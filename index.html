@@ -2,7 +2,6 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="google-site-verification" content="COLE_SEU_CODIGO_AQUI">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0d12">
 <title>tempo. — Utilitários</title>
@@ -86,283 +85,296 @@ footer a:hover{color:var(--accent)}
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const $=s=>document.querySelector(s);
-  const tool=$("#tool"),drawer=$("#drawer");
-  let dateMode="diff";
-  let businessMode="diff";
-  let vacationMode="13";
-  let lifeInterval=null;
+const $=s=>document.querySelector(s);
+const tool=$("#tool"),drawer=$("#drawer");
+let dateMode="diff";
+let businessMode="diff";
+let vacationMode="13";
+let lifeInterval=null;
 
-  function clearLifeTimer(){
-    if(lifeInterval){clearInterval(lifeInterval);lifeInterval=null;}
+function clearLifeTimer(){
+  if(lifeInterval){
+    clearInterval(lifeInterval);
+    lifeInterval=null;
   }
+}
 
-  function showResult(html,error=false){
-    clearLifeTimer();
-    const r=$("#result");
-    if(r){
-      r.innerHTML=html;
-      r.classList.add("show");
-      if(error) r.classList.add("error"); else r.classList.remove("error");
+function showResult(html,error=false){
+  clearLifeTimer();
+  const r=$("#result");
+  if(r){
+    r.innerHTML=html;
+    r.classList.add("show");
+    if(error) r.classList.add("error"); else r.classList.remove("error");
+  }
+}
+function dateFromInput(id){
+  const v=$(id).value;
+  return v?new Date(v+"T00:00:00"):null;
+}
+function formatDate(d){
+  return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
+}
+function calendarDifference(start,end){
+  if(start>end){
+    let temp=start;
+    start=end;
+    end=temp;
+  }
+  let y=end.getFullYear()-start.getFullYear();
+  let m=end.getMonth()-start.getMonth();
+  let d=end.getDate()-start.getDate();
+  if(d<0){
+    m--;
+    const previousMonth=new Date(end.getFullYear(),end.getMonth(),0).getDate();
+    d+=previousMonth;
+  }
+  if(m<0){y--;m+=12}
+  const total=Math.round((end-start)/86400000);
+  return {y,m,d,total};
+}
+function businessDaysDifference(start,end){
+  if(start>end){
+    let temp=start;
+    start=end;
+    end=temp;
+  }
+  let count=0;
+  let cur=new Date(start);
+  while(cur<=end){
+    const day=cur.getDay();
+    if(day!==0&&day!==6) count++;
+    cur.setDate(cur.getDate()+1);
+  }
+  return count;
+}
+function addBusinessDays(base,n,isAdd=true){
+  let cur=new Date(base);
+  let added=0;
+  const dir=isAdd?1:-1;
+  while(added<n){
+    cur.setDate(cur.getDate()+dir);
+    const day=cur.getDay();
+    if(day!==0&&day!==6){
+      added++;
     }
   }
-  function dateFromInput(id){
-    const v=$(id).value;
-    return v?new Date(v+"T00:00:00"):null;
-  }
-  function formatDate(d){
-    return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
-  }
-  function calendarDifference(start,end){
-    if(start>end){
-      let temp=start;
-      start=end;
-      end=temp;
-    }
-    let y=end.getFullYear()-start.getFullYear();
-    let m=end.getMonth()-start.getMonth();
-    let d=end.getDate()-start.getDate();
-    if(d<0){
-      m--;
-      const previousMonth=new Date(end.getFullYear(),end.getMonth(),0).getDate();
-      d+=previousMonth;
-    }
-    if(m<0){y--;m+=12}
-    const total=Math.round((end-start)/86400000);
-    return {y,m,d,total};
-  }
-  function businessDaysDifference(start,end){
-    if(start>end){
-      let temp=start;
-      start=end;
-      end=temp;
-    }
-    let count=0;
-    let cur=new Date(start);
-    while(cur<=end){
-      const day=cur.getDay();
-      if(day!==0&&day!==6) count++;
-      cur.setDate(cur.getDate()+1);
-    }
-    return count;
-  }
-  function addBusinessDays(base,n,isAdd=true){
-    let cur=new Date(base);
-    let added=0;
-    const dir=isAdd?1:-1;
-    while(added<n){
-      cur.setDate(cur.getDate()+dir);
-      const day=cur.getDay();
-      if(day!==0&&day!==6){
-        added++;
-      }
-    }
-    return cur;
-  }
+  return cur;
+}
 
-  function renderDate(){
-    clearLifeTimer();
-    $("#title").textContent="Calculadora de Data";
-    $("#subtitle").textContent="Descubra exatamente quanto tempo existe entre duas datas.";
-    tool.innerHTML=`
-      <div class="tabs">
-        <button class="tab ${dateMode==="diff"?"active":""}" data-mode="diff">Diferença</button>
-        <button class="tab ${dateMode==="add"?"active":""}" data-mode="add">Adicionar</button>
-        <button class="tab ${dateMode==="sub"?"active":""}" data-mode="sub">Subtrair</button>
-      </div>
-      <div id="dateArea"></div>`;
-    renderDateArea();
-  }
-  function renderDateArea(){
-    const area=$("#dateArea");
-    if(dateMode==="diff"){
-      area.innerHTML=`
-        <div class="grid">
-          <div class="field"><label>DATA INICIAL</label><input type="date" id="date1"></div>
-          <div class="field"><label>DATA FINAL</label><input type="date" id="date2"></div>
-        </div>
-        <button class="action" id="calcDate">Calcular diferença</button>
-        <div class="result" id="result"></div>`;
-      const now=new Date();
-      const iso=d=>{d=new Date(d);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
-      $("#date1").value=iso(now);$("#date2").value=iso(now);
-      $("#calcDate").onclick=()=>{
-        const a=dateFromInput("#date1"),b=dateFromInput("#date2");
-        if(!a||!b)return showResult("Selecione as duas datas.",true);
-        const x=calendarDifference(a,b);
-        showResult(`<div class="big">${x.y} ${x.y===1?"ano":"anos"}, ${x.m} ${x.m===1?"mês":"meses"} e ${x.d} ${x.d===1?"dia":"dias"}</div><div class="small">Total: ${x.total.toLocaleString("pt-BR")} ${x.total===1?"dia":"dias"}</div>`);
-      };
-    }else{
-      area.innerHTML=`
-        <div class="grid">
-          <div class="field"><label>DATA</label><input type="date" id="baseDate"></div>
-          <div class="field"><label>QUANTIDADE DE DIAS</label><input type="number" id="days" min="0" step="1" placeholder="Ex.: 45"></div>
-        </div>
-        <button class="action" id="calcMath">${dateMode==="add"?"Adicionar dias":"Subtrair dias"}</button>
-        <div class="result" id="result"></div>`;
-      const now=new Date();now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
-      $("#baseDate").value=now.toISOString().slice(0,10);
-      $("#calcMath").onclick=()=>{
-        const base=dateFromInput("#baseDate"),n=Number($("#days").value);
-        if(!base||$("#days").value===""||!Number.isInteger(n)||n<0)return showResult("Informe uma data e uma quantidade válida de dias.",true);
-        const d=new Date(base);d.setDate(d.getDate()+(dateMode==="add"?n:-n));
-        showResult(`<div class="big">${formatDate(d)}</div><div class="small">${dateMode==="add"?"Foram adicionados":"Foram subtraídos"} ${n.toLocaleString("pt-BR")} ${n===1?"dia":"dias"} de ${formatDate(base)}.</div>`);
-      };
-    }
-    document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{dateMode=b.dataset.mode;renderDate()});
-  }
-
-  function renderTime(){
-    clearLifeTimer();
-    $("#title").textContent="Calculadora de Horas";
-    $("#subtitle").textContent="Calcule a diferença entre dois horários, inclusive passando da meia-noite.";
-    tool.innerHTML=`
+function renderDate(){
+  clearLifeTimer();
+  $("#title").textContent="Calculadora de Data";
+  $("#subtitle").textContent="Descubra exatamente quanto tempo existe entre duas datas.";
+  tool.innerHTML=`
+    <div class="tabs">
+      <button class="tab ${dateMode==="diff"?"active":""}" data-mode="diff">Diferença</button>
+      <button class="tab ${dateMode==="add"?"active":""}" data-mode="add">Adicionar</button>
+      <button class="tab ${dateMode==="sub"?"active":""}" data-mode="sub">Subtrair</button>
+    </div>
+    <div id="dateArea"></div>`;
+  renderDateArea();
+}
+function renderDateArea(){
+  const area=$("#dateArea");
+  if(dateMode==="diff"){
+    area.innerHTML=`
       <div class="grid">
-        <div class="field"><label>HORÁRIO INICIAL</label><input type="time" id="time1"></div>
-        <div class="field"><label>HORÁRIO FINAL</label><input type="time" id="time2"></div>
+        <div class="field"><label>DATA INICIAL</label><input type="date" id="date1"></div>
+        <div class="field"><label>DATA FINAL</label><input type="date" id="date2"></div>
       </div>
-      <button class="action" id="calcTime">Calcular diferença</button>
-      <div class="result" id="result"></div>`;
-    $("#time1").value="17:40";$("#time2").value="00:00";
-    $("#calcTime").onclick=()=>{
-      const a=$("#time1").value,b=$("#time2").value;
-      if(!a||!b)return showResult("Informe os dois horários.",true);
-      let [ah,am]=a.split(":").map(Number),[bh,bm]=b.split(":").map(Number);
-      let start=ah*60+am,end=bh*60+bm;
-      if(end<start)end+=1440;
-      const total=end-start,h=Math.floor(total/60),m=total%60;
-      showResult(`<div class="big">${h}h ${m.toString().padStart(2,"0")}min</div><div class="small">Total: ${total.toLocaleString("pt-BR")} minutos</div>`);
-    };
-  }
-
-  function renderBusiness(){
-    clearLifeTimer();
-    $("#title").textContent="Calculadora de Dias Úteis";
-    $("#subtitle").textContent="Calcule prazos e intervalos desconsiderando os finais de semana.";
-    tool.innerHTML=`
-      <div class="tabs">
-        <button class="tab ${businessMode==="diff"?"active":""}" data-mode="diff">Diferença</button>
-        <button class="tab ${businessMode==="add"?"active":""}" data-mode="add">Adicionar</button>
-        <button class="tab ${businessMode==="sub"?"active":""}" data-mode="sub">Subtrair</button>
-      </div>
-      <div id="businessArea"></div>`;
-    renderBusinessArea();
-  }
-  function renderBusinessArea(){
-    const area=$("#businessArea");
-    if(businessMode==="diff"){
-      area.innerHTML=`
-        <div class="grid">
-          <div class="field"><label>DATA INICIAL</label><input type="date" id="bDate1"></div>
-          <div class="field"><label>DATA FINAL</label><input type="date" id="bDate2"></div>
-        </div>
-        <button class="action" id="calcBusinessDiff">Calcular dias úteis</button>
-        <div class="result" id="result"></div>`;
-      const now=new Date();
-      const iso=d=>{d=new Date(d);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
-      $("#bDate1").value=iso(now);$("#bDate2").value=iso(now);
-      $("#calcBusinessDiff").onclick=()=>{
-        const a=dateFromInput("#bDate1"),b=dateFromInput("#bDate2");
-        if(!a||!b)return showResult("Selecione as duas datas.",true);
-        const total=businessDaysDifference(a,b);
-        showResult(`<div class="big">${total.toLocaleString("pt-BR")} ${total===1?"dia útil":"dias úteis"}</div><div class="small">Intervalo calculado desconsiderando sábados e domingos.</div>`);
-      };
-    }else{
-      area.innerHTML=`
-        <div class="grid">
-          <div class="field"><label>DATA</label><input type="date" id="bBaseDate"></div>
-          <div class="field"><label>DIAS ÚTEIS</label><input type="number" id="bDays" min="0" step="1" placeholder="Ex.: 10"></div>
-        </div>
-        <button class="action" id="calcBusinessMath">${businessMode==="add"?"Adicionar dias úteis":"Subtrair dias úteis"}</button>
-        <div class="result" id="result"></div>`;
-      const now=new Date();now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
-      $("#bBaseDate").value=now.toISOString().slice(0,10);
-      $("#calcBusinessMath").onclick=()=>{
-        const base=dateFromInput("#bBaseDate"),n=Number($("#bDays").value);
-        if(!base||$("#bDays").value===""||!Number.isInteger(n)||n<0)return showResult("Informe uma data e uma quantidade válida de dias úteis.",true);
-        const d=addBusinessDays(base,n,businessMode==="add");
-        showResult(`<div class="big">${formatDate(d)}</div><div class="small">${businessMode==="add"?"Data final após adicionar":"Data final após subtrair"} ${n.toLocaleString("pt-BR")} ${n===1?"dia útil":"dias úteis"}.</div>`);
-      };
-    }
-    document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{businessMode=b.dataset.mode;renderBusiness()});
-  }
-
-  function renderAge(){
-    clearLifeTimer();
-    $("#title").textContent="Calculadora de Idade Exata";
-    $("#subtitle").textContent="Descubra sua idade exata em anos, meses e dias a partir da data de nascimento.";
-    tool.innerHTML=`
-      <div class="grid">
-        <div class="field"><label>DATA DE NASCIMENTO</label><input type="date" id="birthDate"></div>
-        <div class="field"><label>DATA DE REFERÊNCIA (HOJE)</label><input type="date" id="refDate"></div>
-      </div>
-      <button class="action" id="calcAge">Calcular idade exata</button>
+      <button class="action" id="calcDate">Calcular diferença</button>
       <div class="result" id="result"></div>`;
     const now=new Date();
     const iso=d=>{d=new Date(d);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
-    $("#birthDate").value="2000-01-01";
-    $("#refDate").value=iso(now);
-    $("#calcAge").onclick=()=>{
-      const birth=dateFromInput("#birthDate"),ref=dateFromInput("#refDate");
-      if(!birth||!ref)return showResult("Selecione as datas corretamente.",true);
-      if(birth>ref)return showResult("A data de nascimento não pode ser futura.",true);
-      const x=calendarDifference(birth,ref);
-      showResult(`<div class="big">${x.y} anos, ${x.m} meses e ${x.d} dias</div><div class="small">Total aproximado de ${x.total.toLocaleString("pt-BR")} dias vividos.</div>`);
+    $("#date1").value=iso(now);$("#date2").value=iso(now);
+    $("#calcDate").onclick=()=>{
+      const a=dateFromInput("#date1"),b=dateFromInput("#date2");
+      if(!a||!b)return showResult("Selecione as duas datas.",true);
+      const x=calendarDifference(a,b);
+      showResult(`<div class="big">${x.y} ${x.y===1?"ano":"anos"}, ${x.m} ${x.m===1?"mês":"meses"} e ${x.d} ${x.d===1?"dia":"dias"}</div><div class="small">Total: ${x.total.toLocaleString("pt-BR")} ${x.total===1?"dia":"dias"}</div>`);
+    };
+  }else{
+    area.innerHTML=`
+      <div class="grid">
+        <div class="field"><label>DATA</label><input type="date" id="baseDate"></div>
+        <div class="field"><label>QUANTIDADE DE DIAS</label><input type="number" id="days" min="0" step="1" placeholder="Ex.: 45"></div>
+      </div>
+      <button class="action" id="calcMath">${dateMode==="add"?"Adicionar dias":"Subtrair dias"}</button>
+      <div class="result" id="result"></div>`;
+    const now=new Date();now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
+    $("#baseDate").value=now.toISOString().slice(0,10);
+    $("#calcMath").onclick=()=>{
+      const base=dateFromInput("#baseDate"),n=Number($("#days").value);
+      if(!base||$("#days").value===""||!Number.isInteger(n)||n<0)return showResult("Informe uma data e uma quantidade válida de dias.",true);
+      const d=new Date(base);d.setDate(d.getDate()+(dateMode==="add"?n:-n));
+      showResult(`<div class="big">${formatDate(d)}</div><div class="small">${dateMode==="add"?"Foram adicionados":"Foram subtraídos"} ${n.toLocaleString("pt-BR")} ${n===1?"dia":"dias"} de ${formatDate(base)}.</div>`);
     };
   }
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{dateMode=b.dataset.mode;renderDate()});
+}
 
-  function renderPregnancy(){
-    clearLifeTimer();
-    $("#title").textContent="Calculadora de Gestação";
-    $("#subtitle").textContent="Estime a idade gestacional atual e a data provável do parto.";
-    tool.innerHTML=`
-      <div class="grid" style="grid-template-columns:1fr">
-        <div class="field"><label>DATA DA ÚLTIMA MENSTRUAÇÃO (DUM)</label><input type="date" id="dumDate"></div>
+function renderTime(){
+  clearLifeTimer();
+  $("#title").textContent="Calculadora de Horas";
+  $("#subtitle").textContent="Calcule a diferença entre dois horários, inclusive passando da meia-noite.";
+  tool.innerHTML=`
+    <div class="grid">
+      <div class="field"><label>HORÁRIO INICIAL</label><input type="time" id="time1"></div>
+      <div class="field"><label>HORÁRIO FINAL</label><input type="time" id="time2"></div>
+    </div>
+    <button class="action" id="calcTime">Calcular diferença</button>
+    <div class="result" id="result"></div>`;
+  $("#time1").value="17:40";$("#time2").value="00:00";
+  $("#calcTime").onclick=()=>{
+    const a=$("#time1").value,b=$("#time2").value;
+    if(!a||!b)return showResult("Informe os dois horários.",true);
+    let [ah,am]=a.split(":").map(Number),[bh,bm]=b.split(":").map(Number);
+    let start=ah*60+am,end=bh*60+bm;
+    if(end<start)end+=1440;
+    const total=end-start,h=Math.floor(total/60),m=total%60;
+    showResult(`<div class="big">${h}h ${m.toString().padStart(2,"0")}min</div><div class="small">Total: ${total.toLocaleString("pt-BR")} minutos</div>`);
+  };
+}
+
+function renderBusiness(){
+  clearLifeTimer();
+  $("#title").textContent="Calculadora de Dias Úteis";
+  $("#subtitle").textContent="Calcule prazos e intervalos desconsiderando os finais de semana.";
+  tool.innerHTML=`
+    <div class="tabs">
+      <button class="tab ${businessMode==="diff"?"active":""}" data-mode="diff">Diferença</button>
+      <button class="tab ${businessMode==="add"?"active":""}" data-mode="add">Adicionar</button>
+      <button class="tab ${businessMode==="sub"?"active":""}" data-mode="sub">Subtrair</button>
+    </div>
+    <div id="businessArea"></div>`;
+  renderBusinessArea();
+}
+function renderBusinessArea(){
+  const area=$("#businessArea");
+  if(businessMode==="diff"){
+    area.innerHTML=`
+      <div class="grid">
+        <div class="field"><label>DATA INICIAL</label><input type="date" id="bDate1"></div>
+        <div class="field"><label>DATA FINAL</label><input type="date" id="bDate2"></div>
       </div>
-      <button class="action" id="calcPregnancy">Calcular gestação</button>
+      <button class="action" id="calcBusinessDiff">Calcular dias úteis</button>
       <div class="result" id="result"></div>`;
     const now=new Date();
     const iso=d=>{d=new Date(d);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
-    $("#dumDate").value=iso(now);
-    $("#calcPregnancy").onclick=()=>{
-      const dum=dateFromInput("#dumDate");
-      if(!dum)return showResult("Informe a data da última menstruação.",true);
-      const today=new Date(); today.setHours(0,0,0,0);
-      if(dum>today)return showResult("A DUM não pode ser uma data futura.",true);
-      const diffDays=Math.floor((today-dum)/86400000);
-      const weeks=Math.floor(diffDays/7);
-      const days=diffDays%7;
-      const dueDate=new Date(dum);
-      dueDate.setDate(dueDate.getDate()+280);
-      showResult(`<div class="big">${weeks} semanas e ${days} dias</div><div class="small">Previsão do parto: <strong>${formatDate(dueDate)}</strong> (40 semanas).</div>`);
+    $("#bDate1").value=iso(now);$("#bDate2").value=iso(now);
+    $("#calcBusinessDiff").onclick=()=>{
+      const a=dateFromInput("#bDate1"),b=dateFromInput("#bDate2");
+      if(!a||!b)return showResult("Selecione as duas datas.",true);
+      const total=businessDaysDifference(a,b);
+      showResult(`<div class="big">${total.toLocaleString("pt-BR")} ${total===1?"dia útil":"dias úteis"}</div><div class="small">Intervalo calculado desconsiderando sábados e domingos.</div>`);
+    };
+  }else{
+    area.innerHTML=`
+      <div class="grid">
+        <div class="field"><label>DATA</label><input type="date" id="bBaseDate"></div>
+        <div class="field"><label>DIAS ÚTEIS</label><input type="number" id="bDays" min="0" step="1" placeholder="Ex.: 10"></div>
+      </div>
+      <button class="action" id="calcBusinessMath">${businessMode==="add"?"Adicionar dias úteis":"Subtrair dias úteis"}</button>
+      <div class="result" id="result"></div>`;
+    const now=new Date();now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
+    $("#bBaseDate").value=now.toISOString().slice(0,10);
+    $("#calcBusinessMath").onclick=()=>{
+      const base=dateFromInput("#bBaseDate"),n=Number($("#bDays").value);
+      if(!base||$("#bDays").value===""||!Number.isInteger(n)||n<0)return showResult("Informe uma data e uma quantidade válida de dias úteis.",true);
+      const d=addBusinessDays(base,n,businessMode==="add");
+      showResult(`<div class="big">${formatDate(d)}</div><div class="small">${businessMode==="add"?"Data final após adicionar":"Data final após subtrair"} ${n.toLocaleString("pt-BR")} ${n===1?"dia útil":"dias úteis"}.</div>`);
     };
   }
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{businessMode=b.dataset.mode;renderBusiness()});
+}
 
-  function renderOvertime(){
-    clearLifeTimer();
-    $("#title").textContent="Calculadora de Horas Extras";
-    $("#subtitle").textContent="Calcule o valor da hora de trabalho e o total a receber por horas extras (CLT).";
-    tool.innerHTML=`
-      <div class="grid">
-        <div class="field"><label>SALÁRIO MENSAL (R$)</label><input type="number" id="sal" step="0.01" min="0" placeholder="Ex.: 3000"></div>
-        <div class="field"><label>JORNADA MENSAL (HORAS)</label><input type="number" id="jor" value="220" min="1" step="1"></div>
+function renderAge(){
+  clearLifeTimer();
+  $("#title").textContent="Calculadora de Idade Exata";
+  $("#subtitle").textContent="Descubra sua idade exata em anos, meses e dias a partir da data de nascimento.";
+  tool.innerHTML=`
+    <div class="grid">
+      <div class="field"><label>DATA DE NASCIMENTO</label><input type="date" id="birthDate"></div>
+      <div class="field"><label>DATA DE REFERÊNCIA (HOJE)</label><input type="date" id="refDate"></div>
+    </div>
+    <button class="action" id="calcAge">Calcular idade exata</button>
+    <div class="result" id="result"></div>`;
+  const now=new Date();
+  const iso=d=>{d=new Date(d);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
+  $("#birthDate").value="2000-01-01";
+  $("#refDate").value=iso(now);
+  $("#calcAge").onclick=()=>{
+    const birth=dateFromInput("#birthDate"),ref=dateFromInput("#refDate");
+    if(!birth||!ref)return showResult("Selecione as datas corretamente.",true);
+    if(birth>ref)return showResult("A data de nascimento não pode ser futura.",true);
+    const x=calendarDifference(birth,ref);
+    showResult(`<div class="big">${x.y} anos, ${x.m} meses e ${x.d} dias</div><div class="small">Total aproximado de ${x.total.toLocaleString("pt-BR")} dias vividos.</div>`);
+  };
+}
+
+function renderPregnancy(){
+  clearLifeTimer();
+  $("#title").textContent="Calculadora de Gestação";
+  $("#subtitle").textContent="Estime a idade gestacional atual e a data provável do parto.";
+  tool.innerHTML=`
+    <div class="grid" style="grid-template-columns:1fr">
+      <div class="field"><label>DATA DA ÚLTIMA MENSTRUAÇÃO (DUM)</label><input type="date" id="dumDate"></div>
+    </div>
+    <button class="action" id="calcPregnancy">Calcular gestação</button>
+    <div class="result" id="result"></div>`;
+  const now=new Date();
+  const iso=d=>{d=new Date(d);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
+  $("#dumDate").value=iso(now);
+  $("#calcPregnancy").onclick=()=>{
+    const dum=dateFromInput("#dumDate");
+    if(!dum)return showResult("Informe a data da última menstruação.",true);
+    const today=new Date(); today.setHours(0,0,0,0);
+    if(dum>today)return showResult("A DUM não pode ser uma data futura.",true);
+    const diffDays=Math.floor((today-dum)/86400000);
+    const weeks=Math.floor(diffDays/7);
+    const days=diffDays%7;
+    const dueDate=new Date(dum);
+    dueDate.setDate(dueDate.getDate()+280);
+    showResult(`<div class="big">${weeks} semanas e ${days} dias</div><div class="small">Previsão do parto: <strong>${formatDate(dueDate)}</strong> (40 semanas).</div>`);
+  };
+}
+
+function renderOvertime(){
+  clearLifeTimer();
+  $("#title").textContent="Calculadora de Horas Extras";
+  $("#subtitle").textContent="Calcule o valor da hora de trabalho e o total a receber por horas extras (CLT).";
+  tool.innerHTML=`
+    <div class="grid">
+      <div class="field"><label>SALÁRIO MENSAL (R$)</label><input type="number" id="sal" step="0.01" min="0" placeholder="Ex.: 3000"></div>
+      <div class="field"><label>JORNADA MENSAL (HORAS)</label><input type="number" id="jor" value="220" min="1" step="1"></div>
+    </div>
+    <div class="grid" style="margin-top:14px">
+      <div class="field"><label>QTD. DE HORAS EXTRAS</label><input type="number" id="qtd" step="0.5" min="0" placeholder="Ex.: 10"></div>
+      <div class="field"><label>ACRÉSCIMO DA HORA EXTRA</label>
+        <select id="rate">
+          <option value="50">50% (Dias normais)</option>
+          <option value="100">100% (Domingos e feriados)</option>
+        </select>
       </div>
-      <div class="grid" style="margin-top:14px">
-        <div class="field"><label>QTD. DE HORAS EXTRAS</label><input type="number" id="qtd" step="0.5" min="0" placeholder="Ex.: 10"></div>
-        <div class="field"><label>ACRÉSCIMO DA HORA EXTRA</label>
-          <select id="rate">
-            <option value="50">50% (Dias normais)</option>
-            <option value="100">100% (Domingos e feriados)</option>
-          </select>
-        </div>
-      </div>
-      <button class="action" id="calcOvertime">Calcular horas extras</button>
-      <div class="result" id="result"></div>`;
-    $("#sal").value="3000";$("#qtd").value="12";
-    $("#calcOvertime").onclick=()=>{
-      const sal=Number($("#sal").value), jor=Number($("#jor").value), qtd=Number($("#qtd").value), rate=Number($("#rate").value);
-      if(!sal||sal<=0||!jor||jor<=0||isNaN(qtd)||qtd<0)return showResult("Informe valores válidos para o cálculo.",true);
-      const valorHora=sal/jor;
-      const valorHoraExtra=valorHora*(1+rate/100);
-      const total=valorHoraExtra*qtd;
+    </div>
+    <button class="action" id="calcOvertime">Calcular horas extras</button>
+    <div class="result" id="result"></div>`;
+  $("#sal").value="3000";$("#qtd").value="12";
+  $("#calcOvertime").onclick=()=>{
+    const sal=Number($("#sal").value), jor=Number($("#jor").value), qtd=Number($("#qtd").value), rate=Number($("#rate").value);
+    if(!sal||sal<=0||!jor||jor<=0||isNaN(qtd)||qtd<0)return showResult("Informe valores válidos para o cálculo.",true);
+    const valorHora=sal/jor;
+    const valorHoraExtra=valorHora*(1+rate/100);
+    const total=valorHoraExtra*qtd;
+    showResult(`<div class="big">R$ ${total.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="small">Valor da hora normal: R$ ${valorHora.toFixed(2)}<br>Valor da hora extra (${rate}%): R$ ${valorHoraExtra.toFixed(2)}</div>`);
+  };
+}
+
+function renderLifesClock(){
+  clearLifeTimer();
+  $("#title").textContent="Relógio de Vida";
+  $("#subtitle").textContent="Acompanhe sua idade exata atualizando segundo a segundo em tempo real.";
+  tool.innerHTML=`
+    <div class="grid" style="grid-template-columns:1fr">
+      <div class="field"><label>DATA E HORA DE NASCIMENTO</label><input type="datetime-local" id="birth
