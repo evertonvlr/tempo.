@@ -32,7 +32,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.12)
 .action:active{transform:translateY(0)}
 .result{margin-top:17px;padding:21px;border:1px solid var(--line);background:var(--bg);border-radius:16px;text-align:center;display:none}
 .result.show{display:block;animation:up .22s ease}
-.result .big{font-size:clamp(24px,5vw,33px);font-weight:900;letter-spacing:-1px}
+.result .big{font-size:clamp(22px,4.5vw,30px);font-weight:900;letter-spacing:-1px}
 .result .small{color:var(--muted);margin-top:7px;font-size:13px;line-height:1.5}
 .error{color:var(--danger)!important}
 .drawer{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:.25s;z-index:20}
@@ -41,7 +41,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.12)
 .drawer.open .drawer-card{transform:translateX(0)}
 .drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;font-size:18px}
 .close{border:0;background:var(--card);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:21px}
-.menu-item{width:100%;text-align:left;padding:16px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;margin-bottom:10px;font-weight:750;transition:.2s}
+.menu-item{width:100%;text-align:left;padding:14px 16px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;margin-bottom:10px;font-weight:750;font-size:14px;transition:.2s}
 .menu-item:hover,.menu-item.active{border-color:var(--accent);background:var(--card2)}
 .menu-item span{opacity:.9}
 footer{text-align:center;color:var(--muted);font-size:11px;margin-top:42px}
@@ -75,6 +75,8 @@ footer a:hover{color:var(--accent)}
     <button class="menu-item active" data-tool="date">📅 &nbsp; Calculadora de Data</button>
     <button class="menu-item" data-tool="time">⏰ &nbsp; Calculadora de Horas</button>
     <button class="menu-item" data-tool="business">💼 &nbsp; Dias Úteis</button>
+    <button class="menu-item" data-tool="age">🎂 &nbsp; Idade Exata</button>
+    <button class="menu-item" data-tool="pregnancy">👶 &nbsp; Gestação & Parto</button>
   </div>
 </div>
 
@@ -258,6 +260,55 @@ function renderBusinessArea(){
   document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{businessMode=b.dataset.mode;renderBusiness()});
 }
 
+function renderAge(){
+  $("#title").textContent="Calculadora de Idade Exata";
+  $("#subtitle").textContent="Descubra sua idade exata em anos, meses e dias a partir da data de nascimento.";
+  tool.innerHTML=`
+    <div class="grid">
+      <div class="field"><label>DATA DE NASCIMENTO</label><input type="date" id="birthDate"></div>
+      <div class="field"><label>DATA DE REFERÊNCIA (HOJE)</label><input type="date" id="refDate"></div>
+    </div>
+    <button class="action" id="calcAge">Calcular idade exata</button>
+    <div class="result" id="result"></div>`;
+  const now=new Date();
+  const iso=d=>{d=new Date(d);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
+  $("#birthDate").value="2000-01-01";
+  $("#refDate").value=iso(now);
+  $("#calcAge").onclick=()=>{
+    const birth=dateFromInput("#birthDate"),ref=dateFromInput("#refDate");
+    if(!birth||!ref)return showResult("Selecione as datas corretamente.",true);
+    if(birth>ref)return showResult("A data de nascimento não pode ser futura.",true);
+    const x=calendarDifference(birth,ref);
+    showResult(`<div class="big">${x.y} anos, ${x.m} meses e ${x.d} dias</div><div class="small">Total aproximado de ${x.total.toLocaleString("pt-BR")} dias vividos.</div>`);
+  };
+}
+
+function renderPregnancy(){
+  $("#title").textContent="Calculadora de Gestação";
+  $("#subtitle").textContent="Estime a idade gestacional atual e a data provável do parto.";
+  tool.innerHTML=`
+    <div class="grid" style="grid-template-columns:1fr">
+      <div class="field"><label>DATA DA ÚLTIMA MENSTRUAÇÃO (DUM)</label><input type="date" id="dumDate"></div>
+    </div>
+    <button class="action" id="calcPregnancy">Calcular gestação</button>
+    <div class="result" id="result"></div>`;
+  const now=new Date();
+  const iso=d=>{d=new Date(d);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
+  $("#dumDate").value=iso(now);
+  $("#calcPregnancy").onclick=()=>{
+    const dum=dateFromInput("#dumDate");
+    if(!dum)return showResult("Informe a data da última menstruação.",true);
+    const today=new Date(); today.setHours(0,0,0,0);
+    if(dum>today)return showResult("A DUM não pode ser uma data futura.",true);
+    const diffDays=Math.floor((today-dum)/86400000);
+    const weeks=Math.floor(diffDays/7);
+    const days=diffDays%7;
+    const dueDate=new Date(dum);
+    dueDate.setDate(dueDate.getDate()+280); // 40 weeks standard
+    showResult(`<div class="big">${weeks} semanas e ${days} dias</div><div class="small">Previsão do parto: <strong>${formatDate(dueDate)}</strong> (40 semanas).</div>`);
+  };
+}
+
 $("#openMenu").onclick=()=>drawer.classList.add("open");
 $("#closeMenu").onclick=()=>drawer.classList.remove("open");
 drawer.onclick=e=>{if(e.target===drawer)drawer.classList.remove("open")};
@@ -265,9 +316,12 @@ document.querySelectorAll(".menu-item").forEach(item=>{
   item.onclick=()=>{
     document.querySelectorAll(".menu-item").forEach(x=>x.classList.remove("active"));
     item.classList.add("active");
-    if(item.dataset.tool==="date"){dateMode="diff";renderDate()}
-    else if(item.dataset.tool==="time"){renderTime()}
-    else if(item.dataset.tool==="business"){businessMode="diff";renderBusiness()}
+    const t=item.dataset.tool;
+    if(t==="date"){dateMode="diff";renderDate()}
+    else if(t==="time"){renderTime()}
+    else if(t==="business"){businessMode="diff";renderBusiness()}
+    else if(t==="age"){renderAge()}
+    else if(t==="pregnancy"){renderPregnancy()}
     drawer.classList.remove("open");
   };
 });
