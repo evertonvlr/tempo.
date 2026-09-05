@@ -40,7 +40,6 @@ select{cursor:pointer}
 .result.has-copy.copied{border-color:#4ade80}
 .result.has-copy.copied::after{content:'✓ Copiado!';color:#4ade80;opacity:1}
 .drawer{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:.25s;z-index:20}
-.drawer.open{opacity:1;pointer-events:auto}
 .drawer-card{position:absolute;right:0;top:0;height:100%;width:min(350px,89vw);background:#10141c;border-left:1px solid var(--line);padding:22px;transform:translateX(100%);transition:.3s cubic-bezier(.2,.8,.2,1);overflow-y:auto}
 .drawer.open .drawer-card{transform:translateX(0)}
 .drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;font-size:18px}
@@ -387,7 +386,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tool.innerHTML = `
       <div class="grid" style="grid-template-columns:1fr">
         <div class="field"><label>DATA DA ÚLTIMA MENSTRUAÇÃO (DUM)</label><input type="date" id="dumDate"></div>
-      </div>
+      </div
       <div class="result" id="result"></div>`;
       
     const past = new Date(); past.setDate(past.getDate() - 84); 
@@ -412,8 +411,6 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#dumDate").oninput = calculate; calculate();
   }
 
-  // --- FERRAMENTAS CLT (Com salário base livre e regras celetistas) ---
-
   function renderOvertime() {
     $("#title").textContent = "Calculadora de Horas Extras (CLT)";
     $("#subtitle").textContent = "Estime o valor da sua hora e o acréscimo por horas extras trabalhadas.";
@@ -437,9 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const sal = Number($("#sal").value), jor = Number($("#jor").value), qtd = Number($("#qtd").value), rate = Number($("#rate").value);
       if(!sal || sal<=0 || !jor || jor<=0 || isNaN(qtd) || qtd<0) return showResult("Informe valores válidos para o cálculo.", "", true);
       
-      // Regra celetista: Valor da hora = Salário dividido pela jornada contratual mensal
       const valorHora = sal / jor;
-      // Hora extra = Hora normal + percentual legal (50% ou 100%)
       const valorHoraExtra = valorHora * (1 + rate / 100);
       const total = valorHoraExtra * qtd;
       
@@ -452,6 +447,7 @@ document.addEventListener("DOMContentLoaded", () => {
     calculate();
   }
 
+  // CORREÇÃO APLICADA AQUI: Chama renderVacation13() em vez de renderVArea()
   function renderVacation13() {
     $("#title").textContent = "Férias & 13º Salário (CLT)";
     $("#subtitle").textContent = "Estime os valores proporcionais seguindo as normas trabalhistas.";
@@ -478,7 +474,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const sal = Number($("#vSal").value), meses = Number($("#vMeses").value);
         if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult("Informe valores válidos.", "", true);
         
-        // Regra celetista 13º: (Salário / 12) * Meses trabalhados (considerando fração igual ou superior a 15 dias como mês integral)
         const val = (sal / 12) * meses;
         
         const html = `<div class="big">R$ ${val.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="small">Proporcional a ${meses} ${meses===1?"mês trabalhado":"meses trabalhados"}.</div>`;
@@ -499,7 +494,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const sal = Number($("#vSal").value), meses = Number($("#vMeses").value);
         if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult("Informe valores válidos.", "", true);
         
-        // Regra celetista Férias: (Salário / 12) * meses + 1/3 constitucional
         const base = (sal / 12) * meses;
         const terço = base / 3;
         const total = base + terço;
@@ -511,7 +505,8 @@ document.addEventListener("DOMContentLoaded", () => {
       
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
     }
-    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { vacationMode = b.dataset.mode; renderVArea(); });
+    // Agora chama renderVacation13() para atualizar o destaque da aba corretamente
+    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { vacationMode = b.dataset.mode; renderVacation13(); });
   }
 
   // --- CONTROLE DE MENU ---
