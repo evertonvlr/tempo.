@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0d12">
+<title>tempo. — Utilitários</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b0d12;--card:#131720;--card2:#1a202b;--text:#f7f8fb;--muted:#9199a8;--line:#29313e;--accent:#7c5cff;--danger:#ff6574}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% -20%,#171326 0,#0b0d12 45%);color:var(--text);min-height:100vh}
+button,input{font:inherit}button{cursor:pointer}
+.app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
+header{height:76px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:21px;font-weight:850;letter-spacing:-.7px}.logo span{color:var(--accent)}
+.menu-btn{width:45px;height:45px;border:1px solid var(--line);border-radius:14px;background:rgba(19,23,32,.9);color:var(--text);font-size:23px;display:grid;place-items:center;transition:.2s}
+.menu-btn:hover{transform:scale(1.04);background:var(--card2)}
+.hero{text-align:center;padding:48px 0 27px}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:7px 12px;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.8px;margin-bottom:17px}
+h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bottom:15px}
+.hero p{color:var(--muted);font-size:15px;line-height:1.6}
+.panel{width:min(100%,760px);margin:auto;background:rgba(19,23,32,.94);border:1px solid var(--line);border-radius:24px;padding:23px;box-shadow:0 25px 80px rgba(0,0,0,.25)}
+.tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:14px;margin-bottom:23px}
+.tab{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 8px;border-radius:10px;font-weight:750;font-size:13px;transition:.2s}
+.tab.active{background:var(--card2);color:var(--text);box-shadow:0 3px 12px rgba(0,0,0,.15)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field label{display:block;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.5px;margin:0 0 8px 3px}
+input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:14px;outline:none;transition:.2s;color-scheme:dark}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.12)}
+.action{width:100%;margin-top:17px;border:0;border-radius:14px;padding:15px;background:var(--accent);color:#fff;font-weight:850;transition:.2s}
+.action:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.action:active{transform:translateY(0)}
+.result{margin-top:17px;padding:21px;border:1px solid var(--line);background:var(--bg);border-radius:16px;text-align:center;display:none}
+.result.show{display:block;animation:up .22s ease}
+.result .big{font-size:clamp(24px,5vw,33px);font-weight:900;letter-spacing:-1px}
+.result .small{color:var(--muted);margin-top:7px;font-size:13px;line-height:1.5}
+.error{color:var(--danger)!important}
+.drawer{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:.25s;z-index:20}
+.drawer.open{opacity:1;pointer-events:auto}
+.drawer-card{position:absolute;right:0;top:0;height:100%;width:min(350px,89vw);background:#10141c;border-left:1px solid var(--line);padding:22px;transform:translateX(100%);transition:.3s cubic-bezier(.2,.8,.2,1)}
+.drawer.open .drawer-card{transform:translateX(0)}
+.drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;font-size:18px}
+.close{border:0;background:var(--card);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:21px}
+.menu-item{width:100%;text-align:left;padding:16px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;margin-bottom:10px;font-weight:750;transition:.2s}
+.menu-item:hover,.menu-item.active{border-color:var(--accent);background:var(--card2)}
+.menu-item span{opacity:.9}
+footer{text-align:center;color:var(--muted);font-size:11px;margin-top:42px}
+@keyframes up{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@media(max-width:600px){.app{padding:0 14px 35px}.hero{padding:38px 0 22px}.panel{padding:17px;border-radius:20px}.grid{grid-template-columns:1fr}h1{letter-spacing:-2px}.tabs{margin-bottom:19px}.tab{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="logo">tempo<span>.</span></div>
+  <button class="menu-btn" id="openMenu" aria-label="Abrir menu">☰</button>
+</header>
+
+<main>
+<section class="hero">
+  <div class="badge">UTILITÁRIOS DE TEMPO</div>
+  <h1 id="title">Calculadora de Data</h1>
+  <p id="subtitle">Descubra exatamente quanto tempo existe entre duas datas.</p>
+</section>
+<section class="panel" id="tool"></section>
+</main>
+<footer>Simples. Rápido. Preciso.</footer>
+</div>
+
+<div class="drawer" id="drawer">
+  <div class="drawer-card">
+    <div class="drawer-top"><strong>Utilitários</strong><button class="close" id="closeMenu">×</button></div>
+    <button class="menu-item active" data-tool="date">📅 &nbsp; Calculadora de Data</button>
+    <button class="menu-item" data-tool="time">⏰ &nbsp; Calculadora de Horas</button>
+    <button class="menu-item" data-tool="business">💼 &nbsp; Dias Úteis</button>
+  </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const tool=$("#tool"),drawer=$("#drawer");
+let dateMode="diff";
+let businessMode="diff";
+
+function showResult(html,error=false){
+  const r=$("#result");r.innerHTML=html;r.classList.add("show");
+  if(error) r.classList.add("error"); else r.classList.remove("error");
+}
+function dateFromInput(id){
+  const v=$(id).value;
+  return v?new Date(v+"T00:00:00"):null;
+}
+function formatDate(d){
+  return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
+}
+function calendarDifference(start,end){
+  if(start>end)[start,end]=[end,start];
+  let y=end.getFullYear()-start.getFullYear();
+  let m=end.getMonth()-start.getMonth();
+  let d=end.getDate()-start.getDate();
+  if(d<0){
+    m--;
+    const previousMonth=new Date(end.getFullYear(),end.getMonth(),0).getDate();
+    d+=previousMonth;
+  }
+  if(m<0){y--;m+=12}
+  const total=Math.round((end-start)/86400000);
+  return {y,m,d,total};
+}
+function businessDaysDifference(start,end){
+  if(start>end)[start,end]=[end,start];
+  let count=0;
+  let cur=new Date(start);
+  while(cur<=end){
+    const day=cur.getDay();
+    if(day!==0&&day!==6) count++;
+    cur.setDate(cur.getDate()+1);
+  }
+  return count;
+}
+function addBusinessDays(base,n,isAdd=true){
+  let cur=new Date(base);
+  let added=0;
+  const dir=isAdd?1:-1;
+  while(added<n){
+    cur.setDate(cur.getDate()+dir);
+    const day=cur.getDay();
+    if(day!==0&&day!==6){
+      added++;
+    }
+  }
+  return cur;
+}
+
+function renderDate(){
+  $("#title").textContent="Calculadora de Data";
+  $("#subtitle").textContent="Descubra exatamente quanto tempo existe entre duas datas.";
+  tool.innerHTML=`
+    <div class="tabs">
+      <button class="tab ${dateMode==="diff"?"active":""}" data-mode="diff">Diferença</button>
+      <button class="tab ${dateMode==="add"?"active":""}" data-mode="add">Adicionar</button>
+      <button class="tab ${dateMode==="sub"?"active":""}" data-mode="sub">Subtrair</button>
+    </div>
+    <div id="dateArea"></div>`;
+  renderDateArea();
+}
+function renderDateArea(){
+  const area=$("#dateArea");
+  if(dateMode==="diff"){
+    area.innerHTML=`
+      <div class="grid">
+        <div class="field"><label>DATA INICIAL</label><input type="date" id="date1"></div>
+        <div class="field"><label>DATA FINAL</label><input type="date" id="date2"></div>
+      </div>
+      <button class="action" id="calcDate">Calcular diferença</button>
+      <div class="result" id="result"></div>`;
+    const now=new Date();
+    const iso=d=>{d=new Date(d);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
+    $("#date1").value=iso(now);$("#date2").value=iso(now);
+    $("#calcDate").onclick=()=>{
+      const a=dateFromInput("#date1"),b=dateFromInput("#date2");
+      if(!a||!b)return showResult("Selecione as duas datas.",true);
+      const x=calendarDifference(a,b);
+      showResult(`<div class="big">${x.y} ${x.y===1?"ano":"anos"}, ${x.m} ${x.m===1?"mês":"meses"} e ${x.d} ${x.d===1?"dia":"dias"}</div><div class="small">Total: ${x.total.toLocaleString("pt-BR")} ${x.total===1?"dia":"dias"}</div>`);
+    };
+  }else{
+    area.innerHTML=`
+      <div class="grid">
+        <div class="field"><label>DATA</label><input type="date" id="baseDate"></div>
+        <div class="field"><label>QUANTIDADE DE DIAS</label><input type="number" id="days" min="0" step="1" placeholder="Ex.: 45"></div>
+      </div>
+      <button class="action" id="calcMath">${dateMode==="add"?"Adicionar dias":"Subtrair dias"}</button>
+      <div class="result" id="result"></div>`;
+    const now=new Date();now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
+    $("#baseDate").value=now.toISOString().slice(0,10);
+    $("#calcMath").onclick=()=>{
+      const base=dateFromInput("#baseDate"),n=Number($("#days").value);
+      if(!base||$("#days").value===""||!Number.isInteger(n)||n<0)return showResult("Informe uma data e uma quantidade válida de dias.",true);
+      const d=new Date(base);d.setDate(d.getDate()+(dateMode==="add"?n:-n));
+      showResult(`<div class="big">${formatDate(d)}</div><div class="small">${dateMode==="add"?"Foram adicionados":"Foram subtraídos"} ${n.toLocaleString("pt-BR")} ${n===1?"dia":"dias"} de ${formatDate(base)}.</div>`);
+    };
+  }
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{dateMode=b.dataset.mode;renderDate()});
+}
+
+function renderTime(){
+  $("#title").textContent="Calculadora de Horas";
+  $("#subtitle").textContent="Calcule a diferença entre dois horários, inclusive passando da meia-noite.";
+  tool.innerHTML=`
+    <div class="grid">
+      <div class="field"><label>HORÁRIO INICIAL</label><input type="time" id="time1"></div>
+      <div class="field"><label>HORÁRIO FINAL</label><input type="time" id="time2"></div>
+    </div>
+    <button class="action" id="calcTime">Calcular diferença</button>
+    <div class="result" id="result"></div>`;
+  $("#time1").value="17:40";$("#time2").value="00:00";
+  $("#calcTime").onclick=()=>{
+    const a=$("#time1").value,b=$("#time2").value;
+    if(!a||!b)return showResult("Informe os dois horários.",true);
+    let [ah,am]=a.split(":").map(Number),[bh,bm]=b.split(":").map(Number);
+    let start=ah*60+am,end=bh*60+bm;
+    if(end<start)end+=1440;
+    const total=end-start,h=Math.floor(total/60),m=total%60;
+    showResult(`<div class="big">${h}h ${m.toString().padStart(2,"0")}min</div><div class="small">Total: ${total.toLocaleString("pt-BR")} minutos</div>`);
+  };
+}
+
+function renderBusiness(){
+  $("#title").textContent="Calculadora de Dias Úteis";
+  $("#subtitle").textContent="Calcule prazos e intervalos desconsiderando os finais de semana.";
+  tool.innerHTML=`
+    <div class="tabs">
+      <button class="tab ${businessMode==="diff"?"active":""}" data-mode="diff">Diferença</button>
+      <button class="tab ${businessMode==="add"?"active":""}" data-mode="add">Adicionar</button>
+      <button class="tab ${businessMode==="sub"?"active":""}" data-mode="sub">Subtrair</button>
+    </div>
+    <div id="businessArea"></div>`;
+  renderBusinessArea();
+}
+function renderBusinessArea(){
+  const area=$("#businessArea");
+  if(businessMode==="diff"){
+    area.innerHTML=`
+      <div class="grid">
+        <div class="field"><label>DATA INICIAL</label><input type="date" id="bDate1"></div>
+        <div class="field"><label>DATA FINAL</label><input type="date" id="bDate2"></div>
+      </div>
+      <button class="action" id="calcBusinessDiff">Calcular dias úteis</button>
+      <div class="result" id="result"></div>`;
+    const now=new Date();
+    const iso=d=>{d=new Date(d);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
+    $("#bDate1").value=iso(now);$("#bDate2").value=iso(now);
+    $("#calcBusinessDiff").onclick=()=>{
+      const a=dateFromInput("#bDate1"),b=dateFromInput("#bDate2");
+      if(!a||!b)return showResult("Selecione as duas datas.",true);
+      const total=businessDaysDifference(a,b);
+      showResult(`<div class="big">${total.toLocaleString("pt-BR")} ${total===1?"dia útil":"dias úteis"}</div><div class="small">Intervalo calculado desconsiderando sábados e domingos.</div>`);
+    };
+  }else{
+    area.innerHTML=`
+      <div class="grid">
+        <div class="field"><label>DATA</label><input type="date" id="bBaseDate"></div>
+        <div class="field"><label>DIAS ÚTEIS</label><input type="number" id="bDays" min="0" step="1" placeholder="Ex.: 10"></div>
+      </div>
+      <button class="action" id="calcBusinessMath">${businessMode==="add"?"Adicionar dias úteis":"Subtrair dias úteis"}</button>
+      <div class="result" id="result"></div>`;
+    const now=new Date();now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
+    $("#bBaseDate").value=now.toISOString().slice(0,10);
+    $("#calcBusinessMath").onclick=()=>{
+      const base=dateFromInput("#bBaseDate"),n=Number($("#bDays").value);
+      if(!base||$("#bDays").value===""||!Number.isInteger(n)||n<0)return showResult("Informe uma data e uma quantidade válida de dias úteis.",true);
+      const d=addBusinessDays(base,n,businessMode==="add");
+      showResult(`<div class="big">${formatDate(d)}</div><div class="small">${businessMode==="add"?"Data final após adicionar":"Data final após subtrair"} ${n.toLocaleString("pt-BR")} ${n===1?"dia útil":"dias úteis"}.</div>`);
+    };
+  }
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{businessMode=b.dataset.mode;renderBusiness()});
+}
+
+$("#openMenu").onclick=()=>drawer.classList.add("open");
+$("#closeMenu").onclick=()=>drawer.classList.remove("open");
+drawer.onclick=e=>{if(e.target===drawer)drawer.classList.remove("open")};
+document.querySelectorAll(".menu-item").forEach(item=>{
+  item.onclick=()=>{
+    document.querySelectorAll(".menu-item").forEach(x=>x.classList.remove("active"));
+    item.classList.add("active");
+    if(item.dataset.tool==="date"){dateMode="diff";renderDate()}
+    else if(item.dataset.tool==="time"){renderTime()}
+    else if(item.dataset.tool==="business"){businessMode="diff";renderBusiness()}
+    drawer.classList.remove("open");
+  };
+});
+renderDate();
+</script>
+</body>
+</html>
