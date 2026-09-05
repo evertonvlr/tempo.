@@ -32,8 +32,13 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230b0d12%22/><text x=%2250%22 y=%2270%22 font-size=%2260%22 font-weight=%22900%22 font-family=%22system-ui, sans-serif%22 fill=%22%23f7f8fb%22 text-anchor=%22middle%22>t<tspan fill=%22%237c5cff%22>.</tspan></text></svg>">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0b0d12;--card:#131720;--card2:#1a202b;--text:#f7f8fb;--muted:#9199a8;--line:#29313e;--accent:#7c5cff;--danger:#ff6574}
-body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% -20%,#171326 0,#0b0d12 45%);color:var(--text);min-height:100vh}
+:root{
+  --bg:#0b0d12;--card:#131720;--card2:#1a202b;--text:#f7f8fb;--muted:#9199a8;--line:#29313e;--accent:#7c5cff;--danger:#ff6574;
+}
+:root.light{
+  --bg:#f4f5f7;--card:#ffffff;--card2:#eef2f6;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#6366f1;--danger:#ef4444;
+}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% -20%,var(--card2) 0,var(--bg) 45%);color:var(--text);min-height:100vh;transition:background 0.3s, color 0.3s}
 button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer}
 .app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
 header{height:76px;display:flex;align-items:center;justify-content:space-between}
@@ -43,21 +48,20 @@ header{height:76px;display:flex;align-items:center;justify-content:space-between
 .logo:active{transform:scale(0.97)}
 .logo span{color:var(--accent)}
 
-.menu-btn{width:45px;height:45px;border:1px solid var(--line);border-radius:14px;background:rgba(19,23,32,.9);color:var(--text);font-size:23px;display:grid;place-items:center;transition:transform .15s ease, background .2s;outline:none}
-.menu-btn:hover{transform:scale(1.04);background:var(--card2)}
-.menu-btn:active{transform:scale(0.95);background:var(--card2)}
+.header-actions{display:flex;gap:10px;align-items:center}
+.icon-btn{width:45px;height:45px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);font-size:18px;display:grid;place-items:center;transition:transform .15s ease, background .2s, border-color .2s;outline:none}
+.icon-btn:hover{transform:scale(1.04);background:var(--card2);border-color:var(--accent)}
+.icon-btn:active{transform:scale(0.95)}
 
 .hero{text-align:center;padding:48px 0 27px}
-.badge{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:7px 12px;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.8px;margin-bottom:17px}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:7px 12px;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.8px;margin-bottom:17px;background:var(--card)}
 h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bottom:15px}
 .hero p{color:var(--muted);font-size:15px;line-height:1.6}
-.panel{width:min(100%,760px);margin:auto;background:rgba(19,23,32,.94);border:1px solid var(--line);border-radius:24px;padding:23px;box-shadow:0 25px 80px rgba(0,0,0,.25);overflow:hidden}
+.panel{width:min(100%,760px);margin:auto;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:23px;box-shadow:0 25px 80px rgba(0,0,0,.15);overflow:hidden}
 
-.tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:14px;margin-bottom:23px}
+.tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:14px;margin-bottom:23px;border:1px solid var(--line)}
 .tab{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 8px;border-radius:10px;font-weight:750;font-size:13px;transition:.2s}
-.tab.active{background:var(--card2);color:var(--text);box-shadow:0 3px 12px rgba(0,0,0,.15)}
-
-/* Correção crítica para Safari/iOS: minmax(0, 1fr) impede que inputs estourem o grid */
+.tab.active{background:var(--card2);color:var(--text);box-shadow:0 3px 12px rgba(0,0,0,.1)}
 .grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:14px}
 .field{min-width:0}
 .field label{display:block;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.5px;margin:0 0 8px 3px}
@@ -77,17 +81,31 @@ select{cursor:pointer}
 .result.has-copy.copied{border-color:#4ade80}
 .result.has-copy.copied::after{content:'✓ Copiado!';color:#4ade80;opacity:1}
 
-.drawer{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:.25s;z-index:20}
+/* Command Palette Modal */
+.palette-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:.2s;z-index:100;display:grid;place-items:center;padding:20px}
+.palette-overlay.open{opacity:1;pointer-events:auto}
+.palette-box{width:min(100%, 520px);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 25px 60px rgba(0,0,0,.3);transform:translateY(-10px);transition:.2s}
+.palette-overlay.open .palette-box{transform:translateY(0)}
+.palette-input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);padding:14px;border-radius:12px;font-size:15px;outline:none;margin-bottom:12px}
+.palette-list{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+.palette-item{padding:12px 14px;border-radius:10px;background:transparent;border:0;color:var(--text);text-align:left;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:between;transition:.15s}
+.palette-item:hover, .palette-item.selected{background:var(--card2);color:var(--accent)}
+
+/* Drawer Menu */
+.drawer{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:.25s;z-index:90}
 .drawer.open{opacity:1;pointer-events:auto}
-.drawer-card{position:absolute;right:0;top:0;height:100%;width:min(350px,89vw);background:#10141c;border-left:1px solid var(--line);padding:22px;transform:translateX(100%);transition:.3s cubic-bezier(.2,.8,.2,1);overflow-y:auto}
+.drawer-card{position:absolute;right:0;top:0;height:100%;width:min(350px,89vw);background:var(--card);border-left:1px solid var(--line);padding:22px;transform:translateX(100%);transition:.3s cubic-bezier(.2,.8,.2,1);overflow-y:auto}
 .drawer.open .drawer-card{transform:translateX(0)}
 
-.drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;font-size:18px}
-.close{border:0;background:var(--card);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:21px}
+.drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-size:18px}
+.close{border:0;background:var(--card2);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:21px}
+.lang-selector{margin-bottom:20px}
+.lang-selector select{padding:10px;font-size:13px;font-weight:700}
 .menu-group{font-size:11px;font-weight:750;color:var(--muted);letter-spacing:.8px;margin:18px 0 8px 4px}
-.menu-item{width:100%;text-align:left;padding:12px 16px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;margin-bottom:8px;font-weight:750;font-size:14px;transition:.2s}
+.menu-item{width:100%;text-align:left;padding:12px 16px;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:14px;margin-bottom:8px;font-weight:750;font-size:14px;transition:.2s}
 .menu-item:hover,.menu-item.active{border-color:var(--accent);background:var(--card2)}
 .menu-item span{opacity:.9}
+
 footer{text-align:center;color:var(--muted);font-size:11px;margin-top:42px}
 footer a{color:var(--muted);text-decoration:none;transition:.2s}
 footer a:hover{color:var(--accent)}
@@ -100,7 +118,11 @@ footer a:hover{color:var(--accent)}
 <div class="app">
 <header>
   <div class="logo" id="logoBtn">tempo<span>.</span></div>
-  <button class="menu-btn" id="openMenu" aria-label="Abrir menu">☰</button>
+  <div class="header-actions">
+    <button class="icon-btn" id="searchBtn" aria-label="Pesquisar (Ctrl+K)" title="Pesquisar (Ctrl+K)">🔍</button>
+    <button class="icon-btn" id="themeBtn" aria-label="Alternar Tema" title="Alternar Tema">☀️</button>
+    <button class="icon-btn" id="openMenu" aria-label="Abrir menu">☰</button>
+  </div>
 </header>
 
 <main>
@@ -111,53 +133,170 @@ footer a:hover{color:var(--accent)}
 </section>
 <section class="panel" id="tool"></section>
 </main>
-<footer>Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a></footer>
+<footer id="footerText">Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a></footer>
+</div>
+
+<!-- Command Palette Modal -->
+<div class="palette-overlay" id="paletteModal">
+  <div class="palette-box">
+    <input type="text" class="palette-input" id="paletteInput" placeholder="Digite para buscar uma ferramenta...">
+    <div class="palette-list" id="paletteList"></div>
+  </div>
 </div>
 
 <div class="drawer" id="drawer">
   <div class="drawer-card">
-    <div class="drawer-top"><strong>Utilitários</strong><button class="close" id="closeMenu" aria-label="Fechar menu">×</button></div>
+    <div class="drawer-top"><strong id="menuTitle">Utilitários</strong><button class="close" id="closeMenu" aria-label="Fechar menu">×</button></div>
     
-    <div class="menu-group">ESSENCIAIS</div>
-    <button class="menu-item active" data-tool="date">📅 &nbsp; Calculadora de Data</button>
-    <button class="menu-item" data-tool="time">⏰ &nbsp; Calculadora de Horas</button>
-    <button class="menu-item" data-tool="business">💼 &nbsp; Dias Úteis</button>
+    <div class="lang-selector">
+      <label for="langSelect" style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:6px;" id="langLabel">IDIOMA / LANGUAGE</label>
+      <select id="langSelect">
+        <option value="pt-BR">🇧🇷 Português (Brasil)</option>
+        <option value="pt-PT">🇵🇹 Português (Portugal)</option>
+        <option value="en-US">🇺🇸 English (US)</option>
+      </select>
+    </div>
+
+    <div class="menu-group" id="groupEssential">ESSENCIAIS</div>
+    <button class="menu-item active" data-tool="date">📅 &nbsp; <span data-i18n="tool_date">Calculadora de Data</span></button>
+    <button class="menu-item" data-tool="time">⏰ &nbsp; <span data-i18n="tool_time">Calculadora de Horas</span></button>
+    <button class="menu-item" data-tool="business">💼 &nbsp; <span data-i18n="tool_business">Dias Úteis</span></button>
+    <button class="menu-item" data-tool="worldclock">🌍 &nbsp; <span data-i18n="tool_worldclock">Fusos Horários (World Clock)</span></button>
     
-    <div class="menu-group">PESSOAL & VIDA</div>
-    <button class="menu-item" data-tool="age">🎂 &nbsp; Idade Exata</button>
-    <button class="menu-item" data-tool="pregnancy">👶 &nbsp; Gestação & Parto</button>
-    <button class="menu-item" data-tool="countdown">⏳ &nbsp; Contagem Regressiva</button>
+    <div class="menu-group" id="groupPersonal">PESSOAL & VIDA</div>
+    <button class="menu-item" data-tool="age">🎂 &nbsp; <span data-i18n="tool_age">Idade Exata</span></button>
+    <button class="menu-item" data-tool="pregnancy">👶 &nbsp; <span data-i18n="tool_pregnancy">Gestação & Parto</span></button>
+    <button class="menu-item" data-tool="countdown">⏳ &nbsp; <span data-i18n="tool_countdown">Contagem Regressiva</span></button>
     
-    <div class="menu-group">TRABALHISTAS (CLT)</div>
-    <button class="menu-item" data-tool="overtime">⏱️ &nbsp; Horas Extras (CLT)</button>
-    <button class="menu-item" data-tool="vacation13">🏖️ &nbsp; Férias & 13º Salário</button>
-    <button class="menu-item" data-tool="rescision">📄 &nbsp; Rescisão CLT (Acerto)</button>
+    <div class="menu-group" id="groupLabor">TRABALHISTAS (CLT)</div>
+    <button class="menu-item" data-tool="overtime">⏱️ &nbsp; <span data-i18n="tool_overtime">Horas Extras</span></button>
+    <button class="menu-item" data-tool="vacation13">🏖️ &nbsp; <span data-i18n="tool_vacation13">Férias & 13º Salário</span></button>
+    <button class="menu-item" data-tool="rescision">📄 &nbsp; <span data-i18n="tool_rescision">Rescisão (Acerto)</span></button>
     
-    <div class="menu-group">ESPORTE & PERFORMANCE</div>
-    <button class="menu-item" data-tool="running">🏃 &nbsp; Parciais de Corrida (Splits)</button>
+    <div class="menu-group" id="groupSport">ESPORTE & PERFORMANCE</div>
+    <button class="menu-item" data-tool="running">🏃 &nbsp; <span data-i18n="tool_running">Parciais de Corrida (Splits)</span></button>
   </div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const $ = s => document.querySelector(s);
-  const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle");
-  
-  const validTools = ['date', 'time', 'business', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
-  let activeTool = 'date';
-  
-  const toolMeta = {
-    date: { title: "Calculadora de Data", subtitle: "Descubra exatamente quanto tempo existe entre duas datas.", badge: "UTILITÁRIO DE TEMPO", page: "tempo. — Calculadora de Data" },
-    time: { title: "Calculadora de Horas", subtitle: "Calcule a diferença entre dois horários.", badge: "UTILITÁRIO DE TEMPO", page: "tempo. — Calculadora de Horas" },
-    business: { title: "Calculadora de Dias Úteis", subtitle: "Calcule prazos desconsiderando os finais de semana.", badge: "UTILITÁRIO DE TEMPO", page: "tempo. — Calculadora de Dias Úteis" },
-    age: { title: "Calculadora de Idade Exata", subtitle: "Descubra sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", page: "tempo. — Calculadora de Idade Exata" },
-    pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime a idade gestacional e a data provável do parto.", badge: "PESSOAL & VIDA", page: "tempo. — Calculadora de Gestação" },
-    countdown: { title: "Contagem Regressiva", subtitle: "Meça o tempo que falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", page: "tempo. — Contagem Regressiva" },
-    overtime: { title: "Horas Extras (CLT)", subtitle: "Estime o valor da sua hora e o acréscimo por horas extras trabalhadas.", badge: "UTILITÁRIO TRABALHISTA", page: "tempo. — Horas Extras CLT" },
-    vacation13: { title: "Férias & 13º Salário (CLT)", subtitle: "Estime os valores proporcionais seguindo as normas trabalhistas.", badge: "UTILITÁRIO TRABALHISTA", page: "tempo. — Férias e 13º Salário CLT" },
-    rescision: { title: "Rescisão CLT (Acerto)", subtitle: "Estime rapidamente os valores devidos em caso de encerramento de contrato.", badge: "UTILITÁRIO TRABALHISTA", page: "tempo. — Rescisão CLT" },
-    running: { title: "Parciais de Corrida (Splits)", subtitle: "Descubra o ritmo por quilômetro necessário para atingir sua meta de tempo.", badge: "ESPORTE & PERFORMANCE", page: "tempo. — Parciais de Corrida" }
+  const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport");
+
+  // --- INTERNACIONALIZAÇÃO (i18n) COM DIALETOS NATIVOS ---
+  const i18n = {
+    'pt-BR': {
+      page: "tempo. — Utilitários",
+      footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>',
+      menu: "Utilitários", langLabel: "IDIOMA / REGIÃO",
+      g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHISTAS (CLT)", g4: "ESPORTE & PERFORMANCE",
+      copyHint: "Clique no card para copiar", copied: "✓ Copiado!",
+      disclaimer: "* Valores estimados para fins orientativos. Consulte o RH ou um profissional contábil.",
+      tools: {
+        date: { title: "Calculadora de Data", subtitle: "Descubra exatamente quanto tempo existe entre duas datas.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Data" },
+        time: { title: "Calculadora de Horas", subtitle: "Calcule a diferença entre dois horários.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Horas" },
+        business: { title: "Calculadora de Dias Úteis", subtitle: "Calcule prazos desconsiderando os finais de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
+        worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte o horário em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
+        age: { title: "Calculadora de Idade Exata", subtitle: "Descubra sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" },
+        pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime a idade gestacional e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" },
+        countdown: { title: "Contagem Regressiva", subtitle: "Meça o tempo que falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Regressiva" },
+        overtime: { title: "Horas Extras (CLT)", subtitle: "Estime o valor da sua hora e o acréscimo por horas extras trabalhadas.", badge: "UTILITÁRIO TRABALHISTA", menuName: "Horas Extras" },
+        vacation13: { title: "Férias & 13º Salário", subtitle: "Estime os valores proporcionais seguindo as normas trabalhistas.", badge: "UTILITÁRIO TRABALHISTA", menuName: "Férias & 13º Salário" },
+        rescision: { title: "Rescisão Contratual (Acerto)", subtitle: "Estime rapidamente os valores devidos em caso de encerramento de contrato.", badge: "UTILITÁRIO TRABALHISTA", menuName: "Rescisão (Acerto)" },
+        running: { title: "Parciais de Corrida (Splits)", subtitle: "Descubra o ritmo por quilômetro necessário para atingir sua meta de tempo.", badge: "ESPORTE & PERFORMANCE", menuName: "Parciais de Corrida" }
+      }
+    },
+    'pt-PT': {
+      page: "tempo. — Utilitários",
+      footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>',
+      menu: "Utilitários", langLabel: "IDIOMA / REGIÃO",
+      g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHISTAS (CÓDIGO DO TRABALHO)", g4: "DESPORTO & PERFORMANCE",
+      copyHint: "Clique no cartão para copiar", copied: "✓ Cipiado!",
+      disclaimer: "* Valores estimados para fins orientativos. Consulte os Recursos Humanos ou um contabilista.",
+      tools: {
+        date: { title: "Calculadora de Datas", subtitle: "Descubra exatamente quanto tempo decorre entre duas datas.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Datas" },
+        time: { title: "Calculadora de Horas", subtitle: "Calcule a diferença entre dois horários.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Horas" },
+        business: { title: "Dias Úteis", subtitle: "Calcule prazos descontando os fins de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
+        worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte a hora em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
+        age: { title: "Idade Exata", subtitle: "Descubra a sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" },
+        pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime o tempo de gestação e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" },
+        countdown: { title: "Contagem Decrescente", subtitle: "Saiba quanto tempo falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Decrescente" },
+        overtime: { title: "Trabalho Suplementar (Horas Extras)", subtitle: "Estime o valor da sua hora e o acréscimo por trabalho suplementar.", badge: "UTILITÁRIO LABORAL", menuName: "Trabalho Suplementar" },
+        vacation13: { title: "Férias & Subsídio de Natal", subtitle: "Estime os valores proporcionais seguindo a legislação laboral.", badge: "UTILITÁRIO LABORAL", menuName: "Férias & Subsídios" },
+        rescision: { title: "Rescisão de Contrato (Acerto)", subtitle: "Estime rapidamente os valores devidos em caso de cessação do contrato.", badge: "UTILITÁRIO LABORAL", menuName: "Rescisão de Contrato" },
+        running: { title: "Ritmo de Corrida (Splits)", subtitle: "Descubra o ritmo por quilómetro necessário para atingir o seu objetivo.", badge: "DESPORTO & PERFORMANCE", menuName: "Ritmo de Corrida" }
+      }
+    },
+    'en-US': {
+      page: "tempo. — Utilities",
+      footer: 'Simple. Fast. Accurate. &nbsp;·&nbsp; <a href="privacidade.html">Privacy Policy</a>',
+      menu: "Utilities", langLabel: "LANGUAGE / REGION",
+      g1: "ESSENTIALS", g2: "PERSONAL & LIFE", g3: "LABOR & FINANCE", g4: "SPORTS & PERFORMANCE",
+      copyHint: "Click card to copy", copied: "✓ Copied!",
+      disclaimer: "* Estimated values for orientation purposes. Consult HR or a professional accountant.",
+      tools: {
+        date: { title: "Date Calculator", subtitle: "Find out exactly how much time exists between two dates.", badge: "TIME UTILITY", menuName: "Date Calculator" },
+        time: { title: "Time Calculator", subtitle: "Calculate the difference between two times.", badge: "TIME UTILITY", menuName: "Time Calculator" },
+        business: { title: "Business Days", subtitle: "Calculate deadlines excluding weekends.", badge: "TIME UTILITY", menuName: "Business Days" },
+        worldclock: { title: "World Clock & Timezones", subtitle: "Check real-time current time across major global financial hubs.", badge: "GLOBAL UTILITY", menuName: "World Clock" },
+        age: { title: "Exact Age Calculator", subtitle: "Discover your exact age in years, months, and days.", badge: "PERSONAL & LIFE", menuName: "Exact Age" },
+        pregnancy: { title: "Pregnancy Calculator", subtitle: "Estimate gestational age and expected delivery date.", badge: "PERSONAL & LIFE", menuName: "Pregnancy & Due Date" },
+        countdown: { title: "Countdown Timer", subtitle: "Measure time remaining for a major event or time elapsed.", badge: "PERSONAL & LIFE", menuName: "Countdown" },
+        overtime: { title: "Overtime Calculator", subtitle: "Estimate your hourly rate and overtime earnings.", badge: "LABOR & FINANCE", menuName: "Overtime Calculator" },
+        vacation13: { title: "Vacation & Bonus Pay", subtitle: "Estimate proportional payouts following labor guidelines.", badge: "LABOR & FINANCE", menuName: "Vacation & Bonus" },
+        rescision: { title: "Severance Calculator", subtitle: "Quickly estimate payouts upon employment contract termination.", badge: "LABOR & FINANCE", menuName: "Severance Estimate" },
+        running: { title: "Running Splits Calculator", subtitle: "Discover the per-kilometer pace needed to reach your target time.", badge: "SPORTS & PERFORMANCE", menuName: "Running Splits" }
+      }
+    }
   };
+
+  // Auto-detect language if not saved
+  let currentLang = 'pt-BR';
+  try {
+    const savedLang = localStorage.getItem('tempo_lang');
+    if (savedLang && i18n[savedLang]) {
+      currentLang = savedLang;
+    } else {
+      const navLang = navigator.language || navigator.userLanguage;
+      if (navLang.startsWith('pt')) {
+        currentLang = navLang.toLowerCase().includes('pt') && navLang.toLowerCase() !== 'pt-br' ? 'pt-PT' : 'pt-BR';
+      } else if (navLang.startsWith('en')) {
+        currentLang = 'en-US';
+      }
+    }
+  } catch(e) {}
+  langSelect.value = currentLang;
+
+  function t(key) {
+    return i18n[currentLang].tools[activeTool][key] || key;
+  }
+
+  // --- THEME MANAGEMENT ---
+  let currentTheme = 'dark';
+  try {
+    const savedTheme = localStorage.getItem('tempo_theme');
+    if (savedTheme) currentTheme = savedTheme;
+  } catch(e) {}
+
+  function applyTheme(theme) {
+    currentTheme = theme;
+    if (theme === 'light') {
+      document.documentElement.classList.add('light');
+      themeBtn.textContent = '🌙';
+    } else {
+      document.documentElement.classList.remove('light');
+      themeBtn.textContent = '☀️';
+    }
+    try { localStorage.setItem('tempo_theme', theme); } catch(e) {}
+  }
+  applyTheme(currentTheme);
+
+  themeBtn.addEventListener('click', () => {
+    applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+  });
+
+  const validTools = ['date', 'time', 'business', 'worldclock', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
+  let activeTool = 'date';
   
   try {
     const saved = localStorage.getItem('tempo_tool');
@@ -188,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function formatDate(d) {
-    return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    return d.toLocaleDateString(currentLang === 'en-US' ? 'en-US' : 'pt-BR', { day: "2-digit", month: "2-digit", year: "numeric" });
   }
 
   function calendarDifference(start, end) {
@@ -278,9 +417,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderDate() {
     tool.innerHTML = `
       <div class="tabs">
-        <button class="tab ${dateMode === "diff" ? "active" : ""}" data-mode="diff">Diferença</button>
-        <button class="tab ${dateMode === "add" ? "active" : ""}" data-mode="add">Adicionar</button>
-        <button class="tab ${dateMode === "sub" ? "active" : ""}" data-mode="sub">Subtrair</button>
+        <button class="tab ${dateMode === "diff" ? "active" : ""}" data-mode="diff">${currentLang === 'en-US' ? 'Difference' : 'Diferença'}</button>
+        <button class="tab ${dateMode === "add" ? "active" : ""}" data-mode="add">${currentLang === 'en-US' ? 'Add' : 'Adicionar'}</button>
+        <button class="tab ${dateMode === "sub" ? "active" : ""}" data-mode="sub">${currentLang === 'en-US' ? 'Subtract' : 'Subtrair'}</button>
       </div>
       <div id="dateArea"></div>`;
     renderDateArea();
@@ -291,8 +430,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dateMode === "diff") {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="date1">DATA INICIAL</label><input type="date" id="date1"></div>
-          <div class="field"><label for="date2">DATA FINAL</label><input type="date" id="date2"></div>
+          <div class="field"><label for="date1">${currentLang === 'en-US' ? 'START DATE' : 'DATA INICIAL'}</label><input type="date" id="date1"></div>
+          <div class="field"><label for="date2">${currentLang === 'en-US' ? 'END DATE' : 'DATA FINAL'}</label><input type="date" id="date2"></div>
         </div>
         <div class="result" id="result"></div>`;
         
@@ -301,10 +440,10 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const calculate = () => {
         const a = dateFromInput("#date1"), b = dateFromInput("#date2");
-        if(!a || !b) return showResult("Selecione as duas datas.", "", true);
+        if(!a || !b) return showResult(currentLang === 'en-US' ? 'Select both dates.' : 'Selecione as duas datas.', "", true);
         const x = calendarDifference(a, b);
-        const html = `<div class="big">${x.y} ${x.y===1?"ano":"anos"}, ${x.m} ${x.m===1?"mês":"meses"} e ${x.d} ${x.d===1?"dia":"dias"}</div><div class="small">Total: ${x.total.toLocaleString("pt-BR")} ${x.total===1?"dia":"dias"}</div>`;
-        const plainText = `Diferença entre datas: ${x.y} anos, ${x.m} meses e ${x.d} dias (Total de ${x.total} dias).`;
+        const html = `<div class="big">${x.y} ${x.y===1?(currentLang==='en-US'?'year':'ano'):(currentLang==='en-US'?'years':'anos')}, ${x.m} ${x.m===1?(currentLang==='en-US'?'month':'mês'):(currentLang==='en-US'?'months':'meses')} & ${x.d} ${x.d===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">Total: ${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div>`;
+        const plainText = `Diferença: ${x.y} anos, ${x.m} meses e ${x.d} dias (Total: ${x.total} dias).`;
         showResult(html, plainText);
       };
       
@@ -312,8 +451,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="baseDate">DATA</label><input type="date" id="baseDate"></div>
-          <div class="field"><label for="days">QUANTIDADE DE DIAS</label><input type="number" id="days" min="0" step="1" placeholder="Ex.: 45" value="30"></div>
+          <div class="field"><label for="baseDate">${currentLang === 'en-US' ? 'DATE' : 'DATA'}</label><input type="date" id="baseDate"></div>
+          <div class="field"><label for="days">${currentLang === 'en-US' ? 'NUMBER OF DAYS' : 'QUANTIDADE DE DIAS'}</label><input type="number" id="days" min="0" step="1" value="30"></div>
         </div>
         <div class="result" id="result"></div>`;
         
@@ -321,11 +460,11 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const calculate = () => {
         const base = dateFromInput("#baseDate"), n = Number($("#days").value);
-        if(!base || $("#days").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe uma data e uma quantidade válida de dias.", "", true);
+        if(!base || $("#days").value === "" || !Number.isInteger(n) || n < 0) return showResult(currentLang === 'en-US' ? 'Enter a valid date and number.' : 'Informe uma data e quantidade válida.', "", true);
         const d = new Date(base);
         d.setDate(d.getDate() + (dateMode === "add" ? n : -n));
-        const html = `<div class="big">${formatDate(d)}</div><div class="small">${dateMode==="add"?"Foram adicionados":"Foram subtraídos"} ${n.toLocaleString("pt-BR")} ${n===1?"dia":"dias"} de ${formatDate(base)}.</div>`;
-        const plainText = `Resultado: ${formatDate(d)} (${dateMode==="add"?"Adicionados":"Subtraídos"} ${n} dias de ${formatDate(base)}).`;
+        const html = `<div class="big">${formatDate(d)}</div><div class="small">${dateMode==="add"?(currentLang==='en-US'?'Added':'Adicionados'):(currentLang==='en-US'?'Subtracted':'Subtraídos')} ${n.toLocaleString(currentLang)} ${n===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}.</div>`;
+        const plainText = `Resultado: ${formatDate(d)}`;
         showResult(html, plainText);
       };
       
@@ -337,8 +476,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderTime() {
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="time1">HORÁRIO INICIAL</label><input type="time" id="time1"></div>
-        <div class="field"><label for="time2">HORÁRIO FINAL</label><input type="time" id="time2"></div>
+        <div class="field"><label for="time1">${currentLang === 'en-US' ? 'START TIME' : 'HORÁRIO INICIAL'}</label><input type="time" id="time1"></div>
+        <div class="field"><label for="time2">${currentLang === 'en-US' ? 'END TIME' : 'HORÁRIO FINAL'}</label><input type="time" id="time2"></div>
       </div>
       <div class="result" id="result"></div>`;
       
@@ -347,14 +486,13 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const calculate = () => {
       const a = $("#time1").value, b = $("#time2").value;
-      if(!a || !b) return showResult("Informe os dois horários.", "", true);
+      if(!a || !b) return showResult(currentLang === 'en-US' ? 'Provide both times.' : 'Informe os dois horários.', "", true);
       let [ah, am] = a.split(":").map(Number), [bh, bm] = b.split(":").map(Number);
       let start = ah * 60 + am, end = bh * 60 + bm;
       if(end < start) end += 1440;
       const total = end - start, h = Math.floor(total / 60), m = total % 60;
-      const html = `<div class="big">${h}h ${m.toString().padStart(2, "0")}min</div><div class="small">Total: ${total.toLocaleString("pt-BR")} minutos</div>`;
-      const plainText = `Diferença de horário: ${h}h ${m.toString().padStart(2, "0")}min (Total: ${total} minutos).`;
-      showResult(html, plainText);
+      const html = `<div class="big">${h}h ${m.toString().padStart(2, "0")}min</div><div class="small">Total: ${total.toLocaleString(currentLang)} ${currentLang==='en-US'?'minutes':'minutos'}</div>`;
+      showResult(html, `Diferença de horário: ${h}h ${m.toString().padStart(2, "0")}min`);
     };
     
     $("#time1").oninput = calculate; $("#time2").oninput = calculate; calculate();
@@ -363,9 +501,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderBusiness() {
     tool.innerHTML = `
       <div class="tabs">
-        <button class="tab ${businessMode === "diff" ? "active" : ""}" data-mode="diff">Diferença</button>
-        <button class="tab ${businessMode === "add" ? "active" : ""}" data-mode="add">Adicionar</button>
-        <button class="tab ${businessMode === "sub" ? "active" : ""}" data-mode="sub">Subtrair</button>
+        <button class="tab ${businessMode === "diff" ? "active" : ""}" data-mode="diff">${currentLang === 'en-US' ? 'Difference' : 'Diferença'}</button>
+        <button class="tab ${businessMode === "add" ? "active" : ""}" data-mode="add">${currentLang === 'en-US' ? 'Add' : 'Adicionar'}</button>
+        <button class="tab ${businessMode === "sub" ? "active" : ""}" data-mode="sub">${currentLang === 'en-US' ? 'Subtract' : 'Subtrair'}</button>
       </div>
       <div id="businessArea"></div>`;
     renderBusinessArea();
@@ -376,8 +514,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (businessMode === "diff") {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="bDate1">DATA INICIAL</label><input type="date" id="bDate1"></div>
-          <div class="field"><label for="bDate2">DATA FINAL</label><input type="date" id="bDate2"></div>
+          <div class="field"><label for="bDate1">${currentLang === 'en-US' ? 'START DATE' : 'DATA INICIAL'}</label><input type="date" id="bDate1"></div>
+          <div class="field"><label for="bDate2">${currentLang === 'en-US' ? 'END DATE' : 'DATA FINAL'}</label><input type="date" id="bDate2"></div>
         </div>
         <div class="result" id="result"></div>`;
         
@@ -387,19 +525,18 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const calculate = () => {
         const a = dateFromInput("#bDate1"), b = dateFromInput("#bDate2");
-        if(!a || !b) return showResult("Selecione as duas datas.", "", true);
+        if(!a || !b) return showResult(currentLang === 'en-US' ? 'Select both dates.' : 'Selecione as duas datas.', "", true);
         const total = businessDaysDifference(a, b);
-        const html = `<div class="big">${total.toLocaleString("pt-BR")} ${total===1?"dia útil":"dias úteis"}</div><div class="small">Intervalo desconsiderando sábados e domingos.</div>`;
-        const plainText = `Existem ${total} dias úteis entre ${formatDate(a)} e ${formatDate(b)}.`;
-        showResult(html, plainText);
+        const html = `<div class="big">${total.toLocaleString(currentLang)} ${total===1?(currentLang==='en-US'?'business day':'dia útil'):(currentLang==='en-US'?'business days':'dias úteis')}</div><div class="small">${currentLang==='en-US'?'Excluding weekends.':'Intervalo sem finais de semana.'}</div>`;
+        showResult(html, `${total} dias úteis.`);
       };
       
       $("#bDate1").oninput = calculate; $("#bDate2").oninput = calculate; calculate();
     } else {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="bBaseDate">DATA</label><input type="date" id="bBaseDate"></div>
-          <div class="field"><label for="bDays">DIAS ÚTEIS</label><input type="number" id="bDays" min="0" step="1" placeholder="Ex.: 10" value="10"></div>
+          <div class="field"><label for="bBaseDate">${currentLang === 'en-US' ? 'DATE' : 'DATA'}</label><input type="date" id="bBaseDate"></div>
+          <div class="field"><label for="bDays">${currentLang === 'en-US' ? 'BUSINESS DAYS' : 'DIAS ÚTEIS'}</label><input type="number" id="bDays" min="0" step="1" value="10"></div>
         </div>
         <div class="result" id="result"></div>`;
         
@@ -407,11 +544,10 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const calculate = () => {
         const base = dateFromInput("#bBaseDate"), n = Number($("#bDays").value);
-        if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe uma data e quantidade.", "", true);
+        if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult(currentLang === 'en-US' ? 'Provide date and days.' : 'Informe data e quantidade.', "", true);
         const d = addBusinessDays(base, n, businessMode === "add");
-        const html = `<div class="big">${formatDate(d)}</div><div class="small">${businessMode==="add"?"Data após adicionar":"Data após subtrair"} ${n.toLocaleString("pt-BR")} ${n===1?"dia útil":"dias úteis"}.</div>`;
-        const plainText = `Resultado: ${formatDate(d)} (${businessMode==="add"?"Adicionados":"Subtraídos"} ${n} dias úteis de ${formatDate(base)}).`;
-        showResult(html, plainText);
+        const html = `<div class="big">${formatDate(d)}</div><div class="small">Resultado (${n} dias úteis).</div>`;
+        showResult(html, `Resultado: ${formatDate(d)}`);
       };
       
       $("#bBaseDate").oninput = calculate; $("#bDays").oninput = calculate; calculate();
@@ -419,11 +555,46 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".tab").forEach(b => b.onclick = () => { businessMode = b.dataset.mode; renderBusiness(); });
   }
 
+  // --- NOVA FERRAMENTA: WORLD CLOCK & TIME ZONES ---
+  function renderWorldClock() {
+    tool.innerHTML = `
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;" id="worldClockGrid"></div>
+      <div class="result show" style="display:block">
+        <div class="small" style="font-weight:700; margin-bottom:4px;">${currentLang === 'en-US' ? 'Current Local Timezone:' : 'Seu Fuso Horário Local:'}</div>
+        <div class="big" id="localTzBox" style="font-size:18px;">--</div>
+      </div>`;
+    
+    const zones = [
+      { city: 'Brasília', tz: 'America/Sao_Paulo' },
+      { city: 'Lisboa', tz: 'Europe/Lisbon' },
+      { city: 'New York', tz: 'America/New_York' },
+      { city: 'London', tz: 'Europe/London' },
+      { city: 'Tokyo', tz: 'Asia/Tokyo' }
+    ];
+
+    const grid = $("#worldClockGrid");
+    $("#localTzBox").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    function updateClocks() {
+      grid.innerHTML = zones.map(z => {
+        const timeStr = new Intl.DateTimeFormat('en-GB', { timeZone: z.tz, hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date());
+        const dateStr = new Intl.DateTimeFormat(currentLang, { timeZone: z.tz, weekday: 'short', day: 'numeric', month: 'short' }).format(new Date());
+        return `<div style="background:var(--bg); border:1px solid var(--line); border-radius:14px; padding:14px; text-align:center;">
+          <div style="font-size:11px; font-weight:750; color:var(--muted); margin-bottom:4px;">${z.city}</div>
+          <div style="font-size:22px; font-weight:900; letter-spacing:-.5px;">${timeStr}</div>
+          <div style="font-size:11px; color:var(--muted); margin-top:2px;">${dateStr}</div>
+        </div>`;
+      }).join('');
+    }
+    updateClocks();
+    window._wcInterval = setInterval(updateClocks, 1000);
+  }
+
   function renderAge() {
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="birthDate">DATA DE NASCIMENTO</label><input type="date" id="birthDate"></div>
-        <div class="field"><label for="refDate">DATA DE REFERÊNCIA (HOJE)</label><input type="date" id="refDate"></div>
+        <div class="field"><label for="birthDate">${currentLang === 'en-US' ? 'DATE OF BIRTH' : 'DATA DE NASCIMENTO'}</label><input type="date" id="birthDate"></div>
+        <div class="field"><label for="refDate">${currentLang === 'en-US' ? 'REFERENCE DATE' : 'DATA DE REFERÊNCIA'}</label><input type="date" id="refDate"></div>
       </div>
       <div class="result" id="result"></div>`;
       
@@ -432,21 +603,19 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const calculate = () => {
       const birth = dateFromInput("#birthDate"), ref = dateFromInput("#refDate");
-      if(!birth || !ref) return showResult("Selecione as datas corretamente.", "", true);
-      if(birth > ref) return showResult("A data de nascimento não pode ser futura.", "", true);
+      if(!birth || !ref) return showResult(currentLang === 'en-US' ? 'Select dates.' : 'Selecione as datas.', "", true);
+      if(birth > ref) return showResult(currentLang === 'en-US' ? 'Birth date cannot be future.' : 'Data futura inválida.', "", true);
       const x = calendarDifference(birth, ref);
-      const html = `<div class="big">${x.y} anos, ${x.m} meses e ${x.d} dias</div><div class="small">Total aproximado de ${x.total.toLocaleString("pt-BR")} dias vividos.</div>`;
-      const plainText = `Idade: ${x.y} anos, ${x.m} meses e ${x.d} dias (Aprox. ${x.total} dias vividos).`;
-      showResult(html, plainText);
+      const html = `<div class="big">${x.y} ${currentLang==='en-US'?'years':'anos'}, ${x.m} ${currentLang==='en-US'?'months':'meses'} & ${x.d} ${currentLang==='en-US'?'days':'dias'}</div><div class="small">Total: ~${x.total.toLocaleString(currentLang)} dias.</div>`;
+      showResult(html, `Idade: ${x.y} anos, ${x.m} meses e ${x.d} dias.`);
     };
-    
     $("#birthDate").oninput = calculate; $("#refDate").oninput = calculate; calculate();
   }
 
   function renderPregnancy() {
     tool.innerHTML = `
       <div class="grid" style="grid-template-columns:1fr">
-        <div class="field"><label for="dumDate">DATA DA ÚLTIMA MENSTRUAÇÃO (DUM)</label><input type="date" id="dumDate"></div>
+        <div class="field"><label for="dumDate">${currentLang === 'en-US' ? 'LAST MENSTRUAL PERIOD (LMP)' : 'DATA DA ÚLTIMA MENSTRUAÇÃO (DUM)'}</label><input type="date" id="dumDate"></div>
       </div>
       <div class="result" id="result"></div>`;
       
@@ -455,28 +624,26 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const calculate = () => {
       const dum = dateFromInput("#dumDate");
-      if(!dum) return showResult("Informe a data da última menstruação.", "", true);
+      if(!dum) return showResult(currentLang === 'en-US' ? 'Provide LMP.' : 'Informe a DUM.', "", true);
       const today = new Date(); today.setHours(0, 0, 0, 0);
-      if(dum > today) return showResult("A DUM não pode ser uma data futura.", "", true);
+      if(dum > today) return showResult(currentLang === 'en-US' ? 'LMP cannot be future.' : 'DUM futura inválida.', "", true);
       
       const diffDays = Math.floor((today - dum) / 86400000);
       const weeks = Math.floor(diffDays / 7);
       const days = diffDays % 7;
       const dueDate = new Date(dum); dueDate.setDate(dueDate.getDate() + 280); 
       
-      const html = `<div class="big">${weeks} semanas e ${days} dias</div><div class="small">Previsão do parto: <strong>${formatDate(dueDate)}</strong> (40 semanas).</div>`;
-      const plainText = `Gestação: ${weeks} semanas e ${days} dias. Previsão do parto: ${formatDate(dueDate)}.`;
-      showResult(html, plainText);
+      const html = `<div class="big">${weeks} ${currentLang==='en-US'?'weeks':'semanas'} & ${days} ${currentLang==='en-US'?'days':'dias'}</div><div class="small">${currentLang==='en-US'?'Due date:':'Previsão do parto:'} <strong>${formatDate(dueDate)}</strong></div>`;
+      showResult(html, `Gestação: ${weeks} semanas e ${days} dias. Parto: ${formatDate(dueDate)}`);
     };
-    
     $("#dumDate").oninput = calculate; calculate();
   }
 
   function renderCountdown() {
     tool.innerHTML = `
       <div class="tabs">
-        <button class="tab ${countMode === "down" ? "active" : ""}" data-mode="down">Contagem Regressiva</button>
-        <button class="tab ${countMode === "passed" ? "active" : ""}" data-mode="passed">Tempo Passado</button>
+        <button class="tab ${countMode === "down" ? "active" : ""}" data-mode="down">${currentLang === 'en-US' ? 'Countdown' : 'Contagem Regressiva'}</button>
+        <button class="tab ${countMode === "passed" ? "active" : ""}" data-mode="passed">${currentLang === 'en-US' ? 'Time Elapsed' : 'Tempo Passado'}</button>
       </div>
       <div id="countArea"></div>`;
     renderCountArea();
@@ -486,8 +653,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const area = $("#countArea");
     area.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="evName">NOME DO EVENTO / MARCO</label><input type="text" id="evName" placeholder="Ex.: Férias, Aniversário..." value="Férias"></div>
-        <div class="field"><label for="evDate">DATA</label><input type="date" id="evDate"></div>
+        <div class="field"><label for="evName">${currentLang === 'en-US' ? 'EVENT NAME' : 'NOME DO EVENTO'}</label><input type="text" id="evName" value="Férias"></div>
+        <div class="field"><label for="evDate">${currentLang === 'en-US' ? 'DATE' : 'DATA'}</label><input type="date" id="evDate"></div>
       </div>
       <div class="result" id="result"></div>`;
       
@@ -497,49 +664,37 @@ document.addEventListener("DOMContentLoaded", () => {
     const calculate = () => {
       const name = $("#evName").value || "Evento";
       const evDate = dateFromInput("#evDate");
-      if(!evDate) return showResult("Selecione uma data válida.", "", true);
+      if(!evDate) return showResult(currentLang === 'en-US' ? 'Select valid date.' : 'Selecione data válida.', "", true);
       
       const today = new Date(); today.setHours(0,0,0,0);
       const x = calendarDifference(today, evDate);
       
       if (countMode === "down") {
-        if (today > evDate) {
-          showResult(`A data escolhida já passou!`, "", true);
-          return;
-        }
-        const html = `<div class="big">${x.total.toLocaleString("pt-BR")} ${x.total===1?"dia":"dias"}</div><div class="small">Faltam ${x.y} anos, ${x.m} meses e ${x.d} dias para ${name}.</div>`;
-        const plainText = `Faltam ${x.total} dias (${x.y} anos, ${x.m} meses e ${x.d} dias) para ${name}!`;
-        showResult(html, plainText);
+        if (today > evDate) return showResult(currentLang === 'en-US' ? 'Date has passed!' : 'Data já passou!', "", true);
+        const html = `<div class="big">${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">${currentLang==='en-US'?'Remaining for':'Faltam'} ${name}.</div>`;
+        showResult(html, `Faltam ${x.total} dias para ${name}!`);
       } else {
-        if (today < evDate) {
-          showResult(`A data escolhida é futura!`, "", true);
-          return;
-        }
-        const html = `<div class="big">${x.total.toLocaleString("pt-BR")} ${x.total===1?"dia":"dias"}</div><div class="small">Já se passaram ${x.y} anos, ${x.m} meses e ${x.d} dias desde ${name}.</div>`;
-        const plainText = `Já se passaram ${x.total} dias (${x.y} anos, ${x.m} meses e ${x.d} dias) desde ${name}!`;
-        showResult(html, plainText);
+        if (today < evDate) return showResult(currentLang === 'en-US' ? 'Date is future!' : 'Data futura!', "", true);
+        const html = `<div class="big">${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">${currentLang==='en-US'?'Passed since':'Passados desde'} ${name}.</div>`;
+        showResult(html, `Já se passaram ${x.total} dias desde ${name}.`);
       }
     };
-    
-    $("#evName").oninput = calculate;
-    $("#evDate").oninput = calculate;
-    calculate();
-    
+    $("#evName").oninput = calculate; $("#evDate").oninput = calculate; calculate();
     document.querySelectorAll(".tab").forEach(b => b.onclick = () => { countMode = b.dataset.mode; renderCountdown(); });
   }
 
   function renderOvertime() {
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="sal">SALÁRIO MENSAL (R$)</label><input type="number" id="sal" step="0.01" min="0" value="1621"></div>
-        <div class="field"><label for="jor">JORNADA MENSAL (HORAS)</label><input type="number" id="jor" value="220" min="1" step="1"></div>
+        <div class="field"><label for="sal">${currentLang === 'en-US' ? 'MONTHLY SALARY' : 'SALÁRIO MENSAL'} (R$)</label><input type="number" id="sal" step="0.01" min="0" value="1621"></div>
+        <div class="field"><label for="jor">${currentLang === 'en-US' ? 'MONTHLY HOURS' : 'JORNADA MENSAL (HORAS)'}</label><input type="number" id="jor" value="220" min="1"></div>
       </div>
       <div class="grid" style="margin-top:14px">
-        <div class="field"><label for="qtd">QTD. DE HORAS EXTRAS</label><input type="number" id="qtd" step="0.5" min="0" value="10"></div>
-        <div class="field"><label for="rate">ACRÉSCIMO LEGAL (CLT)</label>
+        <div class="field"><label for="qtd">${currentLang === 'en-US' ? 'OVERTIME HOURS' : 'QTD. HORAS EXTRAS'}</label><input type="number" id="qtd" step="0.5" min="0" value="10"></div>
+        <div class="field"><label for="rate">${currentLang === 'en-US' ? 'PREMIUM RATE' : 'ACRÉSCIMO LEGAL'}</label>
           <select id="rate">
-            <option value="50">50% (Dias normais / úteis)</option>
-            <option value="100">100% (Domingos e feriados)</option>
+            <option value="50">50% (Normal / Weekday)</option>
+            <option value="100">100% (Sunday / Holiday)</option>
           </select>
         </div>
       </div>
@@ -547,30 +702,24 @@ document.addEventListener("DOMContentLoaded", () => {
       
     const calculate = () => {
       const sal = Number($("#sal").value), jor = Number($("#jor").value), qtd = Number($("#qtd").value), rate = Number($("#rate").value);
-      if(!sal || sal<=0 || !jor || jor<=0 || isNaN(qtd) || qtd<0) return showResult("Informe valores válidos para o cálculo.", "", true);
+      if(!sal || sal<=0 || !jor || jor<=0 || isNaN(qtd) || qtd<0) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
       
-      const valorHora = sal / jor;
-      const valorHoraExtra = valorHora * (1 + rate / 100);
-      const total = valorHoraExtra * qtd;
-      
+      const vHora = sal / jor, vExtra = vHora * (1 + rate / 100), total = vExtra * qtd;
       const html = `
-        <div class="big">R$ ${total.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
-        <div class="small">Valor da hora normal: R$ ${valorHora.toFixed(2)}<br>Valor da hora extra (${rate}%): R$ ${valorHoraExtra.toFixed(2)}</div>
-        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">* Valores estimados para fins orientativos. Consulte o RH ou um profissional contábil.</div>
+        <div class="big">R$ ${total.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+        <div class="small">Normal: R$ ${vHora.toFixed(2)} | Extra (${rate}%): R$ ${vExtra.toFixed(2)}</div>
+        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>
       `;
-      const plainText = `Total de Horas Extras (${qtd}h a ${rate}%): R$ ${total.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}. Base salarial: R$ ${sal}.`;
-      showResult(html, plainText);
+      showResult(html, `Total Horas Extras: R$ ${total.toFixed(2)}`);
     };
-    
-    $("#sal").oninput = calculate; $("#jor").oninput = calculate; $("#qtd").oninput = calculate; $("#rate").onchange = calculate;
-    calculate();
+    $("#sal").oninput = calculate; $("#jor").oninput = calculate; $("#qtd").oninput = calculate; $("#rate").onchange = calculate; calculate();
   }
 
   function renderVacation13() {
     tool.innerHTML = `
       <div class="tabs">
         <button class="tab ${vacationMode === "13" ? "active" : ""}" data-mode="13">13º Salário</button>
-        <button class="tab ${vacationMode === "vacation" ? "active" : ""}" data-mode="vacation">Férias + 1/3</button>
+        <button class="tab ${vacationMode === "vacation" ? "active" : ""}" data-mode="vacation">${currentLang === 'en-US' ? 'Vacation + 1/3' : 'Férias + 1/3'}</button>
       </div>
       <div id="vArea"></div>`;
     renderVArea();
@@ -581,50 +730,42 @@ document.addEventListener("DOMContentLoaded", () => {
     if(vacationMode === "13"){
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="vSal">SALÁRIO BRUTO (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="1621"></div>
-          <div class="field"><label for="vMeses">MESES TRABALHADOS NO ANO (1 a 12)</label><input type="number" id="vMeses" min="1" max="12" value="12"></div>
+          <div class="field"><label for="vSal">${currentLang === 'en-US' ? 'GROSS SALARY' : 'SALÁRIO BRUTO'} (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="1621"></div>
+          <div class="field"><label for="vMeses">${currentLang === 'en-US' ? 'MONTHS WORKED (1-12)' : 'MESES TRABALHADOS (1 a 12)'}</label><input type="number" id="vMeses" min="1" max="12" value="12"></div>
         </div>
         <div class="result" id="result"></div>`;
         
       const calculate = () => {
         const sal = Number($("#vSal").value), meses = Number($("#vMeses").value);
-        if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult("Informe valores válidos.", "", true);
-        
+        if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
         const val = (sal / 12) * meses;
         const html = `
-          <div class="big">R$ ${val.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
-          <div class="small">Proporcional a ${meses} ${meses===1?"mês trabalhado":"meses trabalhados"}.</div>
-          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">* Valores estimados para fins orientativos. Consulte o RH ou um profissional contábil.</div>
+          <div class="big">R$ ${val.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+          <div class="small">${currentLang==='en-US'?'Proportional to':'Proporcional a'} ${meses} ${meses===1?'mês':'meses'}.</div>
+          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>
         `;
-        const plainText = `13º Salário Proporcional (${meses} meses, base R$ ${sal}): R$ ${val.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}.`;
-        showResult(html, plainText);
+        showResult(html, `13º Proporcional: R$ ${val.toFixed(2)}`);
       };
-      
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
     } else {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="vSal">SALÁRIO BRUTO (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="1621"></div>
-          <div class="field"><label for="vMeses">MESES NO PERÍODO (1 a 12)</label><input type="number" id="vMeses" min="1" max="12" value="12"></div>
+          <div class="field"><label for="vSal">${currentLang === 'en-US' ? 'GROSS SALARY' : 'SALÁRIO BRUTO'} (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="1621"></div>
+          <div class="field"><label for="vMeses">${currentLang === 'en-US' ? 'PERIOD MONTHS (1-12)' : 'MESES NO PERÍODO (1 a 12)'}</label><input type="number" id="vMeses" min="1" max="12" value="12"></div>
         </div>
         <div class="result" id="result"></div>`;
         
       const calculate = () => {
         const sal = Number($("#vSal").value), meses = Number($("#vMeses").value);
-        if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult("Informe valores válidos.", "", true);
-        
-        const base = (sal / 12) * meses;
-        const terço = base / 3;
-        const total = base + terço;
+        if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
+        const base = (sal / 12) * meses, terço = base / 3, total = base + terço;
         const html = `
-          <div class="big">R$ ${total.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
-          <div class="small">Férias proporcionais: R$ ${base.toFixed(2)}<br>Terço constitucional (1/3): R$ ${terço.toFixed(2)}</div>
-          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">* Valores estimados para fins orientativos. Consulte o RH ou um profissional contábil.</div>
+          <div class="big">R$ ${total.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+          <div class="small">${currentLang==='en-US'?'Vacation:':'Férias:'} R$ ${base.toFixed(2)} | 1/3: R$ ${terço.toFixed(2)}</div>
+          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>
         `;
-        const plainText = `Férias Proporcionais + 1/3 (${meses} meses, base R$ ${sal}): R$ ${total.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}.`;
-        showResult(html, plainText);
+        showResult(html, `Férias + 1/3: R$ ${total.toFixed(2)}`);
       };
-      
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
     }
     document.querySelectorAll(".tab").forEach(b => b.onclick = () => { vacationMode = b.dataset.mode; renderVacation13(); });
@@ -633,18 +774,18 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderRescision() {
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="rSal">SALÁRIO BRUTO (R$)</label><input type="number" id="rSal" step="0.01" min="0" value="2500"></div>
-        <div class="field"><label for="rReason">MOTIVO DA SAÍDA</label>
+        <div class="field"><label for="rSal">${currentLang === 'en-US' ? 'GROSS SALARY' : 'SALÁRIO BRUTO'} (R$)</label><input type="number" id="rSal" step="0.01" min="0" value="2500"></div>
+        <div class="field"><label for="rReason">${currentLang === 'en-US' ? 'TERMINATION REASON' : 'MOTIVO DA SAÍDA'}</label>
           <select id="rReason">
-            <option value="sem_justa">Dispensa sem justa causa</option>
-            <option value="pedido">Pedido de demissão</option>
-            <option value="acordo">Acordo comum (Art. 484-A)</option>
+            <option value="sem_justa">${currentLang === 'en-US' ? 'Without cause' : 'Dispensa sem justa causa'}</option>
+            <option value="pedido">${currentLang === 'en-US' ? 'Resignation' : 'Pedido de demissão'}</option>
+            <option value="acordo">${currentLang === 'en-US' ? 'Mutual agreement' : 'Acordo comum'}</option>
           </select>
         </div>
       </div>
       <div class="grid" style="margin-top:14px">
-        <div class="field"><label for="rAdm">DATA DE ADMISSÃO</label><input type="date" id="rAdm"></div>
-        <div class="field"><label for="rTerm">DATA DE DEMISSÃO</label><input type="date" id="rTerm"></div>
+        <div class="field"><label for="rAdm">${currentLang === 'en-US' ? 'HIRE DATE' : 'DATA DE ADMISSÃO'}</label><input type="date" id="rAdm"></div>
+        <div class="field"><label for="rTerm">${currentLang === 'en-US' ? 'TERMINATION DATE' : 'DATA DE DEMISSÃO'}</label><input type="date" id="rTerm"></div>
       </div>
       <div class="result" id="result"></div>`;
       
@@ -654,115 +795,128 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#rTerm").value = getLocalISODate(today);
     
     const calculate = () => {
-      const sal = Number($("#rSal").value);
-      const reason = $("#rReason").value;
-      const dAdm = dateFromInput("#rAdm");
-      const dTerm = dateFromInput("#rTerm");
+      const sal = Number($("#rSal").value), reason = $("#rReason").value, dAdm = dateFromInput("#rAdm"), dTerm = dateFromInput("#rTerm");
+      if(!sal || sal<=0 || !dAdm || !dTerm) return showResult(currentLang === 'en-US' ? 'Fill all fields.' : 'Preencha todos os campos.', "", true);
+      if(dAdm > dTerm) return showResult(currentLang === 'en-US' ? 'Hire date cannot be after termination.' : 'Admissão posterior à demissão.', "", true);
       
-      if(!sal || sal<=0 || !dAdm || !dTerm) return showResult("Preencha todos os campos corretamente.", "", true);
-      if(dAdm > dTerm) return showResult("A data de admissão não pode ser posterior à demissão.", "", true);
-      
-      const timeDiff = calendarDifference(dAdm, dTerm);
-      const totalMonthsWorked = timeDiff.y * 12 + timeDiff.m;
-      
-      const termDay = dTerm.getDate();
-      const saldoSalario = (sal / 30) * termDay;
-      
-      const monthsCurrentYear = dTerm.getMonth() + 1;
-      const decimoTerceiro = (sal / 12) * monthsCurrentYear;
-      
-      const feriasBase = (sal / 12) * (totalMonthsWorked % 12 || 12);
-      const feriasTotal = feriasBase + (feriasBase / 3);
+      const timeDiff = calendarDifference(dAdm, dTerm), totalMonths = timeDiff.y * 12 + timeDiff.m;
+      const saldoSalario = (sal / 30) * dTerm.getDate();
+      const decimoTerceiro = (sal / 12) * (dTerm.getMonth() + 1);
+      const feriasBase = (sal / 12) * (totalMonths % 12 || 12), feriasTotal = feriasBase + (feriasBase / 3);
       
       let avisoPrevio = 0;
-      if (reason === "sem_justa") {
-        const extraDays = Math.min(timeDiff.y * 3, 60);
-        const totalAvisoDays = 30 + extraDays;
-        avisoPrevio = (sal / 30) * totalAvisoDays;
-      } else if (reason === "acordo") {
-        const extraDays = Math.min(timeDiff.y * 3, 60);
-        const totalAvisoDays = 30 + extraDays;
-        avisoPrevio = ((sal / 30) * totalAvisoDays) / 2;
-      }
+      if (reason === "sem_justa") avisoPrevio = (sal / 30) * (30 + Math.min(timeDiff.y * 3, 60));
+      else if (reason === "acordo") avisoPrevio = ((sal / 30) * (30 + Math.min(timeDiff.y * 3, 60))) / 2;
       
-      const totalEstimatedFGTS = (sal * 0.08) * totalMonthsWorked;
-      let multaFgts = 0;
-      if (reason === "sem_justa") {
-        multaFgts = totalEstimatedFGTS * 0.40;
-      } else if (reason === "acordo") {
-        multaFgts = totalEstimatedFGTS * 0.20;
-      }
-      
+      let multaFgts = reason === "sem_justa" ? ((sal * 0.08) * totalMonths) * 0.40 : (reason === "acordo" ? ((sal * 0.08) * totalMonths) * 0.20 : 0);
       const totalRescisao = saldoSalario + decimoTerceiro + feriasTotal + avisoPrevio + multaFgts;
       
       const html = `
-        <div class="big">R$ ${totalRescisao.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+        <div class="big">R$ ${totalRescisao.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
         <div class="small" style="margin-top:8px; line-height:1.6;">
-          Saldo de Salário: R$ ${saldoSalario.toFixed(2)}<br>
+          Saldo: R$ ${saldoSalario.toFixed(2)}<br>
           ${reason !== 'pedido' ? `Aviso Prévio: R$ ${avisoPrevio.toFixed(2)}<br>` : ''}
-          13º Proporcional: R$ ${decimoTerceiro.toFixed(2)}<br>
-          Férias + 1/3: R$ ${feriasTotal.toFixed(2)}<br>
-          ${multaFgts > 0 ? `Multa FGTS: R$ ${multaFgts.toFixed(2)}` : ''}
+          13º: R$ ${decimoTerceiro.toFixed(2)} | Férias: R$ ${feriasTotal.toFixed(2)}
         </div>
-        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">* Valores estimados para fins orientativos. Consulte o RH ou um profissional contábil.</div>
+        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>
       `;
-      const plainText = `Estimativa de Rescisão CLT (${reason}): R$ ${totalRescisao.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}. Saldo: R$ ${saldoSalario.toFixed(2)}, 13º: R$ ${decimoTerceiro.toFixed(2)}, Férias: R$ ${feriasTotal.toFixed(2)}.`;
-      showResult(html, plainText);
+      showResult(html, `Rescisão estimada: R$ ${totalRescisao.toFixed(2)}`);
     };
-    
-    $("#rSal").oninput = calculate;
-    $("#rReason").onchange = calculate;
-    $("#rAdm").oninput = calculate;
-    $("#rTerm").oninput = calculate;
-    calculate();
+    $("#rSal").oninput = calculate; $("#rReason").onchange = calculate; $("#rAdm").oninput = calculate; $("#rTerm").oninput = calculate; calculate();
   }
 
   function renderRunning() {
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="runDist">DISTÂNCIA DA PROVA / TREINO (KM)</label><input type="number" id="runDist" step="0.5" min="1" value="10"></div>
-        <div class="field"><label for="runTime">TEMPO TOTAL DESEJADO (MINUTOS)</label><input type="number" id="runTime" min="1" step="1" value="50"></div>
+        <div class="field"><label for="runDist">${currentLang === 'en-US' ? 'DISTANCE (KM)' : 'DISTÂNCIA (KM)'}</label><input type="number" id="runDist" step="0.5" min="1" value="10"></div>
+        <div class="field"><label for="runTime">${currentLang === 'en-US' ? 'TARGET TIME (MINUTES)' : 'TEMPO DESEJADO (MINUTOS)'}</label><input type="number" id="runTime" min="1" value="50"></div>
       </div>
       <div class="result" id="result"></div>`;
       
     const calculate = () => {
-      const dist = Number($("#runDist").value);
-      const totalMin = Number($("#runTime").value);
+      const dist = Number($("#runDist").value), totalMin = Number($("#runTime").value);
+      if(!dist || dist <= 0 || !totalMin || totalMin <= 0) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
       
-      if(!dist || dist <= 0 || !totalMin || totalMin <= 0) return showResult("Informe valores válidos.", "", true);
-      
-      const paceMinDecimal = totalMin / dist;
-      const paceMin = Math.floor(paceMinDecimal);
-      const paceSec = Math.round((paceMinDecimal - paceMin) * 60);
-      const paceFormatted = `${paceMin}:${paceSec < 10 ? '0' : ''}${paceSec}`;
-      
-      const speedKmh = (dist / (totalMin / 60)).toFixed(1);
+      const paceDec = totalMin / dist, paceMin = Math.floor(paceDec), paceSec = Math.round((paceDec - paceMin) * 60);
+      const paceFormatted = `${paceMin}:${paceSec < 10 ? '0' : ''}${paceSec}`, speed = (dist / (totalMin / 60)).toFixed(1);
       
       const html = `
         <div class="big">${paceFormatted} <span style="font-size:16px; font-weight:normal; color:var(--muted);">min/km</span></div>
-        <div class="small" style="margin-top:8px;">
-          Velocidade média na esteira/rua: <strong>${speedKmh} km/h</strong><br>
-          Para correr ${dist} km em ${totalMin} minutos.
-        </div>
+        <div class="small" style="margin-top:8px;">${currentLang==='en-US'?'Average Speed:':'Velocidade Média:'} <strong>${speed} km/h</strong></div>
       `;
-      const plainText = `Parcial de Corrida: ${paceFormatted} min/km (${speedKmh} km/h) para ${dist} km em ${totalMin} minutos.`;
-      showResult(html, plainText);
+      showResult(html, `Ritmo: ${paceFormatted} min/km (${speed} km/h)`);
     };
-    
-    $("#runDist").oninput = calculate;
-    $("#runTime").oninput = calculate;
-    calculate();
+    $("#runDist").oninput = calculate; $("#runTime").oninput = calculate; calculate();
   }
 
-  // --- CONTROLE DO MENU ---
+  // --- COMMAND PALETTE (CTRL+K) ---
+  function openPalette() {
+    paletteModal.classList.add("open");
+    paletteInput.value = "";
+    renderPaletteList("");
+    setTimeout(() => paletteInput.focus(), 50);
+  }
+  function closePalette() { paletteModal.classList.remove("open"); }
+
+  function renderPaletteList(query) {
+    const list = Object.keys(i18n[currentLang].tools).map(key => ({
+      key, name: i18n[currentLang].tools[key].menuName, badge: i18n[currentLang].tools[key].badge
+    })).filter(x => x.name.toLowerCase().includes(query.toLowerCase()));
+
+    paletteList.innerHTML = list.map((item, idx) => `
+      <button class="palette-item ${idx===0?'selected':''}" data-tool="${item.key}">
+        <span>${item.name}</span>
+        <span style="font-size:11px; color:var(--muted); font-weight:600; border:1px solid var(--line); padding:2px 6px; border-radius:6px;">${item.badge}</span>
+      </button>
+    `).join('');
+
+    paletteList.querySelectorAll('.palette-item').forEach(btn => {
+      btn.onclick = () => {
+        loadTool(btn.dataset.tool);
+        closePalette();
+      };
+    });
+  }
+
+  paletteInput.oninput = (e) => renderPaletteList(e.target.value);
+  searchBtn.onclick = openPalette;
+  paletteModal.onclick = (e) => { if(e.target === paletteModal) closePalette(); };
+
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (paletteModal.classList.contains('open')) closePalette();
+      else openPalette();
+    }
+    if (e.key === 'Escape') closePalette();
+  });
+
+  // --- INTERFACE & MENU UPDATES ---
+  function updateStaticTexts() {
+    footerText.innerHTML = i18n[currentLang].footer;
+    menuTitle.textContent = i18n[currentLang].menu;
+    langLabel.textContent = i18n[currentLang].langLabel;
+    groupEssential.textContent = i18n[currentLang].g1;
+    groupPersonal.textContent = i18n[currentLang].g2;
+    groupLabor.textContent = i18n[currentLang].g3;
+    groupSport.textContent = i18n[currentLang].g4;
+
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const k = el.getAttribute("data-i18n");
+      const toolKey = k.replace("tool_", "");
+      if (i18n[currentLang].tools[toolKey]) {
+        el.textContent = i18n[currentLang].tools[toolKey].menuName;
+      }
+    });
+  }
 
   function loadTool(t) {
+    if (window._wcInterval) clearInterval(window._wcInterval);
     activeTool = t;
     saveTool(t); 
     
-    const meta = toolMeta[t] || toolMeta['date'];
-    
-    pageTitle.textContent = meta.page;
+    const meta = i18n[currentLang].tools[t] || i18n[currentLang].tools['date'];
+    pageTitle.textContent = "tempo. — " + meta.title;
     titleEl.textContent = meta.title;
     subtitleEl.textContent = meta.subtitle;
     toolBadge.textContent = meta.badge;
@@ -774,6 +928,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (t === "date") renderDate();
     else if (t === "time") renderTime();
     else if (t === "business") renderBusiness();
+    else if (t === "worldclock") renderWorldClock();
     else if (t === "age") renderAge();
     else if (t === "pregnancy") renderPregnancy();
     else if (t === "countdown") renderCountdown();
@@ -783,24 +938,17 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (t === "running") renderRunning();
   }
 
-  logoBtn.addEventListener('click', () => {
-    drawer.classList.remove("open");
-    loadTool('date');
-  });
+  langSelect.onchange = (e) => {
+    currentLang = e.target.value;
+    try { localStorage.setItem('tempo_lang', currentLang); } catch(err) {}
+    updateStaticTexts();
+    loadTool(activeTool);
+  };
 
-  openMenuBtn.addEventListener('click', () => {
-    drawer.classList.add("open");
-  });
-
-  closeMenuBtn.addEventListener('click', () => {
-    drawer.classList.remove("open");
-  });
-
-  drawer.addEventListener('click', (e) => {
-    if (e.target === drawer) {
-      drawer.classList.remove("open");
-    }
-  });
+  logoBtn.addEventListener('click', () => { drawer.classList.remove("open"); loadTool('date'); });
+  openMenuBtn.addEventListener('click', () => drawer.classList.add("open"));
+  closeMenuBtn.addEventListener('click', () => drawer.classList.remove("open"));
+  drawer.addEventListener('click', (e) => { if (e.target === drawer) drawer.classList.remove("open"); });
 
   document.querySelectorAll(".menu-item").forEach(item => {
     item.addEventListener('click', () => {
@@ -809,6 +957,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  updateStaticTexts();
   loadTool(activeTool);
 });
 </script>
