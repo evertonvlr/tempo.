@@ -57,7 +57,7 @@ h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bot
 .tab.active{background:var(--card2);color:var(--text);box-shadow:0 3px 12px rgba(0,0,0,.15)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .field label{display:block;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.5px;margin:0 0 8px 3px}
-input,select{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:14px;outline:none;transition:.2s;color-scheme:dark}
+input,select{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:12px 14px;outline:none;transition:.2s}
 input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.12)}
 select{cursor:pointer}
 .result{margin-top:20px;padding:21px;border:1px solid var(--line);background:var(--bg);border-radius:16px;text-align:center;display:none;transition:border-color 0.2s}
@@ -694,13 +694,12 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="small" style="margin-top:8px; line-height:1.6;">
           Saldo de Salário: R$ ${saldoSalario.toFixed(2)}<br>
           ${reason !== 'pedido' ? `Aviso Prévio: R$ ${avisoPrevio.toFixed(2)}<br>` : ''}
-          13º Proporcional: R$ ${decimoTerceioru = decimoTerceiro.toFixed(2)}<br>
+          13º Proporcional: R$ ${decimoTerceiro.toFixed(2)}<br>
           Férias + 1/3: R$ ${feriasTotal.toFixed(2)}<br>
           ${multaFgts > 0 ? `Multa FGTS: R$ ${multaFgts.toFixed(2)}` : ''}
         </div>
         <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">* Valores estimados para fins orientativos. Consulte o RH ou um profissional contábil.</div>
       `;
-      // Correction for decimoTerceiro typo if any
       const plainText = `Estimativa de Rescisão CLT (${reason}): R$ ${totalRescisao.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}. Saldo: R$ ${saldoSalario.toFixed(2)}, 13º: R$ ${decimoTerceiro.toFixed(2)}, Férias: R$ ${feriasTotal.toFixed(2)}.`;
       showResult(html, plainText);
     };
