@@ -49,7 +49,8 @@ header{height:76px;display:flex;align-items:center;justify-content:space-between
 .logo span{color:var(--accent)}
 
 .header-actions{display:flex;gap:10px;align-items:center}
-.icon-btn{width:45px;height:45px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);font-size:18px;display:grid;place-items:center;transition:transform .15s ease, background .2s, border-color .2s;outline:none}
+.icon-btn{width:45px;height:45px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);display:grid;place-items:center;transition:transform .15s ease, background .2s, border-color .2s;outline:none}
+.icon-btn svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none}
 .icon-btn:hover{transform:scale(1.04);background:var(--card2);border-color:var(--accent)}
 .icon-btn:active{transform:scale(0.95)}
 
@@ -88,7 +89,7 @@ select{cursor:pointer}
 .palette-overlay.open .palette-box{transform:translateY(0)}
 .palette-input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);padding:14px;border-radius:12px;font-size:15px;outline:none;margin-bottom:12px}
 .palette-list{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
-.palette-item{padding:12px 14px;border-radius:10px;background:transparent;border:0;color:var(--text);text-align:left;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:between;transition:.15s}
+.palette-item{padding:12px 14px;border-radius:10px;background:transparent;border:0;color:var(--text);text-align:left;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:.15s}
 .palette-item:hover, .palette-item.selected{background:var(--card2);color:var(--accent)}
 
 /* Drawer Menu */
@@ -119,9 +120,16 @@ footer a:hover{color:var(--accent)}
 <header>
   <div class="logo" id="logoBtn">tempo<span>.</span></div>
   <div class="header-actions">
-    <button class="icon-btn" id="searchBtn" aria-label="Pesquisar (Ctrl+K)" title="Pesquisar (Ctrl+K)">🔍</button>
-    <button class="icon-btn" id="themeBtn" aria-label="Alternar Tema" title="Alternar Tema">☀️</button>
-    <button class="icon-btn" id="openMenu" aria-label="Abrir menu">☰</button>
+    <!-- Ícone de Lupa (Pesquisa) Moderno -->
+    <button class="icon-btn" id="searchBtn" aria-label="Pesquisar (Ctrl+K)" title="Pesquisar (Ctrl+K)">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    </button>
+    <!-- Botão de Tema (O SVG injeta via JS) -->
+    <button class="icon-btn" id="themeBtn" aria-label="Alternar Tema" title="Alternar Tema"></button>
+    <!-- Ícone de Menu (Hambúrguer) Moderno -->
+    <button class="icon-btn" id="openMenu" aria-label="Abrir menu">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
   </div>
 </header>
 
@@ -250,7 +258,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Auto-detect language if not saved
   let currentLang = 'pt-BR';
   try {
     const savedLang = localStorage.getItem('tempo_lang');
@@ -267,25 +274,24 @@ document.addEventListener("DOMContentLoaded", () => {
   } catch(e) {}
   langSelect.value = currentLang;
 
-  function t(key) {
-    return i18n[currentLang].tools[activeTool][key] || key;
-  }
-
-  // --- THEME MANAGEMENT ---
+  // --- THEME MANAGEMENT COM SVGS VETORIAIS ---
   let currentTheme = 'dark';
   try {
     const savedTheme = localStorage.getItem('tempo_theme');
     if (savedTheme) currentTheme = savedTheme;
   } catch(e) {}
 
+  const sunSvg = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+  const moonSvg = `<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
   function applyTheme(theme) {
     currentTheme = theme;
     if (theme === 'light') {
       document.documentElement.classList.add('light');
-      themeBtn.textContent = '🌙';
+      themeBtn.innerHTML = moonSvg; // Ícone de lua para trocar para o escuro
     } else {
       document.documentElement.classList.remove('light');
-      themeBtn.textContent = '☀️';
+      themeBtn.innerHTML = sunSvg; // Ícone de sol para trocar para o claro
     }
     try { localStorage.setItem('tempo_theme', theme); } catch(e) {}
   }
@@ -555,7 +561,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".tab").forEach(b => b.onclick = () => { businessMode = b.dataset.mode; renderBusiness(); });
   }
 
-  // --- NOVA FERRAMENTA: WORLD CLOCK & TIME ZONES ---
   function renderWorldClock() {
     tool.innerHTML = `
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;" id="worldClockGrid"></div>
