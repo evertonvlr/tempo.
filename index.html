@@ -42,9 +42,12 @@ select{cursor:pointer}
 .result.has-copy:hover::after{opacity:1;color:var(--accent)}
 .result.has-copy.copied{border-color:#4ade80}
 .result.has-copy.copied::after{content:'✓ Copiado!';color:#4ade80;opacity:1}
+
 .drawer{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:.25s;z-index:20}
+.drawer.open{opacity:1;pointer-events:auto}
 .drawer-card{position:absolute;right:0;top:0;height:100%;width:min(350px,89vw);background:#10141c;border-left:1px solid var(--line);padding:22px;transform:translateX(100%);transition:.3s cubic-bezier(.2,.8,.2,1);overflow-y:auto}
 .drawer.open .drawer-card{transform:translateX(0)}
+
 .drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;font-size:18px}
 .close{border:0;background:var(--card);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:21px}
 .menu-item{width:100%;text-align:left;padding:14px 16px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;margin-bottom:10px;font-weight:750;font-size:14px;transition:.2s}
@@ -412,7 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const html = `<div class="big">${weeks} semanas e ${days} dias</div><div class="small">Previsão do parto: <strong>${formatDate(dueDate)}</strong> (40 semanas).</div>`;
       const plainText = `Gestação: ${weeks} semanas e ${days} dias. Previsão do parto: ${formatDate(dueDate)}.`;
-      showResult(html, plainText);
+      showResult(html, plainTest);
     };
     
     $("#dumDate").oninput = calculate; calculate();
@@ -514,7 +517,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".tab").forEach(b => b.onclick = () => { vacationMode = b.dataset.mode; renderVacation13(); });
   }
 
-  // --- CONTROLE DO MENU BLINDADO COM ADDEventListener ---
+  // --- CONTROLE DO MENU ---
 
   function loadTool(t) {
     activeTool = t;
@@ -533,7 +536,6 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (t === "vacation13") renderVacation13();
   }
 
-  // Substituição por addEventListener seguro para mobile e desktop
   openMenuBtn.addEventListener('click', () => {
     drawer.classList.add("open");
   });
