@@ -51,15 +51,21 @@ header{height:76px;display:flex;align-items:center;justify-content:space-between
 .badge{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:7px 12px;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.8px;margin-bottom:17px}
 h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bottom:15px}
 .hero p{color:var(--muted);font-size:15px;line-height:1.6}
-.panel{width:min(100%,760px);margin:auto;background:rgba(19,23,32,.94);border:1px solid var(--line);border-radius:24px;padding:23px;box-shadow:0 25px 80px rgba(0,0,0,.25)}
+.panel{width:min(100%,760px);margin:auto;background:rgba(19,23,32,.94);border:1px solid var(--line);border-radius:24px;padding:23px;box-shadow:0 25px 80px rgba(0,0,0,.25);overflow:hidden}
+
 .tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:14px;margin-bottom:23px}
 .tab{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 8px;border-radius:10px;font-weight:750;font-size:13px;transition:.2s}
 .tab.active{background:var(--card2);color:var(--text);box-shadow:0 3px 12px rgba(0,0,0,.15)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* Correção crítica para Safari/iOS: minmax(0, 1fr) impede que inputs estourem o grid */
+.grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:14px}
+.field{min-width:0}
 .field label{display:block;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.5px;margin:0 0 8px 3px}
-input,select{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:12px 14px;outline:none;transition:.2s}
+
+input,select{width:100%;max-width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:12px 14px;outline:none;transition:.2s}
 input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.12)}
 select{cursor:pointer}
+
 .result{margin-top:20px;padding:21px;border:1px solid var(--line);background:var(--bg);border-radius:16px;text-align:center;display:none;transition:border-color 0.2s}
 .result.show{display:block;animation:up .25s ease-out}
 .result .big{font-size:clamp(22px,4.5vw,30px);font-weight:900;letter-spacing:-1px}
