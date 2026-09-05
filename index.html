@@ -13,7 +13,11 @@ body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",san
 button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer}
 .app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
 header{height:76px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:21px;font-weight:850;letter-spacing:-.7px}.logo span{color:var(--accent)}
+
+/* Logo com comportamento interativo de botão Home */
+.logo{font-size:21px;font-weight:850;letter-spacing:-.7px;cursor:pointer;user-select:none;transition:opacity .2s}
+.logo:hover{opacity:0.75}
+.logo span{color:var(--accent)}
 
 .menu-btn{width:45px;height:45px;border:1px solid var(--line);border-radius:14px;background:rgba(19,23,32,.9);color:var(--text);font-size:23px;display:grid;place-items:center;transition:transform .15s ease, background .2s;outline:none}
 .menu-btn:hover{transform:scale(1.04);background:var(--card2)}
@@ -64,7 +68,7 @@ footer a:hover{color:var(--accent)}
 <body>
 <div class="app">
 <header>
-  <div class="logo">tempo<span>.</span></div>
+  <div class="logo" id="logoBtn">tempo<span>.</span></div>
   <button class="menu-btn" id="openMenu" aria-label="Abrir menu">☰</button>
 </header>
 
@@ -106,7 +110,7 @@ footer a:hover{color:var(--accent)}
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const $ = s => document.querySelector(s);
-  const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu");
+  const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn");
   
   const validTools = ['date', 'time', 'business', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
   let activeTool = 'date';
@@ -607,7 +611,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="result" id="result"></div>`;
       
     const today = new Date();
-    const adm = new Date(); adm.setFullYear(adm.getFullYear() - 2); // 2 anos atrás como exemplo
+    const adm = new Date(); adm.setFullYear(adm.getFullYear() - 2);
     $("#rAdm").value = getLocalISODate(adm);
     $("#rTerm").value = getLocalISODate(today);
     
@@ -623,19 +627,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const timeDiff = calendarDifference(dAdm, dTerm);
       const totalMonthsWorked = timeDiff.y * 12 + timeDiff.m;
       
-      // Saldo de salário (dias trabalhados no mês da demissão)
       const termDay = dTerm.getDate();
       const saldoSalario = (sal / 30) * termDay;
       
-      // 13º proporcional do ano corrente
       const monthsCurrentYear = dTerm.getMonth() + 1;
       const decimoTerceiro = (sal / 12) * monthsCurrentYear;
       
-      // Férias proporcionais + 1/3 (assumindo período aquisitivo proporcional aos meses desde a última férias, simplificado aqui para o ano ou total)
       const feriasBase = (sal / 12) * (totalMonthsWorked % 12 || 12);
       const feriasTotal = feriasBase + (feriasBase / 3);
       
-      // Aviso prévio (30 dias + 3 dias por ano completo, max 90 dias, apenas para sem justa causa ou acordo)
       let avisoPrevio = 0;
       if (reason === "sem_justa") {
         const extraDays = Math.min(timeDiff.y * 3, 60);
@@ -644,10 +644,9 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (reason === "acordo") {
         const extraDays = Math.min(timeDiff.y * 3, 60);
         const totalAvisoDays = 30 + extraDays;
-        avisoPrevio = ((sal / 30) * totalAvisoDays) / 2; // 50% de indenização no acordo
+        avisoPrevio = ((sal / 30) * totalAvisoDays) / 2;
       }
       
-      // Multa FGTS (Estimativa baseada em 8% ao mês depositado)
       const totalEstimatedFGTS = (sal * 0.08) * totalMonthsWorked;
       let multaFgts = 0;
       if (reason === "sem_justa") {
@@ -739,6 +738,12 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (t === "rescision") renderRescision();
     else if (t === "running") renderRunning();
   }
+
+  // Ação do Botão Home no Logo
+  logoBtn.addEventListener('click', () => {
+    drawer.classList.remove("open");
+    loadTool('date');
+  });
 
   openMenuBtn.addEventListener('click', () => {
     drawer.classList.add("open");
