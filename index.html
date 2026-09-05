@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0b0d12">
 <meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT e esporte. Sem anúncios e direto ao ponto.">
 <meta property="og:title" content="tempo. — Utilitários">
@@ -63,11 +63,14 @@ h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bot
 .tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:14px;margin-bottom:23px;border:1px solid var(--line)}
 .tab{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 8px;border-radius:10px;font-weight:750;font-size:13px;transition:.2s}
 .tab.active{background:var(--card2);color:var(--text);box-shadow:0 3px 12px rgba(0,0,0,.1)}
+
+/* Grid blindado contra estouro no WebKit/iOS */
 .grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:14px}
 .field{min-width:0}
 .field label{display:block;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.5px;margin:0 0 8px 3px}
 
-input,select{width:100%;max-width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:12px 14px;outline:none;transition:.2s}
+/* Correção crítica anti-zoom do Safari no iPhone (font-size >= 16px) */
+input,select{width:100%;max-width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:12px 14px;outline:none;transition:.2s;font-size:16px;-webkit-appearance:none}
 input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.12)}
 select{cursor:pointer}
 
@@ -87,7 +90,7 @@ select{cursor:pointer}
 .palette-overlay.open{opacity:1;pointer-events:auto}
 .palette-box{width:min(100%, 520px);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 25px 60px rgba(0,0,0,.3);transform:translateY(-10px);transition:.2s}
 .palette-overlay.open .palette-box{transform:translateY(0)}
-.palette-input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);padding:14px;border-radius:12px;font-size:15px;outline:none;margin-bottom:12px}
+.palette-input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);padding:14px;border-radius:12px;font-size:16px;outline:none;margin-bottom:12px}
 .palette-list{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
 .palette-item{padding:12px 14px;border-radius:10px;background:transparent;border:0;color:var(--text);text-align:left;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:.15s}
 .palette-item:hover, .palette-item.selected{background:var(--card2);color:var(--accent)}
@@ -101,7 +104,7 @@ select{cursor:pointer}
 .drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-size:18px}
 .close{border:0;background:var(--card2);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:21px}
 .lang-selector{margin-bottom:20px}
-.lang-selector select{padding:10px;font-size:13px;font-weight:700}
+.lang-selector select{padding:10px;font-size:16px;font-weight:700}
 .menu-group{font-size:11px;font-weight:750;color:var(--muted);letter-spacing:.8px;margin:18px 0 8px 4px}
 .menu-item{width:100%;text-align:left;padding:12px 16px;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:14px;margin-bottom:8px;font-weight:750;font-size:14px;transition:.2s}
 .menu-item:hover,.menu-item.active{border-color:var(--accent);background:var(--card2)}
@@ -120,13 +123,10 @@ footer a:hover{color:var(--accent)}
 <header>
   <div class="logo" id="logoBtn">tempo<span>.</span></div>
   <div class="header-actions">
-    <!-- Ícone de Lupa (Pesquisa) Moderno -->
     <button class="icon-btn" id="searchBtn" aria-label="Pesquisar (Ctrl+K)" title="Pesquisar (Ctrl+K)">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
-    <!-- Botão de Tema (O SVG injeta via JS) -->
     <button class="icon-btn" id="themeBtn" aria-label="Alternar Tema" title="Alternar Tema"></button>
-    <!-- Ícone de Menu (Hambúrguer) Moderno -->
     <button class="icon-btn" id="openMenu" aria-label="Abrir menu">
       <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </button>
@@ -191,7 +191,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const $ = s => document.querySelector(s);
   const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport");
 
-  // --- INTERNACIONALIZAÇÃO (i18n) COM DIALETOS NATIVOS ---
   const i18n = {
     'pt-BR': {
       page: "tempo. — Utilitários",
@@ -274,7 +273,6 @@ document.addEventListener("DOMContentLoaded", () => {
   } catch(e) {}
   langSelect.value = currentLang;
 
-  // --- THEME MANAGEMENT COM SVGS VETORIAIS ---
   let currentTheme = 'dark';
   try {
     const savedTheme = localStorage.getItem('tempo_theme');
@@ -288,10 +286,10 @@ document.addEventListener("DOMContentLoaded", () => {
     currentTheme = theme;
     if (theme === 'light') {
       document.documentElement.classList.add('light');
-      themeBtn.innerHTML = moonSvg; // Ícone de lua para trocar para o escuro
+      themeBtn.innerHTML = moonSvg;
     } else {
       document.documentElement.classList.remove('light');
-      themeBtn.innerHTML = sunSvg; // Ícone de sol para trocar para o claro
+      themeBtn.innerHTML = sunSvg;
     }
     try { localStorage.setItem('tempo_theme', theme); } catch(e) {}
   }
@@ -417,8 +415,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
-
-  // --- RENDERIZADORES DE FERRAMENTAS ---
 
   function renderDate() {
     tool.innerHTML = `
@@ -854,7 +850,6 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#runDist").oninput = calculate; $("#runTime").oninput = calculate; calculate();
   }
 
-  // --- COMMAND PALETTE (CTRL+K) ---
   function openPalette() {
     paletteModal.classList.add("open");
     paletteInput.value = "";
@@ -896,7 +891,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === 'Escape') closePalette();
   });
 
-  // --- INTERFACE & MENU UPDATES ---
   function updateStaticTexts() {
     footerText.innerHTML = i18n[currentLang].footer;
     menuTitle.textContent = i18n[currentLang].menu;
