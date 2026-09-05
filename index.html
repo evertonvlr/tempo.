@@ -99,8 +99,12 @@ function clearLifeTimer(){
 
 function showResult(html,error=false){
   clearLifeTimer();
-  const r=$("#result");r.innerHTML=html;r.classList.add("show");
-  if(error) r.classList.add("error"); else r.classList.remove("error");
+  const r=$("#result");
+  if(r){
+    r.innerHTML=html;
+    r.classList.add("show");
+    if(error) r.classList.add("error"); else r.classList.remove("error");
+  }
 }
 function dateFromInput(id){
   const v=$(id).value;
@@ -110,7 +114,11 @@ function formatDate(d){
   return d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
 }
 function calendarDifference(start,end){
-  if(start>end)[start,end]=[end,start];
+  if(start>end){
+    let temp=start;
+    start=end;
+    end=temp;
+  }
   let y=end.getFullYear()-start.getFullYear();
   let m=end.getMonth()-start.getMonth();
   let d=end.getDate()-start.getDate();
@@ -124,7 +132,11 @@ function calendarDifference(start,end){
   return {y,m,d,total};
 }
 function businessDaysDifference(start,end){
-  if(start>end)[start,end]=[end,start];
+  if(start>end){
+    let temp=start;
+    start=end;
+    end=temp;
+  }
   let count=0;
   let cur=new Date(start);
   while(cur<=end){
@@ -363,6 +375,4 @@ function renderLifesClock(){
   $("#subtitle").textContent="Acompanhe sua idade exata atualizando segundo a segundo em tempo real.";
   tool.innerHTML=`
     <div class="grid" style="grid-template-columns:1fr">
-      <div class="field"><label>DATA E HORA DE NASCIMENTO</label><input type="datetime-local" id="birthDateTime"></div>
-</div>
-  
+      <div class="field"><label>DATA E HORA DE
