@@ -14,9 +14,10 @@ button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{
 .app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
 header{height:76px;display:flex;align-items:center;justify-content:space-between}
 
-/* Logo com comportamento interativo de botão Home */
-.logo{font-size:21px;font-weight:850;letter-spacing:-.7px;cursor:pointer;user-select:none;transition:opacity .2s}
+/* Logo corrigido e otimizado contra o retângulo de toque indesejado */
+.logo{font-size:21px;font-weight:850;letter-spacing:-.7px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:opacity .2s, transform .15s ease}
 .logo:hover{opacity:0.75}
+.logo:active{transform:scale(0.97)}
 .logo span{color:var(--accent)}
 
 .menu-btn{width:45px;height:45px;border:1px solid var(--line);border-radius:14px;background:rgba(19,23,32,.9);color:var(--text);font-size:23px;display:grid;place-items:center;transition:transform .15s ease, background .2s;outline:none}
