@@ -8,6 +8,26 @@
 <meta property="og:title" content="tempo. — Utilitários">
 <meta property="og:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT e esporte.">
 <meta property="og:type" content="website">
+
+<!-- PWA & Mobile Meta Tags -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="tempo.">
+<link rel="manifest" href="manifest.json">
+
+<!-- Schema.org Structured Data (WebApplication) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "tempo.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "description": "Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT e esporte."
+}
+</script>
+
 <title id="pageTitle">tempo. — Utilitários</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230b0d12%22/><text x=%2250%22 y=%2270%22 font-size=%2260%22 font-weight=%22900%22 font-family=%22system-ui, sans-serif%22 fill=%22%23f7f8fb%22 text-anchor=%22middle%22>t<tspan fill=%22%237c5cff%22>.</tspan></text></svg>">
 <style>
@@ -735,7 +755,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const meta = toolMeta[t] || toolMeta['date'];
     
-    // Atualização dinâmica do SEO e da interface
     pageTitle.textContent = meta.page;
     titleEl.textContent = meta.title;
     subtitleEl.textContent = meta.subtitle;
