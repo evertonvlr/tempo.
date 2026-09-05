@@ -10,12 +10,16 @@
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0b0d12;--card:#131720;--card2:#1a202b;--text:#f7f8fb;--muted:#9199a8;--line:#29313e;--accent:#7c5cff;--danger:#ff6574}
 body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% -20%,#171326 0,#0b0d12 45%);color:var(--text);min-height:100vh}
-button,input,select{font:inherit}button{cursor:pointer}
+button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer}
 .app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
 header{height:76px;display:flex;align-items:center;justify-content:space-between}
 .logo{font-size:21px;font-weight:850;letter-spacing:-.7px}.logo span{color:var(--accent)}
-.menu-btn{width:45px;height:45px;border:1px solid var(--line);border-radius:14px;background:rgba(19,23,32,.9);color:var(--text);font-size:23px;display:grid;place-items:center;transition:.2s}
+
+/* Correção definitiva do botão de menu e remoção do quadrado indesejado */
+.menu-btn{width:45px;height:45px;border:1px solid var(--line);border-radius:14px;background:rgba(19,23,32,.9);color:var(--text);font-size:23px;display:grid;place-items:center;transition:transform .15s ease, background .2s;outline:none}
 .menu-btn:hover{transform:scale(1.04);background:var(--card2)}
+.menu-btn:active{transform:scale(0.95);background:var(--card2)}
+
 .hero{text-align:center;padding:48px 0 27px}
 .badge{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:7px 12px;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.8px;margin-bottom:17px}
 h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bottom:15px}
@@ -447,7 +451,6 @@ document.addEventListener("DOMContentLoaded", () => {
     calculate();
   }
 
-  // CORREÇÃO APLICADA AQUI: Chama renderVacation13() em vez de renderVArea()
   function renderVacation13() {
     $("#title").textContent = "Férias & 13º Salário (CLT)";
     $("#subtitle").textContent = "Estime os valores proporcionais seguindo as normas trabalhistas.";
@@ -505,11 +508,10 @@ document.addEventListener("DOMContentLoaded", () => {
       
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
     }
-    // Agora chama renderVacation13() para atualizar o destaque da aba corretamente
     document.querySelectorAll(".tab").forEach(b => b.onclick = () => { vacationMode = b.dataset.mode; renderVacation13(); });
   }
 
-  // --- CONTROLE DE MENU ---
+  // --- CONTROLE DE MENU BLINDADO ---
 
   function loadTool(t) {
     activeTool = t;
@@ -528,14 +530,14 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (t === "vacation13") renderVacation13();
   }
 
-  openMenuBtn.onclick = () => { drawer.classList.add("open"); closeMenuBtn.focus(); };
-  closeMenuBtn.onclick = () => { drawer.classList.remove("open"); openMenuBtn.focus(); };
-  drawer.onclick = (e) => { if (e.target === drawer) { drawer.classList.remove("open"); openMenuBtn.focus(); } };
+  // Eventos de clique do menu simplificados e 100% funcionais no mobile
+  openMenuBtn.onclick = () => { drawer.classList.add("open"); };
+  closeMenuBtn.onclick = () => { drawer.classList.remove("open"); };
+  drawer.onclick = (e) => { if (e.target === drawer) { drawer.classList.remove("open"); } };
 
   document.querySelectorAll(".menu-item").forEach(item => {
     item.onclick = () => {
       drawer.classList.remove("open");
-      openMenuBtn.focus();
       loadTool(item.dataset.tool);
     };
   });
