@@ -14,7 +14,6 @@ button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{
 .app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
 header{height:76px;display:flex;align-items:center;justify-content:space-between}
 
-/* Logo corrigido e otimizado contra o retângulo de toque indesejado */
 .logo{font-size:21px;font-weight:850;letter-spacing:-.7px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:opacity .2s, transform .15s ease}
 .logo:hover{opacity:0.75}
 .logo:active{transform:scale(0.97)}
@@ -75,7 +74,7 @@ footer a:hover{color:var(--accent)}
 
 <main>
 <section class="hero">
-  <div class="badge" id="toolBadge">UTILITÁRIOS DE TEMPO</div>
+  <div class="badge" id="toolBadge">UTILITÁRIO DE TEMPO</div>
   <h1 id="title">Calculadora de Data</h1>
   <p id="subtitle">Descubra exatamente quanto tempo existe entre duas datas.</p>
 </section>
@@ -111,10 +110,24 @@ footer a:hover{color:var(--accent)}
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const $ = s => document.querySelector(s);
-  const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn");
+  const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge");
   
   const validTools = ['date', 'time', 'business', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
   let activeTool = 'date';
+  
+  // Mapeamento dinâmico do selo (badge) de cada ferramenta
+  const toolBadges = {
+    date: "UTILITÁRIO DE TEMPO",
+    time: "UTILITÁRIO DE TEMPO",
+    business: "UTILITÁRIO DE TEMPO",
+    age: "PESSOAL & VIDA",
+    pregnancy: "PESSOAL & VIDA",
+    countdown: "PESSOAL & VIDA",
+    overtime: "UTILITÁRIO TRABALHISTA",
+    vacation13: "UTILITÁRIO TRABALHISTA",
+    rescision: "UTILITÁRIO TRABALHISTA",
+    running: "ESPORTE & PERFORMANCE"
+  };
   
   try {
     const saved = localStorage.getItem('tempo_tool');
@@ -724,6 +737,9 @@ document.addEventListener("DOMContentLoaded", () => {
     activeTool = t;
     saveTool(t); 
     
+    // Atualiza dinâmico o selo (badge) acima do título com base na categoria
+    toolBadge.textContent = toolBadges[t] || "UTILITÁRIO DE TEMPO";
+    
     document.querySelectorAll(".menu-item").forEach(x => x.classList.remove("active"));
     const activeItem = document.querySelector(`.menu-item[data-tool="${t}"]`);
     if (activeItem) activeItem.classList.add("active");
@@ -740,7 +756,6 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (t === "running") renderRunning();
   }
 
-  // Ação do Botão Home no Logo
   logoBtn.addEventListener('click', () => {
     drawer.classList.remove("open");
     loadTool('date');
