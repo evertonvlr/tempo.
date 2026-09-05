@@ -380,3 +380,94 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#title").textContent = "Calculadora de Idade Exata";
     $("#subtitle").textContent = "Descubra sua idade em anos, meses e dias.";
     tool.innerHTML = `
+    <div class="grid">
+        <div class="field"><label>DATA DE NASCIMENTO</label><input type="date" id="birthDate"></div>
+        <div class="field"><label>DATA DE REFERÊNCIA</label><input type="date" id="refDate"></div>
+      </div>
+      <div class="result" id="result"></div>`;
+      
+    $("#birthDate").value = getVal('birth', '2000-01-01');
+    $("#refDate").value = getVal('ref', getLocalISODate());
+    
+    const calculate = () => {
+      const bv = $("#birthDate").value, rv = $("#refDate").value;
+      setURLParams({ birth: bv, ref: rv });
+      const birth = dateFromInput("#birthDate"), ref = dateFromInput("#refDate");
+      if(!birth || !ref) return showResult("Selecione as datas corretamente.", "", true);
+      if(birth > ref) return showResult("A data de nascimento não pode ser futura.", "", true);
+      const x = calendarDifference(birth, ref);
+      const html = `<div class="big">${x.y} anos, ${x.m} meses e ${x.d} dias</div><div class="small">Total aproximado de ${x.total.toLocaleString("pt-BR")} dias vividos.</div>`;
+      const plainText = `Idade Exata: ${x.y} anos, ${x.m} meses e ${x.d} dias (Aproximadamente ${x.total} dias vividos). Calculado em tempo.`;
+      showResult(html, plainText);
+    };
+    
+    $("#birthDate").oninput = calculate; $("#refDate").oninput = calculate; calculate();
+  }
+
+  function renderPregnancy() {
+    $("#title").textContent = "Calculadora de Gestação";
+    $("#subtitle").textContent = "Estime a idade gestacional e a data provável do parto.";
+    tool.innerHTML = `
+      <div class="grid" style="grid-template-columns:1fr">
+        <div class="field"><label>DATA DA ÚLTIMA MENSTRUAÇÃO (DUM)</label><input type="date" id="dumDate"></div>
+      </div>
+      <div class="result" id="result"></div>`;
+      
+    const past = new Date(); past.setDate(past.getDate() - 84); // Ex: 12 semanas
+    $("#dumDate").value = getVal('dum', getLocalISODate(past));
+    
+    const calculate = () => {
+      const dv = $("#dumDate").value;
+      setURLParams({ dum: dv });
+      const dum = dateFromInput("#dumDate");
+      if(!dum) return showResult("Informe a data da última menstruação.", "", true);
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      if(dum > today) return showResult("A DUM não pode ser uma data futura.", "", true);
+      
+      const diffDays = Math.floor((today - dum) / 86400000);
+      const weeks = Math.floor(diffDays / 7);
+      const days = diffDays % 7;
+      const dueDate = new Date(dum); dueDate.setDate(dueDate.getDate() + 280); 
+      
+      const html = `<div class="big">${weeks} semanas e ${days} dias</div><div class="small">Previsão do parto: <strong>${formatDate(dueDate)}</strong> (40 semanas).</div>`;
+      const plainText = `Gestação: ${weeks} semanas e ${days} dias. Previsão do parto: ${formatDate(dueDate)}. Calculado em tempo.`;
+      showResult(html, plainText);
+    };
+    
+    $("#dumDate").oninput = calculate; calculate();
+  }
+
+  // Controle do Menu e Inicialização
+  function loadTool(t) {
+    activeTool = t;
+    saveTool(t); // Salva na memória do navegador
+    
+    document.querySelectorAll(".menu-item").forEach(x => x.classList.remove("active"));
+    const activeItem = document.querySelector(`.menu-item[data-tool="${t}"]`);
+    if (activeItem) activeItem.classList.add("active");
+
+    if (t === "date") renderDate();
+    else if (t === "time") renderTime();
+    else if (t === "business") renderBusiness();
+    else if (t === "age") renderAge();
+    else if (t === "pregnancy") renderPregnancy();
+  }
+
+  openMenuBtn.onclick = () => { drawer.classList.add("open"); closeMenuBtn.focus(); };
+  closeMenuBtn.onclick = () => { drawer.classList.remove("open"); openMenuBtn.focus(); };
+  drawer.onclick = (e) => { if (e.target === drawer) { drawer.classList.remove("open"); openMenuBtn.focus(); } };
+
+  document.querySelectorAll(".menu-item").forEach(item => {
+    item.onclick = () => {
+      drawer.classList.remove("open");
+      openMenuBtn.focus();
+      loadTool(item.dataset.tool); // Troca a ferramenta
+    };
+  });
+
+  // Inicializa o app com a ferramenta correta
+  loadTool(activeTool);
+});
+</script>
+</body>
+</html>
