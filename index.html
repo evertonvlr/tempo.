@@ -38,7 +38,19 @@
 :root.light{
   --bg:#f4f5f7;--card:#ffffff;--card2:#eef2f6;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#6366f1;--danger:#ef4444;
 }
-body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% -20%,var(--card2) 0,var(--bg) 45%);color:var(--text);min-height:100vh;transition:background 0.3s, color 0.3s}
+body{
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);
+  min-height:100vh;
+  transition:background 0.3s, color 0.3s;
+  background: radial-gradient(circle at 50% -20%, var(--card2) 0, var(--bg) 60%);
+  background-size: 100% 200%;
+  animation: ambientGlow 15s ease-in-out infinite alternate;
+}
+@keyframes ambientGlow {
+  0% { background-position: 50% 0%; }
+  100% { background-position: 50% 100%; }
+}
 button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer}
 .app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
 header{height:76px;display:flex;align-items:center;justify-content:space-between}
@@ -54,7 +66,15 @@ header{height:76px;display:flex;align-items:center;justify-content:space-between
 .icon-btn:hover{transform:scale(1.04);background:var(--card2);border-color:var(--accent)}
 .icon-btn:active{transform:scale(0.95)}
 
-.hero{text-align:center;padding:48px 0 27px}
+/* Chips / Atalhos Rápidos */
+.chips-wrapper{width:100%;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:10px 0 20px;display:flex;gap:8px;justify-content:center}
+@media(max-width:700px){.chips-wrapper{justify-content:flex-start}}
+.chips-wrapper::-webkit-scrollbar{display:none}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:8px 16px;color:var(--text);font-size:12px;font-weight:750;white-space:nowrap;cursor:pointer;transition:background .2s, border-color .2s, transform .15s; display:flex; align-items:center; gap:6px}
+.chip:hover{background:var(--card2);border-color:var(--accent)}
+.chip:active{transform:scale(0.95)}
+
+.hero{text-align:center;padding:24px 0 27px}
 .badge{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:7px 12px;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.8px;margin-bottom:17px;background:var(--card)}
 h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bottom:15px}
 .hero p{color:var(--muted);font-size:15px;line-height:1.6}
@@ -114,7 +134,7 @@ footer a{color:var(--muted);text-decoration:none;transition:.2s}
 footer a:hover{color:var(--accent)}
 @keyframes up{from{opacity:0;transform:translateY(8px) scale(0.98)}to{opacity:1;transform:none}}
 @media(max-width:700px){.grid{grid-template-columns:1fr}}
-@media(max-width:600px){.app{padding:0 14px 35px}.hero{padding:38px 0 22px}.panel{padding:17px;border-radius:20px}h1{letter-spacing:-2px}.tabs{margin-bottom:19px}.tab{font-size:12px}}
+@media(max-width:600px){.app{padding:0 14px 35px}.hero{padding:24px 0 22px}.panel{padding:17px;border-radius:20px}h1{letter-spacing:-2px}.tabs{margin-bottom:19px}.tab{font-size:12px}}
 </style>
 </head>
 <body>
@@ -132,8 +152,11 @@ footer a:hover{color:var(--accent)}
   </div>
 </header>
 
+<div class="chips-wrapper" id="quickChips"></div>
+
 <main>
 <section class="hero">
+  <div id="greeting" style="font-size:14px; font-weight:750; color:var(--accent); margin-bottom:10px; letter-spacing:0.5px;"></div>
   <div class="badge" id="toolBadge">UTILITÁRIO DE TEMPO</div>
   <h1 id="title">Calculadora de Data</h1>
   <p id="subtitle">Descubra exatamente quanto tempo existe entre duas datas.</p>
@@ -229,7 +252,12 @@ footer a:hover{color:var(--accent)}
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const $ = s => document.querySelector(s);
-  const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport");
+  const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport"), quickChips = $("#quickChips"), greetingEl = $("#greeting");
+
+  // UX: Micro-feedback (vibração leve)
+  function haptic() {
+    try { if (navigator.vibrate) navigator.vibrate(20); } catch(e){}
+  }
 
   const storage = {
     get(key, fallback) {
@@ -252,7 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return adjusted.toISOString().slice(0, 10);
   };
 
-  // ESTADOS GLOBAIS PERSISTENTES PARA TODAS AS FERRAMENTAS
+  // ESTADOS GLOBAIS
   const states = {
     date: { mode: "diff", d1: getLocalISODate(), d2: getLocalISODate(), base: getLocalISODate(), days: 30 },
     time: { t1: "08:00", t2: "17:40" },
@@ -374,6 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
   applyTheme(currentTheme);
 
   themeBtn.addEventListener('click', () => {
+    haptic();
     applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
   });
 
@@ -490,6 +519,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener('click', e => {
     const r = e.target.closest('.result.has-copy');
     if (r && !r.classList.contains('error') && textToCopy) {
+      haptic();
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(textToCopy).then(() => {
           r.classList.add('copied');
@@ -569,7 +599,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
       $("#baseDate").oninput = calculate; $("#days").oninput = calculate; calculate();
     }
-    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { st.mode = b.dataset.mode; renderDate(); });
+    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; renderDate(); });
   }
 
   function renderTime() {
@@ -651,7 +681,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
       $("#bBaseDate").oninput = calculate; $("#bDays").oninput = calculate; calculate();
     }
-    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { st.mode = b.dataset.mode; renderBusiness(); });
+    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; renderBusiness(); });
   }
 
   function renderWorldClock() {
@@ -801,9 +831,7 @@ document.addEventListener("DOMContentLoaded", () => {
           toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
           statusEl.textContent = isEn ? 'Time is up! Great job.' : 'Tempo esgotado! Excelente trabalho.';
           playAlarm();
-          try {
-            if ('vibrate' in navigator) navigator.vibrate([300, 150, 300, 150, 400]);
-          } catch(e){}
+          haptic();
         }
       }, 1000);
     }
@@ -814,6 +842,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     toggleBtn.onclick = () => {
+      haptic();
       if (st.running) {
         stopTimer();
         toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
@@ -824,6 +853,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     resetBtn.onclick = () => {
+      haptic();
       stopTimer();
       st.timeLeft = getSecondsForMode(st.mode);
       updateDisplay();
@@ -833,6 +863,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelectorAll("[data-pmode]").forEach(tab => {
       tab.onclick = () => {
+        haptic();
         stopTimer();
         st.mode = tab.dataset.pmode;
         st.timeLeft = getSecondsForMode(st.mode);
@@ -1002,7 +1033,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>`;
     }
 
-    selectEl.onchange = updateHoroscope;
+    selectEl.onchange = () => { haptic(); updateHoroscope(); };
     updateHoroscope();
   }
 
@@ -1100,7 +1131,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
     $("#evName").oninput = calculate; $("#evDate").oninput = calculate; calculate();
-    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { st.mode = b.dataset.mode; renderCountdown(); });
+    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; renderCountdown(); });
   }
 
   function renderOvertime() {
@@ -1203,7 +1234,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
     }
-    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { st.mode = b.dataset.mode; renderVacation13(); });
+    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; renderVacation13(); });
   }
 
   function renderRescision() {
@@ -1339,6 +1370,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function openPalette() {
+    haptic();
     paletteModal.classList.add("open");
     paletteModal.setAttribute("aria-hidden", "false");
     paletteInput.value = "";
@@ -1352,6 +1384,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function openDrawer() {
+    haptic();
     drawer.classList.add("open");
     drawer.setAttribute("aria-hidden", "false");
     const firstMenuBtn = drawer.querySelector('.close');
@@ -1377,6 +1410,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     paletteList.querySelectorAll('.palette-item').forEach(btn => {
       btn.onclick = () => {
+        haptic();
         loadTool(btn.dataset.tool);
         closePalette();
       };
@@ -1425,7 +1459,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  function updateGreeting() {
+    const hour = new Date().getHours();
+    const isEn = currentLang === 'en-US';
+    let text = '';
+    let emoji = '';
+    
+    if (hour < 12) { text = isEn ? 'Good morning' : 'Bom dia'; emoji = '☀️'; }
+    else if (hour < 18) { text = isEn ? 'Good afternoon' : 'Boa tarde'; emoji = '🌤️'; }
+    else { text = isEn ? 'Good evening' : 'Boa noite'; emoji = '🌙'; }
+    
+    if(greetingEl) greetingEl.textContent = `${text} ${emoji}`;
+  }
+
+  function renderChips() {
+    const chips = [
+      { id: 'overtime', icon: '💼', pt: 'Horas Extras', en: 'Overtime' },
+      { id: 'pomodoro', icon: '🍅', pt: 'Pomodoro', en: 'Pomodoro' },
+      { id: 'rescision', icon: '📄', pt: 'Rescisão', en: 'Severance' },
+      { id: 'worldclock', icon: '🌍', pt: 'Fuso Horário', en: 'Timezones' },
+      { id: 'horoscope', icon: '✨', pt: 'Horóscopo', en: 'Horoscope' }
+    ];
+    const isEn = currentLang === 'en-US';
+    if(quickChips) {
+      quickChips.innerHTML = chips.map(c => `<button class="chip" data-tool="${c.id}">${c.icon} ${isEn ? c.en : c.pt}</button>`).join('');
+      quickChips.querySelectorAll('.chip').forEach(btn => {
+        btn.onclick = () => {
+          haptic();
+          loadTool(btn.dataset.tool);
+        };
+      });
+    }
+  }
+
   function updateStaticTexts() {
+    updateGreeting();
+    renderChips();
     footerText.innerHTML = i18n[currentLang].footer;
     menuTitle.textContent = i18n[currentLang].menu;
     langLabel.textContent = i18n[currentLang].langLabel;
@@ -1480,10 +1549,15 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (t === "rescision") renderRescision();
     else if (t === "running") renderRunning();
 
-    // GERENCIAMENTO DE FOCO E ACESSIBILIDADE: Foca o primeiro input ou elemento interativo
+    // UX: Foco automático e Scroll suave no celular
     requestAnimationFrame(() => {
       const firstEl = tool.querySelector('input, select, button');
       if (firstEl) firstEl.focus();
+      
+      if (window.innerWidth <= 600) {
+        const y = tool.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
     });
   }
 
@@ -1501,13 +1575,14 @@ document.addEventListener("DOMContentLoaded", () => {
     loadTool(activeTool);
   };
 
-  logoBtn.addEventListener('click', () => { closeDrawer(); loadTool('date'); });
+  logoBtn.addEventListener('click', () => { haptic(); closeDrawer(); loadTool('date'); });
   openMenuBtn.addEventListener('click', openDrawer);
   closeMenuBtn.addEventListener('click', closeDrawer);
   drawer.addEventListener('click', (e) => { if (e.target === drawer) closeDrawer(); });
 
   document.querySelectorAll(".menu-item").forEach(item => {
     item.addEventListener('click', () => {
+      haptic();
       closeDrawer();
       loadTool(item.dataset.tool);
     });
