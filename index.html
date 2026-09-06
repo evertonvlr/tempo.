@@ -246,6 +246,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }[tag] || tag));
   }
 
+  const getLocalISODate = (d = new Date()) => {
+    const adjusted = new Date(d);
+    adjusted.setMinutes(adjusted.getMinutes() - adjusted.getTimezoneOffset());
+    return adjusted.toISOString().slice(0, 10);
+  };
+
+  // ESTADOS GLOBAIS PERSISTENTES PARA TODAS AS FERRAMENTAS (1-B)
+  const states = {
+    date: { mode: "diff", d1: getLocalISODate(), d2: getLocalISODate(), base: getLocalISODate(), days: 30 },
+    time: { t1: "08:00", t2: "17:40" },
+    business: { mode: "diff", b1: getLocalISODate(), b2: (() => { const d = new Date(); d.setDate(d.getDate() + 15); return getLocalISODate(d); })(), base: getLocalISODate(), days: 10 },
+    worldclock: {},
+    pomodoro: { mode: 'work', timeLeft: 25 * 60, running: false },
+    horoscope: { sign: 'aries' },
+    age: { birth: "2000-01-01", ref: getLocalISODate() },
+    pregnancy: { dum: (() => { const d = new Date(); d.setDate(d.getDate() - 84); return getLocalISODate(d); })() },
+    countdown: { mode: "down", name: "Férias", date: (() => { const d = new Date(); d.setDate(d.getDate() + 30); return getLocalISODate(d); })() },
+    overtime: { sal: 1621, jor: 220, qtd: 10, rate: 50 },
+    vacation13: { mode: "13", sal: 1621, meses: 12 },
+    rescision: { sal: 2500, reason: "sem_justa", adm: (() => { const d = new Date(); d.setFullYear(d.getFullYear() - 2); return getLocalISODate(d); })(), term: getLocalISODate() },
+    running: { dist: 10, time: 50 }
+  };
+
   const i18n = {
     'pt-BR': {
       page: "tempo. — Utilitários",
@@ -364,18 +387,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let activeTool = getToolFromHash() || storage.get('tempo_tool', 'date');
   if (!validTools.includes(activeTool)) activeTool = 'date';
 
-  // Estados locais das ferramentas com abas para preservar dados digitados
-  let dateState = { mode: "diff", d1: getLocalISODate(), d2: getLocalISODate(), base: getLocalISODate(), days: 30 };
-  let businessState = { mode: "diff", b1: getLocalISODate(), b2: (() => { const d = new Date(); d.setDate(d.getDate() + 15); return getLocalISODate(d); })(), base: getLocalISODate(), days: 10 };
-  let countState = { mode: "down", name: "Férias", date: (() => { const d = new Date(); d.setDate(d.getDate() + 30); return getLocalISODate(d); })() };
-  let vacationState = { mode: "13", sal: 1621, meses: 12 };
-
+  let textToCountry = "";
   let textToCopy = "";
-  let pomoMode = 'work';
-  let pomoTimeLeft = 25 * 60;
-  let pomoRunning = false;
 
-  const getLocalISODate = (d = new Date()) => {
+  const getLocalISODateHelper = (d = new Date()) => {
     const adjusted = new Date(d);
     adjusted.setMinutes(adjusted.getMinutes() - adjusted.getTimezoneOffset());
     return adjusted.toISOString().slice(0, 10);
@@ -417,19 +432,23 @@ document.addEventListener("DOMContentLoaded", () => {
     return { y, m, d, total };
   }
 
+  // ALGORITMO OTIMIZADO DE DIAS ÚTEIS (2-A) - Sem loops lineares pesados
   function businessDaysDifference(start, end) {
     if (start > end) { let temp = start; start = end; end = temp; }
-    let count = 0; 
-    let cur = new Date(start);
-    cur.setHours(12, 0, 0, 0);
-    let endNorm = new Date(end);
-    endNorm.setHours(12, 0, 0, 0);
+    let s = new Date(start); s.setDate(s.getDate() + 1);
+    let e = new Date(end);
+    s.setHours(12,0,0,0); e.setHours(12,0,0,0);
+    if (s > e) return 0;
     
-    cur.setDate(cur.getDate() + 1); 
-    while (cur <= endNorm) {
-      const day = cur.getDay();
-      if (day !== 0 && day !== 6) count++;
-      cur.setDate(cur.getDate() + 1);
+    let totalDays = Math.round((e - s) / 86400000) + 1;
+    let fullWeeks = Math.floor(totalDays / 7);
+    let remDays = totalDays % 7;
+    
+    let count = fullWeeks * 5;
+    let curDayOfWeek = s.getDay();
+    for (let i = 0; i < remDays; i++) {
+      let d = (curDayOfWeek + i) % 7;
+      if (d !== 0 && d !== 6) count++;
     }
     return count;
   }
@@ -437,7 +456,15 @@ document.addEventListener("DOMContentLoaded", () => {
   function addBusinessDays(base, n, isAdd = true) {
     let cur = new Date(base); 
     cur.setHours(12, 0, 0, 0);
-    let added = 0; const dir = isAdd ? 1 : -1;
+    if (n === 0) return cur;
+    let dir = isAdd ? 1 : -1;
+    
+    let fullWeeks = Math.floor(n / 5);
+    let rem = n % 5;
+    
+    cur.setDate(cur.getDate() + (fullWeeks * 7 * dir));
+    let added = fullWeeks * 5;
+    
     while (added < n) {
       cur.setDate(cur.getDate() + dir);
       const day = cur.getDay();
@@ -446,7 +473,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // CORREÇÃO: Adicionado aria-live e aria-atomic para acessibilidade dinâmica automática de leitores de tela
   function showResult(html, plainText = "", error = false) {
     const r = $("#result");
     if(r) {
@@ -494,29 +520,31 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function renderDate() {
+    const st = states.date;
     tool.innerHTML = `
       <div class="tabs">
-        <button class="tab ${dateState.mode === "diff" ? "active" : ""}" data-mode="diff">${currentLang === 'en-US' ? 'Difference' : 'Diferença'}</button>
-        <button class="tab ${dateState.mode === "add" ? "active" : ""}" data-mode="add">${currentLang === 'en-US' ? 'Add' : 'Adicionar'}</button>
-        <button class="tab ${dateState.mode === "sub" ? "active" : ""}" data-mode="sub">${currentLang === 'en-US' ? 'Subtract' : 'Subtrair'}</button>
+        <button class="tab ${st.mode === "diff" ? "active" : ""}" data-mode="diff">${currentLang === 'en-US' ? 'Difference' : 'Diferença'}</button>
+        <button class="tab ${st.mode === "add" ? "active" : ""}" data-mode="add">${currentLang === 'en-US' ? 'Add' : 'Adicionar'}</button>
+        <button class="tab ${st.mode === "sub" ? "active" : ""}" data-mode="sub">${currentLang === 'en-US' ? 'Subtract' : 'Subtrair'}</button>
       </div>
       <div id="dateArea"></div>`;
     renderDateArea();
   }
 
   function renderDateArea() {
+    const st = states.date;
     const area = $("#dateArea");
-    if (dateState.mode === "diff") {
+    if (st.mode === "diff") {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="date1">${currentLang === 'en-US' ? 'START DATE' : 'DATA INICIAL'}</label><input type="date" id="date1" value="${dateState.d1}"></div>
-          <div class="field"><label for="date2">${currentLang === 'en-US' ? 'END DATE' : 'DATA FINAL'}</label><input type="date" id="date2" value="${dateState.d2}"></div>
+          <div class="field"><label for="date1">${currentLang === 'en-US' ? 'START DATE' : 'DATA INICIAL'}</label><input type="date" id="date1" value="${st.d1}"></div>
+          <div class="field"><label for="date2">${currentLang === 'en-US' ? 'END DATE' : 'DATA FINAL'}</label><input type="date" id="date2" value="${st.d2}"></div>
         </div>
         <div class="result" id="result"></div>`;
       
       const calculate = () => {
-        dateState.d1 = $("#date1").value;
-        dateState.d2 = $("#date2").value;
+        st.d1 = $("#date1").value;
+        st.d2 = $("#date2").value;
         const a = dateFromInput("#date1"), b = dateFromInput("#date2");
         if(!a || !b) return showResult(currentLang === 'en-US' ? 'Select both dates.' : 'Selecione as duas datas.', "", true);
         const x = calendarDifference(a, b);
@@ -529,41 +557,41 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="baseDate">${currentLang === 'en-US' ? 'DATE' : 'DATA'}</label><input type="date" id="baseDate" value="${dateState.base}"></div>
-          <div class="field"><label for="days">${currentLang === 'en-US' ? 'NUMBER OF DAYS' : 'QUANTIDADE DE DIAS'}</label><input type="number" id="days" min="0" step="1" value="${dateState.days}"></div>
+          <div class="field"><label for="baseDate">${currentLang === 'en-US' ? 'DATE' : 'DATA'}</label><input type="date" id="baseDate" value="${st.base}"></div>
+          <div class="field"><label for="days">${currentLang === 'en-US' ? 'NUMBER OF DAYS' : 'QUANTIDADE DE DIAS'}</label><input type="number" id="days" min="0" step="1" value="${st.days}"></div>
         </div>
         <div class="result" id="result"></div>`;
       
       const calculate = () => {
-        dateState.base = $("#baseDate").value;
-        dateState.days = $("#days").value;
+        st.base = $("#baseDate").value;
+        st.days = $("#days").value;
         const base = dateFromInput("#baseDate"), n = Number($("#days").value);
         if(!base || $("#days").value === "" || !Number.isInteger(n) || n < 0) return showResult(currentLang === 'en-US' ? 'Enter a valid date and number.' : 'Informe uma data e quantidade válida.', "", true);
         const d = new Date(base);
-        d.setDate(d.getDate() + (dateState.mode === "add" ? n : -n));
-        const html = `<div class="big">${formatDate(d)}</div><div class="small">${dateState.mode==="add"?(currentLang==='en-US'?'Added':'Adicionados'):(currentLang==='en-US'?'Subtracted':'Subtraídos')} ${n.toLocaleString(currentLang)} ${n===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}.</div>`;
+        d.setDate(d.getDate() + (st.mode === "add" ? n : -n));
+        const html = `<div class="big">${formatDate(d)}</div><div class="small">${st.mode==="add"?(currentLang==='en-US'?'Added':'Adicionados'):(currentLang==='en-US'?'Subtracted':'Subtraídos')} ${n.toLocaleString(currentLang)} ${n===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}.</div>`;
         const plainText = `Resultado: ${formatDate(d)}`;
         showResult(html, plainText);
       };
       
       $("#baseDate").oninput = calculate; $("#days").oninput = calculate; calculate();
     }
-    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { dateState.mode = b.dataset.mode; renderDate(); });
+    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { st.mode = b.dataset.mode; renderDate(); });
   }
 
   function renderTime() {
+    const st = states.time;
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="time1">${currentLang === 'en-US' ? 'START TIME' : 'HORÁRIO INICIAL'}</label><input type="time" id="time1"></div>
-        <div class="field"><label for="time2">${currentLang === 'en-US' ? 'END TIME' : 'HORÁRIO FINAL'}</label><input type="time" id="time2"></div>
+        <div class="field"><label for="time1">${currentLang === 'en-US' ? 'START TIME' : 'HORÁRIO INICIAL'}</label><input type="time" id="time1" value="${st.t1}"></div>
+        <div class="field"><label for="time2">${currentLang === 'en-US' ? 'END TIME' : 'HORÁRIO FINAL'}</label><input type="time" id="time2" value="${st.t2}"></div>
       </div>
       <div class="result" id="result"></div>`;
-      
-    $("#time1").value = "08:00";
-    $("#time2").value = "17:40";
     
     const calculate = () => {
-      const a = $("#time1").value, b = $("#time2").value;
+      st.t1 = $("#time1").value;
+      st.t2 = $("#time2").value;
+      const a = st.t1, b = st.t2;
       if(!a || !b) return showResult(currentLang === 'en-US' ? 'Provide both times.' : 'Informe os dois horários.', "", true);
       let [ah, am] = a.split(":").map(Number), [bh, bm] = b.split(":").map(Number);
       let start = ah * 60 + am, end = bh * 60 + bm;
@@ -577,29 +605,31 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderBusiness() {
+    const st = states.business;
     tool.innerHTML = `
       <div class="tabs">
-        <button class="tab ${businessState.mode === "diff" ? "active" : ""}" data-mode="diff">${currentLang === 'en-US' ? 'Difference' : 'Diferença'}</button>
-        <button class="tab ${businessState.mode === "add" ? "active" : ""}" data-mode="add">${currentLang === 'en-US' ? 'Add' : 'Adicionar'}</button>
-        <button class="tab ${businessState.mode === "sub" ? "active" : ""}" data-mode="sub">${currentLang === 'en-US' ? 'Subtract' : 'Subtrair'}</button>
+        <button class="tab ${st.mode === "diff" ? "active" : ""}" data-mode="diff">${currentLang === 'en-US' ? 'Difference' : 'Diferença'}</button>
+        <button class="tab ${st.mode === "add" ? "active" : ""}" data-mode="add">${currentLang === 'en-US' ? 'Add' : 'Adicionar'}</button>
+        <button class="tab ${st.mode === "sub" ? "active" : ""}" data-mode="sub">${currentLang === 'en-US' ? 'Subtract' : 'Subtrair'}</button>
       </div>
       <div id="businessArea"></div>`;
     renderBusinessArea();
   }
 
   function renderBusinessArea() {
+    const st = states.business;
     const area = $("#businessArea");
-    if (businessState.mode === "diff") {
+    if (st.mode === "diff") {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="bDate1">${currentLang === 'en-US' ? 'START DATE' : 'DATA INICIAL'}</label><input type="date" id="bDate1" value="${businessState.b1}"></div>
-          <div class="field"><label for="bDate2">${currentLang === 'en-US' ? 'END DATE' : 'DATA FINAL'}</label><input type="date" id="bDate2" value="${businessState.b2}"></div>
+          <div class="field"><label for="bDate1">${currentLang === 'en-US' ? 'START DATE' : 'DATA INICIAL'}</label><input type="date" id="bDate1" value="${st.b1}"></div>
+          <div class="field"><label for="bDate2">${currentLang === 'en-US' ? 'END DATE' : 'DATA FINAL'}</label><input type="date" id="bDate2" value="${st.b2}"></div>
         </div>
         <div class="result" id="result"></div>`;
       
       const calculate = () => {
-        businessState.b1 = $("#bDate1").value;
-        businessState.b2 = $("#bDate2").value;
+        st.b1 = $("#bDate1").value;
+        st.b2 = $("#bDate2").value;
         const a = dateFromInput("#bDate1"), b = dateFromInput("#bDate2");
         if(!a || !b) return showResult(currentLang === 'en-US' ? 'Select both dates.' : 'Selecione as duas datas.', "", true);
         const total = businessDaysDifference(a, b);
@@ -611,24 +641,24 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="bBaseDate">${currentLang === 'en-US' ? 'DATE' : 'DATA'}</label><input type="date" id="bBaseDate" value="${businessState.base}"></div>
-          <div class="field"><label for="bDays">${currentLang === 'en-US' ? 'BUSINESS DAYS' : 'DIAS ÚTEIS'}</label><input type="number" id="bDays" min="0" step="1" value="${businessState.days}"></div>
+          <div class="field"><label for="bBaseDate">${currentLang === 'en-US' ? 'DATE' : 'DATA'}</label><input type="date" id="bBaseDate" value="${st.base}"></div>
+          <div class="field"><label for="bDays">${currentLang === 'en-US' ? 'BUSINESS DAYS' : 'DIAS ÚTEIS'}</label><input type="number" id="bDays" min="0" step="1" value="${st.days}"></div>
         </div>
         <div class="result" id="result"></div>`;
       
       const calculate = () => {
-        businessState.base = $("#bBaseDate").value;
-        businessState.days = $("#bDays").value;
+        st.base = $("#bBaseDate").value;
+        st.days = $("#bDays").value;
         const base = dateFromInput("#bBaseDate"), n = Number($("#bDays").value);
         if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult(currentLang === 'en-US' ? 'Provide date and days.' : 'Informe data e quantidade.', "", true);
-        const d = addBusinessDays(base, n, businessState.mode === "add");
+        const d = addBusinessDays(base, n, st.mode === "add");
         const html = `<div class="big">${formatDate(d)}</div><div class="small">Resultado (${n} dias úteis).</div>`;
         showResult(html, `Resultado: ${formatDate(d)}`);
       };
       
       $("#bBaseDate").oninput = calculate; $("#bDays").oninput = calculate; calculate();
     }
-    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { businessState.mode = b.dataset.mode; renderBusiness(); });
+    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { st.mode = b.dataset.mode; renderBusiness(); });
   }
 
   function renderWorldClock() {
@@ -674,22 +704,29 @@ document.addEventListener("DOMContentLoaded", () => {
     window._wcInterval = setInterval(updateClocks, 1000);
   }
 
+  // GERENCIAMENTO SEGURO DE ÁUDIO NO POMODORO (1-A)
+  let audioCtx = null;
   function playAlarm() {
     try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const notes = [587.33, 659.25, 783.99]; // D5, E5, G5
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const notes = [587.33, 659.25, 783.99];
       notes.forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
         osc.type = 'sine';
         osc.frequency.value = freq;
         osc.connect(gain);
-        gain.connect(ctx.destination);
+        gain.connect(audioCtx.destination);
         
-        const startTime = ctx.currentTime + (idx * 0.9);
-        const duration = 0.5;
+        const startTime = audioCtx.currentTime + (idx * 0.3);
+        const duration = 0.25;
         
-        gain.gain.setValueAtTime(0.25, startTime);
+        gain.gain.setValueAtTime(0.2, startTime);
         gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
         
         osc.start(startTime);
@@ -699,22 +736,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderPomodoro() {
+    const st = states.pomodoro;
     const isEn = currentLang === 'en-US';
     tool.innerHTML = `
       <div class="tabs">
-        <button class="tab ${pomoMode === 'work' ? 'active' : ''}" data-pmode="work">${isEn ? 'Focus (25m)' : 'Foco (25m)'}</button>
-        <button class="tab ${pomoMode === 'short' ? 'active' : ''}" data-pmode="short">${isEn ? 'Short Break (5m)' : 'Pausa Curta (5m)'}</button>
-        <button class="tab ${pomoMode === 'long' ? 'active' : ''}" data-pmode="long">${isEn ? 'Long Break (15m)' : 'Pausa Longa (15m)'}</button>
+        <button class="tab ${st.mode === 'work' ? 'active' : ''}" data-pmode="work">${isEn ? 'Focus (25m)' : 'Foco (25m)'}</button>
+        <button class="tab ${st.mode === 'short' ? 'active' : ''}" data-pmode="short">${isEn ? 'Short Break (5m)' : 'Pausa Curta (5m)'}</button>
+        <button class="tab ${st.mode === 'long' ? 'active' : ''}" data-pmode="long">${isEn ? 'Long Break (15m)' : 'Pausa Longa (15m)'}</button>
       </div>
       <div style="text-align: center; padding: 10px 0;">
         <div id="pomoDisplay" style="font-size: clamp(54px, 12vw, 84px); font-weight: 900; letter-spacing: -2px; margin: 15px 0; font-variant-numeric: tabular-nums;">25:00</div>
         <div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px;">
-          <button id="pomoToggleBtn" style="padding: 14px 32px; border-radius: 14px; border: 0; background: var(--accent); color: #fff; font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.15s;">${isEn ? 'Start' : 'Iniciar'}</button>
+          <button id="pomoToggleBtn" style="padding: 14px 32px; border-radius: 14px; border: 0; background: var(--accent); color: #fff; font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.15s;">${st.running ? (isEn ? 'Pause' : 'Pausar') : (isEn ? 'Start' : 'Iniciar')}</button>
           <button id="pomoResetBtn" style="padding: 14px 24px; border-radius: 14px; border: 1px solid var(--line); background: var(--card2); color: var(--text); font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.15s;">${isEn ? 'Reset' : 'Reiniciar'}</button>
         </div>
       </div>
       <div class="result show" style="display:block; margin-top: 24px; text-align: center;">
-        <div class="small" id="pomoStatus" style="font-weight: 700;">${isEn ? 'Ready to start focus session.' : 'Pronto para iniciar a sessão de foco.'}</div>
+        <div class="small" id="pomoStatus" style="font-weight: 700;">${st.running ? (isEn ? 'Focus session in progress...' : 'Sessão em andamento...') : (isEn ? 'Ready to start focus session.' : 'Pronto para iniciar a sessão de foco.')}</div>
       </div>`;
 
     function getSecondsForMode(m) {
@@ -723,18 +761,14 @@ document.addEventListener("DOMContentLoaded", () => {
       return 15 * 60;
     }
 
-    if (!pomoRunning) {
-      pomoTimeLeft = getSecondsForMode(pomoMode);
-    }
-
     const displayEl = $("#pomoDisplay");
     const toggleBtn = $("#pomoToggleBtn");
     const resetBtn = $("#pomoResetBtn");
     const statusEl = $("#pomoStatus");
 
     function updateDisplay() {
-      const m = Math.floor(pomoTimeLeft / 60);
-      const s = pomoTimeLeft % 60;
+      const m = Math.floor(st.timeLeft / 60);
+      const s = st.timeLeft % 60;
       displayEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     }
     updateDisplay();
@@ -744,17 +778,25 @@ document.addEventListener("DOMContentLoaded", () => {
         clearInterval(window._pomodoroInterval);
         window._pomodoroInterval = null;
       }
-      pomoRunning = false;
+      st.running = false;
     }
 
     function startTimer() {
-      pomoRunning = true;
+      // Desbloqueia o AudioContext no gesto do usuário (Clique em Iniciar)
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      st.running = true;
       toggleBtn.textContent = isEn ? 'Pause' : 'Pausar';
       statusEl.textContent = isEn ? 'Focus session in progress...' : 'Sessão em andamento...';
 
       window._pomodoroInterval = setInterval(() => {
-        if (pomoTimeLeft > 0) {
-          pomoTimeLeft--;
+        if (st.timeLeft > 0) {
+          st.timeLeft--;
           updateDisplay();
         } else {
           stopTimer();
@@ -768,8 +810,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 1000);
     }
 
+    if (st.running && !window._pomodoroInterval) {
+      startTimer();
+    }
+
     toggleBtn.onclick = () => {
-      if (pomoRunning) {
+      if (st.running) {
         stopTimer();
         toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
         statusEl.textContent = isEn ? 'Paused.' : 'Pausado.';
@@ -780,7 +826,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     resetBtn.onclick = () => {
       stopTimer();
-      pomoTimeLeft = getSecondsForMode(pomoMode);
+      st.timeLeft = getSecondsForMode(st.mode);
       updateDisplay();
       toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
       statusEl.textContent = isEn ? 'Timer reset.' : 'Cronômetro reiniciado.';
@@ -789,14 +835,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("[data-pmode]").forEach(tab => {
       tab.onclick = () => {
         stopTimer();
-        pomoMode = tab.dataset.pmode;
-        pomoTimeLeft = getSecondsForMode(pomoMode);
+        st.mode = tab.dataset.pmode;
+        st.timeLeft = getSecondsForMode(st.mode);
         renderPomodoro();
       };
     });
   }
 
   function renderHoroscope() {
+    const st = states.horoscope;
     const isEn = currentLang === 'en-US';
     const signs = [
       { id: 'aries', name: isEn ? 'Aries' : 'Áries', symbol: '♈' },
@@ -817,7 +864,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div style="margin-bottom: 16px;">
         <label style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:8px;" id="signLabel">${isEn ? 'SELECT YOUR SIGN' : 'SELECIONE SEU SIGNO'}</label>
         <select id="signSelect" style="font-weight:700;">
-          ${signs.map(s => `<option value="${s.id}">${s.symbol} ${s.name}</option>`).join('')}
+          ${signs.map(s => `<option value="${s.id}" ${st.sign === s.id ? 'selected' : ''}>${s.symbol} ${s.name}</option>`).join('')}
         </select>
       </div>
       <div class="result show" id="horoscopeResult" style="display:block; text-align: left; padding: 24px;">
@@ -899,11 +946,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const contentEl = $("#horoscopeContent");
 
     function updateHoroscope() {
-      const selectedSign = selectEl.value;
-      const signObj = signs.find(s => s.id === selectedSign);
+      st.sign = selectEl.value;
+      const signObj = signs.find(s => s.id === st.sign);
       
       const todayEpochDays = Math.floor(Date.now() / 86400000);
-      const signIndex = signs.findIndex(s => s.id === selectedSign);
+      const signIndex = signs.findIndex(s => s.id === st.sign);
       
       const langData = isEn ? pools.en : pools.pt;
       
@@ -961,17 +1008,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderAge() {
+    const st = states.age;
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="birthDate">${currentLang === 'en-US' ? 'DATE OF BIRTH' : 'DATA DE NASCIMENTO'}</label><input type="date" id="birthDate"></div>
-        <div class="field"><label for="refDate">${currentLang === 'en-US' ? 'REFERENCE DATE' : 'DATA DE REFERÊNCIA'}</label><input type="date" id="refDate"></div>
+        <div class="field"><label for="birthDate">${currentLang === 'en-US' ? 'DATE OF BIRTH' : 'DATA DE NASCIMENTO'}</label><input type="date" id="birthDate" value="${st.birth}"></div>
+        <div class="field"><label for="refDate">${currentLang === 'en-US' ? 'REFERENCE DATE' : 'DATA DE REFERÊNCIA'}</label><input type="date" id="refDate" value="${st.ref}"></div>
       </div>
       <div class="result" id="result"></div>`;
       
-    $("#birthDate").value = "2000-01-01";
-    $("#refDate").value = getLocalISODate();
-    
     const calculate = () => {
+      st.birth = $("#birthDate").value;
+      st.ref = $("#refDate").value;
       const birth = dateFromInput("#birthDate"), ref = dateFromInput("#refDate");
       if(!birth || !ref) return showResult(currentLang === 'en-US' ? 'Select dates.' : 'Selecione as datas.', "", true);
       if(birth > ref) return showResult(currentLang === 'en-US' ? 'Birth date cannot be future.' : 'Data futura inválida.', "", true);
@@ -983,21 +1030,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderPregnancy() {
+    const st = states.pregnancy;
     tool.innerHTML = `
       <div class="grid" style="grid-template-columns:1fr">
-        <div class="field"><label for="dumDate">${currentLang === 'en-US' ? 'LAST MENSTRUAL PERIOD (LMP)' : 'DATA DA ÚLTIMA MENSTRUAÇÃO (DUM)'}</label><input type="date" id="dumDate"></div>
+        <div class="field"><label for="dumDate">${currentLang === 'en-US' ? 'LAST MENSTRUAL PERIOD (LMP)' : 'DATA DA ÚLTIMA MENSTRUAÇÃO (DUM)'}</label><input type="date" id="dumDate" value="${st.dum}"></div>
       </div>
       <div class="result" id="result"></div>`;
       
-    const past = new Date(); past.setDate(past.getDate() - 84); 
-    $("#dumDate").value = getLocalISODate(past);
-    
     const calculate = () => {
+      st.dum = $("#dumDate").value;
       const dum = dateFromInput("#dumDate");
       if(!dum) return showResult(currentLang === 'en-US' ? 'Provide LMP.' : 'Informe a DUM.', "", true);
       
       const today = new Date(); today.setHours(12, 0, 0, 0);
-      
       if(dum > today) return showResult(currentLang === 'en-US' ? 'LMP cannot be future.' : 'DUM futura inválida.', "", true);
       
       const diffDays = Math.round((today - dum) / 86400000);
@@ -1012,29 +1057,31 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderCountdown() {
+    const st = states.countdown;
     tool.innerHTML = `
       <div class="tabs">
-        <button class="tab ${countState.mode === "down" ? "active" : ""}" data-mode="down">${currentLang === 'en-US' ? 'Countdown' : 'Contagem Regressiva'}</button>
-        <button class="tab ${countState.mode === "passed" ? "active" : ""}" data-mode="passed">${currentLang === 'en-US' ? 'Time Elapsed' : 'Tempo Passado'}</button>
+        <button class="tab ${st.mode === "down" ? "active" : ""}" data-mode="down">${currentLang === 'en-US' ? 'Countdown' : 'Contagem Regressiva'}</button>
+        <button class="tab ${st.mode === "passed" ? "active" : ""}" data-mode="passed">${currentLang === 'en-US' ? 'Time Elapsed' : 'Tempo Passado'}</button>
       </div>
       <div id="countArea"></div>`;
     renderCountArea();
   }
 
   function renderCountArea() {
+    const st = states.countdown;
     const area = $("#countArea");
     area.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="evName">${currentLang === 'en-US' ? 'EVENT NAME' : 'NOME DO EVENTO'}</label><input type="text" id="evName" value="${countState.name}"></div>
-        <div class="field"><label for="evDate">${currentLang === 'en-US' ? 'DATE' : 'DATA'}</label><input type="date" id="evDate" value="${countState.date}"></div>
+        <div class="field"><label for="evName">${currentLang === 'en-US' ? 'EVENT NAME' : 'NOME DO EVENTO'}</label><input type="text" id="evName" value="${st.name}"></div>
+        <div class="field"><label for="evDate">${currentLang === 'en-US' ? 'DATE' : 'DATA'}</label><input type="date" id="evDate" value="${st.date}"></div>
       </div>
       <div class="result" id="result"></div>`;
     
     const calculate = () => {
-      countState.name = $("#evName").value;
-      countState.date = $("#evDate").value;
+      st.name = $("#evName").value;
+      st.date = $("#evDate").value;
 
-      const rawName = countState.name || "Evento";
+      const rawName = st.name || "Evento";
       const name = escapeHTML(rawName);
       
       const evDate = dateFromInput("#evDate");
@@ -1043,7 +1090,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const today = new Date(); today.setHours(12,0,0,0);
       const x = calendarDifference(today, evDate);
       
-      if (countState.mode === "down") {
+      if (st.mode === "down") {
         if (today > evDate) return showResult(currentLang === 'en-US' ? 'Date has passed!' : 'Data já passou!', "", true);
         const html = `<div class="big">${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">${currentLang==='en-US'?'Remaining for':'Faltam'} ${name}.</div>`;
         showResult(html, `Faltam ${x.total} dias para ${rawName}!`);
@@ -1054,32 +1101,38 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
     $("#evName").oninput = calculate; $("#evDate").oninput = calculate; calculate();
-    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { countState.mode = b.dataset.mode; renderCountdown(); });
+    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { st.mode = b.dataset.mode; renderCountdown(); });
   }
 
   function renderOvertime() {
+    const st = states.overtime;
     const isEn = currentLang === 'en-US';
     const label50 = isEn ? '50% (Normal / Weekday)' : '50% (Dias úteis / Normal)';
     const label100 = isEn ? '100% (Sunday / Holiday)' : '100% (Domingos / Feriados)';
 
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="sal">${isEn ? 'MONTHLY SALARY' : 'SALÁRIO MENSAL'} (R$)</label><input type="number" id="sal" step="0.01" min="0" value="1621"></div>
-        <div class="field"><label for="jor">${isEn ? 'MONTHLY HOURS' : 'JORNADA MENSAL (HORAS)'}</label><input type="number" id="jor" value="220" min="1"></div>
+        <div class="field"><label for="sal">${isEn ? 'MONTHLY SALARY' : 'SALÁRIO MENSAL'} (R$)</label><input type="number" id="sal" step="0.01" min="0" value="${st.sal}"></div>
+        <div class="field"><label for="jor">${isEn ? 'MONTHLY HOURS' : 'JORNADA MENSAL (HORAS)'}</label><input type="number" id="jor" value="${st.jor}" min="1"></div>
       </div>
       <div class="grid" style="margin-top:14px">
-        <div class="field"><label for="qtd">${isEn ? 'OVERTIME HOURS' : 'QTD. HORAS EXTRAS'}</label><input type="number" id="qtd" step="0.5" min="0" value="10"></div>
+        <div class="field"><label for="qtd">${isEn ? 'OVERTIME HOURS' : 'QTD. HORAS EXTRAS'}</label><input type="number" id="qtd" step="0.5" min="0" value="${st.qtd}"></div>
         <div class="field"><label for="rate">${isEn ? 'PREMIUM RATE' : 'ACRÉSCIMO LEGAL'}</label>
           <select id="rate">
-            <option value="50">${label50}</option>
-            <option value="100">${label100}</option>
+            <option value="50" ${st.rate===50?'selected':''}>${label50}</option>
+            <option value="100" ${st.rate===100?'selected':''}>${label100}</option>
           </select>
         </div>
       </div>
       <div class="result" id="result"></div>`;
       
     const calculate = () => {
-      const sal = Number($("#sal").value), jor = Number($("#jor").value), qtd = Number($("#qtd").value), rate = Number($("#rate").value);
+      st.sal = Number($("#sal").value);
+      st.jor = Number($("#jor").value);
+      st.qtd = Number($("#qtd").value);
+      st.rate = Number($("#rate").value);
+      
+      const sal = st.sal, jor = st.jor, qtd = st.qtd, rate = st.rate;
       if(!sal || sal<=0 || !jor || jor<=0 || isNaN(qtd) || qtd<0) return showResult(isEn ? 'Invalid values.' : 'Valores inválidos.', "", true);
       
       const vHora = sal / jor, vExtra = vHora * (1 + rate / 100), total = vExtra * qtd;
@@ -1096,27 +1149,28 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderVacation13() {
     tool.innerHTML = `
       <div class="tabs">
-        <button class="tab ${vacationState.mode === "13" ? "active" : ""}" data-mode="13">13º Salário</button>
-        <button class="tab ${vacationState.mode === "vacation" ? "active" : ""}" data-mode="vacation">${currentLang === 'en-US' ? 'Vacation + 1/3' : 'Férias + 1/3'}</button>
+        <button class="tab ${states.vacation13.mode === "13" ? "active" : ""}" data-mode="13">13º Salário</button>
+        <button class="tab ${states.vacation13.mode === "vacation" ? "active" : ""}" data-mode="vacation">${currentLang === 'en-US' ? 'Vacation + 1/3' : 'Férias + 1/3'}</button>
       </div>
       <div id="vArea"></div>`;
     renderVArea();
   }
 
   function renderVArea() {
+    const st = states.vacation13;
     const area = $("#vArea");
-    if(vacationState.mode === "13"){
+    if(st.mode === "13"){
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="vSal">${currentLang === 'en-US' ? 'GROSS SALARY' : 'SALÁRIO BRUTO'} (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="${vacationState.sal}"></div>
-          <div class="field"><label for="vMeses">${currentLang === 'en-US' ? 'MONTHS WORKED (1-12)' : 'MESES TRABALHADOS (1 a 12)'}</label><input type="number" id="vMeses" min="1" max="12" value="${vacationState.meses}"></div>
+          <div class="field"><label for="vSal">${currentLang === 'en-US' ? 'GROSS SALARY' : 'SALÁRIO BRUTO'} (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="${st.sal}"></div>
+          <div class="field"><label for="vMeses">${currentLang === 'en-US' ? 'MONTHS WORKED (1-12)' : 'MESES TRABALHADOS (1 a 12)'}</label><input type="number" id="vMeses" min="1" max="12" value="${st.meses}"></div>
         </div>
         <div class="result" id="result"></div>`;
       
       const calculate = () => {
-        vacationState.sal = Number($("#vSal").value);
-        vacationState.meses = Number($("#vMeses").value);
-        const sal = vacationState.sal, meses = vacationState.meses;
+        st.sal = Number($("#vSal").value);
+        st.meses = Number($("#vMeses").value);
+        const sal = st.sal, meses = st.meses;
         if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
         const val = (sal / 12) * meses;
         const html = `
@@ -1130,15 +1184,15 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="vSal">${currentLang === 'en-US' ? 'GROSS SALARY' : 'SALÁRIO BRUTO'} (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="${vacationState.sal}"></div>
-          <div class="field"><label for="vMeses">${currentLang === 'en-US' ? 'PERIOD MONTHS (1-12)' : 'MESES NO PERÍODO (1 a 12)'}</label><input type="number" id="vMeses" min="1" max="12" value="${vacationState.meses}"></div>
+          <div class="field"><label for="vSal">${currentLang === 'en-US' ? 'GROSS SALARY' : 'SALÁRIO BRUTO'} (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="${st.sal}"></div>
+          <div class="field"><label for="vMeses">${currentLang === 'en-US' ? 'PERIOD MONTHS (1-12)' : 'MESES NO PERÍODO (1 a 12)'}</label><input type="number" id="vMeses" min="1" max="12" value="${st.meses}"></div>
         </div>
         <div class="result" id="result"></div>`;
       
       const calculate = () => {
-        vacationState.sal = Number($("#vSal").value);
-        vacationState.meses = Number($("#vMeses").value);
-        const sal = vacationState.sal, meses = vacationState.meses;
+        st.sal = Number($("#vSal").value);
+        st.meses = Number($("#vMeses").value);
+        const sal = st.sal, meses = st.meses;
         if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
         const base = (sal / 12) * meses, terço = base / 3, total = base + terço;
         const html = `
@@ -1150,34 +1204,35 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
     }
-    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { vacationState.mode = b.dataset.mode; renderVacation13(); });
+    document.querySelectorAll(".tab").forEach(b => b.onclick = () => { st.mode = b.dataset.mode; renderVacation13(); });
   }
 
   function renderRescision() {
+    const st = states.rescision;
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="rSal">${currentLang === 'en-US' ? 'GROSS SALARY' : 'SALÁRIO BRUTO'} (R$)</label><input type="number" id="rSal" step="0.01" min="0" value="2500"></div>
+        <div class="field"><label for="rSal">${currentLang === 'en-US' ? 'GROSS SALARY' : 'SALÁRIO BRUTO'} (R$)</label><input type="number" id="rSal" step="0.01" min="0" value="${st.sal}"></div>
         <div class="field"><label for="rReason">${currentLang === 'en-US' ? 'TERMINATION REASON' : 'MOTIVO DA SAÍDA'}</label>
           <select id="rReason">
-            <option value="sem_justa">${currentLang === 'en-US' ? 'Without cause' : 'Dispensa sem justa causa'}</option>
-            <option value="pedido">${currentLang === 'en-US' ? 'Resignation' : 'Pedido de demissão'}</option>
-            <option value="acordo">${currentLang === 'en-US' ? 'Mutual agreement' : 'Acordo comum (Art. 484-A)'}</option>
+            <option value="sem_justa" ${st.reason==='sem_justa'?'selected':''}>${currentLang === 'en-US' ? 'Without cause' : 'Dispensa sem justa causa'}</option>
+            <option value="pedido" ${st.reason==='pedido'?'selected':''}>${currentLang === 'en-US' ? 'Resignation' : 'Pedido de demissão'}</option>
+            <option value="acordo" ${st.reason==='acordo'?'selected':''}>${currentLang === 'en-US' ? 'Mutual agreement' : 'Acordo comum (Art. 484-A)'}</option>
           </select>
         </div>
       </div>
       <div class="grid" style="margin-top:14px">
-        <div class="field"><label for="rAdm">${currentLang === 'en-US' ? 'HIRE DATE' : 'DATA DE ADMISSÃO'}</label><input type="date" id="rAdm"></div>
-        <div class="field"><label for="rTerm">${currentLang === 'en-US' ? 'TERMINATION DATE' : 'DATA DE DEMISSÃO'}</label><input type="date" id="rTerm"></div>
+        <div class="field"><label for="rAdm">${currentLang === 'en-US' ? 'HIRE DATE' : 'DATA DE ADMISSÃO'}</label><input type="date" id="rAdm" value="${st.adm}"></div>
+        <div class="field"><label for="rTerm">${currentLang === 'en-US' ? 'TERMINATION DATE' : 'DATA DE DEMISSÃO'}</label><input type="date" id="rTerm" value="${st.term}"></div>
       </div>
       <div class="result" id="result"></div>`;
-      
-    const today = new Date();
-    const adm = new Date(); adm.setFullYear(adm.getFullYear() - 2);
-    $("#rAdm").value = getLocalISODate(adm);
-    $("#rTerm").value = getLocalISODate(today);
     
     const calculate = () => {
-      const sal = Number($("#rSal").value), reason = $("#rReason").value, dAdm = dateFromInput("#rAdm"), dTerm = dateFromInput("#rTerm");
+      st.sal = Number($("#rSal").value);
+      st.reason = $("#rReason").value;
+      st.adm = $("#rAdm").value;
+      st.term = $("#rTerm").value;
+
+      const sal = st.sal, reason = st.reason, dAdm = dateFromInput("#rAdm"), dTerm = dateFromInput("#rTerm");
       if(!sal || sal<=0 || !dAdm || !dTerm) return showResult(currentLang === 'en-US' ? 'Fill all fields.' : 'Preencha todos os campos.', "", true);
       if(dAdm > dTerm) return showResult(currentLang === 'en-US' ? 'Hire date cannot be after termination.' : 'Admissão posterior à demissão.', "", true);
       
@@ -1193,7 +1248,10 @@ document.addEventListener("DOMContentLoaded", () => {
         dProj.setDate(dProj.getDate() + diasAviso);
       }
 
-      const saldoSalario = Math.min(sal, (sal / 30) * dTerm.getDate());
+      // CORREÇÃO DE SALDO DE SALÁRIO (3-A): Tratamento preciso dos dias do mês vigente
+      const daysInMonth = new Date(dTerm.getFullYear(), dTerm.getMonth() + 1, 0).getDate();
+      const diasTrab = Math.min(dTerm.getDate(), daysInMonth);
+      const saldoSalario = diasTrab >= daysInMonth ? sal : Math.min(sal, (sal / 30) * diasTrab);
       
       let avisoPrevio = 0;
       if (reason === "sem_justa") {
@@ -1253,15 +1311,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderRunning() {
+    const st = states.running;
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="runDist">${currentLang === 'en-US' ? 'DISTANCE (KM)' : 'DISTÂNCIA (KM)'}</label><input type="number" id="runDist" step="0.5" min="1" value="10"></div>
-        <div class="field"><label for="runTime">${currentLang === 'en-US' ? 'TARGET TIME (MINUTES)' : 'TEMPO DESEJADO (MINUTOS)'}</label><input type="number" id="runTime" min="1" value="50"></div>
+        <div class="field"><label for="runDist">${currentLang === 'en-US' ? 'DISTANCE (KM)' : 'DISTÂNCIA (KM)'}</label><input type="number" id="runDist" step="0.5" min="1" value="${st.dist}"></div>
+        <div class="field"><label for="runTime">${currentLang === 'en-US' ? 'TARGET TIME (MINUTES)' : 'TEMPO DESEJADO (MINUTOS)'}</label><input type="number" id="runTime" min="1" value="${st.time}"></div>
       </div>
       <div class="result" id="result"></div>`;
       
     const calculate = () => {
-      const dist = Number($("#runDist").value), totalMin = Number($("#runTime").value);
+      st.dist = Number($("#runDist").value);
+      st.time = Number($("#runTime").value);
+      const dist = st.dist, totalMin = st.time;
       if(!dist || dist <= 0 || !totalMin || totalMin <= 0) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
       
       let paceDec = totalMin / dist, paceMin = Math.floor(paceDec), paceSec = Math.round((paceDec - paceMin) * 60);
@@ -1389,11 +1450,9 @@ document.addEventListener("DOMContentLoaded", () => {
       clearInterval(window._wcInterval);
       window._wcInterval = null;
     }
-    if (window._pomodoroInterval) {
-      clearInterval(window._pomodoroInterval);
-      window._pomodoroInterval = null;
+    if (window._pomodoroInterval && t !== 'pomodoro') {
+      // Mantém rodando o Pomodoro em background se trocar de aba, ou limpa se desejar. Mantemos o estado interno salvo.
     }
-    pomoRunning = false;
 
     activeTool = t;
     storage.set('tempo_tool', t); 
@@ -1425,6 +1484,12 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (t === "vacation13") renderVacation13();
     else if (t === "rescision") renderRescision();
     else if (t === "running") renderRunning();
+
+    // GERENCIAMENTO DE FOCO E ACESSIBILIDADE (1-C): Foca o primeiro input ou elemento interativo
+    requestAnimationFrame(() => {
+      const firstEl = tool.querySelector('input, select, button');
+      if (firstEl) firstEl.focus();
+    });
   }
 
   window.addEventListener('hashchange', () => {
