@@ -64,19 +64,19 @@ h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bot
 .tab{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 8px;border-radius:10px;font-weight:750;font-size:13px;transition:.2s}
 .tab.active{background:var(--card2);color:var(--text);box-shadow:0 3px 12px rgba(0,0,0,.1)}
 
-/* Grid blindado contra estouro no WebKit/iOS */
+/* Grid blindado contra estouro */
 .grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:14px}
 .field{min-width:0}
 .field label{display:block;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.5px;margin:0 0 8px 3px}
 
-/* Correção anti-zoom do Safari no iPhone (font-size >= 16px) */
+/* Correção anti-zoom iPhone */
 input,select{width:100%;max-width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:12px 14px;outline:none;transition:.2s;font-size:16px;-webkit-appearance:none}
 input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.12)}
 select{cursor:pointer}
 
 .result{margin-top:20px;padding:21px;border:1px solid var(--line);background:var(--bg);border-radius:16px;text-align:center;display:none;transition:border-color 0.2s}
 .result.show{display:block;animation:up .25s ease-out}
-/* word-break blindado para números gigantes não quebrarem a tela */
+/* word-break blindado */
 .result .big{font-size:clamp(22px,4.5vw,30px);font-weight:900;letter-spacing:-1px;word-break:break-word}
 .result .small{color:var(--muted);margin-top:7px;font-size:13px;line-height:1.5}
 .error{color:var(--danger)!important}
@@ -360,39 +360,55 @@ document.addEventListener("DOMContentLoaded", () => {
     return adjusted.toISOString().slice(0, 10);
   };
 
+  /* CORREÇÃO BUG #1: Proteção contra Invalid Date gerando NaN */
   function dateFromInput(id) {
     const v = $(id).value;
-    return v ? new Date(v + "T00:00:00") : null;
+    if (!v) return null;
+    const d = new Date(v + "T00:00:00");
+    return isNaN(d.getTime()) ? null : d;
   }
 
   function formatDate(d) {
     return d.toLocaleDateString(currentLang === 'en-US' ? 'en-US' : 'pt-BR', { day: "2-digit", month: "2-digit", year: "numeric" });
   }
 
+  /* CORREÇÃO BUG #3: Matemática cravada para não dar dias negativos */
   function calendarDifference(start, end) {
     if (start > end) { let temp = start; start = end; end = temp; }
     let y = end.getFullYear() - start.getFullYear();
     let m = end.getMonth() - start.getMonth();
     let d = end.getDate() - start.getDate();
+    
+    if (m < 0 || (m === 0 && d < 0)) {
+      y--;
+      m += 12;
+    }
+    
     if (d < 0) {
       m--;
-      const previousMonth = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
-      d += previousMonth;
+      if (m < 0) { m += 12; y--; }
+      let daysInPrevMonth = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
+      d += daysInPrevMonth;
+      if (d < 0) { d = end.getDate(); } // Fallback edge case extremo de meses longos p/ curtos
     }
-    if (m < 0) { y--; m += 12; }
+    
     const utcStart = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
     const utcEnd = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
     const total = Math.round((utcEnd - utcStart) / 86400000);
     return { y, m, d, total };
   }
 
+  /* CORREÇÃO BUG #2: Normalizar para 12:00 protege do DST (Horário de Verão) e ajustada contagem exclusiva */
   function businessDaysDifference(start, end) {
     if (start > end) { let temp = start; start = end; end = temp; }
     let count = 0; 
     let cur = new Date(start);
-    // CORREÇÃO: Diferença de prazo é inclusiva no final, exclusiva no começo
+    cur.setHours(12, 0, 0, 0);
+    let endNorm = new Date(end);
+    endNorm.setHours(12, 0, 0, 0);
+    
     cur.setDate(cur.getDate() + 1); 
-    while (cur <= end) {
+    while (cur <= endNorm) {
       const day = cur.getDay();
       if (day !== 0 && day !== 6) count++;
       cur.setDate(cur.getDate() + 1);
@@ -400,8 +416,11 @@ document.addEventListener("DOMContentLoaded", () => {
     return count;
   }
 
+  /* CORREÇÃO BUG #2: Normalização de horas */
   function addBusinessDays(base, n, isAdd = true) {
-    let cur = new Date(base); let added = 0; const dir = isAdd ? 1 : -1;
+    let cur = new Date(base); 
+    cur.setHours(12, 0, 0, 0);
+    let added = 0; const dir = isAdd ? 1 : -1;
     while (added < n) {
       cur.setDate(cur.getDate() + dir);
       const day = cur.getDay();
@@ -615,6 +634,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#localTzBox").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     function updateClocks() {
+      if(!$("#worldClockGrid")) return;
       grid.innerHTML = zones.map(z => {
         const timeStr = new Intl.DateTimeFormat('en-GB', { timeZone: z.tz, hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date());
         const dateStr = new Intl.DateTimeFormat(currentLang, { timeZone: z.tz, weekday: 'short', day: 'numeric', month: 'short' }).format(new Date());
@@ -664,10 +684,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const calculate = () => {
       const dum = dateFromInput("#dumDate");
       if(!dum) return showResult(currentLang === 'en-US' ? 'Provide LMP.' : 'Informe a DUM.', "", true);
-      const today = new Date(); today.setHours(0, 0, 0, 0);
+      
+      // Correção DST p/ Gestação
+      dum.setHours(12, 0, 0, 0); 
+      const today = new Date(); today.setHours(12, 0, 0, 0);
+      
       if(dum > today) return showResult(currentLang === 'en-US' ? 'LMP cannot be future.' : 'DUM futura inválida.', "", true);
       
-      // CORREÇÃO: Math.round em vez de Math.floor evita perda de 1 dia em horário de verão/fusos.
       const diffDays = Math.round((today - dum) / 86400000);
       const weeks = Math.floor(diffDays / 7);
       const days = diffDays % 7;
@@ -845,7 +868,6 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const timeDiffReal = calendarDifference(dAdm, dTerm);
       
-      // CORREÇÃO: Projeção do Aviso Prévio na contagem de avos
       let diasAviso = 0;
       if (reason === "sem_justa" || reason === "acordo") {
         diasAviso = 30 + Math.min(timeDiffReal.y * 3, 60);
@@ -855,30 +877,23 @@ document.addEventListener("DOMContentLoaded", () => {
       if (reason !== "pedido") dProj.setDate(dProj.getDate() + diasAviso);
       const projDiff = calendarDifference(dAdm, dProj);
 
-      // Saldo de Salário Real (Mês trabalhado até o último dia efetivo)
       const saldoSalario = (sal / 30) * dTerm.getDate();
       
       let avisoPrevio = 0;
       if (reason === "sem_justa") avisoPrevio = (sal / 30) * diasAviso;
       else if (reason === "acordo") avisoPrevio = ((sal / 30) * diasAviso) / 2;
 
-      // CORREÇÃO: 13º Salário (Regra dos 15 dias usando data projetada)
       let avos13 = dProj.getMonth();
       if (dProj.getDate() >= 15) avos13++; 
       const decimoTerceiro = (sal / 12) * Math.min(avos13, 12);
 
-      // CORREÇÃO: Férias Proporcionais + Regra de 15 dias + Férias Vencidas Estimadas
       let avosFerias = projDiff.m;
       if (projDiff.d >= 15) avosFerias++;
       
       let feriasBase = (sal / 12) * Math.min(avosFerias, 12);
-      
-      // Estima 1 mês de férias vencidas caso o tempo ultrapasse 1 ano 
       if (timeDiffReal.y > 0) feriasBase += sal;
-      
       const feriasTotal = feriasBase + (feriasBase / 3);
 
-      // Multa FGTS Base (Estimativa via 8% dos meses trabalhados efetivos)
       const totalMonthsReal = timeDiffReal.y * 12 + timeDiffReal.m + (timeDiffReal.d >= 15 ? 1 : 0);
       const saldoFgtsEst = (sal * 0.08) * totalMonthsReal;
       
@@ -895,7 +910,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ${reason !== 'pedido' ? `Aviso Prévio: R$ ${avisoPrevio.toFixed(2)}<br>` : ''}
           Férias (Prop./Venc. + ⅓): R$ ${feriasTotal.toFixed(2)}
         </div>
-        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">* Regra de 15 dias (Avos) e projeção de aviso aplicadas. Férias vencidas assumidas caso contratação > 1 ano.</div>
+        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">* Regra de 15 dias e projeção de aviso aplicadas. Férias vencidas estimadas se contrato > 1 ano.</div>
       `;
       showResult(html, `Rescisão estimada: R$ ${totalRescisao.toFixed(2)}`);
     };
@@ -916,7 +931,6 @@ document.addEventListener("DOMContentLoaded", () => {
       
       let paceDec = totalMin / dist, paceMin = Math.floor(paceDec), paceSec = Math.round((paceDec - paceMin) * 60);
       
-      // CORREÇÃO: Evita a exibição bugada de "5:60 min/km"
       if (paceSec === 60) { paceMin += 1; paceSec = 0; }
       
       const paceFormatted = `${paceMin}:${paceSec < 10 ? '0' : ''}${paceSec}`, speed = (dist / (totalMin / 60)).toFixed(1);
