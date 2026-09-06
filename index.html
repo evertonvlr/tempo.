@@ -661,18 +661,28 @@ document.addEventListener("DOMContentLoaded", () => {
     window._wcInterval = setInterval(updateClocks, 1000);
   }
 
-  function playBeep() {
+  // Alarme reformulado: Sequência rítmica de 3 segundos para garantir que o usuário ouça bem
+  function playAlarm() {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = 587.33; // D5
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      gain.gain.setValueAtTime(0.15, ctx.currentTime);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.3);
+      const notes = [587.33, 659.25, 783.99]; // D5, E5, G5
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        const startTime = ctx.currentTime + (idx * 0.9);
+        const duration = 0.5;
+        
+        gain.gain.setValueAtTime(0.25, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+      });
     } catch(e) {}
   }
 
@@ -738,9 +748,9 @@ document.addEventListener("DOMContentLoaded", () => {
           stopTimer();
           toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
           statusEl.textContent = isEn ? 'Time is up! Great job.' : 'Tempo esgotado! Excelente trabalho.';
-          playBeep();
+          playAlarm(); // Dispara a sequência sonora de ~3 segundos
           try {
-            if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
+            if ('vibrate' in navigator) navigator.vibrate([300, 150, 300, 150, 400]);
           } catch(e){}
         }
       }, 1000);
@@ -1402,7 +1412,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadTool(activeTool);
   };
 
-  logoBtn.addEventListener('click', () => { closeDrawer(); loadTool('date'); });
+  logoBtn.addEventListener('click', () => { closeDrawer(); loadtool('date'); });
   openMenuBtn.addEventListener('click', openDrawer);
   closeMenuBtn.addEventListener('click', closeDrawer);
   drawer.addEventListener('click', (e) => { if (e.target === drawer) closeDrawer(); });
