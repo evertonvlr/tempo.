@@ -76,7 +76,6 @@ select{cursor:pointer}
 
 .result{margin-top:20px;padding:21px;border:1px solid var(--line);background:var(--bg);border-radius:16px;text-align:center;display:none;transition:border-color 0.2s}
 .result.show{display:block;animation:up .25s ease-out}
-/* word-break blindado */
 .result .big{font-size:clamp(22px,4.5vw,30px);font-weight:900;letter-spacing:-1px;word-break:break-word}
 .result .small{color:var(--muted);margin-top:7px;font-size:13px;line-height:1.5}
 .error{color:var(--danger)!important}
@@ -147,14 +146,14 @@ footer a:hover{color:var(--accent)}
 </div>
 
 <!-- Command Palette Modal -->
-<div class="palette-overlay" id="paletteModal">
+<div class="palette-overlay" id="paletteModal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="palette-box">
     <input type="text" class="palette-input" id="paletteInput" placeholder="Digite para buscar uma ferramenta...">
     <div class="palette-list" id="paletteList"></div>
   </div>
 </div>
 
-<div class="drawer" id="drawer">
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="drawer-card">
     <div class="drawer-top"><strong id="menuTitle">Utilitários</strong><button class="close" id="closeMenu" aria-label="Fechar menu">×</button></div>
     
@@ -226,6 +225,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const $ = s => document.querySelector(s);
   const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport");
 
+  // Safe localStorage utility
+  const storage = {
+    get(key, fallback) {
+      try { const v = localStorage.getItem(key); return v !== null ? v : fallback; } catch(e) { return fallback; }
+    },
+    set(key, val) {
+      try { localStorage.setItem(key, val); } catch(e) {}
+    }
+  };
+
   const i18n = {
     'pt-BR': {
       page: "tempo. — Utilitários",
@@ -293,26 +302,20 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   let currentLang = 'pt-BR';
-  try {
-    const savedLang = localStorage.getItem('tempo_lang');
-    if (savedLang && i18n[savedLang]) {
-      currentLang = savedLang;
-    } else {
-      const navLang = navigator.language || navigator.userLanguage;
-      if (navLang.startsWith('pt')) {
-        currentLang = navLang.toLowerCase().includes('pt') && navLang.toLowerCase() !== 'pt-br' ? 'pt-PT' : 'pt-BR';
-      } else if (navLang.startsWith('en')) {
-        currentLang = 'en-US';
-      }
+  const savedLang = storage.get('tempo_lang', '');
+  if (savedLang && i18n[savedLang]) {
+    currentLang = savedLang;
+  } else {
+    const navLang = navigator.language || navigator.userLanguage || 'pt-BR';
+    if (navLang.startsWith('pt')) {
+      currentLang = navLang.toLowerCase().includes('pt') && navLang.toLowerCase() !== 'pt-br' ? 'pt-PT' : 'pt-BR';
+    } else if (navLang.startsWith('en')) {
+      currentLang = 'en-US';
     }
-  } catch(e) {}
+  }
   langSelect.value = currentLang;
 
-  let currentTheme = 'dark';
-  try {
-    const savedTheme = localStorage.getItem('tempo_theme');
-    if (savedTheme) currentTheme = savedTheme;
-  } catch(e) {}
+  let currentTheme = storage.get('tempo_theme', 'dark');
 
   const sunSvg = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
   const moonSvg = `<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
@@ -326,7 +329,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.documentElement.classList.remove('light');
       themeBtn.innerHTML = sunSvg;
     }
-    try { localStorage.setItem('tempo_theme', theme); } catch(e) {}
+    storage.set('tempo_theme', theme);
   }
   applyTheme(currentTheme);
 
@@ -335,18 +338,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const validTools = ['date', 'time', 'business', 'worldclock', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
-  let activeTool = 'date';
-  
-  try {
-    const saved = localStorage.getItem('tempo_tool');
-    if (saved && validTools.includes(saved)) {
-      activeTool = saved;
-    }
-  } catch (e) {}
-
-  function saveTool(t) {
-    try { localStorage.setItem('tempo_tool', t); } catch(e) {}
-  }
+  let activeTool = storage.get('tempo_tool', 'date');
+  if (!validTools.includes(activeTool)) activeTool = 'date';
 
   let dateMode = "diff";
   let businessMode = "diff";
@@ -360,7 +353,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return adjusted.toISOString().slice(0, 10);
   };
 
-  /* CORREÇÃO BUG #1: Proteção contra Invalid Date gerando NaN */
   function dateFromInput(id) {
     const v = $(id).value;
     if (!v) return null;
@@ -372,7 +364,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return d.toLocaleDateString(currentLang === 'en-US' ? 'en-US' : 'pt-BR', { day: "2-digit", month: "2-digit", year: "numeric" });
   }
 
-  /* CORREÇÃO BUG #3: Matemática cravada para não dar dias negativos */
   function calendarDifference(start, end) {
     if (start > end) { let temp = start; start = end; end = temp; }
     let y = end.getFullYear() - start.getFullYear();
@@ -389,7 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (m < 0) { m += 12; y--; }
       let daysInPrevMonth = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
       d += daysInPrevMonth;
-      if (d < 0) { d = end.getDate(); } // Fallback edge case extremo de meses longos p/ curtos
+      if (d < 0) { d = end.getDate(); }
     }
     
     const utcStart = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
@@ -398,7 +389,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return { y, m, d, total };
   }
 
-  /* CORREÇÃO BUG #2: Normalizar para 12:00 protege do DST (Horário de Verão) e ajustada contagem exclusiva */
   function businessDaysDifference(start, end) {
     if (start > end) { let temp = start; start = end; end = temp; }
     let count = 0; 
@@ -416,7 +406,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return count;
   }
 
-  /* CORREÇÃO BUG #2: Normalização de horas */
   function addBusinessDays(base, n, isAdd = true) {
     let cur = new Date(base); 
     cur.setHours(12, 0, 0, 0);
@@ -633,17 +622,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const grid = $("#worldClockGrid");
     $("#localTzBox").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+    // Renderiza uma vez para evitar reflows agressivos do DOM a cada segundo
+    grid.innerHTML = zones.map((z, idx) => `
+      <div style="background:var(--bg); border:1px solid var(--line); border-radius:14px; padding:14px; text-align:center;">
+        <div style="font-size:11px; font-weight:750; color:var(--muted); margin-bottom:4px;">${z.city}</div>
+        <div id="wc-time-${idx}" style="font-size:22px; font-weight:900; letter-spacing:-.5px;">--:--:--</div>
+        <div id="wc-date-${idx}" style="font-size:11px; color:var(--muted); margin-top:2px;">--</div>
+      </div>
+    `).join('');
+
     function updateClocks() {
       if(!$("#worldClockGrid")) return;
-      grid.innerHTML = zones.map(z => {
-        const timeStr = new Intl.DateTimeFormat('en-GB', { timeZone: z.tz, hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date());
-        const dateStr = new Intl.DateTimeFormat(currentLang, { timeZone: z.tz, weekday: 'short', day: 'numeric', month: 'short' }).format(new Date());
-        return `<div style="background:var(--bg); border:1px solid var(--line); border-radius:14px; padding:14px; text-align:center;">
-          <div style="font-size:11px; font-weight:750; color:var(--muted); margin-bottom:4px;">${z.city}</div>
-          <div style="font-size:22px; font-weight:900; letter-spacing:-.5px;">${timeStr}</div>
-          <div style="font-size:11px; color:var(--muted); margin-top:2px;">${dateStr}</div>
-        </div>`;
-      }).join('');
+      const now = new Date();
+      zones.forEach((z, idx) => {
+        const timeEl = $(`#wc-time-${idx}`);
+        const dateEl = $(`#wc-date-${idx}`);
+        if(timeEl && dateEl) {
+          timeEl.textContent = new Intl.DateTimeFormat('en-GB', { timeZone: z.tz, hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(now);
+          dateEl.textContent = new Intl.DateTimeFormat(currentLang, { timeZone: z.tz, weekday: 'short', day: 'numeric', month: 'short' }).format(now);
+        }
+      });
     }
     updateClocks();
     window._wcInterval = setInterval(updateClocks, 1000);
@@ -685,7 +683,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const dum = dateFromInput("#dumDate");
       if(!dum) return showResult(currentLang === 'en-US' ? 'Provide LMP.' : 'Informe a DUM.', "", true);
       
-      // Correção DST p/ Gestação
       dum.setHours(12, 0, 0, 0); 
       const today = new Date(); today.setHours(12, 0, 0, 0);
       
@@ -946,11 +943,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function openPalette() {
     paletteModal.classList.add("open");
+    paletteModal.setAttribute("aria-hidden", "false");
     paletteInput.value = "";
     renderPaletteList("");
-    setTimeout(() => paletteInput.focus(), 50);
+    requestAnimationFrame(() => paletteInput.focus());
   }
-  function closePalette() { paletteModal.classList.remove("open"); }
+  function closePalette() { 
+    paletteModal.classList.remove("open"); 
+    paletteModal.setAttribute("aria-hidden", "true");
+  }
+
+  function openDrawer() {
+    drawer.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+  }
+  function closeDrawer() {
+    drawer.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+  }
 
   function renderPaletteList(query) {
     const list = Object.keys(i18n[currentLang].tools).map(key => ({
@@ -982,7 +992,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (paletteModal.classList.contains('open')) closePalette();
       else openPalette();
     }
-    if (e.key === 'Escape') closePalette();
+    if (e.key === 'Escape') {
+      closePalette();
+      closeDrawer();
+    }
   });
 
   function updateStaticTexts() {
@@ -1006,7 +1019,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function loadTool(t) {
     if (window._wcInterval) clearInterval(window._wcInterval);
     activeTool = t;
-    saveTool(t); 
+    storage.set('tempo_tool', t); 
     
     const meta = i18n[currentLang].tools[t] || i18n[currentLang].tools['date'];
     pageTitle.textContent = "tempo. — " + meta.title;
@@ -1033,19 +1046,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   langSelect.onchange = (e) => {
     currentLang = e.target.value;
-    try { localStorage.setItem('tempo_lang', currentLang); } catch(err) {}
+    storage.set('tempo_lang', currentLang);
     updateStaticTexts();
     loadTool(activeTool);
   };
 
-  logoBtn.addEventListener('click', () => { drawer.classList.remove("open"); loadTool('date'); });
-  openMenuBtn.addEventListener('click', () => drawer.classList.add("open"));
-  closeMenuBtn.addEventListener('click', () => drawer.classList.remove("open"));
-  drawer.addEventListener('click', (e) => { if (e.target === drawer) drawer.classList.remove("open"); });
+  logoBtn.addEventListener('click', () => { closeDrawer(); loadTool('date'); });
+  openMenuBtn.addEventListener('click', openDrawer);
+  closeMenuBtn.addEventListener('click', closeDrawer);
+  drawer.addEventListener('click', (e) => { if (e.target === drawer) closeDrawer(); });
 
   document.querySelectorAll(".menu-item").forEach(item => {
     item.addEventListener('click', () => {
-      drawer.classList.remove("open");
+      closeDrawer();
       loadTool(item.dataset.tool);
     });
   });
