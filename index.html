@@ -64,12 +64,10 @@ h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bot
 .tab{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 8px;border-radius:10px;font-weight:750;font-size:13px;transition:.2s}
 .tab.active{background:var(--card2);color:var(--text);box-shadow:0 3px 12px rgba(0,0,0,.1)}
 
-/* Grid blindado contra estouro */
 .grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:14px}
 .field{min-width:0}
 .field label{display:block;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.5px;margin:0 0 8px 3px}
 
-/* Correção anti-zoom iPhone */
 input,select{width:100%;max-width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:12px 14px;outline:none;transition:.2s;font-size:16px;-webkit-appearance:none}
 input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.12)}
 select{cursor:pointer}
@@ -225,7 +223,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const $ = s => document.querySelector(s);
   const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport");
 
-  // Safe localStorage utility
   const storage = {
     get(key, fallback) {
       try { const v = localStorage.getItem(key); return v !== null ? v : fallback; } catch(e) { return fallback; }
@@ -356,7 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function dateFromInput(id) {
     const v = $(id).value;
     if (!v) return null;
-    const d = new Date(v + "T00:00:00");
+    const d = new Date(v + "T12:00:00"); // Normalizado ao meio-dia para evitar DST
     return isNaN(d.getTime()) ? null : d;
   }
 
@@ -622,7 +619,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const grid = $("#worldClockGrid");
     $("#localTzBox").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    // Renderiza uma vez para evitar reflows agressivos do DOM a cada segundo
     grid.innerHTML = zones.map((z, idx) => `
       <div style="background:var(--bg); border:1px solid var(--line); border-radius:14px; padding:14px; text-align:center;">
         <div style="font-size:11px; font-weight:750; color:var(--muted); margin-bottom:4px;">${z.city}</div>
@@ -683,7 +679,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const dum = dateFromInput("#dumDate");
       if(!dum) return showResult(currentLang === 'en-US' ? 'Provide LMP.' : 'Informe a DUM.', "", true);
       
-      dum.setHours(12, 0, 0, 0); 
       const today = new Date(); today.setHours(12, 0, 0, 0);
       
       if(dum > today) return showResult(currentLang === 'en-US' ? 'LMP cannot be future.' : 'DUM futura inválida.', "", true);
@@ -726,7 +721,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const evDate = dateFromInput("#evDate");
       if(!evDate) return showResult(currentLang === 'en-US' ? 'Select valid date.' : 'Selecione data válida.', "", true);
       
-      const today = new Date(); today.setHours(0,0,0,0);
+      const today = new Date(); today.setHours(12,0,0,0);
       const x = calendarDifference(today, evDate);
       
       if (countMode === "down") {
@@ -843,7 +838,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <select id="rReason">
             <option value="sem_justa">${currentLang === 'en-US' ? 'Without cause' : 'Dispensa sem justa causa'}</option>
             <option value="pedido">${currentLang === 'en-US' ? 'Resignation' : 'Pedido de demissão'}</option>
-            <option value="acordo">${currentLang === 'en-US' ? 'Mutual agreement' : 'Acordo comum'}</option>
+            <option value="acordo">${currentLang === 'en-US' ? 'Mutual agreement' : 'Acordo comum (Art. 484-A)'}</option>
           </select>
         </div>
       </div>
@@ -865,32 +860,57 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const timeDiffReal = calendarDifference(dAdm, dTerm);
       
+      // Lei 12.506/11: 30 dias + 3 dias por ano completo trabalhado (máx 90 dias totais)
       let diasAviso = 0;
       if (reason === "sem_justa" || reason === "acordo") {
         diasAviso = 30 + Math.min(timeDiffReal.y * 3, 60);
       }
 
       const dProj = new Date(dTerm);
-      if (reason !== "pedido") dProj.setDate(dProj.getDate() + diasAviso);
-      const projDiff = calendarDifference(dAdm, dProj);
+      if (reason !== "pedido") {
+        dProj.setDate(dProj.getDate() + diasAviso);
+      }
 
-      const saldoSalario = (sal / 30) * dTerm.getDate();
+      // 1. Saldo de Salário (Divisor 30, teto limitado ao salário mensal)
+      const saldoSalario = Math.min(sal, (sal / 30) * dTerm.getDate());
       
+      // 2. Aviso Prévio (Indenizado integral se sem justa causa, ou pela metade se acordo art. 484-A)
       let avisoPrevio = 0;
-      if (reason === "sem_justa") avisoPrevio = (sal / 30) * diasAviso;
-      else if (reason === "acordo") avisoPrevio = ((sal / 30) * diasAviso) / 2;
+      if (reason === "sem_justa") {
+        avisoPrevio = (sal / 30) * diasAviso;
+      } else if (reason === "acordo") {
+        avisoPrevio = ((sal / 30) * diasAviso) / 2;
+      }
 
-      let avos13 = dProj.getMonth();
-      if (dProj.getDate() >= 15) avos13++; 
+      // 3. 13º Salário Proporcional (Regra dos 15 dias + Marco civil anual)
+      const start13 = new Date(Math.max(dAdm.getTime(), new Date(dProj.getFullYear(), 0, 1).getTime()));
+      const diff13 = calendarDifference(start13, dProj);
+      let avos13 = diff13.y * 12 + diff13.m;
+      if (diff13.d >= 15) avos13++;
       const decimoTerceiro = (sal / 12) * Math.min(avos13, 12);
 
-      let avosFerias = projDiff.m;
-      if (projDiff.d >= 15) avosFerias++;
+      // 4. Férias Vencidas + Proporcionais + 1/3 Constitucional
+      const totalMesesTrabalhados = timeDiffReal.y * 12 + timeDiffReal.m;
+      let feriasTotal = 0;
       
-      let feriasBase = (sal / 12) * Math.min(avosFerias, 12);
-      if (timeDiffReal.y > 0) feriasBase += sal;
-      const feriasTotal = feriasBase + (feriasBase / 3);
+      if (totalMesesTrabalhados >= 12) {
+        const periodosVencidos = Math.floor(totalMesesTrabalhados / 12);
+        const mesAtualCiclo = totalMesesTrabalhados % 12;
+        let avosFeriasProp = mesAtualCiclo;
+        if (timeDiffReal.d >= 15) avosFeriasProp++;
+        
+        const valorVencidas = (sal + sal / 3) * periodosVencidos;
+        const valorProporcional = ((sal / 12) * Math.min(avosFeriasProp, 12)) * (4/3);
+        feriasTotal = valorVencidas + valorProporcional;
+      } else {
+        const projDiff = calendarDifference(dAdm, dProj);
+        let avosFerias = projDiff.m;
+        if (projDiff.d >= 15) avosFerias++;
+        const feriasBase = (sal / 12) * Math.min(avosFerias, 12);
+        feriasTotal = feriasBase + (feriasBase / 3);
+      }
 
+      // 5. FGTS e Multa Rescisória (40% sem justa causa, 20% acordo)
       const totalMonthsReal = timeDiffReal.y * 12 + timeDiffReal.m + (timeDiffReal.d >= 15 ? 1 : 0);
       const saldoFgtsEst = (sal * 0.08) * totalMonthsReal;
       
@@ -904,10 +924,11 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="big">R$ ${totalRescisao.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
         <div class="small" style="margin-top:8px; line-height:1.6;">
           Saldo: R$ ${saldoSalario.toFixed(2)} | 13º Prop.: R$ ${decimoTerceiro.toFixed(2)}<br>
-          ${reason !== 'pedido' ? `Aviso Prévio: R$ ${avisoPrevio.toFixed(2)}<br>` : ''}
-          Férias (Prop./Venc. + ⅓): R$ ${feriasTotal.toFixed(2)}
+          ${reason !== 'pedido' ? `Aviso Prévio (${diasAviso}d): R$ ${avisoPrevio.toFixed(2)}<br>` : ''}
+          Férias (Venc./Prop. + ⅓): R$ ${feriasTotal.toFixed(2)}<br>
+          ${reason !== 'pedido' ? `Multa FGTS: R$ ${multaFgts.toFixed(2)}` : ''}
         </div>
-        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">* Regra de 15 dias e projeção de aviso aplicadas. Férias vencidas estimadas se contrato > 1 ano.</div>
+        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">* Em conformidade com a CLT, Lei 12.506/11 e Art. 484-A.</div>
       `;
       showResult(html, `Rescisão estimada: R$ ${totalRescisao.toFixed(2)}`);
     };
