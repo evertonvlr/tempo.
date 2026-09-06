@@ -15,18 +15,8 @@
 <meta name="apple-mobile-web-app-title" content="tempo.">
 <link rel="manifest" href="manifest.json">
 
-<!-- Schema.org Structured Data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "tempo.",
-  "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": "All",
-  "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "description": "Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte, foco e horóscopo."
-}
-</script>
+<!-- SCRIPT DO ADSENSE (Mantenha seu client ID aqui) -->
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-SEU_CODIGO_AQUI" crossorigin="anonymous"></script> -->
 
 <title id="pageTitle">tempo. — Utilitários</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230b0d12%22/><text x=%2250%22 y=%2270%22 font-size=%2260%22 font-weight=%22900%22 font-family=%22system-ui, sans-serif%22 fill=%22%23f7f8fb%22 text-anchor=%22middle%22>t<tspan fill=%22%237c5cff%22>.</tspan></text></svg>">
@@ -42,43 +32,68 @@ body{
   font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text);
   min-height:100vh;
-  transition:background 0.3s, color 0.3s;
+  transition:background 0.3s, color 0.3s, padding-left 0.3s;
   background: radial-gradient(circle at 50% -20%, var(--card2) 0, var(--bg) 60%);
   background-size: 100% 200%;
   animation: ambientGlow 15s ease-in-out infinite alternate;
 }
-@keyframes ambientGlow {
-  0% { background-position: 50% 0%; }
-  100% { background-position: 50% 100%; }
-}
+@keyframes ambientGlow { 0% { background-position: 50% 0%; } 100% { background-position: 50% 100%; } }
 button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer}
-.app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
-header{height:76px;display:flex;align-items:center;justify-content:space-between}
 
-.logo{font-size:21px;font-weight:850;letter-spacing:-.7px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:opacity .2s, transform .15s ease}
+/* Sidebar Fixa (Desktop) e Gaveta (Mobile) */
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:89;opacity:0;transition:opacity .3s}
+.sidebar{background:var(--card);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto;z-index:90;padding:22px}
+
+/* Layout Responsivo Base */
+.app{width:min(100%,900px);margin:0 auto;padding:0 20px 48px;display:flex;flex-direction:column}
+header{height:76px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+
+@media(min-width: 901px) {
+  body{padding-left:280px}
+  .sidebar{position:fixed;top:0;left:0;bottom:0;width:280px}
+  .mobile-only{display:none !important}
+}
+@media(max-width: 900px) {
+  .sidebar{position:fixed;top:0;left:-100%;bottom:0;width:min(320px,85vw);transition:left .3s cubic-bezier(.2,.8,.2,1)}
+  .sidebar.open{left:0}
+  .drawer-overlay.open{display:block;opacity:1;pointer-events:auto}
+  .desktop-only{display:none !important}
+}
+
+.logo{font-size:24px;font-weight:850;letter-spacing:-.7px;cursor:pointer;user-select:none;transition:opacity .2s, transform .15s ease}
+.logo span{color:var(--accent)}
 .logo:hover{opacity:0.75}
 .logo:active{transform:scale(0.97)}
-.logo span{color:var(--accent)}
 
-.header-actions{display:flex;gap:10px;align-items:center}
+.drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.close{border:0;background:var(--card2);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:21px;display:grid;place-items:center}
+
+.header-actions{display:flex;gap:10px;align-items:center;margin-left:auto}
 .icon-btn{width:45px;height:45px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);display:grid;place-items:center;transition:transform .15s ease, background .2s, border-color .2s;outline:none}
 .icon-btn svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none}
 .icon-btn:hover{transform:scale(1.04);background:var(--card2);border-color:var(--accent)}
 .icon-btn:active{transform:scale(0.95)}
 
-/* Chips / Atalhos Rápidos */
+.search-desktop{flex:1;max-width:380px;height:45px;background:var(--card);border:1px solid var(--line);border-radius:14px;display:flex;align-items:center;gap:12px;padding:0 16px;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
+.search-desktop:hover{border-color:var(--accent);color:var(--text)}
+.search-desktop svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none}
+
 .chips-wrapper{width:100%;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:10px 0 20px;display:flex;gap:8px;justify-content:center}
-@media(max-width:700px){.chips-wrapper{justify-content:flex-start}}
+@media(max-width:900px){.chips-wrapper{justify-content:flex-start}}
 .chips-wrapper::-webkit-scrollbar{display:none}
-.chip{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:8px 16px;color:var(--text);font-size:12px;font-weight:750;white-space:nowrap;cursor:pointer;transition:background .2s, border-color .2s, transform .15s; display:flex; align-items:center; gap:6px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:8px 16px;color:var(--text);font-size:12px;font-weight:750;white-space:nowrap;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}
 .chip:hover{background:var(--card2);border-color:var(--accent)}
 .chip:active{transform:scale(0.95)}
 
-.hero{text-align:center;padding:24px 0 27px}
+.hero{text-align:center;padding:20px 0 27px}
 .badge{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:7px 12px;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.8px;margin-bottom:17px;background:var(--card)}
-h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bottom:15px}
+h1{font-size:clamp(35px,7vw,58px);line-height:1;letter-spacing:-2.5px;margin-bottom:15px}
 .hero p{color:var(--muted);font-size:15px;line-height:1.6}
-.panel{width:min(100%,760px);margin:auto;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:23px;box-shadow:0 25px 80px rgba(0,0,0,.15);overflow:hidden}
+.panel{width:min(100%,760px);margin:auto;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:23px;box-shadow:0 25px 80px rgba(0,0,0,.15);position:relative}
+
+.reset-tool-btn{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid transparent;color:var(--muted);padding:6px 12px;border-radius:99px;font-size:11px;font-weight:750;cursor:pointer;transition:.2s;margin-left:auto;margin-bottom:12px;margin-top:-10px;opacity:0.8}
+.reset-tool-btn:hover{background:var(--card2);border-color:var(--line);color:var(--text);opacity:1}
+.reset-tool-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none}
 
 .tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:14px;margin-bottom:23px;border:1px solid var(--line)}
 .tab{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 8px;border-radius:10px;font-weight:750;font-size:13px;transition:.2s}
@@ -90,20 +105,19 @@ h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bot
 
 input,select{width:100%;max-width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:12px 14px;outline:none;transition:.2s;font-size:16px;-webkit-appearance:none}
 input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.12)}
-select{cursor:pointer}
 
-.result{margin-top:20px;padding:21px;border:1px solid var(--line);background:var(--bg);border-radius:16px;text-align:center;display:none;transition:border-color 0.2s}
-.result.show{display:block;animation:up .25s ease-out}
+.result{margin-top:20px;padding:24px 21px;border:1px solid var(--line);background:var(--bg);border-radius:16px;text-align:center;display:none;transition:border-color 0.2s}
+.result.show{display:block;animation:up .3s ease-out}
 .result .big{font-size:clamp(22px,4.5vw,30px);font-weight:900;letter-spacing:-1px;word-break:break-word}
 .result .small{color:var(--muted);margin-top:7px;font-size:13px;line-height:1.5}
 .error{color:var(--danger)!important}
-.result.has-copy{cursor:pointer;position:relative;padding-bottom:30px}
-.result.has-copy::after{content:'Clique no card para copiar';position:absolute;bottom:10px;left:0;right:0;font-size:11px;font-weight:750;color:var(--muted);opacity:0.6;transition:0.2s}
-.result.has-copy:hover::after{opacity:1;color:var(--accent)}
-.result.has-copy.copied{border-color:#4ade80}
-.result.has-copy.copied::after{content:'✓ Copiado!';color:#4ade80;opacity:1}
 
-/* Command Palette Modal */
+.res-actions{display:flex;gap:10px;justify-content:center;margin-top:20px;padding-top:20px;border-top:1px solid var(--line)}
+.btn-action{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);color:var(--text);padding:8px 16px;border-radius:99px;font-size:12px;font-weight:750;cursor:pointer;transition:.2s}
+.btn-action:hover{background:var(--card2);border-color:var(--accent)}
+.btn-action svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none}
+
+/* Modais e Menus */
 .palette-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:.2s;z-index:100;display:grid;place-items:center;padding:20px}
 .palette-overlay.open{opacity:1;pointer-events:auto}
 .palette-box{width:min(100%, 520px);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 25px 60px rgba(0,0,0,.3);transform:translateY(-10px);transition:.2s}
@@ -113,40 +127,126 @@ select{cursor:pointer}
 .palette-item{padding:12px 14px;border-radius:10px;background:transparent;border:0;color:var(--text);text-align:left;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:.15s}
 .palette-item:hover, .palette-item.selected{background:var(--card2);color:var(--accent)}
 
-/* Drawer Menu */
-.drawer{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:.25s;z-index:90}
-.drawer.open{opacity:1;pointer-events:auto}
-.drawer-card{position:absolute;right:0;top:0;height:100%;width:min(350px,89vw);background:var(--card);border-left:1px solid var(--line);padding:22px;transform:translateX(100%);transition:.3s cubic-bezier(.2,.8,.2,1);overflow-y:auto}
-.drawer.open .drawer-card{transform:translateX(0)}
-
-.drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-size:18px}
-.close{border:0;background:var(--card2);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:21px}
 .lang-selector{margin-bottom:20px}
-.lang-selector select{padding:10px;font-size:16px;font-weight:700}
+.lang-selector select{padding:10px;font-size:14px;font-weight:700}
 .menu-group{font-size:11px;font-weight:750;color:var(--muted);letter-spacing:.8px;margin:18px 0 8px 4px}
 .menu-item{width:100%;text-align:left;padding:12px 16px;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:14px;margin-bottom:8px;font-weight:750;font-size:14px;transition:.2s;display:flex;align-items:center;gap:12px}
 .menu-item svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;flex-shrink:0}
 .menu-item:hover,.menu-item.active{border-color:var(--accent);background:var(--card2)}
-.menu-item span{opacity:.9}
+
+/* Toasts e Animações */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--text);color:var(--bg);padding:12px 24px;border-radius:99px;font-size:13px;font-weight:750;z-index:1000;opacity:0;transition:.3s cubic-bezier(0.2,0.8,0.2,1);box-shadow:0 10px 30px rgba(0,0,0,0.2);pointer-events:none;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast svg{color:#4ade80}
+
+.fade-enter{animation:fadeIn 0.3s ease-out forwards}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes up{from{opacity:0;transform:translateY(8px) scale(0.98)}to{opacity:1;transform:none}}
+.shake{animation:shake 0.4s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes shake{10%,90%{transform:translate3d(-1px,0,0)} 20%,80%{transform:translate3d(2px,0,0)} 30%,50%,70%{transform:translate3d(-4px,0,0)} 40%,60%{transform:translate3d(4px,0,0)}}
 
 footer{text-align:center;color:var(--muted);font-size:11px;margin-top:42px}
 footer a{color:var(--muted);text-decoration:none;transition:.2s}
 footer a:hover{color:var(--accent)}
-@keyframes up{from{opacity:0;transform:translateY(8px) scale(0.98)}to{opacity:1;transform:none}}
 @media(max-width:700px){.grid{grid-template-columns:1fr}}
-@media(max-width:600px){.app{padding:0 14px 35px}.hero{padding:24px 0 22px}.panel{padding:17px;border-radius:20px}h1{letter-spacing:-2px}.tabs{margin-bottom:19px}.tab{font-size:12px}}
 </style>
 </head>
 <body>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
+<!-- Menu Lateral (Sidebar Desktop / Gaveta Mobile) -->
+<aside class="sidebar" id="drawer" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="drawer-top">
+    <div class="logo" id="sidebarLogoBtn">tempo<span>.</span></div>
+    <button class="close mobile-only" id="closeMenu" aria-label="Fechar menu">×</button>
+  </div>
+  
+  <div class="lang-selector">
+    <label for="langSelect" style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:6px;" id="langLabel">IDIOMA / LANGUAGE</label>
+    <select id="langSelect">
+      <option value="pt-BR">🇧🇷 Português (Brasil)</option>
+      <option value="pt-PT">🇵🇹 Português (Portugal)</option>
+      <option value="en-US">🇺🇸 English (US)</option>
+    </select>
+  </div>
+
+  <div class="menu-group" id="groupEssential">ESSENCIAIS</div>
+  <button class="menu-item active" data-tool="date">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+    <span data-i18n="tool_date">Calculadora de Data</span>
+  </button>
+  <button class="menu-item" data-tool="time">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+    <span data-i18n="tool_time">Calculadora de Horas</span>
+  </button>
+  <button class="menu-item" data-tool="business">
+    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+    <span data-i18n="tool_business">Dias Úteis</span>
+  </button>
+  <button class="menu-item" data-tool="worldclock">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+    <span data-i18n="tool_worldclock">Fusos Horários</span>
+  </button>
+  <button class="menu-item" data-tool="pomodoro">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 15 15"></polyline></svg>
+    <span data-i18n="tool_pomodoro">Pomodoro</span>
+  </button>
+  <button class="menu-item" data-tool="horoscope">
+    <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+    <span data-i18n="tool_horoscope">Horóscopo</span>
+  </button>
+  
+  <div class="menu-group" id="groupPersonal">PESSOAL & VIDA</div>
+  <button class="menu-item" data-tool="age">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    <span data-i18n="tool_age">Idade Exata</span>
+  </button>
+  <button class="menu-item" data-tool="pregnancy">
+    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+    <span data-i18n="tool_pregnancy">Gestação</span>
+  </button>
+  <button class="menu-item" data-tool="countdown">
+    <svg viewBox="0 0 24 24"><path d="M5 22h14"></path><path d="M5 2h14"></path><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
+    <span data-i18n="tool_countdown">Contagem</span>
+  </button>
+  
+  <div class="menu-group" id="groupLabor">TRABALHISTAS (CLT)</div>
+  <button class="menu-item" data-tool="overtime">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2"></path><path d="M5 3 2 6"></path><path d="m22 6-3-3"></path><path d="M12 2v1"></path></svg>
+    <span data-i18n="tool_overtime">Horas Extras</span>
+  </button>
+  <button class="menu-item" data-tool="vacation13">
+    <svg viewBox="0 0 24 24"><path d="M23 12a11.05 11.05 0 0 0-22 0zm-5 7a3 3 0 0 1-6 0v-7"></path></svg>
+    <span data-i18n="tool_vacation13">Férias & 13º</span>
+  </button>
+  <button class="menu-item" data-tool="rescision">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+    <span data-i18n="tool_rescision">Rescisão</span>
+  </button>
+  
+  <div class="menu-group" id="groupSport">ESPORTE & PERFORMANCE</div>
+  <button class="menu-item" data-tool="running">
+    <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+    <span data-i18n="tool_running">Splits de Corrida</span>
+  </button>
+</aside>
+
 <div class="app">
 <header>
-  <div class="logo" id="logoBtn">tempo<span>.</span></div>
+  <div class="logo mobile-only" id="mobileLogoBtn">tempo<span>.</span></div>
+  
+  <div class="search-desktop desktop-only" id="searchDesktopBtn" aria-label="Pesquisar">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <span id="searchLabel">Pesquisar ferramenta... [Ctrl K]</span>
+  </div>
+
   <div class="header-actions">
-    <button class="icon-btn" id="searchBtn" aria-label="Pesquisar (Ctrl+K)" title="Pesquisar (Ctrl+K)">
+    <button class="icon-btn mobile-only" id="searchBtn" aria-label="Pesquisar">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
-    <button class="icon-btn" id="themeBtn" aria-label="Alternar Tema" title="Alternar Tema"></button>
-    <button class="icon-btn" id="openMenu" aria-label="Abrir menu">
+    <button class="icon-btn" id="themeBtn" aria-label="Alternar Tema"></button>
+    <button class="icon-btn mobile-only" id="openMenu" aria-label="Abrir menu">
       <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </button>
   </div>
@@ -166,7 +266,7 @@ footer a:hover{color:var(--accent)}
 <footer id="footerText">Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a></footer>
 </div>
 
-<!-- Command Palette Modal -->
+<!-- Modal Pesquisa -->
 <div class="palette-overlay" id="paletteModal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="palette-box">
     <input type="text" class="palette-input" id="paletteInput" placeholder="Digite para buscar uma ferramenta...">
@@ -174,105 +274,35 @@ footer a:hover{color:var(--accent)}
   </div>
 </div>
 
-<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="drawer-card" id="drawerCard">
-    <div class="drawer-top"><strong id="menuTitle">Utilitários</strong><button class="close" id="closeMenu" aria-label="Fechar menu">×</button></div>
-    
-    <div class="lang-selector">
-      <label for="langSelect" style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:6px;" id="langLabel">IDIOMA / LANGUAGE</label>
-      <select id="langSelect">
-        <option value="pt-BR">🇧🇷 Português (Brasil)</option>
-        <option value="pt-PT">🇵🇹 Português (Portugal)</option>
-        <option value="en-US">🇺🇸 English (US)</option>
-      </select>
-    </div>
-
-    <div class="menu-group" id="groupEssential">ESSENCIAIS</div>
-    <button class="menu-item active" data-tool="date">
-      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-      <span data-i18n="tool_date">Calculadora de Data</span>
-    </button>
-    <button class="menu-item" data-tool="time">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-      <span data-i18n="tool_time">Calculadora de Horas</span>
-    </button>
-    <button class="menu-item" data-tool="business">
-      <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-      <span data-i18n="tool_business">Dias Úteis</span>
-    </button>
-    <button class="menu-item" data-tool="worldclock">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-      <span data-i18n="tool_worldclock">Fusos Horários (World Clock)</span>
-    </button>
-    <button class="menu-item" data-tool="pomodoro">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 15 15"></polyline></svg>
-      <span data-i18n="tool_pomodoro">Temporizador Pomodoro</span>
-    </button>
-    <button class="menu-item" data-tool="horoscope">
-      <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-      <span data-i18n="tool_horoscope">Horóscopo Diário</span>
-    </button>
-    
-    <div class="menu-group" id="groupPersonal">PESSOAL & VIDA</div>
-    <button class="menu-item" data-tool="age">
-      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-      <span data-i18n="tool_age">Idade Exata</span>
-    </button>
-    <button class="menu-item" data-tool="pregnancy">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-      <span data-i18n="tool_pregnancy">Gestação & Parto</span>
-    </button>
-    <button class="menu-item" data-tool="countdown">
-      <svg viewBox="0 0 24 24"><path d="M5 22h14"></path><path d="M5 2h14"></path><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
-      <span data-i18n="tool_countdown">Contagem Regressiva</span>
-    </button>
-    
-    <div class="menu-group" id="groupLabor">TRABALHISTAS (CLT)</div>
-    <button class="menu-item" data-tool="overtime">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2"></path><path d="M5 3 2 6"></path><path d="m22 6-3-3"></path><path d="M12 2v1"></path></svg>
-      <span data-i18n="tool_overtime">Horas Extras</span>
-    </button>
-    <button class="menu-item" data-tool="vacation13">
-      <svg viewBox="0 0 24 24"><path d="M23 12a11.05 11.05 0 0 0-22 0zm-5 7a3 3 0 0 1-6 0v-7"></path></svg>
-      <span data-i18n="tool_vacation13">Férias & 13º Salário</span>
-    </button>
-    <button class="menu-item" data-tool="rescision">
-      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-      <span data-i18n="tool_rescision">Rescisão (Acerto)</span>
-    </button>
-    
-    <div class="menu-group" id="groupSport">ESPORTE & PERFORMANCE</div>
-    <button class="menu-item" data-tool="running">
-      <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-      <span data-i18n="tool_running">Parciais de Corrida (Splits)</span>
-    </button>
-  </div>
-</div>
+<!-- Notificação Toast -->
+<div id="toast" class="toast"></div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const $ = s => document.querySelector(s);
-  const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport"), quickChips = $("#quickChips"), greetingEl = $("#greeting");
+  const tool = $("#tool"), drawer = $("#drawer"), drawerOverlay = $("#drawerOverlay"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), sidebarLogoBtn = $("#sidebarLogoBtn"), mobileLogoBtn = $("#mobileLogoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), searchDesktopBtn = $("#searchDesktopBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport"), quickChips = $("#quickChips"), greetingEl = $("#greeting");
 
-  // UX: Micro-feedback (vibração leve)
+  // Haptics (Vibração sutil)
   function haptic() {
     try { if (navigator.vibrate) navigator.vibrate(20); } catch(e){}
   }
 
+  // Toast Notifications
+  function showToast(msg) {
+    const t = $("#toast");
+    t.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> ${msg}`;
+    t.classList.add("show");
+    haptic();
+    clearTimeout(t.timer);
+    t.timer = setTimeout(() => t.classList.remove("show"), 2500);
+  }
+
   const storage = {
-    get(key, fallback) {
-      try { const v = localStorage.getItem(key); return v !== null ? v : fallback; } catch(e) { return fallback; }
-    },
-    set(key, val) {
-      try { localStorage.setItem(key, val); } catch(e) {}
-    }
+    get(key, fallback) { try { const v = localStorage.getItem(key); return v !== null ? v : fallback; } catch(e) { return fallback; } },
+    set(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
   };
 
-  function escapeHTML(str) {
-    return str.replace(/[&<>'"]/g, tag => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-    }[tag] || tag));
-  }
+  function escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); }
 
   const getLocalISODate = (d = new Date()) => {
     const adjusted = new Date(d);
@@ -280,8 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return adjusted.toISOString().slice(0, 10);
   };
 
-  // ESTADOS GLOBAIS
-  const states = {
+  const getDefaultStates = () => ({
     date: { mode: "diff", d1: getLocalISODate(), d2: getLocalISODate(), base: getLocalISODate(), days: 30 },
     time: { t1: "08:00", t2: "17:40" },
     business: { mode: "diff", b1: getLocalISODate(), b2: (() => { const d = new Date(); d.setDate(d.getDate() + 15); return getLocalISODate(d); })(), base: getLocalISODate(), days: 10 },
@@ -295,203 +324,179 @@ document.addEventListener("DOMContentLoaded", () => {
     vacation13: { mode: "13", sal: 1621, meses: 12 },
     rescision: { sal: 2500, reason: "sem_justa", adm: (() => { const d = new Date(); d.setFullYear(d.getFullYear() - 2); return getLocalISODate(d); })(), term: getLocalISODate() },
     running: { dist: 10, time: 50 }
-  };
+  });
+
+  const states = getDefaultStates();
 
   const i18n = {
     'pt-BR': {
-      page: "tempo. — Utilitários",
-      footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>',
+      page: "tempo. — Utilitários", footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>',
       menu: "Utilitários", langLabel: "IDIOMA / REGIÃO",
       g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHISTAS (CLT)", g4: "ESPORTE & PERFORMANCE",
-      copyHint: "Clique no card para copiar", copied: "✓ Copiado!",
+      copyHint: "Copiar", shareHint: "Compartilhar", copied: "Copiado com sucesso!", resetText: "Limpar Formulário", resetMsg: "Campos redefinidos",
       disclaimer: "* Valores estimados para fins orientativos. Consulte o RH ou um profissional contábil.",
       tools: {
         date: { title: "Calculadora de Data", subtitle: "Descubra exatamente quanto tempo existe entre duas datas.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Data" },
         time: { title: "Calculadora de Horas", subtitle: "Calcule a diferença entre dois horários.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Horas" },
         business: { title: "Calculadora de Dias Úteis", subtitle: "Calcule prazos desconsiderando os finais de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
-        worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte o horário em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
+        worldclock: { title: "Fusos Horários", subtitle: "Consulte o horário em tempo real nas principais capitais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
         pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
-        horoscope: { title: "Horóscopo Diário Completo", subtitle: "Previsões detalhadas de amor, trabalho, finanças e saúde para o seu signo.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
+        horoscope: { title: "Horóscopo Diário", subtitle: "Previsões detalhadas de amor, trabalho, finanças e saúde.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
         age: { title: "Calculadora de Idade Exata", subtitle: "Descubra sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" },
         pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime a idade gestacional e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" },
-        countdown: { title: "Contagem Regressiva", subtitle: "Meça o tempo que falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Regressiva" },
-        overtime: { title: "Horas Extras (CLT)", subtitle: "Estime o valor da sua hora e o acréscimo por horas extras trabalhadas.", badge: "UTILITÁRIO TRABALHISTA", menuName: "Horas Extras" },
-        vacation13: { title: "Férias & 13º Salário", subtitle: "Estime os valores proporcionais seguindo as normas trabalhistas.", badge: "UTILITÁRIO TRABALHISTA", menuName: "Férias & 13º Salário" },
-        rescision: { title: "Rescisão Contratual (Acerto)", subtitle: "Estime rapidamente os valores devidos em caso de encerramento de contrato.", badge: "UTILITÁRIO TRABALHISTA", menuName: "Rescisão (Acerto)" },
-        running: { title: "Parciais de Corrida (Splits)", subtitle: "Descubra o ritmo por quilômetro necessário para atingir sua meta de tempo.", badge: "ESPORTE & PERFORMANCE", menuName: "Parciais de Corrida" }
+        countdown: { title: "Contagem Regressiva", subtitle: "Meça o tempo que falta para um grande evento ou quanto passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Regressiva" },
+        overtime: { title: "Horas Extras (CLT)", subtitle: "Estime o valor da sua hora e o acréscimo por horas extras.", badge: "UTILITÁRIO TRABALHISTA", menuName: "Horas Extras" },
+        vacation13: { title: "Férias & 13º Salário", subtitle: "Estime os valores proporcionais seguindo as normas.", badge: "UTILITÁRIO TRABALHISTA", menuName: "Férias & 13º Salário" },
+        rescision: { title: "Rescisão Contratual", subtitle: "Estime rapidamente os valores devidos no encerramento de contrato.", badge: "UTILITÁRIO TRABALHISTA", menuName: "Rescisão (Acerto)" },
+        running: { title: "Parciais de Corrida (Splits)", subtitle: "Descubra o ritmo necessário para atingir sua meta.", badge: "ESPORTE & PERFORMANCE", menuName: "Parciais de Corrida" }
       }
     },
     'pt-PT': {
-      page: "tempo. — Utilitários",
-      footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>',
+      page: "tempo. — Utilitários", footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>',
       menu: "Utilitários", langLabel: "IDIOMA / REGIÃO",
-      g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHISTAS (CÓDIGO DO TRABALHO)", g4: "DESPORTO & PERFORMANCE",
-      copyHint: "Clique no cartão para copiar", copied: "✓ Copiado!",
-      disclaimer: "* Valores estimados para fins orientativos. Consulte os Recursos Humanos ou um contabilista.",
+      g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHISTAS", g4: "DESPORTO & PERFORMANCE",
+      copyHint: "Copiar", shareHint: "Partilhar", copied: "Copiado com sucesso!", resetText: "Limpar Formulário", resetMsg: "Campos redefinidos",
+      disclaimer: "* Valores estimados para fins orientativos. Consulte os Recursos Humanos.",
       tools: {
         date: { title: "Calculadora de Datas", subtitle: "Descubra exatamente quanto tempo decorre entre duas datas.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Datas" },
         time: { title: "Calculadora de Horas", subtitle: "Calcule a diferença entre dois horários.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Horas" },
         business: { title: "Dias Úteis", subtitle: "Calcule prazos descontando os fins de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
-        worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte a hora em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
-        pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie o seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
-        horoscope: { title: "Horóscopo Diário Completo", subtitle: "Previsões detalhadas de amor, trabalho, finanças e saúde para o seu signo.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
+        worldclock: { title: "Fusos Horários", subtitle: "Consulte a hora em tempo real nas principais capitais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
+        pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie o seu tempo de foco e pausas.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
+        horoscope: { title: "Horóscopo Diário", subtitle: "Previsões detalhadas de amor, trabalho, finanças e saúde.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
         age: { title: "Idade Exata", subtitle: "Descubra a sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" },
-        pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime o tempo de gestação e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" },
-        countdown: { title: "Contagem Decrescente", subtitle: "Saiba quanto tempo falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Decrescente" },
-        overtime: { title: "Trabalho Suplementar (Horas Extras)", subtitle: "Estime o valor da sua hora e o acréscimo por trabalho suplementar.", badge: "UTILITÁRIO LABORAL", menuName: "Trabalho Suplementar" },
-        vacation13: { title: "Férias & Subsídio de Natal", subtitle: "Estime os valores proporcionais seguindo a legislação laboral.", badge: "UTILITÁRIO LABORAL", menuName: "Férias & Subsídios" },
-        rescision: { title: "Rescisão de Contrato (Acerto)", subtitle: "Estime rapidamente os valores devidos em caso de cessação do contrato.", badge: "UTILITÁRIO LABORAL", menuName: "Rescisão de Contrato" },
-        running: { title: "Ritmo de Corrida (Splits)", subtitle: "Descubra o ritmo por quilómetro necessário para atingir o seu objetivo.", badge: "DESPORTO & PERFORMANCE", menuName: "Ritmo de Corrida" }
+        pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime o tempo de gestação e a data do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" },
+        countdown: { title: "Contagem Decrescente", subtitle: "Saiba quanto tempo falta para um grande evento.", badge: "PESSOAL & VIDA", menuName: "Contagem Decrescente" },
+        overtime: { title: "Trabalho Suplementar", subtitle: "Estime o valor da sua hora e o acréscimo.", badge: "UTILITÁRIO LABORAL", menuName: "Trabalho Suplementar" },
+        vacation13: { title: "Férias & Subsídio de Natal", subtitle: "Estime os valores proporcionais legais.", badge: "UTILITÁRIO LABORAL", menuName: "Férias & Subsídios" },
+        rescision: { title: "Rescisão de Contrato", subtitle: "Estime os valores devidos na cessação do contrato.", badge: "UTILITÁRIO LABORAL", menuName: "Rescisão de Contrato" },
+        running: { title: "Ritmo de Corrida (Splits)", subtitle: "Descubra o ritmo necessário para atingir o seu objetivo.", badge: "DESPORTO & PERFORMANCE", menuName: "Ritmo de Corrida" }
       }
     },
     'en-US': {
-      page: "tempo. — Utilities",
-      footer: 'Simple. Fast. Accurate. &nbsp;·&nbsp; <a href="privacidade.html">Privacy Policy</a>',
+      page: "tempo. — Utilities", footer: 'Simple. Fast. Accurate. &nbsp;·&nbsp; <a href="privacidade.html">Privacy Policy</a>',
       menu: "Utilities", langLabel: "LANGUAGE / REGION",
       g1: "ESSENTIALS", g2: "PERSONAL & LIFE", g3: "LABOR & FINANCE", g4: "SPORTS & PERFORMANCE",
-      copyHint: "Click card to copy", copied: "✓ Copiado!",
-      disclaimer: "* Estimated values for orientation purposes. Consult HR or a professional accountant.",
+      copyHint: "Copy", shareHint: "Share", copied: "Copied successfully!", resetText: "Reset Form", resetMsg: "Restored to defaults",
+      disclaimer: "* Estimated values for orientation purposes. Consult HR or an accountant.",
       tools: {
         date: { title: "Date Calculator", subtitle: "Find out exactly how much time exists between two dates.", badge: "TIME UTILITY", menuName: "Date Calculator" },
         time: { title: "Time Calculator", subtitle: "Calculate the difference between two times.", badge: "TIME UTILITY", menuName: "Time Calculator" },
         business: { title: "Business Days", subtitle: "Calculate deadlines excluding weekends.", badge: "TIME UTILITY", menuName: "Business Days" },
-        worldclock: { title: "World Clock & Timezones", subtitle: "Check real-time current time across major global financial hubs.", badge: "GLOBAL UTILITY", menuName: "World Clock" },
+        worldclock: { title: "World Clock", subtitle: "Check real-time current time across major global hubs.", badge: "GLOBAL UTILITY", menuName: "World Clock" },
         pomodoro: { title: "Pomodoro Timer", subtitle: "Manage your focus time and breaks with productive cycles.", badge: "FOCUS UTILITY", menuName: "Pomodoro Timer" },
-        horoscope: { title: "Complete Daily Horoscope", subtitle: "Detailed love, career, money and health predictions for your sign.", badge: "ASTROLOGY UTILITY", menuName: "Daily Horoscope" },
+        horoscope: { title: "Complete Daily Horoscope", subtitle: "Detailed love, career, money and health predictions.", badge: "ASTROLOGY UTILITY", menuName: "Daily Horoscope" },
         age: { title: "Exact Age Calculator", subtitle: "Discover your exact age in years, months, and days.", badge: "PERSONAL & LIFE", menuName: "Exact Age" },
         pregnancy: { title: "Pregnancy Calculator", subtitle: "Estimate gestational age and expected delivery date.", badge: "PERSONAL & LIFE", menuName: "Pregnancy & Due Date" },
-        countdown: { title: "Countdown Timer", subtitle: "Measure time remaining for a major event or time elapsed.", badge: "PERSONAL & LIFE", menuName: "Countdown" },
+        countdown: { title: "Countdown Timer", subtitle: "Measure time remaining for an event or time elapsed.", badge: "PERSONAL & LIFE", menuName: "Countdown" },
         overtime: { title: "Overtime Calculator", subtitle: "Estimate your hourly rate and overtime earnings.", badge: "LABOR & FINANCE", menuName: "Overtime Calculator" },
-        vacation13: { title: "Vacation & Bonus Pay", subtitle: "Estimate proportional payouts following labor guidelines.", badge: "LABOR & FINANCE", menuName: "Vacation & Bonus" },
-        rescision: { title: "Severance Calculator", subtitle: "Quickly estimate payouts upon employment contract termination.", badge: "LABOR & FINANCE", menuName: "Severance Estimate" },
-        running: { title: "Running Splits Calculator", subtitle: "Discover the per-kilometer pace needed to reach your target time.", badge: "SPORTS & PERFORMANCE", menuName: "Running Splits" }
+        vacation13: { title: "Vacation & Bonus Pay", subtitle: "Estimate proportional payouts following guidelines.", badge: "LABOR & FINANCE", menuName: "Vacation & Bonus" },
+        rescision: { title: "Severance Calculator", subtitle: "Quickly estimate payouts upon contract termination.", badge: "LABOR & FINANCE", menuName: "Severance Estimate" },
+        running: { title: "Running Splits Calculator", subtitle: "Discover the per-kilometer pace needed to reach your target.", badge: "SPORTS & PERFORMANCE", menuName: "Running Splits" }
       }
     }
   };
 
   let currentLang = 'pt-BR';
   const savedLang = storage.get('tempo_lang', '');
-  if (savedLang && i18n[savedLang]) {
-    currentLang = savedLang;
-  } else {
+  if (savedLang && i18n[savedLang]) currentLang = savedLang;
+  else {
     const navLang = navigator.language || navigator.userLanguage || 'pt-BR';
-    if (navLang.startsWith('pt')) {
-      currentLang = navLang.toLowerCase().includes('pt') && navLang.toLowerCase() !== 'pt-br' ? 'pt-PT' : 'pt-BR';
-    } else if (navLang.startsWith('en')) {
-      currentLang = 'en-US';
-    }
+    if (navLang.startsWith('pt')) currentLang = navLang.toLowerCase().includes('pt') && navLang.toLowerCase() !== 'pt-br' ? 'pt-PT' : 'pt-BR';
+    else if (navLang.startsWith('en')) currentLang = 'en-US';
   }
   langSelect.value = currentLang;
 
   let currentTheme = storage.get('tempo_theme', 'dark');
-
   const sunSvg = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
   const moonSvg = `<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
 
   function applyTheme(theme) {
     currentTheme = theme;
-    if (theme === 'light') {
-      document.documentElement.classList.add('light');
-      themeBtn.innerHTML = moonSvg;
-    } else {
-      document.documentElement.classList.remove('light');
-      themeBtn.innerHTML = sunSvg;
-    }
+    if (theme === 'light') { document.documentElement.classList.add('light'); themeBtn.innerHTML = moonSvg; } 
+    else { document.documentElement.classList.remove('light'); themeBtn.innerHTML = sunSvg; }
     storage.set('tempo_theme', theme);
   }
   applyTheme(currentTheme);
 
-  themeBtn.addEventListener('click', () => {
-    haptic();
-    applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-  });
+  themeBtn.addEventListener('click', () => { haptic(); applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); });
 
   const validTools = ['date', 'time', 'business', 'worldclock', 'pomodoro', 'horoscope', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
   
-  function getToolFromHash() {
-    const hash = window.location.hash.replace('#', '');
-    return validTools.includes(hash) ? hash : null;
-  }
-
-  let activeTool = getToolFromHash() || storage.get('tempo_tool', 'date');
+  let activeTool = window.location.hash.replace('#', '') || storage.get('tempo_tool', 'date');
   if (!validTools.includes(activeTool)) activeTool = 'date';
 
   let textToCopy = "";
 
-  function dateFromInput(id) {
-    const v = $(id).value;
-    if (!v) return null;
-    const d = new Date(v + "T12:00:00");
-    return isNaN(d.getTime()) ? null : d;
+  window.copyText = () => {
+    haptic();
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(textToCopy).then(() => showToast(i18n[currentLang].copied)).catch(()=>{});
+    } else {
+      try {
+        const t = document.createElement("textarea"); t.value = textToCopy; t.style.position="fixed"; document.body.appendChild(t); t.focus(); t.select(); document.execCommand('copy'); document.body.removeChild(t);
+        showToast(i18n[currentLang].copied);
+      } catch(e) {}
+    }
+  };
+
+  window.shareText = () => {
+    haptic();
+    if (navigator.share) { navigator.share({ title: 'tempo.', text: textToCopy }).catch(()=>{}); }
+  };
+
+  window.resetCurrentTool = () => {
+    haptic();
+    states[activeTool] = JSON.parse(JSON.stringify(getDefaultStates()[activeTool]));
+    if (activeTool === 'pomodoro' && window._pomodoroInterval) {
+      clearInterval(window._pomodoroInterval);
+      states.pomodoro.running = false;
+    }
+    loadTool(activeTool);
+    showToast(i18n[currentLang].resetMsg);
+  };
+
+  function renderHTML(html) {
+    const resetText = i18n[currentLang].resetText;
+    tool.innerHTML = `
+      <button onclick="window.resetCurrentTool()" class="reset-tool-btn" title="${resetText}">
+         <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
+         ${resetText}
+      </button>
+      ${html}
+    `;
+    tool.classList.remove('fade-enter');
+    void tool.offsetWidth;
+    tool.classList.add('fade-enter');
   }
 
-  function formatDate(d) {
-    return d.toLocaleDateString(currentLang === 'en-US' ? 'en-US' : 'pt-BR', { day: "2-digit", month: "2-digit", year: "numeric" });
-  }
+  function dateFromInput(id) { const v = $(id).value; if (!v) return null; const d = new Date(v + "T12:00:00"); return isNaN(d.getTime()) ? null : d; }
+  function formatDate(d) { return d.toLocaleDateString(currentLang === 'en-US' ? 'en-US' : 'pt-BR', { day: "2-digit", month: "2-digit", year: "numeric" }); }
 
   function calendarDifference(start, end) {
     if (start > end) { let temp = start; start = end; end = temp; }
-    let y = end.getFullYear() - start.getFullYear();
-    let m = end.getMonth() - start.getMonth();
-    let d = end.getDate() - start.getDate();
-    
-    if (m < 0 || (m === 0 && d < 0)) {
-      y--;
-      m += 12;
-    }
-    
-    if (d < 0) {
-      m--;
-      if (m < 0) { m += 12; y--; }
-      let daysInPrevMonth = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
-      d += daysInPrevMonth;
-      if (d < 0) { d = end.getDate(); }
-    }
-    
-    const utcStart = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
-    const utcEnd = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
-    const total = Math.round((utcEnd - utcStart) / 86400000);
+    let y = end.getFullYear() - start.getFullYear(); let m = end.getMonth() - start.getMonth(); let d = end.getDate() - start.getDate();
+    if (m < 0 || (m === 0 && d < 0)) { y--; m += 12; }
+    if (d < 0) { m--; if (m < 0) { m += 12; y--; } let daysInPrevMonth = new Date(end.getFullYear(), end.getMonth(), 0).getDate(); d += daysInPrevMonth; if (d < 0) { d = end.getDate(); } }
+    const total = Math.round((Date.UTC(end.getFullYear(), end.getMonth(), end.getDate()) - Date.UTC(start.getFullYear(), start.getMonth(), start.getDate())) / 86400000);
     return { y, m, d, total };
   }
 
-  // ALGORITMO OTIMIZADO DE DIAS ÚTEIS - O(1)
   function businessDaysDifference(start, end) {
     if (start > end) { let temp = start; start = end; end = temp; }
-    let s = new Date(start); s.setDate(s.getDate() + 1);
-    let e = new Date(end);
-    s.setHours(12,0,0,0); e.setHours(12,0,0,0);
+    let s = new Date(start); s.setDate(s.getDate() + 1); let e = new Date(end); s.setHours(12,0,0,0); e.setHours(12,0,0,0);
     if (s > e) return 0;
-    
     let totalDays = Math.round((e - s) / 86400000) + 1;
-    let fullWeeks = Math.floor(totalDays / 7);
-    let remDays = totalDays % 7;
-    
-    let count = fullWeeks * 5;
-    let curDayOfWeek = s.getDay();
-    for (let i = 0; i < remDays; i++) {
-      let d = (curDayOfWeek + i) % 7;
-      if (d !== 0 && d !== 6) count++;
-    }
+    let fullWeeks = Math.floor(totalDays / 7), remDays = totalDays % 7, count = fullWeeks * 5, curDayOfWeek = s.getDay();
+    for (let i = 0; i < remDays; i++) { let d = (curDayOfWeek + i) % 7; if (d !== 0 && d !== 6) count++; }
     return count;
   }
 
   function addBusinessDays(base, n, isAdd = true) {
-    let cur = new Date(base); 
-    cur.setHours(12, 0, 0, 0);
-    if (n === 0) return cur;
-    let dir = isAdd ? 1 : -1;
-    
-    let fullWeeks = Math.floor(n / 5);
-    let rem = n % 5;
-    
+    let cur = new Date(base); cur.setHours(12, 0, 0, 0); if (n === 0) return cur;
+    let dir = isAdd ? 1 : -1, fullWeeks = Math.floor(n / 5), added = fullWeeks * 5;
     cur.setDate(cur.getDate() + (fullWeeks * 7 * dir));
-    let added = fullWeeks * 5;
-    
-    while (added < n) {
-      cur.setDate(cur.getDate() + dir);
-      const day = cur.getDay();
-      if (day !== 0 && day !== 6) added++;
-    }
+    while (added < n) { cur.setDate(cur.getDate() + dir); const day = cur.getDay(); if (day !== 0 && day !== 6) added++; }
     return cur;
   }
 
@@ -499,58 +504,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const r = $("#result");
     if(r) {
       r.setAttribute('aria-live', 'polite');
-      r.setAttribute('aria-atomic', 'true');
       textToCopy = plainText;
-      r.innerHTML = html;
-      r.classList.remove("show", "copied");
+      let actionsHtml = '';
+      
+      if(!error && plainText) {
+        actionsHtml = `
+          <div class="res-actions">
+            <button class="btn-action" onclick="window.copyText()"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> ${i18n[currentLang].copyHint}</button>
+            ${navigator.share ? `<button class="btn-action" onclick="window.shareText()"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg> ${i18n[currentLang].shareHint}</button>` : ''}
+          </div>`;
+      }
+      
+      r.innerHTML = html + actionsHtml;
+      r.classList.remove("show", "shake", "error");
       void r.offsetWidth; 
       r.classList.add("show");
       
       if (error) {
-        r.classList.add("error");
-        r.classList.remove("has-copy");
-      } else {
-        r.classList.remove("error");
-        if(textToCopy) r.classList.add("has-copy");
+        haptic();
+        r.classList.add("error", "shake");
+        setTimeout(() => r.classList.remove("shake"), 400);
       }
     }
   }
 
-  document.addEventListener('click', e => {
-    const r = e.target.closest('.result.has-copy');
-    if (r && !r.classList.contains('error') && textToCopy) {
-      haptic();
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          r.classList.add('copied');
-          setTimeout(() => r.classList.remove('copied'), 2000);
-        }).catch(()=>{}); 
-      } else {
-        try {
-          const textArea = document.createElement("textarea");
-          textArea.value = textToCopy;
-          textArea.style.position = "fixed"; 
-          document.body.appendChild(textArea);
-          textArea.focus();
-          textArea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textArea);
-          r.classList.add('copied');
-          setTimeout(() => r.classList.remove('copied'), 2000);
-        } catch(err) {}
-      }
-    }
-  });
-
   function renderDate() {
     const st = states.date;
-    tool.innerHTML = `
+    renderHTML(`
       <div class="tabs">
         <button class="tab ${st.mode === "diff" ? "active" : ""}" data-mode="diff">${currentLang === 'en-US' ? 'Difference' : 'Diferença'}</button>
         <button class="tab ${st.mode === "add" ? "active" : ""}" data-mode="add">${currentLang === 'en-US' ? 'Add' : 'Adicionar'}</button>
         <button class="tab ${st.mode === "sub" ? "active" : ""}" data-mode="sub">${currentLang === 'en-US' ? 'Subtract' : 'Subtrair'}</button>
       </div>
-      <div id="dateArea"></div>`;
+      <div id="dateArea"></div>`);
     renderDateArea();
   }
 
@@ -564,18 +550,13 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="field"><label for="date2">${currentLang === 'en-US' ? 'END DATE' : 'DATA FINAL'}</label><input type="date" id="date2" value="${st.d2}"></div>
         </div>
         <div class="result" id="result"></div>`;
-      
       const calculate = () => {
-        st.d1 = $("#date1").value;
-        st.d2 = $("#date2").value;
+        st.d1 = $("#date1").value; st.d2 = $("#date2").value;
         const a = dateFromInput("#date1"), b = dateFromInput("#date2");
         if(!a || !b) return showResult(currentLang === 'en-US' ? 'Select both dates.' : 'Selecione as duas datas.', "", true);
         const x = calendarDifference(a, b);
-        const html = `<div class="big">${x.y} ${x.y===1?(currentLang==='en-US'?'year':'ano'):(currentLang==='en-US'?'years':'anos')}, ${x.m} ${x.m===1?(currentLang==='en-US'?'month':'mês'):(currentLang==='en-US'?'months':'meses')} & ${x.d} ${x.d===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">Total: ${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div>`;
-        const plainText = `Diferença: ${x.y} anos, ${x.m} meses e ${x.d} dias (Total: ${x.total} dias).`;
-        showResult(html, plainText);
+        showResult(`<div class="big">${x.y} ${x.y===1?(currentLang==='en-US'?'year':'ano'):(currentLang==='en-US'?'years':'anos')}, ${x.m} ${x.m===1?(currentLang==='en-US'?'month':'mês'):(currentLang==='en-US'?'months':'meses')} & ${x.d} ${x.d===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">Total: ${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div>`, `Diferença: ${x.y} anos, ${x.m} meses e ${x.d} dias (Total: ${x.total} dias).`);
       };
-      
       $("#date1").oninput = calculate; $("#date2").oninput = calculate; calculate();
     } else {
       area.innerHTML = `
@@ -584,19 +565,13 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="field"><label for="days">${currentLang === 'en-US' ? 'NUMBER OF DAYS' : 'QUANTIDADE DE DIAS'}</label><input type="number" id="days" min="0" step="1" value="${st.days}"></div>
         </div>
         <div class="result" id="result"></div>`;
-      
       const calculate = () => {
-        st.base = $("#baseDate").value;
-        st.days = $("#days").value;
+        st.base = $("#baseDate").value; st.days = $("#days").value;
         const base = dateFromInput("#baseDate"), n = Number($("#days").value);
         if(!base || $("#days").value === "" || !Number.isInteger(n) || n < 0) return showResult(currentLang === 'en-US' ? 'Enter a valid date and number.' : 'Informe uma data e quantidade válida.', "", true);
-        const d = new Date(base);
-        d.setDate(d.getDate() + (st.mode === "add" ? n : -n));
-        const html = `<div class="big">${formatDate(d)}</div><div class="small">${st.mode==="add"?(currentLang==='en-US'?'Added':'Adicionados'):(currentLang==='en-US'?'Subtracted':'Subtraídos')} ${n.toLocaleString(currentLang)} ${n===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}.</div>`;
-        const plainText = `Resultado: ${formatDate(d)}`;
-        showResult(html, plainText);
+        const d = new Date(base); d.setDate(d.getDate() + (st.mode === "add" ? n : -n));
+        showResult(`<div class="big">${formatDate(d)}</div><div class="small">${st.mode==="add"?(currentLang==='en-US'?'Added':'Adicionados'):(currentLang==='en-US'?'Subtracted':'Subtraídos')} ${n.toLocaleString(currentLang)} ${n===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}.</div>`, `Resultado: ${formatDate(d)}`);
       };
-      
       $("#baseDate").oninput = calculate; $("#days").oninput = calculate; calculate();
     }
     document.querySelectorAll(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; renderDate(); });
@@ -604,38 +579,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderTime() {
     const st = states.time;
-    tool.innerHTML = `
+    renderHTML(`
       <div class="grid">
         <div class="field"><label for="time1">${currentLang === 'en-US' ? 'START TIME' : 'HORÁRIO INICIAL'}</label><input type="time" id="time1" value="${st.t1}"></div>
         <div class="field"><label for="time2">${currentLang === 'en-US' ? 'END TIME' : 'HORÁRIO FINAL'}</label><input type="time" id="time2" value="${st.t2}"></div>
       </div>
-      <div class="result" id="result"></div>`;
-    
+      <div class="result" id="result"></div>`);
     const calculate = () => {
-      st.t1 = $("#time1").value;
-      st.t2 = $("#time2").value;
-      const a = st.t1, b = st.t2;
-      if(!a || !b) return showResult(currentLang === 'en-US' ? 'Provide both times.' : 'Informe os dois horários.', "", true);
-      let [ah, am] = a.split(":").map(Number), [bh, bm] = b.split(":").map(Number);
-      let start = ah * 60 + am, end = bh * 60 + bm;
-      if(end < start) end += 1440;
+      st.t1 = $("#time1").value; st.t2 = $("#time2").value;
+      if(!st.t1 || !st.t2) return showResult(currentLang === 'en-US' ? 'Provide both times.' : 'Informe os dois horários.', "", true);
+      let [ah, am] = st.t1.split(":").map(Number), [bh, bm] = st.t2.split(":").map(Number);
+      let start = ah * 60 + am, end = bh * 60 + bm; if(end < start) end += 1440;
       const total = end - start, h = Math.floor(total / 60), m = total % 60;
-      const html = `<div class="big">${h}h ${m.toString().padStart(2, "0")}min</div><div class="small">Total: ${total.toLocaleString(currentLang)} ${currentLang==='en-US'?'minutes':'minutos'}</div>`;
-      showResult(html, `Diferença de horário: ${h}h ${m.toString().padStart(2, "0")}min`);
+      showResult(`<div class="big">${h}h ${m.toString().padStart(2, "0")}min</div><div class="small">Total: ${total.toLocaleString(currentLang)} ${currentLang==='en-US'?'minutes':'minutos'}</div>`, `Diferença de horário: ${h}h ${m.toString().padStart(2, "0")}min`);
     };
-    
     $("#time1").oninput = calculate; $("#time2").oninput = calculate; calculate();
   }
 
   function renderBusiness() {
     const st = states.business;
-    tool.innerHTML = `
+    renderHTML(`
       <div class="tabs">
         <button class="tab ${st.mode === "diff" ? "active" : ""}" data-mode="diff">${currentLang === 'en-US' ? 'Difference' : 'Diferença'}</button>
         <button class="tab ${st.mode === "add" ? "active" : ""}" data-mode="add">${currentLang === 'en-US' ? 'Add' : 'Adicionar'}</button>
         <button class="tab ${st.mode === "sub" ? "active" : ""}" data-mode="sub">${currentLang === 'en-US' ? 'Subtract' : 'Subtrair'}</button>
       </div>
-      <div id="businessArea"></div>`;
+      <div id="businessArea"></div>`);
     renderBusinessArea();
   }
 
@@ -649,17 +618,13 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="field"><label for="bDate2">${currentLang === 'en-US' ? 'END DATE' : 'DATA FINAL'}</label><input type="date" id="bDate2" value="${st.b2}"></div>
         </div>
         <div class="result" id="result"></div>`;
-      
       const calculate = () => {
-        st.b1 = $("#bDate1").value;
-        st.b2 = $("#bDate2").value;
+        st.b1 = $("#bDate1").value; st.b2 = $("#bDate2").value;
         const a = dateFromInput("#bDate1"), b = dateFromInput("#bDate2");
         if(!a || !b) return showResult(currentLang === 'en-US' ? 'Select both dates.' : 'Selecione as duas datas.', "", true);
         const total = businessDaysDifference(a, b);
-        const html = `<div class="big">${total.toLocaleString(currentLang)} ${total===1?(currentLang==='en-US'?'business day':'dia útil'):(currentLang==='en-US'?'business days':'dias úteis')}</div><div class="small">${currentLang==='en-US'?'Excluding weekends.':'Intervalo sem finais de semana.'}</div>`;
-        showResult(html, `${total} dias úteis.`);
+        showResult(`<div class="big">${total.toLocaleString(currentLang)} ${total===1?(currentLang==='en-US'?'business day':'dia útil'):(currentLang==='en-US'?'business days':'dias úteis')}</div><div class="small">${currentLang==='en-US'?'Excluding weekends.':'Intervalo sem finais de semana.'}</div>`, `${total} dias úteis.`);
       };
-      
       $("#bDate1").oninput = calculate; $("#bDate2").oninput = calculate; calculate();
     } else {
       area.innerHTML = `
@@ -668,38 +633,27 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="field"><label for="bDays">${currentLang === 'en-US' ? 'BUSINESS DAYS' : 'DIAS ÚTEIS'}</label><input type="number" id="bDays" min="0" step="1" value="${st.days}"></div>
         </div>
         <div class="result" id="result"></div>`;
-      
       const calculate = () => {
-        st.base = $("#bBaseDate").value;
-        st.days = $("#bDays").value;
+        st.base = $("#bBaseDate").value; st.days = $("#bDays").value;
         const base = dateFromInput("#bBaseDate"), n = Number($("#bDays").value);
         if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult(currentLang === 'en-US' ? 'Provide date and days.' : 'Informe data e quantidade.', "", true);
         const d = addBusinessDays(base, n, st.mode === "add");
-        const html = `<div class="big">${formatDate(d)}</div><div class="small">Resultado (${n} dias úteis).</div>`;
-        showResult(html, `Resultado: ${formatDate(d)}`);
+        showResult(`<div class="big">${formatDate(d)}</div><div class="small">Resultado (${n} dias úteis).</div>`, `Resultado: ${formatDate(d)}`);
       };
-      
       $("#bBaseDate").oninput = calculate; $("#bDays").oninput = calculate; calculate();
     }
     document.querySelectorAll(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; renderBusiness(); });
   }
 
   function renderWorldClock() {
-    tool.innerHTML = `
+    renderHTML(`
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;" id="worldClockGrid"></div>
-      <div class="result show" style="display:block">
+      <div class="result show" style="display:block; margin-top:0;">
         <div class="small" style="font-weight:700; margin-bottom:4px;">${currentLang === 'en-US' ? 'Current Local Timezone:' : 'Seu Fuso Horário Local:'}</div>
         <div class="big" id="localTzBox" style="font-size:18px;">--</div>
-      </div>`;
+      </div>`);
     
-    const zones = [
-      { city: 'Brasília', tz: 'America/Sao_Paulo' },
-      { city: 'Lisboa', tz: 'Europe/Lisbon' },
-      { city: 'New York', tz: 'America/New_York' },
-      { city: 'London', tz: 'Europe/London' },
-      { city: 'Tokyo', tz: 'Asia/Tokyo' }
-    ];
-
+    const zones = [{ city: 'Brasília', tz: 'America/Sao_Paulo' }, { city: 'Lisboa', tz: 'Europe/Lisbon' }, { city: 'New York', tz: 'America/New_York' }, { city: 'London', tz: 'Europe/London' }, { city: 'Tokyo', tz: 'Asia/Tokyo' }];
     const grid = $("#worldClockGrid");
     $("#localTzBox").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -708,52 +662,34 @@ document.addEventListener("DOMContentLoaded", () => {
         <div style="font-size:11px; font-weight:750; color:var(--muted); margin-bottom:4px;">${z.city}</div>
         <div id="wc-time-${idx}" style="font-size:22px; font-weight:900; letter-spacing:-.5px;">--:--:--</div>
         <div id="wc-date-${idx}" style="font-size:11px; color:var(--muted); margin-top:2px;">--</div>
-      </div>
-    `).join('');
+      </div>`).join('');
 
     function updateClocks() {
       if(!$("#worldClockGrid")) return;
       const now = new Date();
       zones.forEach((z, idx) => {
-        const timeEl = $(`#wc-time-${idx}`);
-        const dateEl = $(`#wc-date-${idx}`);
+        const timeEl = $(`#wc-time-${idx}`), dateEl = $(`#wc-date-${idx}`);
         if(timeEl && dateEl) {
           timeEl.textContent = new Intl.DateTimeFormat('en-GB', { timeZone: z.tz, hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(now);
           dateEl.textContent = new Intl.DateTimeFormat(currentLang, { timeZone: z.tz, weekday: 'short', day: 'numeric', month: 'short' }).format(now);
         }
       });
     }
-    updateClocks();
-    window._wcInterval = setInterval(updateClocks, 1000);
+    updateClocks(); window._wcInterval = setInterval(updateClocks, 1000);
   }
 
-  // GERENCIAMENTO SEGURO DE ÁUDIO NO POMODORO
   let audioCtx = null;
   function playAlarm() {
     try {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
       const notes = [587.33, 659.25, 783.99];
       notes.forEach((freq, idx) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.value = freq;
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        
-        const startTime = audioCtx.currentTime + (idx * 0.3);
-        const duration = 0.25;
-        
-        gain.gain.setValueAtTime(0.2, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-        
-        osc.start(startTime);
-        osc.stop(startTime + duration);
+        const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+        osc.type = 'sine'; osc.frequency.value = freq; osc.connect(gain); gain.connect(audioCtx.destination);
+        const startTime = audioCtx.currentTime + (idx * 0.3), duration = 0.25;
+        gain.gain.setValueAtTime(0.2, startTime); gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        osc.start(startTime); osc.stop(startTime + duration);
       });
     } catch(e) {}
   }
@@ -761,7 +697,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderPomodoro() {
     const st = states.pomodoro;
     const isEn = currentLang === 'en-US';
-    tool.innerHTML = `
+    renderHTML(`
       <div class="tabs">
         <button class="tab ${st.mode === 'work' ? 'active' : ''}" data-pmode="work">${isEn ? 'Focus (25m)' : 'Foco (25m)'}</button>
         <button class="tab ${st.mode === 'short' ? 'active' : ''}" data-pmode="short">${isEn ? 'Short Break (5m)' : 'Pausa Curta (5m)'}</button>
@@ -776,99 +712,47 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
       <div class="result show" style="display:block; margin-top: 24px; text-align: center;">
         <div class="small" id="pomoStatus" style="font-weight: 700;">${st.running ? (isEn ? 'Focus session in progress...' : 'Sessão em andamento...') : (isEn ? 'Ready to start focus session.' : 'Pronto para iniciar a sessão de foco.')}</div>
-      </div>`;
+      </div>`);
 
-    function getSecondsForMode(m) {
-      if (m === 'work') return 25 * 60;
-      if (m === 'short') return 5 * 60;
-      return 15 * 60;
-    }
-
-    const displayEl = $("#pomoDisplay");
-    const toggleBtn = $("#pomoToggleBtn");
-    const resetBtn = $("#pomoResetBtn");
-    const statusEl = $("#pomoStatus");
+    function getSecondsForMode(m) { return m === 'work' ? 25 * 60 : m === 'short' ? 5 * 60 : 15 * 60; }
+    const displayEl = $("#pomoDisplay"), toggleBtn = $("#pomoToggleBtn"), resetBtn = $("#pomoResetBtn"), statusEl = $("#pomoStatus");
 
     function updateDisplay() {
-      const m = Math.floor(st.timeLeft / 60);
-      const s = st.timeLeft % 60;
+      const m = Math.floor(st.timeLeft / 60), s = st.timeLeft % 60;
       displayEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     }
     updateDisplay();
 
     function stopTimer() {
-      if (window._pomodoroInterval) {
-        clearInterval(window._pomodoroInterval);
-        window._pomodoroInterval = null;
-      }
+      if (window._pomodoroInterval) { clearInterval(window._pomodoroInterval); window._pomodoroInterval = null; }
       st.running = false;
     }
 
     function startTimer(isResume = false) {
-      if (!isResume) {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
-        st.running = true;
-      }
-
-      toggleBtn.textContent = isEn ? 'Pause' : 'Pausar';
-      statusEl.textContent = isEn ? 'Focus session in progress...' : 'Sessão em andamento...';
-
-      if (window._pomodoroInterval) {
-        clearInterval(window._pomodoroInterval);
-      }
-
+      if (!isResume) { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); st.running = true; }
+      toggleBtn.textContent = isEn ? 'Pause' : 'Pausar'; statusEl.textContent = isEn ? 'Focus session in progress...' : 'Sessão em andamento...';
+      if (window._pomodoroInterval) clearInterval(window._pomodoroInterval);
       window._pomodoroInterval = setInterval(() => {
-        if (st.timeLeft > 0) {
-          st.timeLeft--;
-          updateDisplay();
-        } else {
-          stopTimer();
-          toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
-          statusEl.textContent = isEn ? 'Time is up! Great job.' : 'Tempo esgotado! Excelente trabalho.';
-          playAlarm();
-          haptic();
+        if (st.timeLeft > 0) { st.timeLeft--; updateDisplay(); } 
+        else {
+          stopTimer(); toggleBtn.textContent = isEn ? 'Start' : 'Iniciar'; statusEl.textContent = isEn ? 'Time is up! Great job.' : 'Tempo esgotado! Excelente trabalho.';
+          playAlarm(); haptic();
         }
       }, 1000);
     }
 
-    // Mantém rodando em background e reconecta os novos elementos da tela perfeitamente ao retornar
-    if (st.running) {
-      startTimer(true);
-    }
+    if (st.running) startTimer(true);
 
     toggleBtn.onclick = () => {
       haptic();
-      if (st.running) {
-        stopTimer();
-        toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
-        statusEl.textContent = isEn ? 'Paused.' : 'Pausado.';
-      } else {
-        startTimer(false);
-      }
+      if (st.running) { stopTimer(); toggleBtn.textContent = isEn ? 'Start' : 'Iniciar'; statusEl.textContent = isEn ? 'Paused.' : 'Pausado.'; } 
+      else startTimer(false);
     };
-
     resetBtn.onclick = () => {
-      haptic();
-      stopTimer();
-      st.timeLeft = getSecondsForMode(st.mode);
-      updateDisplay();
-      toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
-      statusEl.textContent = isEn ? 'Timer reset.' : 'Cronômetro reiniciado.';
+      haptic(); stopTimer(); st.timeLeft = getSecondsForMode(st.mode); updateDisplay(); toggleBtn.textContent = isEn ? 'Start' : 'Iniciar'; statusEl.textContent = isEn ? 'Timer reset.' : 'Cronômetro reiniciado.';
     };
-
     document.querySelectorAll("[data-pmode]").forEach(tab => {
-      tab.onclick = () => {
-        haptic();
-        stopTimer();
-        st.mode = tab.dataset.pmode;
-        st.timeLeft = getSecondsForMode(st.mode);
-        renderPomodoro();
-      };
+      tab.onclick = () => { haptic(); stopTimer(); st.mode = tab.dataset.pmode; st.timeLeft = getSecondsForMode(st.mode); renderPomodoro(); };
     });
   }
 
@@ -876,258 +760,131 @@ document.addEventListener("DOMContentLoaded", () => {
     const st = states.horoscope;
     const isEn = currentLang === 'en-US';
     const signs = [
-      { id: 'aries', name: isEn ? 'Aries' : 'Áries', symbol: '♈' },
-      { id: 'taurus', name: isEn ? 'Taurus' : 'Touro', symbol: '♉' },
-      { id: 'gemini', name: isEn ? 'Gemini' : 'Gêmeos', symbol: '♊' },
-      { id: 'cancer', name: isEn ? 'Cancer' : 'Câncer', symbol: '♋' },
-      { id: 'leo', name: isEn ? 'Leo' : 'Leão', symbol: '♌' },
-      { id: 'virgo', name: isEn ? 'Virgo' : 'Virgem', symbol: '♍' },
-      { id: 'libra', name: isEn ? 'Libra' : 'Libra', symbol: '♎' },
-      { id: 'scorpio', name: isEn ? 'Scorpio' : 'Escorpião', symbol: '♏' },
-      { id: 'sagittarius', name: isEn ? 'Sagittarius' : 'Sagitário', symbol: '♐' },
-      { id: 'capricorn', name: isEn ? 'Capricorn' : 'Capricórnio', symbol: '♑' },
-      { id: 'aquarius', name: isEn ? 'Aquarius' : 'Aquário', symbol: '♒' },
-      { id: 'pisces', name: isEn ? 'Pisces' : 'Peixes', symbol: '♓' }
+      { id: 'aries', name: isEn ? 'Aries' : 'Áries', symbol: '♈' }, { id: 'taurus', name: isEn ? 'Taurus' : 'Touro', symbol: '♉' },
+      { id: 'gemini', name: isEn ? 'Gemini' : 'Gêmeos', symbol: '♊' }, { id: 'cancer', name: isEn ? 'Cancer' : 'Câncer', symbol: '♋' },
+      { id: 'leo', name: isEn ? 'Leo' : 'Leão', symbol: '♌' }, { id: 'virgo', name: isEn ? 'Virgo' : 'Virgem', symbol: '♍' },
+      { id: 'libra', name: isEn ? 'Libra' : 'Libra', symbol: '♎' }, { id: 'scorpio', name: isEn ? 'Scorpio' : 'Escorpião', symbol: '♏' },
+      { id: 'sagittarius', name: isEn ? 'Sagittarius' : 'Sagitário', symbol: '♐' }, { id: 'capricorn', name: isEn ? 'Capricorn' : 'Capricórnio', symbol: '♑' },
+      { id: 'aquarius', name: isEn ? 'Aquarius' : 'Aquário', symbol: '♒' }, { id: 'pisces', name: isEn ? 'Pisces' : 'Peixes', symbol: '♓' }
     ];
-
-    tool.innerHTML = `
+    renderHTML(`
       <div style="margin-bottom: 16px;">
-        <label style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:8px;" id="signLabel">${isEn ? 'SELECT YOUR SIGN' : 'SELECIONE SEU SIGNO'}</label>
+        <label style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:8px;">${isEn ? 'SELECT YOUR SIGN' : 'SELECIONE SEU SIGNO'}</label>
         <select id="signSelect" style="font-weight:700;">
           ${signs.map(s => `<option value="${s.id}" ${st.sign === s.id ? 'selected' : ''}>${s.symbol} ${s.name}</option>`).join('')}
         </select>
       </div>
-      <div class="result show" id="horoscopeResult" style="display:block; text-align: left; padding: 24px;">
+      <div class="result show" style="display:block; text-align: left; padding: 24px;">
         <div id="horoscopeContent"></div>
-      </div>`;
+      </div>`);
 
     const pools = {
       pt: {
-        climate: [
-          "O céu astral favorece a clareza mental e a tomada de decisões importantes que estavam em banho-maria.",
-          "Uma forte onda de energia renovadora convida você a sair da zona de conforto e explorar novas perspectivas.",
-          "O momento pede cautela com impulsos repentinos; respire fundo antes de reagir a provocações.",
-          "Alinhamentos planetários auspiciosos trazem leveza e otimismo genuíno para o seu dia a dia.",
-          "Sensibilidade acirrada. Aproveite para olhar para dentro e alinhar suas verdadeiras prioridades de vida."
-        ],
-        love: [
-          "No amor, a cumplicidade ganha espaço. Se estiver comprometido(a), uma conversa sincera fortalece os laços. Solteiros podem atrair alguém com interesses intelectuais parecidos.",
-          "O magnetismo pessoal está em alta. O romance ganha contornos apaixonados, mas evite cobranças excessivas por atenção que possam gerar atritos desnecessários.",
-          "Sua empatia natural será o grande diferencial nas relações hoje. Ouça mais o coração de quem você ama e evite discussões por detalhes irrelevantes.",
-          "Fase excelente para resolver pendências afetivas do passado. Perdoar e virar a página abrirá portas para surpresas muito felizes no campo amoroso."
-        ],
-        work: [
-          "No campo profissional, sua capacidade de foco e produtividade impressionará superiores. É um ótimo dia para apresentar propostas ou liderar projetos complexos.",
-          "Desafios inesperados na rotina exigirão flexibilidade rápida. Sua habilidade de improviso garantirá que tudo termine dentro do prazo estabelecido.",
-          "Evite se sobrecarregar assumindo tarefas que pertencem a outros colegas. Foque nas suas metas principais para garantir entregas de excelência.",
-          "Momento altamente favorável para networking e parcerias estratégicas. Uma conversa informal pode se desdobrar em uma excelente oportunidade de carreira."
-        ],
-        money: [
-          "O setor financeiro pede cautela com gastos por impulso motivados pelo estresse. Organize suas contas antes de fechar qualquer nova compra.",
-          "Boas notícias relativas a investimentos ou entradas extras de dinheiro podem surgir. Mantenha o planejamento a longo prazo firme.",
-          "Fase estável para as finanças, ideal para renegociar dívidas ou traçar metas claras de economia para o próximo semestre."
-        ],
-        health: [
-          "Sua energia vital pede pausas estratégicas. Reserve alguns minutos do dia para respirar fundo, se alongar e cuidar da saúde mental.",
-          "Ótimo dia para iniciar uma nova rotina de exercícios físicos ou ajustar a hidratação e a qualidade do sono.",
-          "Evite o excesso de cafeína e telas antes de dormir; seu corpo agradecerá com um descanso muito mais revigorante."
-        ],
-        colors: ["Vermelho Rubi", "Azul Safira", "Amarelo Ouro", "Verde Esmeralda", "Violeta", "Branco Pérola", "Rosa Quartzo"],
-        numbers: ["07", "14", "22", "33", "41", "55", "09", "18"],
-        compatibilities: ["Áries", "Touro", "Gêmeos", "Câncer", "Leão", "Virgem", "Libra", "Escorpião", "Sagitário", "Capricórnio", "Aquário", "Peixes"]
+        climate: ["O céu astral favorece a clareza mental e decisões importantes.", "Forte onda de energia convida você a explorar novas perspectivas.", "O momento pede cautela com impulsos; respire antes de reagir.", "Alinhamentos trazem leveza e otimismo genuíno ao dia.", "Sensibilidade acirrada. Olhe para dentro e alinhe prioridades."],
+        love: ["Cumplicidade ganha espaço. Uma conversa sincera fortalece os laços.", "Magnetismo em alta. Romance apaixonado, mas evite cobranças.", "Empatia será o diferencial. Ouça o coração e evite discussões.", "Fase excelente para resolver pendências afetivas do passado."],
+        work: ["Sua capacidade de foco impressionará superiores hoje.", "Desafios exigirão flexibilidade. O improviso garantirá entregas no prazo.", "Evite sobrecarga assumindo tarefas de outros. Foque nas suas metas.", "Momento favorável para networking e parcerias estratégicas."],
+        money: ["Cuidado com gastos por impulso motivados pelo estresse.", "Boas notícias de investimentos ou entrada extra de dinheiro.", "Fase estável, ideal para traçar metas de economia."],
+        health: ["Sua energia pede pausas. Reserve tempo para cuidar da mente.", "Ótimo dia para ajustar a hidratação e a qualidade do sono.", "Evite excesso de telas antes de dormir para um descanso revigorante."],
+        colors: ["Vermelho Rubi", "Azul Safira", "Amarelo Ouro", "Verde Esmeralda", "Violeta", "Branco Pérola", "Rosa Quartzo"], numbers: ["07", "14", "22", "33", "41", "55", "09", "18"]
       },
       en: {
-        climate: [
-          "The astral sky favors mental clarity and important decision-making that was previously on hold.",
-          "A strong wave of renewing energy invites you to step out of your comfort zone and explore new perspectives.",
-          "The moment calls for caution with sudden impulses; take a deep breath before reacting to provocations.",
-          "Auspicious planetary alignments bring lightness and genuine optimism to your daily routine.",
-          "Heightened sensitivity. Take the opportunity to look inward and align your true life priorities."
-        ],
-        love: [
-          "In love, complicity takes center stage. If committed, a sincere conversation strengthens ties. Singles might attract someone with similar intellectual interests.",
-          "Personal magnetism is peaking. Romance turns passionate, but avoid excessive demands for attention that could cause unnecessary friction.",
-          "Your natural empathy will be your greatest asset in relationships today. Listen more to your loved one's heart and avoid arguments over trivial details.",
-          "An excellent phase to resolve past emotional issues. Forgiving and turning the page will open doors for very happy surprises in love."
-        ],
-        work: [
-          "Professionally, your focus and productivity will impress superiors. It's a great day to pitch proposals or lead complex projects.",
-          "Unexpected routine challenges will demand quick flexibility. Your improvisation skills will ensure everything finishes on schedule.",
-          "Avoid overloading yourself by taking on tasks belonging to colleagues. Focus on core goals to guarantee excellence.",
-          "Highly favorable phase for networking and strategic partnerships. An informal chat could unfold into a great career opportunity."
-        ],
-        money: [
-          "The financial sector calls for caution against impulse purchases driven by stress. Organize accounts before any new buy.",
-          "Good news regarding investments or extra income may arise. Keep long-term planning steady.",
-          "A stable financial phase, ideal for renegotiating debts or outlining clear savings goals for the next semester."
-        ],
-        health: [
-          "Your vital energy calls for strategic breaks. Take a few minutes today to breathe, stretch, and nurture mental health.",
-          "Great day to start a new exercise routine or adjust hydration and sleep quality.",
-          "Avoid excessive caffeine and screens before bed; your body will thank you with much more refreshing rest."
-        ],
-        colors: ["Ruby Red", "Sapphire Blue", "Golden Yellow", "Emerald Green", "Violet", "Pearl White", "Quartz Pink"],
-        numbers: ["07", "14", "22", "33", "41", "55", "09", "18"],
-        compatibilities: ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
+        climate: ["Astral sky favors clarity and important decisions.", "A strong renewing energy invites you to explore new paths.", "Caution with impulses; breathe before reacting.", "Alignments bring lightness and optimism today.", "Heightened sensitivity. Align your true priorities."],
+        love: ["Complicity shines. A sincere chat strengthens ties.", "Magnetism is peaking. Romance is passionate, avoid demands.", "Empathy is key. Listen to your heart and avoid arguments.", "Excellent phase to resolve past emotional issues."],
+        work: ["Your focus will impress superiors today.", "Challenges demand flexibility. Improvisation ensures timely delivery.", "Avoid taking colleagues' tasks. Focus on your core goals.", "Favorable moment for networking and partnerships."],
+        money: ["Caution against stress-driven impulse purchases.", "Good news regarding investments or extra income.", "Stable phase, ideal for outlining savings goals."],
+        health: ["Take strategic breaks. Nurture your mental health.", "Great day to adjust hydration and sleep quality.", "Avoid excessive screens before bed for better rest."],
+        colors: ["Ruby Red", "Sapphire Blue", "Golden Yellow", "Emerald Green", "Violet", "Pearl White", "Quartz Pink"], numbers: ["07", "14", "22", "33", "41", "55", "09", "18"]
       }
     };
-
-    const selectEl = $("#signSelect");
-    const contentEl = $("#horoscopeContent");
-
+    
     function updateHoroscope() {
-      st.sign = selectEl.value;
-      const signObj = signs.find(s => s.id === st.sign);
-      
-      const todayEpochDays = Math.floor(Date.now() / 86400000);
-      const signIndex = signs.findIndex(s => s.id === st.sign);
-      
-      const langData = isEn ? pools.en : pools.pt;
-      
-      const cIdx = (todayEpochDays + signIndex * 3) % langData.climate.length;
-      const lIdx = (todayEpochDays + signIndex * 7) % langData.love.length;
-      const wIdx = (todayEpochDays + signIndex * 11) % langData.work.length;
-      const mIdx = (todayEpochDays + signIndex * 13) % langData.money.length;
-      const hIdx = (todayEpochDays + signIndex * 17) % langData.health.length;
-      const colIdx = (todayEpochDays + signIndex * 5) % langData.colors.length;
-      const numIdx = (todayEpochDays + signIndex * 9) % langData.numbers.length;
-      const compIdx = (signIndex + (todayEpochDays % 4)) % signs.length;
-
+      st.sign = $("#signSelect").value;
+      const signObj = signs.find(s => s.id === st.sign), todayEpochDays = Math.floor(Date.now() / 86400000), signIndex = signs.findIndex(s => s.id === st.sign), langData = isEn ? pools.en : pools.pt;
+      const cIdx = (todayEpochDays + signIndex * 3) % langData.climate.length, lIdx = (todayEpochDays + signIndex * 7) % langData.love.length, wIdx = (todayEpochDays + signIndex * 11) % langData.work.length, mIdx = (todayEpochDays + signIndex * 13) % langData.money.length, hIdx = (todayEpochDays + signIndex * 17) % langData.health.length, colIdx = (todayEpochDays + signIndex * 5) % langData.colors.length, numIdx = (todayEpochDays + signIndex * 9) % langData.numbers.length, compIdx = (signIndex + (todayEpochDays % 4)) % signs.length;
       const todayStr = new Date().toLocaleDateString(isEn ? 'en-US' : 'pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
-      contentEl.innerHTML = `
+      $("#horoscopeContent").innerHTML = `
         <div style="font-size: 11px; font-weight: 750; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">${todayStr}</div>
-        <div style="font-size: 26px; font-weight: 900; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
-          <span>${signObj.symbol}</span> <span>${signObj.name}</span>
-        </div>
-
-        <div style="margin-bottom: 16px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌤️ ${isEn ? 'Astral Climate' : 'Clima Astral'}</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.climate[cIdx]}</span>
-        </div>
-
-        <div style="margin-bottom: 16px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">❤️ ${isEn ? 'Love & Relationships' : 'Amor & Relações'}</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.love[lIdx]}</span>
-        </div>
-
-        <div style="margin-bottom: 16px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💼 ${isEn ? 'Career & Work' : 'Trabalho & Carreira'}</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.work[wIdx]}</span>
-        </div>
-
-        <div style="margin-bottom: 16px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💰 ${isEn ? 'Money & Finances' : 'Dinheiro & Finanças'}</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.money[mIdx]}</span>
-        </div>
-
-        <div style="margin-bottom: 18px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌿 ${isEn ? 'Health & Wellness' : 'Saúde & Bem-estar'}</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.health[hIdx]}</span>
-        </div>
-
+        <div style="font-size: 26px; font-weight: 900; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;"><span>${signObj.symbol}</span> <span>${signObj.name}</span></div>
+        <div style="margin-bottom: 16px;"><strong style="display:block; font-size:13px; margin-bottom:4px;">🌤️ ${isEn ? 'Astral Climate' : 'Clima Astral'}</strong><span style="color:var(--muted); font-size:14px;">${langData.climate[cIdx]}</span></div>
+        <div style="margin-bottom: 16px;"><strong style="display:block; font-size:13px; margin-bottom:4px;">❤️ ${isEn ? 'Love & Relationships' : 'Amor & Relações'}</strong><span style="color:var(--muted); font-size:14px;">${langData.love[lIdx]}</span></div>
+        <div style="margin-bottom: 16px;"><strong style="display:block; font-size:13px; margin-bottom:4px;">💼 ${isEn ? 'Career' : 'Trabalho'}</strong><span style="color:var(--muted); font-size:14px;">${langData.work[wIdx]}</span></div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted);">
           <div>🎨 <strong>${isEn ? 'Color:' : 'Cor:'}</strong> <span style="color:var(--text);">${langData.colors[colIdx]}</span></div>
           <div>🍀 <strong>${isEn ? 'Number:' : 'Número:'}</strong> <span style="color:var(--text);">${langData.numbers[numIdx]}</span></div>
           <div>✨ <strong>${isEn ? 'Match:' : 'Combina com:'}</strong> <span style="color:var(--text);">${signs[compIdx].name}</span></div>
         </div>`;
     }
-
-    selectEl.onchange = () => { haptic(); updateHoroscope(); };
-    updateHoroscope();
+    $("#signSelect").onchange = () => { haptic(); updateHoroscope(); }; updateHoroscope();
   }
 
   function renderAge() {
     const st = states.age;
-    tool.innerHTML = `
+    renderHTML(`
       <div class="grid">
         <div class="field"><label for="birthDate">${currentLang === 'en-US' ? 'DATE OF BIRTH' : 'DATA DE NASCIMENTO'}</label><input type="date" id="birthDate" value="${st.birth}"></div>
         <div class="field"><label for="refDate">${currentLang === 'en-US' ? 'REFERENCE DATE' : 'DATA DE REFERÊNCIA'}</label><input type="date" id="refDate" value="${st.ref}"></div>
       </div>
-      <div class="result" id="result"></div>`;
-      
+      <div class="result" id="result"></div>`);
     const calculate = () => {
-      st.birth = $("#birthDate").value;
-      st.ref = $("#refDate").value;
+      st.birth = $("#birthDate").value; st.ref = $("#refDate").value;
       const birth = dateFromInput("#birthDate"), ref = dateFromInput("#refDate");
       if(!birth || !ref) return showResult(currentLang === 'en-US' ? 'Select dates.' : 'Selecione as datas.', "", true);
       if(birth > ref) return showResult(currentLang === 'en-US' ? 'Birth date cannot be future.' : 'Data futura inválida.', "", true);
       const x = calendarDifference(birth, ref);
-      const html = `<div class="big">${x.y} ${currentLang==='en-US'?'years':'anos'}, ${x.m} ${currentLang==='en-US'?'months':'meses'} & ${x.d} ${currentLang==='en-US'?'days':'dias'}</div><div class="small">Total: ~${x.total.toLocaleString(currentLang)} dias.</div>`;
-      showResult(html, `Idade: ${x.y} anos, ${x.m} meses e ${x.d} dias.`);
+      showResult(`<div class="big">${x.y} ${currentLang==='en-US'?'years':'anos'}, ${x.m} ${currentLang==='en-US'?'months':'meses'} & ${x.d} ${currentLang==='en-US'?'days':'dias'}</div><div class="small">Total: ~${x.total.toLocaleString(currentLang)} dias.</div>`, `Idade: ${x.y} anos, ${x.m} meses e ${x.d} dias.`);
     };
     $("#birthDate").oninput = calculate; $("#refDate").oninput = calculate; calculate();
   }
 
   function renderPregnancy() {
     const st = states.pregnancy;
-    tool.innerHTML = `
+    renderHTML(`
       <div class="grid" style="grid-template-columns:1fr">
         <div class="field"><label for="dumDate">${currentLang === 'en-US' ? 'LAST MENSTRUAL PERIOD (LMP)' : 'DATA DA ÚLTIMA MENSTRUAÇÃO (DUM)'}</label><input type="date" id="dumDate" value="${st.dum}"></div>
       </div>
-      <div class="result" id="result"></div>`;
-      
+      <div class="result" id="result"></div>`);
     const calculate = () => {
-      st.dum = $("#dumDate").value;
-      const dum = dateFromInput("#dumDate");
+      st.dum = $("#dumDate").value; const dum = dateFromInput("#dumDate");
       if(!dum) return showResult(currentLang === 'en-US' ? 'Provide LMP.' : 'Informe a DUM.', "", true);
-      
       const today = new Date(); today.setHours(12, 0, 0, 0);
       if(dum > today) return showResult(currentLang === 'en-US' ? 'LMP cannot be future.' : 'DUM futura inválida.', "", true);
-      
-      const diffDays = Math.round((today - dum) / 86400000);
-      const weeks = Math.floor(diffDays / 7);
-      const days = diffDays % 7;
-      const dueDate = new Date(dum); dueDate.setDate(dueDate.getDate() + 280); 
-      
-      const html = `<div class="big">${weeks} ${currentLang==='en-US'?'weeks':'semanas'} & ${days} ${currentLang==='en-US'?'days':'dias'}</div><div class="small">${currentLang==='en-US'?'Due date:':'Previsão do parto:'} <strong>${formatDate(dueDate)}</strong></div>`;
-      showResult(html, `Gestação: ${weeks} semanas e ${days} dias. Parto: ${formatDate(dueDate)}`);
+      const diffDays = Math.round((today - dum) / 86400000), weeks = Math.floor(diffDays / 7), days = diffDays % 7, dueDate = new Date(dum); dueDate.setDate(dueDate.getDate() + 280); 
+      showResult(`<div class="big">${weeks} ${currentLang==='en-US'?'weeks':'semanas'} & ${days} ${currentLang==='en-US'?'days':'dias'}</div><div class="small">${currentLang==='en-US'?'Due date:':'Previsão do parto:'} <strong>${formatDate(dueDate)}</strong></div>`, `Gestação: ${weeks} semanas e ${days} dias. Parto: ${formatDate(dueDate)}`);
     };
     $("#dumDate").oninput = calculate; calculate();
   }
 
   function renderCountdown() {
     const st = states.countdown;
-    tool.innerHTML = `
+    renderHTML(`
       <div class="tabs">
         <button class="tab ${st.mode === "down" ? "active" : ""}" data-mode="down">${currentLang === 'en-US' ? 'Countdown' : 'Contagem Regressiva'}</button>
         <button class="tab ${st.mode === "passed" ? "active" : ""}" data-mode="passed">${currentLang === 'en-US' ? 'Time Elapsed' : 'Tempo Passado'}</button>
       </div>
-      <div id="countArea"></div>`;
+      <div id="countArea"></div>`);
     renderCountArea();
   }
 
   function renderCountArea() {
-    const st = states.countdown;
-    const area = $("#countArea");
+    const st = states.countdown; const area = $("#countArea");
     area.innerHTML = `
       <div class="grid">
         <div class="field"><label for="evName">${currentLang === 'en-US' ? 'EVENT NAME' : 'NOME DO EVENTO'}</label><input type="text" id="evName" value="${st.name}"></div>
         <div class="field"><label for="evDate">${currentLang === 'en-US' ? 'DATE' : 'DATA'}</label><input type="date" id="evDate" value="${st.date}"></div>
       </div>
       <div class="result" id="result"></div>`;
-    
     const calculate = () => {
-      st.name = $("#evName").value;
-      st.date = $("#evDate").value;
-
-      const rawName = st.name || "Evento";
-      const name = escapeHTML(rawName);
-      
-      const evDate = dateFromInput("#evDate");
+      st.name = $("#evName").value; st.date = $("#evDate").value;
+      const rawName = st.name || "Evento", name = escapeHTML(rawName), evDate = dateFromInput("#evDate");
       if(!evDate) return showResult(currentLang === 'en-US' ? 'Select valid date.' : 'Selecione data válida.', "", true);
-      
-      const today = new Date(); today.setHours(12,0,0,0);
-      const x = calendarDifference(today, evDate);
-      
+      const today = new Date(); today.setHours(12,0,0,0); const x = calendarDifference(today, evDate);
       if (st.mode === "down") {
         if (today > evDate) return showResult(currentLang === 'en-US' ? 'Date has passed!' : 'Data já passou!', "", true);
-        const html = `<div class="big">${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">${currentLang==='en-US'?'Remaining for':'Faltam'} ${name}.</div>`;
-        showResult(html, `Faltam ${x.total} dias para ${rawName}!`);
+        showResult(`<div class="big">${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">${currentLang==='en-US'?'Remaining for':'Faltam para'} ${name}.</div>`, `Faltam ${x.total} dias para ${rawName}!`);
       } else {
         if (today < evDate) return showResult(currentLang === 'en-US' ? 'Date is future!' : 'Data futura!', "", true);
-        const html = `<div class="big">${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">${currentLang==='en-US'?'Passed since':'Passados desde'} ${name}.</div>`;
-        showResult(html, `Já se passaram ${x.total} dias desde ${rawName}.`);
+        showResult(`<div class="big">${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">${currentLang==='en-US'?'Passed since':'Passados desde'} ${name}.</div>`, `Já se passaram ${x.total} dias desde ${rawName}.`);
       }
     };
     $("#evName").oninput = calculate; $("#evDate").oninput = calculate; calculate();
@@ -1135,12 +892,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderOvertime() {
-    const st = states.overtime;
-    const isEn = currentLang === 'en-US';
-    const label50 = isEn ? '50% (Normal / Weekday)' : '50% (Dias úteis / Normal)';
-    const label100 = isEn ? '100% (Sunday / Holiday)' : '100% (Domingos / Feriados)';
-
-    tool.innerHTML = `
+    const st = states.overtime; const isEn = currentLang === 'en-US';
+    renderHTML(`
       <div class="grid">
         <div class="field"><label for="sal">${isEn ? 'MONTHLY SALARY' : 'SALÁRIO MENSAL'} (R$)</label><input type="number" id="sal" step="0.01" min="0" value="${st.sal}"></div>
         <div class="field"><label for="jor">${isEn ? 'MONTHLY HOURS' : 'JORNADA MENSAL (HORAS)'}</label><input type="number" id="jor" value="${st.jor}" min="1"></div>
@@ -1149,46 +902,37 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="field"><label for="qtd">${isEn ? 'OVERTIME HOURS' : 'QTD. HORAS EXTRAS'}</label><input type="number" id="qtd" step="0.5" min="0" value="${st.qtd}"></div>
         <div class="field"><label for="rate">${isEn ? 'PREMIUM RATE' : 'ACRÉSCIMO LEGAL'}</label>
           <select id="rate">
-            <option value="50" ${st.rate===50?'selected':''}>${label50}</option>
-            <option value="100" ${st.rate===100?'selected':''}>${label100}</option>
+            <option value="50" ${st.rate===50?'selected':''}>${isEn ? '50% (Normal)' : '50% (Dias úteis)'}</option>
+            <option value="100" ${st.rate===100?'selected':''}>${isEn ? '100% (Holiday)' : '100% (Domingos/Feriados)'}</option>
           </select>
         </div>
       </div>
-      <div class="result" id="result"></div>`;
-      
+      <div class="result" id="result"></div>`);
     const calculate = () => {
-      st.sal = Number($("#sal").value);
-      st.jor = Number($("#jor").value);
-      st.qtd = Number($("#qtd").value);
-      st.rate = Number($("#rate").value);
-      
-      const sal = st.sal, jor = st.jor, qtd = st.qtd, rate = st.rate;
-      if(!sal || sal<=0 || !jor || jor<=0 || isNaN(qtd) || qtd<0) return showResult(isEn ? 'Invalid values.' : 'Valores inválidos.', "", true);
-      
-      const vHora = sal / jor, vExtra = vHora * (1 + rate / 100), total = vExtra * qtd;
-      const html = `
+      st.sal = Number($("#sal").value); st.jor = Number($("#jor").value); st.qtd = Number($("#qtd").value); st.rate = Number($("#rate").value);
+      if(!st.sal || st.sal<=0 || !st.jor || st.jor<=0 || isNaN(st.qtd) || st.qtd<0) return showResult(isEn ? 'Invalid values.' : 'Valores inválidos.', "", true);
+      const vHora = st.sal / st.jor, vExtra = vHora * (1 + st.rate / 100), total = vExtra * st.qtd;
+      showResult(`
         <div class="big">R$ ${total.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
-        <div class="small">Normal: R$ ${vHora.toFixed(2)} | Extra (${rate}%): R$ ${vExtra.toFixed(2)}</div>
+        <div class="small">Normal: R$ ${vHora.toFixed(2)} | Extra (${st.rate}%): R$ ${vExtra.toFixed(2)}</div>
         <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>
-      `;
-      showResult(html, `Total Horas Extras: R$ ${total.toFixed(2)}`);
+      `, `Total Horas Extras: R$ ${total.toFixed(2)}`);
     };
     $("#sal").oninput = calculate; $("#jor").oninput = calculate; $("#qtd").oninput = calculate; $("#rate").onchange = calculate; calculate();
   }
 
   function renderVacation13() {
-    tool.innerHTML = `
+    renderHTML(`
       <div class="tabs">
         <button class="tab ${states.vacation13.mode === "13" ? "active" : ""}" data-mode="13">13º Salário</button>
         <button class="tab ${states.vacation13.mode === "vacation" ? "active" : ""}" data-mode="vacation">${currentLang === 'en-US' ? 'Vacation + 1/3' : 'Férias + 1/3'}</button>
       </div>
-      <div id="vArea"></div>`;
+      <div id="vArea"></div>`);
     renderVArea();
   }
 
   function renderVArea() {
-    const st = states.vacation13;
-    const area = $("#vArea");
+    const st = states.vacation13; const area = $("#vArea");
     if(st.mode === "13"){
       area.innerHTML = `
         <div class="grid">
@@ -1196,19 +940,11 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="field"><label for="vMeses">${currentLang === 'en-US' ? 'MONTHS WORKED (1-12)' : 'MESES TRABALHADOS (1 a 12)'}</label><input type="number" id="vMeses" min="1" max="12" value="${st.meses}"></div>
         </div>
         <div class="result" id="result"></div>`;
-      
       const calculate = () => {
-        st.sal = Number($("#vSal").value);
-        st.meses = Number($("#vMeses").value);
-        const sal = st.sal, meses = st.meses;
-        if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
-        const val = (sal / 12) * meses;
-        const html = `
-          <div class="big">R$ ${val.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
-          <div class="small">${currentLang==='en-US'?'Proportional to':'Proporcional a'} ${meses} ${meses===1?'mês':'meses'}.</div>
-          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>
-        `;
-        showResult(html, `13º Proporcional: R$ ${val.toFixed(2)}`);
+        st.sal = Number($("#vSal").value); st.meses = Number($("#vMeses").value);
+        if(!st.sal || st.sal<=0 || !st.meses || st.meses<1 || st.meses>12) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
+        const val = (st.sal / 12) * st.meses;
+        showResult(`<div class="big">R$ ${val.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="small">${currentLang==='en-US'?'Proportional to':'Proporcional a'} ${st.meses} meses.</div><div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>`, `13º Proporcional: R$ ${val.toFixed(2)}`);
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
     } else {
@@ -1218,19 +954,11 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="field"><label for="vMeses">${currentLang === 'en-US' ? 'PERIOD MONTHS (1-12)' : 'MESES NO PERÍODO (1 a 12)'}</label><input type="number" id="vMeses" min="1" max="12" value="${st.meses}"></div>
         </div>
         <div class="result" id="result"></div>`;
-      
       const calculate = () => {
-        st.sal = Number($("#vSal").value);
-        st.meses = Number($("#vMeses").value);
-        const sal = st.sal, meses = st.meses;
-        if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
-        const base = (sal / 12) * meses, terço = base / 3, total = base + terço;
-        const html = `
-          <div class="big">R$ ${total.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
-          <div class="small">${currentLang==='en-US'?'Vacation:':'Férias:'} R$ ${base.toFixed(2)} | 1/3: R$ ${terço.toFixed(2)}</div>
-          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>
-        `;
-        showResult(html, `Férias + 1/3: R$ ${total.toFixed(2)}`);
+        st.sal = Number($("#vSal").value); st.meses = Number($("#vMeses").value);
+        if(!st.sal || st.sal<=0 || !st.meses || st.meses<1 || st.meses>12) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
+        const base = (st.sal / 12) * st.meses, terço = base / 3, total = base + terço;
+        showResult(`<div class="big">R$ ${total.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="small">${currentLang==='en-US'?'Vacation:':'Férias:'} R$ ${base.toFixed(2)} | 1/3: R$ ${terço.toFixed(2)}</div><div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>`, `Férias + 1/3: R$ ${total.toFixed(2)}`);
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
     }
@@ -1239,14 +967,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderRescision() {
     const st = states.rescision;
-    tool.innerHTML = `
+    renderHTML(`
       <div class="grid">
         <div class="field"><label for="rSal">${currentLang === 'en-US' ? 'GROSS SALARY' : 'SALÁRIO BRUTO'} (R$)</label><input type="number" id="rSal" step="0.01" min="0" value="${st.sal}"></div>
         <div class="field"><label for="rReason">${currentLang === 'en-US' ? 'TERMINATION REASON' : 'MOTIVO DA SAÍDA'}</label>
           <select id="rReason">
             <option value="sem_justa" ${st.reason==='sem_justa'?'selected':''}>${currentLang === 'en-US' ? 'Without cause' : 'Dispensa sem justa causa'}</option>
             <option value="pedido" ${st.reason==='pedido'?'selected':''}>${currentLang === 'en-US' ? 'Resignation' : 'Pedido de demissão'}</option>
-            <option value="acordo" ${st.reason==='acordo'?'selected':''}>${currentLang === 'en-US' ? 'Mutual agreement' : 'Acordo comum (Art. 484-A)'}</option>
+            <option value="acordo" ${st.reason==='acordo'?'selected':''}>${currentLang === 'en-US' ? 'Mutual agreement' : 'Acordo comum'}</option>
           </select>
         </div>
       </div>
@@ -1254,77 +982,39 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="field"><label for="rAdm">${currentLang === 'en-US' ? 'HIRE DATE' : 'DATA DE ADMISSÃO'}</label><input type="date" id="rAdm" value="${st.adm}"></div>
         <div class="field"><label for="rTerm">${currentLang === 'en-US' ? 'TERMINATION DATE' : 'DATA DE DEMISSÃO'}</label><input type="date" id="rTerm" value="${st.term}"></div>
       </div>
-      <div class="result" id="result"></div>`;
+      <div class="result" id="result"></div>`);
     
     const calculate = () => {
-      st.sal = Number($("#rSal").value);
-      st.reason = $("#rReason").value;
-      st.adm = $("#rAdm").value;
-      st.term = $("#rTerm").value;
-
+      st.sal = Number($("#rSal").value); st.reason = $("#rReason").value; st.adm = $("#rAdm").value; st.term = $("#rTerm").value;
       const sal = st.sal, reason = st.reason, dAdm = dateFromInput("#rAdm"), dTerm = dateFromInput("#rTerm");
       if(!sal || sal<=0 || !dAdm || !dTerm) return showResult(currentLang === 'en-US' ? 'Fill all fields.' : 'Preencha todos os campos.', "", true);
       if(dAdm > dTerm) return showResult(currentLang === 'en-US' ? 'Hire date cannot be after termination.' : 'Admissão posterior à demissão.', "", true);
       
       const timeDiffReal = calendarDifference(dAdm, dTerm);
+      let diasAviso = (reason === "sem_justa" || reason === "acordo") ? 30 + Math.min(timeDiffReal.y * 3, 60) : 0;
+      const dProj = new Date(dTerm); if (reason !== "pedido") dProj.setDate(dProj.getDate() + diasAviso);
+      const daysInMonth = new Date(dTerm.getFullYear(), dTerm.getMonth() + 1, 0).getDate(), diasTrab = Math.min(dTerm.getDate(), daysInMonth), saldoSalario = diasTrab >= daysInMonth ? sal : Math.min(sal, (sal / 30) * diasTrab);
+      let avisoPrevio = reason === "sem_justa" ? (sal / 30) * diasAviso : reason === "acordo" ? ((sal / 30) * diasAviso) / 2 : 0;
       
-      let diasAviso = 0;
-      if (reason === "sem_justa" || reason === "acordo") {
-        diasAviso = 30 + Math.min(timeDiffReal.y * 3, 60);
-      }
-
-      const dProj = new Date(dTerm);
-      if (reason !== "pedido") {
-        dProj.setDate(dProj.getDate() + diasAviso);
-      }
-
-      const daysInMonth = new Date(dTerm.getFullYear(), dTerm.getMonth() + 1, 0).getDate();
-      const diasTrab = Math.min(dTerm.getDate(), daysInMonth);
-      const saldoSalario = diasTrab >= daysInMonth ? sal : Math.min(sal, (sal / 30) * diasTrab);
-      
-      let avisoPrevio = 0;
-      if (reason === "sem_justa") {
-        avisoPrevio = (sal / 30) * diasAviso;
-      } else if (reason === "acordo") {
-        avisoPrevio = ((sal / 30) * diasAviso) / 2;
-      }
-
-      const start13 = new Date(Math.max(dAdm.getTime(), new Date(dProj.getFullYear(), 0, 1).getTime()));
-      const diff13 = calendarDifference(start13, dProj);
-      let avos13 = diff13.y * 12 + diff13.m;
-      if (diff13.d >= 15) avos13++;
+      const start13 = new Date(Math.max(dAdm.getTime(), new Date(dProj.getFullYear(), 0, 1).getTime())), diff13 = calendarDifference(start13, dProj);
+      let avos13 = diff13.y * 12 + diff13.m; if (diff13.d >= 15) avos13++;
       const decimoTerceiro = (sal / 12) * Math.min(avos13, 12);
-
+      
       const totalMesesTrabalhados = timeDiffReal.y * 12 + timeDiffReal.m;
       let feriasTotal = 0;
-      
       if (totalMesesTrabalhados >= 12) {
-        const periodosVencidos = Math.floor(totalMesesTrabalhados / 12);
-        const mesAtualCiclo = totalMesesTrabalhados % 12;
-        let avosFeriasProp = mesAtualCiclo;
-        if (timeDiffReal.d >= 15) avosFeriasProp++;
-        
-        const valorVencidas = (sal + sal / 3) * periodosVencidos;
-        const valorProporcional = ((sal / 12) * Math.min(avosFeriasProp, 12)) * (4/3);
-        feriasTotal = valorVencidas + valorProporcional;
+        const periodosVencidos = Math.floor(totalMesesTrabalhados / 12), mesAtualCiclo = totalMesesTrabalhados % 12;
+        let avosFeriasProp = mesAtualCiclo; if (timeDiffReal.d >= 15) avosFeriasProp++;
+        feriasTotal = ((sal + sal / 3) * periodosVencidos) + (((sal / 12) * Math.min(avosFeriasProp, 12)) * (4/3));
       } else {
-        const projDiff = calendarDifference(dAdm, dProj);
-        let avosFerias = projDiff.m;
-        if (projDiff.d >= 15) avosFerias++;
-        const feriasBase = (sal / 12) * Math.min(avosFerias, 12);
-        feriasTotal = feriasBase + (feriasBase / 3);
+        const projDiff = calendarDifference(dAdm, dProj); let avosFerias = projDiff.m; if (projDiff.d >= 15) avosFerias++;
+        const feriasBase = (sal / 12) * Math.min(avosFerias, 12); feriasTotal = feriasBase + (feriasBase / 3);
       }
-
-      const totalMonthsReal = timeDiffReal.y * 12 + timeDiffReal.m + (timeDiffReal.d >= 15 ? 1 : 0);
-      const saldoFgtsEst = (sal * 0.08) * totalMonthsReal;
-      
-      let multaFgts = 0;
-      if (reason === "sem_justa") multaFgts = saldoFgtsEst * 0.40;
-      else if (reason === "acordo") multaFgts = saldoFgtsEst * 0.20;
-
+      const totalMonthsReal = timeDiffReal.y * 12 + timeDiffReal.m + (timeDiffReal.d >= 15 ? 1 : 0), saldoFgtsEst = (sal * 0.08) * totalMonthsReal;
+      let multaFgts = reason === "sem_justa" ? saldoFgtsEst * 0.40 : reason === "acordo" ? saldoFgtsEst * 0.20 : 0;
       const totalRescisao = saldoSalario + decimoTerceiro + feriasTotal + avisoPrevio + multaFgts;
       
-      const html = `
+      showResult(`
         <div class="big">R$ ${totalRescisao.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
         <div class="small" style="margin-top:8px; line-height:1.6;">
           Saldo: R$ ${saldoSalario.toFixed(2)} | 13º Prop.: R$ ${decimoTerceiro.toFixed(2)}<br>
@@ -1333,263 +1023,98 @@ document.addEventListener("DOMContentLoaded", () => {
           ${reason !== 'pedido' ? `Multa FGTS: R$ ${multaFgts.toFixed(2)}` : ''}
         </div>
         <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>
-      `;
-      showResult(html, `Rescisão estimada: R$ ${totalRescisao.toFixed(2)}`);
+      `, `Rescisão estimada: R$ ${totalRescisao.toFixed(2)}`);
     };
     $("#rSal").oninput = calculate; $("#rReason").onchange = calculate; $("#rAdm").oninput = calculate; $("#rTerm").oninput = calculate; calculate();
   }
 
   function renderRunning() {
     const st = states.running;
-    tool.innerHTML = `
+    renderHTML(`
       <div class="grid">
         <div class="field"><label for="runDist">${currentLang === 'en-US' ? 'DISTANCE (KM)' : 'DISTÂNCIA (KM)'}</label><input type="number" id="runDist" step="0.5" min="1" value="${st.dist}"></div>
         <div class="field"><label for="runTime">${currentLang === 'en-US' ? 'TARGET TIME (MINUTES)' : 'TEMPO DESEJADO (MINUTOS)'}</label><input type="number" id="runTime" min="1" value="${st.time}"></div>
       </div>
-      <div class="result" id="result"></div>`;
-      
+      <div class="result" id="result"></div>`);
     const calculate = () => {
-      st.dist = Number($("#runDist").value);
-      st.time = Number($("#runTime").value);
-      const dist = st.dist, totalMin = st.time;
-      if(!dist || dist <= 0 || !totalMin || totalMin <= 0) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
-      
-      let paceDec = totalMin / dist, paceMin = Math.floor(paceDec), paceSec = Math.round((paceDec - paceMin) * 60);
-      
+      st.dist = Number($("#runDist").value); st.time = Number($("#runTime").value);
+      if(!st.dist || st.dist <= 0 || !st.time || st.time <= 0) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
+      let paceDec = st.time / st.dist, paceMin = Math.floor(paceDec), paceSec = Math.round((paceDec - paceMin) * 60);
       if (paceSec === 60) { paceMin += 1; paceSec = 0; }
-      
-      const paceFormatted = `${paceMin}:${paceSec < 10 ? '0' : ''}${paceSec}`, speed = (dist / (totalMin / 60)).toFixed(1);
-      
-      const html = `
-        <div class="big">${paceFormatted} <span style="font-size:16px; font-weight:normal; color:var(--muted);">min/km</span></div>
-        <div class="small" style="margin-top:8px;">${currentLang==='en-US'?'Average Speed:':'Velocidade Média:'} <strong>${speed} km/h</strong></div>
-      `;
-      showResult(html, `Ritmo: ${paceFormatted} min/km (${speed} km/h)`);
+      const paceFormatted = `${paceMin}:${paceSec < 10 ? '0' : ''}${paceSec}`, speed = (st.dist / (st.time / 60)).toFixed(1);
+      showResult(`<div class="big">${paceFormatted} <span style="font-size:16px; font-weight:normal; color:var(--muted);">min/km</span></div><div class="small" style="margin-top:8px;">${currentLang==='en-US'?'Average Speed:':'Velocidade Média:'} <strong>${speed} km/h</strong></div>`, `Ritmo: ${paceFormatted} min/km (${speed} km/h)`);
     };
     $("#runDist").oninput = calculate; $("#runTime").oninput = calculate; calculate();
   }
 
-  function openPalette() {
-    haptic();
-    paletteModal.classList.add("open");
-    paletteModal.setAttribute("aria-hidden", "false");
-    paletteInput.value = "";
-    renderPaletteList("");
-    requestAnimationFrame(() => paletteInput.focus());
-  }
-  function closePalette() { 
-    paletteModal.classList.remove("open"); 
-    paletteModal.setAttribute("aria-hidden", "true");
-    searchBtn.focus();
-  }
-
-  function openDrawer() {
-    haptic();
-    drawer.classList.add("open");
-    drawer.setAttribute("aria-hidden", "false");
-    const firstMenuBtn = drawer.querySelector('.close');
-    if(firstMenuBtn) firstMenuBtn.focus();
-  }
-  function closeDrawer() {
-    drawer.classList.remove("open");
-    drawer.setAttribute("aria-hidden", "true");
-    openMenuBtn.focus();
-  }
+  function openPalette() { haptic(); paletteModal.classList.add("open"); paletteModal.setAttribute("aria-hidden", "false"); paletteInput.value = ""; renderPaletteList(""); requestAnimationFrame(() => paletteInput.focus()); }
+  function closePalette() { paletteModal.classList.remove("open"); paletteModal.setAttribute("aria-hidden", "true"); }
+  function openDrawer() { haptic(); drawer.classList.add("open"); drawerOverlay.classList.add("open"); }
+  function closeDrawer() { drawer.classList.remove("open"); drawerOverlay.classList.remove("open"); }
 
   function renderPaletteList(query) {
-    const list = Object.keys(i18n[currentLang].tools).map(key => ({
-      key, name: i18n[currentLang].tools[key].menuName, badge: i18n[currentLang].tools[key].badge
-    })).filter(x => x.name.toLowerCase().includes(query.toLowerCase()));
-
-    paletteList.innerHTML = list.map((item, idx) => `
-      <button class="palette-item ${idx===0?'selected':''}" data-tool="${item.key}">
-        <span>${item.name}</span>
-        <span style="font-size:11px; color:var(--muted); font-weight:600; border:1px solid var(--line); padding:2px 6px; border-radius:6px;">${item.badge}</span>
-      </button>
-    `).join('');
-
-    paletteList.querySelectorAll('.palette-item').forEach(btn => {
-      btn.onclick = () => {
-        haptic();
-        loadTool(btn.dataset.tool);
-        closePalette();
-      };
-    });
+    const list = Object.keys(i18n[currentLang].tools).map(key => ({ key, name: i18n[currentLang].tools[key].menuName, badge: i18n[currentLang].tools[key].badge })).filter(x => x.name.toLowerCase().includes(query.toLowerCase()));
+    paletteList.innerHTML = list.map((item, idx) => `<button class="palette-item ${idx===0?'selected':''}" data-tool="${item.key}"><span>${item.name}</span><span style="font-size:11px; color:var(--muted); font-weight:600; border:1px solid var(--line); padding:2px 6px; border-radius:6px;">${item.badge}</span></button>`).join('');
+    paletteList.querySelectorAll('.palette-item').forEach(btn => { btn.onclick = () => { haptic(); loadTool(btn.dataset.tool); closePalette(); }; });
   }
 
   paletteInput.oninput = (e) => renderPaletteList(e.target.value);
-  searchBtn.onclick = openPalette;
+  searchBtn.onclick = openPalette; searchDesktopBtn.onclick = openPalette;
   paletteModal.onclick = (e) => { if(e.target === paletteModal) closePalette(); };
 
-  function trapFocus(e, container) {
-    const focusable = container.querySelectorAll('input, button, select, textarea, a[href], [tabindex]:not([tabindex="-1"])');
-    if (focusable.length === 0) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    if (e.key === 'Tab') {
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          last.focus();
-          e.preventDefault();
-        }
-      } else {
-        if (document.activeElement === last) {
-          first.focus();
-          e.preventDefault();
-        }
-      }
-    }
-  }
-
   document.addEventListener('keydown', e => {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-      e.preventDefault();
-      if (paletteModal.classList.contains('open')) closePalette();
-      else openPalette();
-    }
-    if (e.key === 'Escape') {
-      closePalette();
-      closeDrawer();
-    }
-    if (paletteModal.classList.contains('open')) {
-      trapFocus(e, paletteModal);
-    } else if (drawer.classList.contains('open')) {
-      trapFocus(e, drawer);
-    }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); paletteModal.classList.contains('open') ? closePalette() : openPalette(); }
+    if (e.key === 'Escape') { closePalette(); closeDrawer(); }
   });
 
   function updateGreeting() {
-    const hour = new Date().getHours();
-    const isEn = currentLang === 'en-US';
-    let text = '';
-    let emoji = '';
-    
-    if (hour < 12) { text = isEn ? 'Good morning' : 'Bom dia'; emoji = '☀️'; }
-    else if (hour < 18) { text = isEn ? 'Good afternoon' : 'Boa tarde'; emoji = '🌤️'; }
-    else { text = isEn ? 'Good evening' : 'Boa noite'; emoji = '🌙'; }
-    
+    const hour = new Date().getHours(), isEn = currentLang === 'en-US';
+    let text = '', emoji = '';
+    if (hour < 12) { text = isEn ? 'Good morning' : 'Bom dia'; emoji = '☀️'; } else if (hour < 18) { text = isEn ? 'Good afternoon' : 'Boa tarde'; emoji = '🌤️'; } else { text = isEn ? 'Good evening' : 'Boa noite'; emoji = '🌙'; }
     if(greetingEl) greetingEl.textContent = `${text} ${emoji}`;
   }
 
   function renderChips() {
-    const chips = [
-      { id: 'overtime', icon: '💼', pt: 'Horas Extras', en: 'Overtime' },
-      { id: 'pomodoro', icon: '🍅', pt: 'Pomodoro', en: 'Pomodoro' },
-      { id: 'rescision', icon: '📄', pt: 'Rescisão', en: 'Severance' },
-      { id: 'worldclock', icon: '🌍', pt: 'Fuso Horário', en: 'Timezones' },
-      { id: 'horoscope', icon: '✨', pt: 'Horóscopo', en: 'Horoscope' }
-    ];
-    const isEn = currentLang === 'en-US';
+    const chips = [{ id: 'overtime', icon: '💼', pt: 'Horas Extras', en: 'Overtime' }, { id: 'pomodoro', icon: '🍅', pt: 'Pomodoro', en: 'Pomodoro' }, { id: 'rescision', icon: '📄', pt: 'Rescisão', en: 'Severance' }, { id: 'worldclock', icon: '🌍', pt: 'Fuso Horário', en: 'Timezones' }, { id: 'horoscope', icon: '✨', pt: 'Horóscopo', en: 'Horoscope' }];
     if(quickChips) {
-      quickChips.innerHTML = chips.map(c => `<button class="chip" data-tool="${c.id}">${c.icon} ${isEn ? c.en : c.pt}</button>`).join('');
-      quickChips.querySelectorAll('.chip').forEach(btn => {
-        btn.onclick = () => {
-          haptic();
-          loadTool(btn.dataset.tool);
-        };
-      });
+      quickChips.innerHTML = chips.map(c => `<button class="chip" data-tool="${c.id}">${c.icon} ${currentLang==='en-US' ? c.en : c.pt}</button>`).join('');
+      quickChips.querySelectorAll('.chip').forEach(btn => { btn.onclick = () => { haptic(); loadTool(btn.dataset.tool); }; });
     }
   }
 
   function updateStaticTexts() {
-    updateGreeting();
-    renderChips();
-    footerText.innerHTML = i18n[currentLang].footer;
-    menuTitle.textContent = i18n[currentLang].menu;
-    langLabel.textContent = i18n[currentLang].langLabel;
-    groupEssential.textContent = i18n[currentLang].g1;
-    groupPersonal.textContent = i18n[currentLang].g2;
-    groupLabor.textContent = i18n[currentLang].g3;
-    groupSport.textContent = i18n[currentLang].g4;
-
-    document.querySelectorAll("[data-i18n]").forEach(el => {
-      const k = el.getAttribute("data-i18n");
-      const toolKey = k.replace("tool_", "");
-      if (i18n[currentLang].tools[toolKey]) {
-        el.textContent = i18n[currentLang].tools[toolKey].menuName;
-      }
-    });
+    updateGreeting(); renderChips(); footerText.innerHTML = i18n[currentLang].footer; menuTitle.textContent = i18n[currentLang].menu; langLabel.textContent = i18n[currentLang].langLabel; groupEssential.textContent = i18n[currentLang].g1; groupPersonal.textContent = i18n[currentLang].g2; groupLabor.textContent = i18n[currentLang].g3; groupSport.textContent = i18n[currentLang].g4;
+    document.querySelectorAll("[data-i18n]").forEach(el => { const k = el.getAttribute("data-i18n").replace("tool_", ""); if (i18n[currentLang].tools[k]) el.textContent = i18n[currentLang].tools[k].menuName; });
   }
 
   function loadTool(t, updateHash = true) {
-    if (window._wcInterval) {
-      clearInterval(window._wcInterval);
-      window._wcInterval = null;
-    }
-
-    activeTool = t;
-    storage.set('tempo_tool', t); 
-    
-    if (updateHash && window.location.hash !== '#' + t) {
-      window.location.hash = t;
-    }
+    if (window._wcInterval) { clearInterval(window._wcInterval); window._wcInterval = null; }
+    activeTool = t; storage.set('tempo_tool', t); 
+    if (updateHash && window.location.hash !== '#' + t) window.location.hash = t;
 
     const meta = i18n[currentLang].tools[t] || i18n[currentLang].tools['date'];
-    pageTitle.textContent = "tempo. — " + meta.title;
-    titleEl.textContent = meta.title;
-    subtitleEl.textContent = meta.subtitle;
-    toolBadge.textContent = meta.badge;
-    
+    pageTitle.textContent = "tempo. — " + meta.title; titleEl.textContent = meta.title; subtitleEl.textContent = meta.subtitle; toolBadge.textContent = meta.badge;
     document.querySelectorAll(".menu-item").forEach(x => x.classList.remove("active"));
-    const activeItem = document.querySelector(`.menu-item[data-tool="${t}"]`);
-    if (activeItem) activeItem.classList.add("active");
+    const activeItem = document.querySelector(`.menu-item[data-tool="${t}"]`); if (activeItem) activeItem.classList.add("active");
 
-    if (t === "date") renderDate();
-    else if (t === "time") renderTime();
-    else if (t === "business") renderBusiness();
-    else if (t === "worldclock") renderWorldClock();
-    else if (t === "pomodoro") renderPomodoro();
-    else if (t === "horoscope") renderHoroscope();
-    else if (t === "age") renderAge();
-    else if (t === "pregnancy") renderPregnancy();
-    else if (t === "countdown") renderCountdown();
-    else if (t === "overtime") renderOvertime();
-    else if (t === "vacation13") renderVacation13();
-    else if (t === "rescision") renderRescision();
-    else if (t === "running") renderRunning();
+    if (t === "date") renderDate(); else if (t === "time") renderTime(); else if (t === "business") renderBusiness(); else if (t === "worldclock") renderWorldClock(); else if (t === "pomodoro") renderPomodoro(); else if (t === "horoscope") renderHoroscope(); else if (t === "age") renderAge(); else if (t === "pregnancy") renderPregnancy(); else if (t === "countdown") renderCountdown(); else if (t === "overtime") renderOvertime(); else if (t === "vacation13") renderVacation13(); else if (t === "rescision") renderRescision(); else if (t === "running") renderRunning();
 
-    // UX: Foco automático e Scroll suave no celular
     requestAnimationFrame(() => {
-      const firstEl = tool.querySelector('input, select, button');
-      if (firstEl) firstEl.focus();
-      
-      if (window.innerWidth <= 600) {
-        const y = tool.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
+      const firstEl = tool.querySelector('input, select, button'); if (firstEl) firstEl.focus();
+      if (window.innerWidth <= 900) { const y = tool.getBoundingClientRect().top + window.scrollY - 80; window.scrollTo({ top: y, behavior: 'smooth' }); }
     });
   }
 
-  window.addEventListener('hashchange', () => {
-    const toolFromHash = getToolFromHash();
-    if (toolFromHash && toolFromHash !== activeTool) {
-      loadTool(toolFromHash, false);
-    }
-  });
+  window.addEventListener('hashchange', () => { const toolFromHash = getToolFromHash(); if (toolFromHash && toolFromHash !== activeTool) loadTool(toolFromHash, false); });
+  langSelect.onchange = (e) => { currentLang = e.target.value; storage.set('tempo_lang', currentLang); updateStaticTexts(); loadTool(activeTool); };
+  
+  const returnHome = () => { haptic(); closeDrawer(); loadTool('date'); };
+  sidebarLogoBtn.addEventListener('click', returnHome); mobileLogoBtn.addEventListener('click', returnHome);
+  openMenuBtn.addEventListener('click', openDrawer); closeMenuBtn.addEventListener('click', closeDrawer);
+  drawerOverlay.addEventListener('click', closeDrawer);
+  document.querySelectorAll(".menu-item").forEach(item => { item.addEventListener('click', () => { haptic(); closeDrawer(); loadTool(item.dataset.tool); }); });
 
-  langSelect.onchange = (e) => {
-    currentLang = e.target.value;
-    storage.set('tempo_lang', currentLang);
-    updateStaticTexts();
-    loadTool(activeTool);
-  };
-
-  logoBtn.addEventListener('click', () => { haptic(); closeDrawer(); loadTool('date'); });
-  openMenuBtn.addEventListener('click', openDrawer);
-  closeMenuBtn.addEventListener('click', closeDrawer);
-  drawer.addEventListener('click', (e) => { if (e.target === drawer) closeDrawer(); });
-
-  document.querySelectorAll(".menu-item").forEach(item => {
-    item.addEventListener('click', () => {
-      haptic();
-      closeDrawer();
-      loadTool(item.dataset.tool);
-    });
-  });
-
-  updateStaticTexts();
-  loadTool(activeTool);
+  updateStaticTexts(); loadTool(activeTool);
 });
 </script>
 </body>
