@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="tempo.">
 <link rel="manifest" href="manifest.json">
 
-<!-- Schema.org Structured Data (WebApplication) -->
+<!-- Schema.org Structured Data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -76,7 +76,8 @@ select{cursor:pointer}
 
 .result{margin-top:20px;padding:21px;border:1px solid var(--line);background:var(--bg);border-radius:16px;text-align:center;display:none;transition:border-color 0.2s}
 .result.show{display:block;animation:up .25s ease-out}
-.result .big{font-size:clamp(22px,4.5vw,30px);font-weight:900;letter-spacing:-1px}
+/* word-break blindado para números gigantes não quebrarem a tela */
+.result .big{font-size:clamp(22px,4.5vw,30px);font-weight:900;letter-spacing:-1px;word-break:break-word}
 .result .small{color:var(--muted);margin-top:7px;font-size:13px;line-height:1.5}
 .error{color:var(--danger)!important}
 .result.has-copy{cursor:pointer;position:relative;padding-bottom:30px}
@@ -387,7 +388,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function businessDaysDifference(start, end) {
     if (start > end) { let temp = start; start = end; end = temp; }
-    let count = 0; let cur = new Date(start);
+    let count = 0; 
+    let cur = new Date(start);
+    // CORREÇÃO: Diferença de prazo é inclusiva no final, exclusiva no começo
+    cur.setDate(cur.getDate() + 1); 
     while (cur <= end) {
       const day = cur.getDay();
       if (day !== 0 && day !== 6) count++;
@@ -663,7 +667,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const today = new Date(); today.setHours(0, 0, 0, 0);
       if(dum > today) return showResult(currentLang === 'en-US' ? 'LMP cannot be future.' : 'DUM futura inválida.', "", true);
       
-      const diffDays = Math.floor((today - dum) / 86400000);
+      // CORREÇÃO: Math.round em vez de Math.floor evita perda de 1 dia em horário de verão/fusos.
+      const diffDays = Math.round((today - dum) / 86400000);
       const weeks = Math.floor(diffDays / 7);
       const days = diffDays % 7;
       const dueDate = new Date(dum); dueDate.setDate(dueDate.getDate() + 280); 
@@ -838,26 +843,59 @@ document.addEventListener("DOMContentLoaded", () => {
       if(!sal || sal<=0 || !dAdm || !dTerm) return showResult(currentLang === 'en-US' ? 'Fill all fields.' : 'Preencha todos os campos.', "", true);
       if(dAdm > dTerm) return showResult(currentLang === 'en-US' ? 'Hire date cannot be after termination.' : 'Admissão posterior à demissão.', "", true);
       
-      const timeDiff = calendarDifference(dAdm, dTerm), totalMonths = timeDiff.y * 12 + timeDiff.m;
+      const timeDiffReal = calendarDifference(dAdm, dTerm);
+      
+      // CORREÇÃO: Projeção do Aviso Prévio na contagem de avos
+      let diasAviso = 0;
+      if (reason === "sem_justa" || reason === "acordo") {
+        diasAviso = 30 + Math.min(timeDiffReal.y * 3, 60);
+      }
+
+      const dProj = new Date(dTerm);
+      if (reason !== "pedido") dProj.setDate(dProj.getDate() + diasAviso);
+      const projDiff = calendarDifference(dAdm, dProj);
+
+      // Saldo de Salário Real (Mês trabalhado até o último dia efetivo)
       const saldoSalario = (sal / 30) * dTerm.getDate();
-      const decimoTerceiro = (sal / 12) * (dTerm.getMonth() + 1);
-      const feriasBase = (sal / 12) * (totalMonths % 12 || 12), feriasTotal = feriasBase + (feriasBase / 3);
       
       let avisoPrevio = 0;
-      if (reason === "sem_justa") avisoPrevio = (sal / 30) * (30 + Math.min(timeDiff.y * 3, 60));
-      else if (reason === "acordo") avisoPrevio = ((sal / 30) * (30 + Math.min(timeDiff.y * 3, 60))) / 2;
+      if (reason === "sem_justa") avisoPrevio = (sal / 30) * diasAviso;
+      else if (reason === "acordo") avisoPrevio = ((sal / 30) * diasAviso) / 2;
+
+      // CORREÇÃO: 13º Salário (Regra dos 15 dias usando data projetada)
+      let avos13 = dProj.getMonth();
+      if (dProj.getDate() >= 15) avos13++; 
+      const decimoTerceiro = (sal / 12) * Math.min(avos13, 12);
+
+      // CORREÇÃO: Férias Proporcionais + Regra de 15 dias + Férias Vencidas Estimadas
+      let avosFerias = projDiff.m;
+      if (projDiff.d >= 15) avosFerias++;
       
-      let multaFgts = reason === "sem_justa" ? ((sal * 0.08) * totalMonths) * 0.40 : (reason === "acordo" ? ((sal * 0.08) * totalMonths) * 0.20 : 0);
+      let feriasBase = (sal / 12) * Math.min(avosFerias, 12);
+      
+      // Estima 1 mês de férias vencidas caso o tempo ultrapasse 1 ano 
+      if (timeDiffReal.y > 0) feriasBase += sal;
+      
+      const feriasTotal = feriasBase + (feriasBase / 3);
+
+      // Multa FGTS Base (Estimativa via 8% dos meses trabalhados efetivos)
+      const totalMonthsReal = timeDiffReal.y * 12 + timeDiffReal.m + (timeDiffReal.d >= 15 ? 1 : 0);
+      const saldoFgtsEst = (sal * 0.08) * totalMonthsReal;
+      
+      let multaFgts = 0;
+      if (reason === "sem_justa") multaFgts = saldoFgtsEst * 0.40;
+      else if (reason === "acordo") multaFgts = saldoFgtsEst * 0.20;
+
       const totalRescisao = saldoSalario + decimoTerceiro + feriasTotal + avisoPrevio + multaFgts;
       
       const html = `
         <div class="big">R$ ${totalRescisao.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
         <div class="small" style="margin-top:8px; line-height:1.6;">
-          Saldo: R$ ${saldoSalario.toFixed(2)}<br>
+          Saldo: R$ ${saldoSalario.toFixed(2)} | 13º Prop.: R$ ${decimoTerceiro.toFixed(2)}<br>
           ${reason !== 'pedido' ? `Aviso Prévio: R$ ${avisoPrevio.toFixed(2)}<br>` : ''}
-          13º: R$ ${decimoTerceiro.toFixed(2)} | Férias: R$ ${feriasTotal.toFixed(2)}
+          Férias (Prop./Venc. + ⅓): R$ ${feriasTotal.toFixed(2)}
         </div>
-        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>
+        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">* Regra de 15 dias (Avos) e projeção de aviso aplicadas. Férias vencidas assumidas caso contratação > 1 ano.</div>
       `;
       showResult(html, `Rescisão estimada: R$ ${totalRescisao.toFixed(2)}`);
     };
@@ -876,7 +914,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const dist = Number($("#runDist").value), totalMin = Number($("#runTime").value);
       if(!dist || dist <= 0 || !totalMin || totalMin <= 0) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
       
-      const paceDec = totalMin / dist, paceMin = Math.floor(paceDec), paceSec = Math.round((paceDec - paceMin) * 60);
+      let paceDec = totalMin / dist, paceMin = Math.floor(paceDec), paceSec = Math.round((paceDec - paceMin) * 60);
+      
+      // CORREÇÃO: Evita a exibição bugada de "5:60 min/km"
+      if (paceSec === 60) { paceMin += 1; paceSec = 0; }
+      
       const paceFormatted = `${paceMin}:${paceSec < 10 ? '0' : ''}${paceSec}`, speed = (dist / (totalMin / 60)).toFixed(1);
       
       const html = `
