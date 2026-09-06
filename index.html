@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
       footer: 'Simple. Fast. Accurate. &nbsp;·&nbsp; <a href="privacidade.html">Privacy Policy</a>',
       menu: "Utilities", langLabel: "LANGUAGE / REGION",
       g1: "ESSENTIALS", g2: "PERSONAL & LIFE", g3: "LABOR & FINANCE", g4: "SPORTS & PERFORMANCE",
-      copyHint: "Click card to copy", copied: "✓ Copiado!",
+      copyHint: "Click card to copy", copied: "✓ Copied!",
       disclaimer: "* Estimated values for orientation purposes. Consult HR or a professional accountant.",
       tools: {
         date: { title: "Date Calculator", subtitle: "Find out exactly how much time exists between two dates.", badge: "TIME UTILITY", menuName: "Date Calculator" },
@@ -661,6 +661,21 @@ document.addEventListener("DOMContentLoaded", () => {
     window._wcInterval = setInterval(updateClocks, 1000);
   }
 
+  function playBeep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 587.33; // D5
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.3);
+    } catch(e) {}
+  }
+
   function renderPomodoro() {
     const isEn = currentLang === 'en-US';
     tool.innerHTML = `
@@ -723,6 +738,7 @@ document.addEventListener("DOMContentLoaded", () => {
           stopTimer();
           toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
           statusEl.textContent = isEn ? 'Time is up! Great job.' : 'Tempo esgotado! Excelente trabalho.';
+          playBeep();
           try {
             if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
           } catch(e){}
