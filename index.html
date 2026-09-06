@@ -9,14 +9,10 @@
 <meta property="og:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte, foco e horóscopo.">
 <meta property="og:type" content="website">
 
-<!-- PWA & Mobile Meta Tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="tempo.">
 <link rel="manifest" href="manifest.json">
-
-<!-- SCRIPT DO ADSENSE (Mantenha seu client ID aqui) -->
-<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-SEU_CODIGO_AQUI" crossorigin="anonymous"></script> -->
 
 <title id="pageTitle">tempo. — Utilitários</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230b0d12%22/><text x=%2250%22 y=%2270%22 font-size=%2260%22 font-weight=%22900%22 font-family=%22system-ui, sans-serif%22 fill=%22%23f7f8fb%22 text-anchor=%22middle%22>t<tspan fill=%22%237c5cff%22>.</tspan></text></svg>">
@@ -139,8 +135,6 @@ input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(12
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .toast svg{color:#4ade80}
 
-.fade-enter{animation:fadeIn 0.3s ease-out forwards}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @keyframes up{from{opacity:0;transform:translateY(8px) scale(0.98)}to{opacity:1;transform:none}}
 .shake{animation:shake 0.4s cubic-bezier(.36,.07,.19,.97) both}
 @keyframes shake{10%,90%{transform:translate3d(-1px,0,0)} 20%,80%{transform:translate3d(2px,0,0)} 30%,50%,70%{transform:translate3d(-4px,0,0)} 40%,60%{transform:translate3d(4px,0,0)}}
@@ -155,7 +149,6 @@ footer a:hover{color:var(--accent)}
 
 <div class="drawer-overlay" id="drawerOverlay"></div>
 
-<!-- Menu Lateral (Sidebar Desktop / Gaveta Mobile) -->
 <aside class="sidebar" id="drawer" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="drawer-top">
     <div class="logo" id="sidebarLogoBtn">tempo<span>.</span></div>
@@ -266,7 +259,6 @@ footer a:hover{color:var(--accent)}
 <footer id="footerText">Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a></footer>
 </div>
 
-<!-- Modal Pesquisa -->
 <div class="palette-overlay" id="paletteModal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="palette-box">
     <input type="text" class="palette-input" id="paletteInput" placeholder="Digite para buscar uma ferramenta...">
@@ -274,7 +266,6 @@ footer a:hover{color:var(--accent)}
   </div>
 </div>
 
-<!-- Notificação Toast -->
 <div id="toast" class="toast"></div>
 
 <script>
@@ -282,12 +273,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const $ = s => document.querySelector(s);
   const tool = $("#tool"), drawer = $("#drawer"), drawerOverlay = $("#drawerOverlay"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), sidebarLogoBtn = $("#sidebarLogoBtn"), mobileLogoBtn = $("#mobileLogoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), searchDesktopBtn = $("#searchDesktopBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport"), quickChips = $("#quickChips"), greetingEl = $("#greeting");
 
-  // Haptics (Vibração sutil)
   function haptic() {
     try { if (navigator.vibrate) navigator.vibrate(20); } catch(e){}
   }
 
-  // Toast Notifications
   function showToast(msg) {
     const t = $("#toast");
     t.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> ${msg}`;
@@ -459,15 +448,14 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderHTML(html) {
     const resetText = i18n[currentLang].resetText;
     tool.innerHTML = `
-      <button onclick="window.resetCurrentTool()" class="reset-tool-btn" title="${resetText}">
-         <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
-         ${resetText}
-      </button>
-      ${html}
+      <div>
+        <button onclick="window.resetCurrentTool()" class="reset-tool-btn" title="${resetText}">
+           <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
+           ${resetText}
+        </button>
+        ${html}
+      </div>
     `;
-    tool.classList.remove('fade-enter');
-    void tool.offsetWidth;
-    tool.classList.add('fade-enter');
   }
 
   function dateFromInput(id) { const v = $(id).value; if (!v) return null; const d = new Date(v + "T12:00:00"); return isNaN(d.getTime()) ? null : d; }
@@ -1100,8 +1088,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (t === "date") renderDate(); else if (t === "time") renderTime(); else if (t === "business") renderBusiness(); else if (t === "worldclock") renderWorldClock(); else if (t === "pomodoro") renderPomodoro(); else if (t === "horoscope") renderHoroscope(); else if (t === "age") renderAge(); else if (t === "pregnancy") renderPregnancy(); else if (t === "countdown") renderCountdown(); else if (t === "overtime") renderOvertime(); else if (t === "vacation13") renderVacation13(); else if (t === "rescision") renderRescision(); else if (t === "running") renderRunning();
 
     requestAnimationFrame(() => {
-      const firstEl = tool.querySelector('input, select, button'); if (firstEl) firstEl.focus();
-      if (window.innerWidth <= 900) { const y = tool.getBoundingClientRect().top + window.scrollY - 80; window.scrollTo({ top: y, behavior: 'smooth' }); }
+      if (window.innerWidth > 900) {
+        const firstEl = tool.querySelector('input, select'); if (firstEl) firstEl.focus();
+      } else {
+        const y = tool.getBoundingClientRect().top + window.scrollY - 80; window.scrollTo({ top: y, behavior: 'smooth' });
+      }
     });
   }
 
@@ -1114,7 +1105,12 @@ document.addEventListener("DOMContentLoaded", () => {
   drawerOverlay.addEventListener('click', closeDrawer);
   document.querySelectorAll(".menu-item").forEach(item => { item.addEventListener('click', () => { haptic(); closeDrawer(); loadTool(item.dataset.tool); }); });
 
-  updateStaticTexts(); loadTool(activeTool);
+  updateStaticTexts(); 
+  
+  // Respiro de segurança para o Android renderizar o DOM perfeitamente
+  setTimeout(() => {
+    loadTool(activeTool);
+  }, 50);
 });
 </script>
 </body>
