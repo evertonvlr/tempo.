@@ -774,17 +774,23 @@ document.addEventListener("DOMContentLoaded", () => {
       st.running = false;
     }
 
-    function startTimer() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
+    function startTimer(isResume = false) {
+      if (!isResume) {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        st.running = true;
       }
 
-      st.running = true;
       toggleBtn.textContent = isEn ? 'Pause' : 'Pausar';
       statusEl.textContent = isEn ? 'Focus session in progress...' : 'Sessão em andamento...';
+
+      if (window._pomodoroInterval) {
+        clearInterval(window._pomodoroInterval);
+      }
 
       window._pomodoroInterval = setInterval(() => {
         if (st.timeLeft > 0) {
@@ -802,8 +808,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 1000);
     }
 
-    if (st.running && !window._pomodoroInterval) {
-      startTimer();
+    // Mantém rodando em background e reconecta os novos elementos da tela perfeitamente ao retornar
+    if (st.running) {
+      startTimer(true);
     }
 
     toggleBtn.onclick = () => {
@@ -812,7 +819,7 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
         statusEl.textContent = isEn ? 'Paused.' : 'Pausado.';
       } else {
-        startTimer();
+        startTimer(false);
       }
     };
 
