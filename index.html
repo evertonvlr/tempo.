@@ -152,7 +152,7 @@ footer a:hover{color:var(--accent)}
 </div>
 
 <div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="drawer-card">
+  <div class="drawer-card" id="drawerCard">
     <div class="drawer-top"><strong id="menuTitle">Utilitários</strong><button class="close" id="closeMenu" aria-label="Fechar menu">×</button></div>
     
     <div class="lang-selector">
@@ -259,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
       footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>',
       menu: "Utilitários", langLabel: "IDIOMA / REGIÃO",
       g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHISTAS (CÓDIGO DO TRABALHO)", g4: "DESPORTO & PERFORMANCE",
-      copyHint: "Clique no cartão para copiar", copied: "✓ Copiado!", /* CORRIGIDO AQUI */
+      copyHint: "Clique no cartão para copiar", copied: "✓ Copiado!",
       disclaimer: "* Valores estimados para fins orientativos. Consulte os Recursos Humanos ou um contabilista.",
       tools: {
         date: { title: "Calculadora de Datas", subtitle: "Descubra exatamente quanto tempo decorre entre duas datas.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Datas" },
@@ -966,15 +966,19 @@ document.addEventListener("DOMContentLoaded", () => {
   function closePalette() { 
     paletteModal.classList.remove("open"); 
     paletteModal.setAttribute("aria-hidden", "true");
+    searchBtn.focus();
   }
 
   function openDrawer() {
     drawer.classList.add("open");
     drawer.setAttribute("aria-hidden", "false");
+    const firstMenuBtn = drawer.querySelector('.close');
+    if(firstMenuBtn) firstMenuBtn.focus();
   }
   function closeDrawer() {
     drawer.classList.remove("open");
     drawer.setAttribute("aria-hidden", "true");
+    openMenuBtn.focus();
   }
 
   function renderPaletteList(query) {
@@ -1001,6 +1005,28 @@ document.addEventListener("DOMContentLoaded", () => {
   searchBtn.onclick = openPalette;
   paletteModal.onclick = (e) => { if(e.target === paletteModal) closePalette(); };
 
+  // Focus Trap Helper
+  function trapFocus(e, container) {
+    const focusable = container.querySelectorAll('input, button, select, textarea, a[href], [tabindex]:not([tabindex="-1"])');
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.key === 'Tab') {
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          last.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === last) {
+          first.focus();
+          e.preventDefault();
+        }
+      }
+    }
+  }
+
   document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
@@ -1010,6 +1036,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === 'Escape') {
       closePalette();
       closeDrawer();
+    }
+    if (paletteModal.classList.contains('open')) {
+      trapFocus(e, paletteModal);
+    } else if (drawer.classList.contains('open')) {
+      trapFocus(e, drawer);
     }
   });
 
