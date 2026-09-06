@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0b0d12">
-<meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT e esporte. Sem anúncios e direto ao ponto.">
+<meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte e foco. Sem anúncios e direto ao ponto.">
 <meta property="og:title" content="tempo. — Utilitários">
-<meta property="og:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT e esporte.">
+<meta property="og:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte e foco.">
 <meta property="og:type" content="website">
 
 <!-- PWA & Mobile Meta Tags -->
@@ -24,7 +24,7 @@
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "description": "Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT e esporte."
+  "description": "Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte e foco."
 }
 </script>
 
@@ -181,6 +181,10 @@ footer a:hover{color:var(--accent)}
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
       <span data-i18n="tool_worldclock">Fusos Horários (World Clock)</span>
     </button>
+    <button class="menu-item" data-tool="pomodoro">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 15 15"></polyline></svg>
+      <span data-i18n="tool_pomodoro">Temporizador Pomodoro</span>
+    </button>
     
     <div class="menu-group" id="groupPersonal">PESSOAL & VIDA</div>
     <button class="menu-item" data-tool="age">
@@ -245,6 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
         time: { title: "Calculadora de Horas", subtitle: "Calcule a diferença entre dois horários.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Horas" },
         business: { title: "Calculadora de Dias Úteis", subtitle: "Calcule prazos desconsiderando os finais de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
         worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte o horário em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
+        pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
         age: { title: "Calculadora de Idade Exata", subtitle: "Descubra sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" },
         pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime a idade gestacional e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" },
         countdown: { title: "Contagem Regressiva", subtitle: "Meça o tempo que falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Regressiva" },
@@ -266,6 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
         time: { title: "Calculadora de Horas", subtitle: "Calcule a diferença entre dois horários.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Horas" },
         business: { title: "Dias Úteis", subtitle: "Calcule prazos descontando os fins de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
         worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte a hora em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
+        pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie o seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
         age: { title: "Idade Exata", subtitle: "Descubra a sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" },
         pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime o tempo de gestação e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" },
         countdown: { title: "Contagem Decrescente", subtitle: "Saiba quanto tempo falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Decrescente" },
@@ -287,6 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
         time: { title: "Time Calculator", subtitle: "Calculate the difference between two times.", badge: "TIME UTILITY", menuName: "Time Calculator" },
         business: { title: "Business Days", subtitle: "Calculate deadlines excluding weekends.", badge: "TIME UTILITY", menuName: "Business Days" },
         worldclock: { title: "World Clock & Timezones", subtitle: "Check real-time current time across major global financial hubs.", badge: "GLOBAL UTILITY", menuName: "World Clock" },
+        pomodoro: { title: "Pomodoro Timer", subtitle: "Manage your focus time and breaks with productive cycles.", badge: "FOCUS UTILITY", menuName: "Pomodoro Timer" },
         age: { title: "Exact Age Calculator", subtitle: "Discover your exact age in years, months, and days.", badge: "PERSONAL & LIFE", menuName: "Exact Age" },
         pregnancy: { title: "Pregnancy Calculator", subtitle: "Estimate gestational age and expected delivery date.", badge: "PERSONAL & LIFE", menuName: "Pregnancy & Due Date" },
         countdown: { title: "Countdown Timer", subtitle: "Measure time remaining for a major event or time elapsed.", badge: "PERSONAL & LIFE", menuName: "Countdown" },
@@ -334,7 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
     applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
   });
 
-  const validTools = ['date', 'time', 'business', 'worldclock', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
+  const validTools = ['date', 'time', 'business', 'worldclock', 'pomodoro', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
   let activeTool = storage.get('tempo_tool', 'date');
   if (!validTools.includes(activeTool)) activeTool = 'date';
 
@@ -343,6 +350,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let vacationMode = "13";
   let countMode = "down";
   let textToCopy = "";
+
+  // Pomodoro variables
+  let pomoMode = 'work'; // 'work', 'short', 'long'
+  let pomoTimeLeft = 25 * 60;
+  let pomoRunning = false;
 
   const getLocalISODate = (d = new Date()) => {
     const adjusted = new Date(d);
@@ -641,6 +653,103 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     updateClocks();
     window._wcInterval = setInterval(updateClocks, 1000);
+  }
+
+  function renderPomodoro() {
+    const isEn = currentLang === 'en-US';
+    tool.innerHTML = `
+      <div class="tabs">
+        <button class="tab ${pomoMode === 'work' ? 'active' : ''}" data-pmode="work">${isEn ? 'Focus (25m)' : 'Foco (25m)'}</button>
+        <button class="tab ${pomoMode === 'short' ? 'active' : ''}" data-pmode="short">${isEn ? 'Short Break (5m)' : 'Pausa Curta (5m)'}</button>
+        <button class="tab ${pomoMode === 'long' ? 'active' : ''}" data-pmode="long">${isEn ? 'Long Break (15m)' : 'Pausa Longa (15m)'}</button>
+      </div>
+      <div style="text-align: center; padding: 10px 0;">
+        <div id="pomoDisplay" style="font-size: clamp(54px, 12vw, 84px); font-weight: 900; letter-spacing: -2px; margin: 15px 0; font-variant-numeric: tabular-nums;">25:00</div>
+        <div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px;">
+          <button id="pomoToggleBtn" style="padding: 14px 32px; border-radius: 14px; border: 0; background: var(--accent); color: #fff; font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.15s;">${isEn ? 'Start' : 'Iniciar'}</button>
+          <button id="pomoResetBtn" style="padding: 14px 24px; border-radius: 14px; border: 1px solid var(--line); background: var(--card2); color: var(--text); font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.15s;">${isEn ? 'Reset' : 'Reiniciar'}</button>
+        </div>
+      </div>
+      <div class="result show" style="display:block; margin-top: 24px; text-align: center;">
+        <div class="small" id="pomoStatus" style="font-weight: 700;">${isEn ? 'Ready to start focus session.' : 'Pronto para iniciar a sessão de foco.'}</div>
+      </div>`;
+
+    function getSecondsForMode(m) {
+      if (m === 'work') return 25 * 60;
+      if (m === 'short') return 5 * 60;
+      return 15 * 60;
+    }
+
+    if (!pomoRunning) {
+      pomoTimeLeft = getSecondsForMode(pomoMode);
+    }
+
+    const displayEl = $("#pomoDisplay");
+    const toggleBtn = $("#pomoToggleBtn");
+    const resetBtn = $("#pomoResetBtn");
+    const statusEl = $("#pomoStatus");
+
+    function updateDisplay() {
+      const m = Math.floor(pomoTimeLeft / 60);
+      const s = pomoTimeLeft % 60;
+      displayEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+    updateDisplay();
+
+    function stopTimer() {
+      if (window._pomodoroInterval) {
+        clearInterval(window._pomodoroInterval);
+        window._pomodoroInterval = null;
+      }
+      pomoRunning = false;
+    }
+
+    function startTimer() {
+      pomoRunning = true;
+      toggleBtn.textContent = isEn ? 'Pause' : 'Pausar';
+      statusEl.textContent = isEn ? 'Focus session in progress...' : 'Sessão em andamento...';
+
+      window._pomodoroInterval = setInterval(() => {
+        if (pomoTimeLeft > 0) {
+          pomoTimeLeft--;
+          updateDisplay();
+        } else {
+          stopTimer();
+          toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
+          statusEl.textContent = isEn ? 'Time is up! Great job.' : 'Tempo esgotado! Excelente trabalho.';
+          try {
+            if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
+          } catch(e){}
+        }
+      }, 1000);
+    }
+
+    toggleBtn.onclick = () => {
+      if (pomoRunning) {
+        stopTimer();
+        toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
+        statusEl.textContent = isEn ? 'Paused.' : 'Pausado.';
+      } else {
+        startTimer();
+      }
+    };
+
+    resetBtn.onclick = () => {
+      stopTimer();
+      pomoTimeLeft = getSecondsForMode(pomoMode);
+      updateDisplay();
+      toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
+      statusEl.textContent = isEn ? 'Timer reset.' : 'Cronômetro reiniciado.';
+    };
+
+    document.querySelectorAll("[data-pmode]").forEach(tab => {
+      tab.onclick = () => {
+        stopTimer();
+        pomoMode = tab.dataset.pmode;
+        pomoTimeLeft = getSecondsForMode(pomoMode);
+        renderPomodoro();
+      };
+    });
   }
 
   function renderAge() {
@@ -1063,7 +1172,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function loadTool(t) {
-    if (window._wcInterval) clearInterval(window._wcInterval);
+    if (window._wcInterval) {
+      clearInterval(window._wcInterval);
+      window._wcInterval = null;
+    }
+    if (window._pomodoroInterval) {
+      clearInterval(window._pomodoroInterval);
+      window._pomodoroInterval = null;
+    }
+    pomoRunning = false;
+
     activeTool = t;
     storage.set('tempo_tool', t); 
     
@@ -1081,6 +1199,7 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (t === "time") renderTime();
     else if (t === "business") renderBusiness();
     else if (t === "worldclock") renderWorldClock();
+    else if (t === "pomodoro") renderPomodoro();
     else if (t === "age") renderAge();
     else if (t === "pregnancy") renderPregnancy();
     else if (t === "countdown") renderCountdown();
