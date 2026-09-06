@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0b0d12">
-<meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte e foco. Sem anúncios e direto ao ponto.">
+<meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte, foco e horóscopo diário. Sem anúncios e direto ao ponto.">
 <meta property="og:title" content="tempo. — Utilitários">
-<meta property="og:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte e foco.">
+<meta property="og:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte, foco e horóscopo.">
 <meta property="og:type" content="website">
 
 <!-- PWA & Mobile Meta Tags -->
@@ -24,7 +24,7 @@
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "description": "Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte e foco."
+  "description": "Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte, foco e horóscopo."
 }
 </script>
 
@@ -185,6 +185,10 @@ footer a:hover{color:var(--accent)}
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 15 15"></polyline></svg>
       <span data-i18n="tool_pomodoro">Temporizador Pomodoro</span>
     </button>
+    <button class="menu-item" data-tool="horoscope">
+      <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+      <span data-i18n="tool_horoscope">Horóscopo Diário</span>
+    </button>
     
     <div class="menu-group" id="groupPersonal">PESSOAL & VIDA</div>
     <button class="menu-item" data-tool="age">
@@ -250,6 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
         business: { title: "Calculadora de Dias Úteis", subtitle: "Calcule prazos desconsiderando os finais de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
         worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte o horário em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
         pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
+        horoscope: { title: "Horóscopo Diário", subtitle: "Previsões atualizadas diariamente para todos os signos do zodíaco.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
         age: { title: "Calculadora de Idade Exata", subtitle: "Descubra sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" },
         pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime a idade gestacional e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" },
         countdown: { title: "Contagem Regressiva", subtitle: "Meça o tempo que falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Regressiva" },
@@ -272,6 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
         business: { title: "Dias Úteis", subtitle: "Calcule prazos descontando os fins de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
         worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte a hora em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
         pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie o seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
+        horoscope: { title: "Horóscopo Diário", subtitle: "Previsões atualizadas diariamente para todos os signos do zodíaco.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
         age: { title: "Idade Exata", subtitle: "Descubra a sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" },
         pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime o tempo de gestação e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" },
         countdown: { title: "Contagem Decrescente", subtitle: "Saiba quanto tempo falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Decrescente" },
@@ -294,6 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
         business: { title: "Business Days", subtitle: "Calculate deadlines excluding weekends.", badge: "TIME UTILITY", menuName: "Business Days" },
         worldclock: { title: "World Clock & Timezones", subtitle: "Check real-time current time across major global financial hubs.", badge: "GLOBAL UTILITY", menuName: "World Clock" },
         pomodoro: { title: "Pomodoro Timer", subtitle: "Manage your focus time and breaks with productive cycles.", badge: "FOCUS UTILITY", menuName: "Pomodoro Timer" },
+        horoscope: { title: "Daily Horoscope", subtitle: "Daily updated predictions for all zodiac signs.", badge: "ASTROLOGY UTILITY", menuName: "Daily Horoscope" },
         age: { title: "Exact Age Calculator", subtitle: "Discover your exact age in years, months, and days.", badge: "PERSONAL & LIFE", menuName: "Exact Age" },
         pregnancy: { title: "Pregnancy Calculator", subtitle: "Estimate gestational age and expected delivery date.", badge: "PERSONAL & LIFE", menuName: "Pregnancy & Due Date" },
         countdown: { title: "Countdown Timer", subtitle: "Measure time remaining for a major event or time elapsed.", badge: "PERSONAL & LIFE", menuName: "Countdown" },
@@ -341,7 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
     applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
   });
 
-  const validTools = ['date', 'time', 'business', 'worldclock', 'pomodoro', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
+  const validTools = ['date', 'time', 'business', 'worldclock', 'pomodoro', 'horoscope', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
   let activeTool = storage.get('tempo_tool', 'date');
   if (!validTools.includes(activeTool)) activeTool = 'date';
 
@@ -351,8 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let countMode = "down";
   let textToCopy = "";
 
-  // Pomodoro variables
-  let pomoMode = 'work'; // 'work', 'short', 'long'
+  let pomoMode = 'work';
   let pomoTimeLeft = 25 * 60;
   let pomoRunning = false;
 
@@ -752,6 +758,155 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function renderHoroscope() {
+    const isEn = currentLang === 'en-US';
+    const signs = [
+      { id: 'aries', name: isEn ? 'Aries' : 'Áries', symbol: '♈' },
+      { id: 'taurus', name: isEn ? 'Taurus' : 'Touro', symbol: '♉' },
+      { id: 'gemini', name: isEn ? 'Gemini' : 'Gêmeos', symbol: '♊' },
+      { id: 'cancer', name: isEn ? 'Cancer' : 'Câncer', symbol: '♋' },
+      { id: 'leo', name: isEn ? 'Leo' : 'Leão', symbol: '♌' },
+      { id: 'virgo', name: isEn ? 'Virgo' : 'Virgem', symbol: '♍' },
+      { id: 'libra', name: isEn ? 'Libra' : 'Libra', symbol: '♎' },
+      { id: 'scorpio', name: isEn ? 'Scorpio' : 'Escorpião', symbol: '♏' },
+      { id: 'sagittarius', name: isEn ? 'Sagittarius' : 'Sagitário', symbol: '♐' },
+      { id: 'capricorn', name: isEn ? 'Capricorn' : 'Capricórnio', symbol: '♑' },
+      { id: 'aquarius', name: isEn ? 'Aquarius' : 'Aquário', symbol: '♒' },
+      { id: 'pisces', name: isEn ? 'Pisces' : 'Peixes', symbol: '♓' }
+    ];
+
+    tool.innerHTML = `
+      <div style="margin-bottom: 16px;">
+        <label style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:8px;" id="signLabel">${isEn ? 'SELECT YOUR SIGN' : 'SELECIONE SEU SIGNO'}</label>
+        <select id="signSelect" style="font-weight:700;">
+          ${signs.map(s => `<option value="${s.id}">${s.symbol} ${s.name}</option>`).join('')}
+        </select>
+      </div>
+      <div class="result show" id="horoscopeResult" style="display:block; text-align: left; padding: 24px;">
+        <div id="horoscopeContent"></div>
+      </div>`;
+
+    const pools = {
+      pt: {
+        energy: [
+          "Dia de alta voltagem criativa; aproveite para tirar ideias antigas do papel.",
+          "A lua traz introspecção; priorize resolver pendências mentais antes de agir.",
+          "Sua intuição estará afiada hoje. Confie nos seus instintos em decisões rápidas.",
+          "O momento pede paciência com imprevistos rotineiros. Mantenha o foco no essencial.",
+          "Energia de renovação e coragem. Excelente para romper ciclos repetitivos.",
+          "Harmonia em alta nas interações sociais. Um bom diálogo resolve mal-entendidos.",
+          "Foco na disciplina financeira e organização de prazos para evitar estresse.",
+          "Sua vitalidade está em expansão; ótimo dia para iniciar atividades físicas.",
+          "Pequenos detalhes farão grande diferença hoje. Preste atenção aos sinais.",
+          "O otimismo será sua marca registrada, contagiando quem estiver ao seu redor.",
+          "Momento propício para perdoar, virar a página e abrir espaço para o novo.",
+          "Sua mente analítica capta soluções que outros deixam passar despercebidas."
+        ],
+        work: [
+          "No trabalho, sua capacidade de liderança natural destacará você perante os colegas.",
+          "Evite distrações digitais na primeira metade do dia para render o dobro.",
+          "Um projeto antigo pode ganhar nova vida com uma abordagem inovadora.",
+          "Boa fase para negociações e alinhamento de expectativas com superiores.",
+          "Mantenha a discrição sobre planos futuros até que estejam concretizados.",
+          "Trabalho em equipe trará resultados surpreendentes antes do esperado.",
+          "Sua habilidade de resolver problemas sob pressão será testada e aprovada.",
+          "Organize sua caixa de entrada e e-mails; a clareza digital trará paz mental.",
+          "Um convite profissional inesperado pode mudar sua perspectiva de longo prazo."
+        ],
+        love: [
+          "No amor, pequenos gestos de cuidado valem mais do que grandes discursos.",
+          "Se estiver solteiro(a), uma conversa casual pode surpreender positivamente.",
+          "Momento ideal para conversas francas e transparentes a dois.",
+          "A empatia será sua maior aliada para fortalecer vínculos afetivos hoje.",
+          "Surpreenda quem você ama com um programa fora da rotina.",
+          "Respeite o seu espaço emocional e o do parceiro; o equilíbrio é vital.",
+          "Um laço do passado pode reaparecer trazendo reflexões importantes."
+        ],
+        advice: "Lembre-se: gerenciar bem o seu tempo é a chave para a tranquilidade."
+      },
+      en: {
+        energy: [
+          "High creative voltage day; take the chance to bring old ideas to life.",
+          "The moon brings introspection; prioritize clearing mental clutter before acting.",
+          "Your intuition will be sharp today. Trust your instincts on quick decisions.",
+          "The moment calls for patience with routine hiccups. Keep focus on the essential.",
+          "Energy of renewal and courage. Excellent for breaking repetitive cycles.",
+          "High harmony in social interactions. Good dialogue clears up misunderstandings.",
+          "Focus on financial discipline and deadline management to avoid stress.",
+          "Your vitality is expanding; great day to start physical activities.",
+          "Small details will make a big difference today. Pay attention to the signs.",
+          "Optimism will be your trademark, contagious to those around you.",
+          "Propitious moment to forgive, turn the page, and open space for the new.",
+          "Your analytical mind catches solutions others let slip by."
+        ],
+        work: [
+          "At work, your natural leadership capacity will make you stand out among peers.",
+          "Avoid digital distractions in the first half of the day to double your output.",
+          "An old project can gain new life with an innovative approach.",
+          "Good phase for negotiations and aligning expectations with superiors.",
+          "Keep discretion regarding future plans until they are fully realized.",
+          "Teamwork will bring surprising results sooner than expected.",
+          "Your ability to solve problems under pressure will be tested and approved.",
+          "Organize your inbox; digital clarity will bring peace of mind.",
+          "An unexpected professional invitation could change your long-term outlook."
+        ],
+        love: [
+          "In love, small gestures of care speak louder than grand speeches.",
+          "If single, a casual conversation might bring a pleasant surprise.",
+          "Ideal time for frank and transparent conversations as a couple.",
+          "Empathy will be your greatest ally in strengthening emotional bonds today.",
+          "Surprise your loved one with something completely out of the routine.",
+          "Respect your emotional space and your partner's; balance is vital.",
+          "A tie from the past might reappear bringing important reflections."
+        ],
+        advice: "Remember: managing your time wisely is the key to peace of mind."
+      }
+    };
+
+    const selectEl = $("#signSelect");
+    const contentEl = $("#horoscopeContent");
+
+    function updateHoroscope() {
+      const selectedSign = selectEl.value;
+      const signObj = signs.find(s => s.id === selectedSign);
+      
+      const todayEpochDays = Math.floor(Date.now() / 86400000);
+      const signIndex = signs.findIndex(s => s.id === selectedSign);
+      
+      const langData = isEn ? pools.en : pools.pt;
+      
+      const eIdx = (todayEpochDays + signIndex * 7) % langData.energy.length;
+      const wIdx = (todayEpochDays + signIndex * 13) % langData.work.length;
+      const lIdx = (todayEpochDays + signIndex * 19) % langData.love.length;
+
+      const todayStr = new Date().toLocaleDateString(isEn ? 'en-US' : 'pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+      contentEl.innerHTML = `
+        <div style="font-size: 11px; font-weight: 750; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">${todayStr}</div>
+        <div style="font-size: 24px; font-weight: 900; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+          <span>${signObj.symbol}</span> <span>${signObj.name}</span>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 2px;">🌟 ${isEn ? 'Daily Energy' : 'Energia do Dia'}</strong>
+          <span style="color: var(--muted); font-size: 14px; line-height: 1.5;">${langData.energy[eIdx]}</span>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 2px;">💼 ${isEn ? 'Work & Focus' : 'Trabalho & Foco'}</strong>
+          <span style="color: var(--muted); font-size: 14px; line-height: 1.5;">${langData.work[wIdx]}</span>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 2px;">❤️ ${isEn ? 'Love & Relationships' : 'Amor & Relações'}</strong>
+          <span style="color: var(--muted); font-size: 14px; line-height: 1.5;">${langData.love[lIdx]}</span>
+        </div>
+        <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 12px; color: var(--accent); font-weight: 700;">
+          💡 ${langData.advice}
+        </div>`;
+    }
+
+    selectEl.onchange = updateHoroscope;
+    updateHoroscope();
+  }
+
   function renderAge() {
     tool.innerHTML = `
       <div class="grid">
@@ -1114,7 +1269,6 @@ document.addEventListener("DOMContentLoaded", () => {
   searchBtn.onclick = openPalette;
   paletteModal.onclick = (e) => { if(e.target === paletteModal) closePalette(); };
 
-  // Focus Trap Helper
   function trapFocus(e, container) {
     const focusable = container.querySelectorAll('input, button, select, textarea, a[href], [tabindex]:not([tabindex="-1"])');
     if (focusable.length === 0) return;
@@ -1200,6 +1354,7 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (t === "business") renderBusiness();
     else if (t === "worldclock") renderWorldClock();
     else if (t === "pomodoro") renderPomodoro();
+    else if (t === "horoscope") renderHoroscope();
     else if (t === "age") renderAge();
     else if (t === "pregnancy") renderPregnancy();
     else if (t === "countdown") renderCountdown();
