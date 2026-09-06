@@ -719,17 +719,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderOvertime() {
+    const isEn = currentLang === 'en-US';
+    const label50 = isEn ? '50% (Normal / Weekday)' : '50% (Dias úteis / Normal)';
+    const label100 = isEn ? '100% (Sunday / Holiday)' : '100% (Domingos / Feriados)';
+
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="sal">${currentLang === 'en-US' ? 'MONTHLY SALARY' : 'SALÁRIO MENSAL'} (R$)</label><input type="number" id="sal" step="0.01" min="0" value="1621"></div>
-        <div class="field"><label for="jor">${currentLang === 'en-US' ? 'MONTHLY HOURS' : 'JORNADA MENSAL (HORAS)'}</label><input type="number" id="jor" value="220" min="1"></div>
+        <div class="field"><label for="sal">${isEn ? 'MONTHLY SALARY' : 'SALÁRIO MENSAL'} (R$)</label><input type="number" id="sal" step="0.01" min="0" value="1621"></div>
+        <div class="field"><label for="jor">${isEn ? 'MONTHLY HOURS' : 'JORNADA MENSAL (HORAS)'}</label><input type="number" id="jor" value="220" min="1"></div>
       </div>
       <div class="grid" style="margin-top:14px">
-        <div class="field"><label for="qtd">${currentLang === 'en-US' ? 'OVERTIME HOURS' : 'QTD. HORAS EXTRAS'}</label><input type="number" id="qtd" step="0.5" min="0" value="10"></div>
-        <div class="field"><label for="rate">${currentLang === 'en-US' ? 'PREMIUM RATE' : 'ACRÉSCIMO LEGAL'}</label>
+        <div class="field"><label for="qtd">${isEn ? 'OVERTIME HOURS' : 'QTD. HORAS EXTRAS'}</label><input type="number" id="qtd" step="0.5" min="0" value="10"></div>
+        <div class="field"><label for="rate">${isEn ? 'PREMIUM RATE' : 'ACRÉSCIMO LEGAL'}</label>
           <select id="rate">
-            <option value="50">50% (Normal / Weekday)</option>
-            <option value="100">100% (Sunday / Holiday)</option>
+            <option value="50">${label50}</option>
+            <option value="100">${label100}</option>
           </select>
         </div>
       </div>
@@ -737,7 +741,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
     const calculate = () => {
       const sal = Number($("#sal").value), jor = Number($("#jor").value), qtd = Number($("#qtd").value), rate = Number($("#rate").value);
-      if(!sal || sal<=0 || !jor || jor<=0 || isNaN(qtd) || qtd<0) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
+      if(!sal || sal<=0 || !jor || jor<=0 || isNaN(qtd) || qtd<0) return showResult(isEn ? 'Invalid values.' : 'Valores inválidos.', "", true);
       
       const vHora = sal / jor, vExtra = vHora * (1 + rate / 100), total = vExtra * qtd;
       const html = `
