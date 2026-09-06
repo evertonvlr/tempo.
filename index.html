@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0b0d12">
-<meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte, foco e horóscopo diário. Sem anúncios e direto ao ponto.">
+<meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte, foco e horóscopo diário completo. Sem anúncios e direto ao ponto.">
 <meta property="og:title" content="tempo. — Utilitários">
 <meta property="og:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte, foco e horóscopo.">
 <meta property="og:type" content="website">
@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
         business: { title: "Calculadora de Dias Úteis", subtitle: "Calcule prazos desconsiderando os finais de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
         worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte o horário em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
         pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
-        horoscope: { title: "Horóscopo Diário", subtitle: "Previsões atualizadas diariamente para todos os signos do zodíaco.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
+        horoscope: { title: "Horóscopo Diário Completo", subtitle: "Previsões detalhadas de amor, trabalho, finanças e saúde para o seu signo.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
         age: { title: "Calculadora de Idade Exata", subtitle: "Descubra sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" },
         pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime a idade gestacional e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" },
         countdown: { title: "Contagem Regressiva", subtitle: "Meça o tempo que falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Regressiva" },
@@ -277,7 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
         business: { title: "Dias Úteis", subtitle: "Calcule prazos descontando os fins de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
         worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte a hora em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
         pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie o seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
-        horoscope: { title: "Horóscopo Diário", subtitle: "Previsões atualizadas diariamente para todos os signos do zodíaco.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
+        horoscope: { title: "Horóscopo Diário Completo", subtitle: "Previsões detalhadas de amor, trabalho, finanças e saúde para o seu signo.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
         age: { title: "Idade Exata", subtitle: "Descubra a sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" },
         pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime o tempo de gestação e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" },
         countdown: { title: "Contagem Decrescente", subtitle: "Saiba quanto tempo falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Decrescente" },
@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
       footer: 'Simple. Fast. Accurate. &nbsp;·&nbsp; <a href="privacidade.html">Privacy Policy</a>',
       menu: "Utilities", langLabel: "LANGUAGE / REGION",
       g1: "ESSENTIALS", g2: "PERSONAL & LIFE", g3: "LABOR & FINANCE", g4: "SPORTS & PERFORMANCE",
-      copyHint: "Click card to copy", copied: "✓ Copied!",
+      copyHint: "Click card to copy", copied: "✓ Copiado!",
       disclaimer: "* Estimated values for orientation purposes. Consult HR or a professional accountant.",
       tools: {
         date: { title: "Date Calculator", subtitle: "Find out exactly how much time exists between two dates.", badge: "TIME UTILITY", menuName: "Date Calculator" },
@@ -300,7 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
         business: { title: "Business Days", subtitle: "Calculate deadlines excluding weekends.", badge: "TIME UTILITY", menuName: "Business Days" },
         worldclock: { title: "World Clock & Timezones", subtitle: "Check real-time current time across major global financial hubs.", badge: "GLOBAL UTILITY", menuName: "World Clock" },
         pomodoro: { title: "Pomodoro Timer", subtitle: "Manage your focus time and breaks with productive cycles.", badge: "FOCUS UTILITY", menuName: "Pomodoro Timer" },
-        horoscope: { title: "Daily Horoscope", subtitle: "Daily updated predictions for all zodiac signs.", badge: "ASTROLOGY UTILITY", menuName: "Daily Horoscope" },
+        horoscope: { title: "Complete Daily Horoscope", subtitle: "Detailed love, career, money and health predictions for your sign.", badge: "ASTROLOGY UTILITY", menuName: "Daily Horoscope" },
         age: { title: "Exact Age Calculator", subtitle: "Discover your exact age in years, months, and days.", badge: "PERSONAL & LIFE", menuName: "Exact Age" },
         pregnancy: { title: "Pregnancy Calculator", subtitle: "Estimate gestational age and expected delivery date.", badge: "PERSONAL & LIFE", menuName: "Pregnancy & Due Date" },
         countdown: { title: "Countdown Timer", subtitle: "Measure time remaining for a major event or time elapsed.", badge: "PERSONAL & LIFE", menuName: "Countdown" },
@@ -788,78 +788,72 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const pools = {
       pt: {
-        energy: [
-          "Dia de alta voltagem criativa; aproveite para tirar ideias antigas do papel.",
-          "A lua traz introspecção; priorize resolver pendências mentais antes de agir.",
-          "Sua intuição estará afiada hoje. Confie nos seus instintos em decisões rápidas.",
-          "O momento pede paciência com imprevistos rotineiros. Mantenha o foco no essencial.",
-          "Energia de renovação e coragem. Excelente para romper ciclos repetitivos.",
-          "Harmonia em alta nas interações sociais. Um bom diálogo resolve mal-entendidos.",
-          "Foco na disciplina financeira e organização de prazos para evitar estresse.",
-          "Sua vitalidade está em expansão; ótimo dia para iniciar atividades físicas.",
-          "Pequenos detalhes farão grande diferença hoje. Preste atenção aos sinais.",
-          "O otimismo será sua marca registrada, contagiando quem estiver ao seu redor.",
-          "Momento propício para perdoar, virar a página e abrir espaço para o novo.",
-          "Sua mente analítica capta soluções que outros deixam passar despercebidas."
-        ],
-        work: [
-          "No trabalho, sua capacidade de liderança natural destacará você perante os colegas.",
-          "Evite distrações digitais na primeira metade do dia para render o dobro.",
-          "Um projeto antigo pode ganhar nova vida com uma abordagem inovadora.",
-          "Boa fase para negociações e alinhamento de expectativas com superiores.",
-          "Mantenha a discrição sobre planos futuros até que estejam concretizados.",
-          "Trabalho em equipe trará resultados surpreendentes antes do esperado.",
-          "Sua habilidade de resolver problemas sob pressão será testada e aprovada.",
-          "Organize sua caixa de entrada e e-mails; a clareza digital trará paz mental.",
-          "Um convite profissional inesperado pode mudar sua perspectiva de longo prazo."
+        climate: [
+          "O céu astral favorece a clareza mental e a tomada de decisões importantes que estavam em banho-maria.",
+          "Uma forte onda de energia renovadora convida você a sair da zona de conforto e explorar novas perspectivas.",
+          "O momento pede cautela com impulsos repentinos; respire fundo antes de reagir a provocações.",
+          "Alinhamentos planetários auspiciosos trazem leveza e otimismo genuíno para o seu dia a dia.",
+          "Sensibilidade acirrada. Aproveite para olhar para dentro e alinhar suas verdadeiras prioridades de vida."
         ],
         love: [
-          "No amor, pequenos gestos de cuidado valem mais do que grandes discursos.",
-          "Se estiver solteiro(a), uma conversa casual pode surpreender positivamente.",
-          "Momento ideal para conversas francas e transparentes a dois.",
-          "A empatia será sua maior aliada para fortalecer vínculos afetivos hoje.",
-          "Surpreenda quem você ama com um programa fora da rotina.",
-          "Respeite o seu espaço emocional e o do parceiro; o equilíbrio é vital.",
-          "Um laço do passado pode reaparecer trazendo reflexões importantes."
+          "No amor, a cumplicidade ganha espaço. Se estiver comprometido(a), uma conversa sincera fortalece os laços. Solteiros podem atrair alguém com interesses intelectuais parecidos.",
+          "O magnetismo pessoal está em alta. O romance ganha contornos apaixonados, mas evite cobranças excessivas por atenção que possam gerar atritos desnecessários.",
+          "Sua empatia natural será o grande diferencial nas relações hoje. Ouça mais o coração de quem você ama e evite discussões por detalhes irrelevantes.",
+          "Fase excelente para resolver pendências afetivas do passado. Perdoar e virar a página abrirá portas para surpresas muito felizes no campo amoroso."
         ],
-        advice: "Lembre-se: gerenciar bem o seu tempo é a chave para a tranquilidade."
+        work: [
+          "No campo profissional, sua capacidade de foco e produtividade impressionará superiores. É um ótimo dia para apresentar propostas ou liderar projetos complexos.",
+          "Desafios inesperados na rotina exigirão flexibilidade rápida. Sua habilidade de improviso garantirá que tudo termine dentro do prazo estabelecido.",
+          "Evite se sobrecarregar assumindo tarefas que pertencem a outros colegas. Foque nas suas metas principais para garantir entregas de excelência.",
+          "Momento altamente favorável para networking e parcerias estratégicas. Uma conversa informal pode se desdobrar em uma excelente oportunidade de carreira."
+        ],
+        money: [
+          "O setor financeiro pede cautela com gastos por impulso motivados pelo estresse. Organize suas contas antes de fechar qualquer nova compra.",
+          "Boas notícias relativas a investimentos ou entradas extras de dinheiro podem surgir. Mantenha o planejamento a longo prazo firme.",
+          "Fase estável para as finanças, ideal para renegociar dívidas ou traçar metas claras de economia para o próximo semestre."
+        ],
+        health: [
+          "Sua energia vital pede pausas estratégicas. Reserve alguns minutos do dia para respirar fundo, se alongar e cuidar da saúde mental.",
+          "Ótimo dia para iniciar uma nova rotina de exercícios físicos ou ajustar a hidratação e a qualidade do sono.",
+          "Evite o excesso de cafeína e telas antes de dormir; seu corpo agradecerá com um descanso muito mais revigorante."
+        ],
+        colors: ["Vermelho Rubi", "Azul Safira", "Amarelo Ouro", "Verde Esmeralda", "Violeta", "Branco Pérola", "Rosa Quartzo"],
+        numbers: ["07", "14", "22", "33", "41", "55", "09", "18"],
+        compatibilities: ["Áries", "Touro", "Gêmeos", "Câncer", "Leão", "Virgem", "Libra", "Escorpião", "Sagitário", "Capricórnio", "Aquário", "Peixes"]
       },
       en: {
-        energy: [
-          "High creative voltage day; take the chance to bring old ideas to life.",
-          "The moon brings introspection; prioritize clearing mental clutter before acting.",
-          "Your intuition will be sharp today. Trust your instincts on quick decisions.",
-          "The moment calls for patience with routine hiccups. Keep focus on the essential.",
-          "Energy of renewal and courage. Excellent for breaking repetitive cycles.",
-          "High harmony in social interactions. Good dialogue clears up misunderstandings.",
-          "Focus on financial discipline and deadline management to avoid stress.",
-          "Your vitality is expanding; great day to start physical activities.",
-          "Small details will make a big difference today. Pay attention to the signs.",
-          "Optimism will be your trademark, contagious to those around you.",
-          "Propitious moment to forgive, turn the page, and open space for the new.",
-          "Your analytical mind catches solutions others let slip by."
-        ],
-        work: [
-          "At work, your natural leadership capacity will make you stand out among peers.",
-          "Avoid digital distractions in the first half of the day to double your output.",
-          "An old project can gain new life with an innovative approach.",
-          "Good phase for negotiations and aligning expectations with superiors.",
-          "Keep discretion regarding future plans until they are fully realized.",
-          "Teamwork will bring surprising results sooner than expected.",
-          "Your ability to solve problems under pressure will be tested and approved.",
-          "Organize your inbox; digital clarity will bring peace of mind.",
-          "An unexpected professional invitation could change your long-term outlook."
+        climate: [
+          "The astral sky favors mental clarity and important decision-making that was previously on hold.",
+          "A strong wave of renewing energy invites you to step out of your comfort zone and explore new perspectives.",
+          "The moment calls for caution with sudden impulses; take a deep breath before reacting to provocations.",
+          "Auspicious planetary alignments bring lightness and genuine optimism to your daily routine.",
+          "Heightened sensitivity. Take the opportunity to look inward and align your true life priorities."
         ],
         love: [
-          "In love, small gestures of care speak louder than grand speeches.",
-          "If single, a casual conversation might bring a pleasant surprise.",
-          "Ideal time for frank and transparent conversations as a couple.",
-          "Empathy will be your greatest ally in strengthening emotional bonds today.",
-          "Surprise your loved one with something completely out of the routine.",
-          "Respect your emotional space and your partner's; balance is vital.",
-          "A tie from the past might reappear bringing important reflections."
+          "In love, complicity takes center stage. If committed, a sincere conversation strengthens ties. Singles might attract someone with similar intellectual interests.",
+          "Personal magnetism is peaking. Romance turns passionate, but avoid excessive demands for attention that could cause unnecessary friction.",
+          "Your natural empathy will be your greatest asset in relationships today. Listen more to your loved one's heart and avoid arguments over trivial details.",
+          "An excellent phase to resolve past emotional issues. Forgiving and turning the page will open doors for very happy surprises in love."
         ],
-        advice: "Remember: managing your time wisely is the key to peace of mind."
+        work: [
+          "Professionally, your focus and productivity will impress superiors. It's a great day to pitch proposals or lead complex projects.",
+          "Unexpected routine challenges will demand quick flexibility. Your improvisation skills will ensure everything finishes on schedule.",
+          "Avoid overloading yourself by taking on tasks belonging to colleagues. Focus on core goals to guarantee excellence.",
+          "Highly favorable phase for networking and strategic partnerships. An informal chat could unfold into a great career opportunity."
+        ],
+        money: [
+          "The financial sector calls for caution against impulse purchases driven by stress. Organize accounts before any new buy.",
+          "Good news regarding investments or extra income may arise. Keep long-term planning steady.",
+          "A stable financial phase, ideal for renegotiating debts or outlining clear savings goals for the next semester."
+        ],
+        health: [
+          "Your vital energy calls for strategic breaks. Take a few minutes today to breathe, stretch, and nurture mental health.",
+          "Great day to start a new exercise routine or adjust hydration and sleep quality.",
+          "Avoid excessive caffeine and screens before bed; your body will thank you with much more refreshing rest."
+        ],
+        colors: ["Ruby Red", "Sapphire Blue", "Golden Yellow", "Emerald Green", "Violet", "Pearl White", "Quartz Pink"],
+        numbers: ["07", "14", "22", "33", "41", "55", "09", "18"],
+        compatibilities: ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
       }
     };
 
@@ -875,31 +869,52 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const langData = isEn ? pools.en : pools.pt;
       
-      const eIdx = (todayEpochDays + signIndex * 7) % langData.energy.length;
-      const wIdx = (todayEpochDays + signIndex * 13) % langData.work.length;
-      const lIdx = (todayEpochDays + signIndex * 19) % langData.love.length;
+      const cIdx = (todayEpochDays + signIndex * 3) % langData.climate.length;
+      const lIdx = (todayEpochDays + signIndex * 7) % langData.love.length;
+      const wIdx = (todayEpochDays + signIndex * 11) % langData.work.length;
+      const mIdx = (todayEpochDays + signIndex * 13) % langData.money.length;
+      const hIdx = (todayEpochDays + signIndex * 17) % langData.health.length;
+      const colIdx = (todayEpochDays + signIndex * 5) % langData.colors.length;
+      const numIdx = (todayEpochDays + signIndex * 9) % langData.numbers.length;
+      const compIdx = (signIndex + (todayEpochDays % 4)) % signs.length;
 
       const todayStr = new Date().toLocaleDateString(isEn ? 'en-US' : 'pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
       contentEl.innerHTML = `
         <div style="font-size: 11px; font-weight: 750; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">${todayStr}</div>
-        <div style="font-size: 24px; font-weight: 900; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+        <div style="font-size: 26px; font-weight: 900; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
           <span>${signObj.symbol}</span> <span>${signObj.name}</span>
         </div>
-        <div style="margin-bottom: 12px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 2px;">🌟 ${isEn ? 'Daily Energy' : 'Energia do Dia'}</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.5;">${langData.energy[eIdx]}</span>
+
+        <div style="margin-bottom: 16px;">
+          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌤️ ${isEn ? 'Astral Climate' : 'Clima Astral'}</strong>
+          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.climate[cIdx]}</span>
         </div>
-        <div style="margin-bottom: 12px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 2px;">💼 ${isEn ? 'Work & Focus' : 'Trabalho & Foco'}</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.5;">${langData.work[wIdx]}</span>
+
+        <div style="margin-bottom: 16px;">
+          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">❤️ ${isEn ? 'Love & Relationships' : 'Amor & Relações'}</strong>
+          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.love[lIdx]}</span>
         </div>
-        <div style="margin-bottom: 12px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 2px;">❤️ ${isEn ? 'Love & Relationships' : 'Amor & Relações'}</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.5;">${langData.love[lIdx]}</span>
+
+        <div style="margin-bottom: 16px;">
+          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💼 ${isEn ? 'Career & Work' : 'Trabalho & Carreira'}</strong>
+          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.work[wIdx]}</span>
         </div>
-        <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 12px; color: var(--accent); font-weight: 700;">
-          💡 ${langData.advice}
+
+        <div style="margin-bottom: 16px;">
+          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💰 ${isEn ? 'Money & Finances' : 'Dinheiro & Finanças'}</strong>
+          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.money[mIdx]}</span>
+        </div>
+
+        <div style="margin-bottom: 18px;">
+          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌿 ${isEn ? 'Health & Wellness' : 'Saúde & Bem-estar'}</strong>
+          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.health[hIdx]}</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted);">
+          <div>🎨 <strong>${isEn ? 'Color:' : 'Cor:'}</strong> <span style="color:var(--text);">${langData.colors[colIdx]}</span></div>
+          <div>🍀 <strong>${isEn ? 'Number:' : 'Número:'}</strong> <span style="color:var(--text);">${langData.numbers[numIdx]}</span></div>
+          <div>✨ <strong>${isEn ? 'Match:' : 'Combina com:'}</strong> <span style="color:var(--text);">${signs[compIdx].name}</span></div>
         </div>`;
     }
 
