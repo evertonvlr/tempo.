@@ -349,7 +349,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const validTools = ['date', 'time', 'business', 'worldclock', 'pomodoro', 'horoscope', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
-  let activeTool = storage.get('tempo_tool', 'date');
+  
+  function getToolFromHash() {
+    const hash = window.location.hash.replace('#', '');
+    return validTools.includes(hash) ? hash : null;
+  }
+
+  let activeTool = getToolFromHash() || storage.get('tempo_tool', 'date');
   if (!validTools.includes(activeTool)) activeTool = 'date';
 
   let dateMode = "diff";
@@ -661,7 +667,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window._wcInterval = setInterval(updateClocks, 1000);
   }
 
-  // Alarme reformulado: Sequência rítmica de 3 segundos para garantir que o usuário ouça bem
   function playAlarm() {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -748,7 +753,7 @@ document.addEventListener("DOMContentLoaded", () => {
           stopTimer();
           toggleBtn.textContent = isEn ? 'Start' : 'Iniciar';
           statusEl.textContent = isEn ? 'Time is up! Great job.' : 'Tempo esgotado! Excelente trabalho.';
-          playAlarm(); // Dispara a sequência sonora de ~3 segundos
+          playAlarm();
           try {
             if ('vibrate' in navigator) navigator.vibrate([300, 150, 300, 150, 400]);
           } catch(e){}
@@ -1366,7 +1371,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function loadTool(t) {
+  function loadTool(t, updateHash = true) {
     if (window._wcInterval) {
       clearInterval(window._wcInterval);
       window._wcInterval = null;
@@ -1380,6 +1385,10 @@ document.addEventListener("DOMContentLoaded", () => {
     activeTool = t;
     storage.set('tempo_tool', t); 
     
+    if (updateHash && window.location.hash !== '#' + t) {
+      window.location.hash = t;
+    }
+
     const meta = i18n[currentLang].tools[t] || i18n[currentLang].tools['date'];
     pageTitle.textContent = "tempo. — " + meta.title;
     titleEl.textContent = meta.title;
@@ -1405,6 +1414,14 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (t === "running") renderRunning();
   }
 
+  // Suporte aos botões de voltar/avançar do navegador com hash routing
+  window.addEventListener('hashchange', () => {
+    const toolFromHash = getToolFromHash();
+    if (toolFromHash && toolFromHash !== activeTool) {
+      loadTool(toolFromHash, false);
+    }
+  });
+
   langSelect.onchange = (e) => {
     currentLang = e.target.value;
     storage.set('tempo_lang', currentLang);
@@ -1412,7 +1429,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadTool(activeTool);
   };
 
-  logoBtn.addEventListener('click', () => { closeDrawer(); loadtool('date'); });
+  logoBtn.addEventListener('click', () => { closeDrawer(); loadTool('date'); });
   openMenuBtn.addEventListener('click', openDrawer);
   closeMenuBtn.addEventListener('click', closeDrawer);
   drawer.addEventListener('click', (e) => { if (e.target === drawer) closeDrawer(); });
