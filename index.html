@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!-- CORREÇÃO 1: Removidas as travas de zoom (maximum-scale e user-scalable) para garantir acessibilidade (WCAG) -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0d12">
 <meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte, foco e horóscopo diário completo. Sem anúncios e direto ao ponto.">
 <meta property="og:title" content="tempo. — Utilitários">
@@ -240,6 +241,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  // Helper de segurança contra XSS (Escapa caracteres HTML perigosos inseridos pelo usuário)
+  function escapeHTML(str) {
+    return str.replace(/[&<>'"]/g, tag => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    }[tag] || tag));
+  }
+
   const i18n = {
     'pt-BR': {
       page: "tempo. — Utilitários",
@@ -292,7 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
       footer: 'Simple. Fast. Accurate. &nbsp;·&nbsp; <a href="privacidade.html">Privacy Policy</a>',
       menu: "Utilities", langLabel: "LANGUAGE / REGION",
       g1: "ESSENTIALS", g2: "PERSONAL & LIFE", g3: "LABOR & FINANCE", g4: "SPORTS & PERFORMANCE",
-      copyHint: "Click card to copy", copied: "✓ Copied!",
+      copyHint: "Click card to copy", copied: "✓ Copiado!",
       disclaimer: "* Estimated values for orientation purposes. Consult HR or a professional accountant.",
       tools: {
         date: { title: "Date Calculator", subtitle: "Find out exactly how much time exists between two dates.", badge: "TIME UTILITY", menuName: "Date Calculator" },
@@ -1027,7 +1035,10 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#evDate").value = getLocalISODate(target);
     
     const calculate = () => {
-      const name = $("#evName").value || "Evento";
+      // CORREÇÃO 2: Escapando o nome do evento para evitar vulnerabilidade de XSS
+      const rawName = $("#evName").value || "Evento";
+      const name = escapeHTML(rawName);
+      
       const evDate = dateFromInput("#evDate");
       if(!evDate) return showResult(currentLang === 'en-US' ? 'Select valid date.' : 'Selecione data válida.', "", true);
       
@@ -1037,11 +1048,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (countMode === "down") {
         if (today > evDate) return showResult(currentLang === 'en-US' ? 'Date has passed!' : 'Data já passou!', "", true);
         const html = `<div class="big">${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">${currentLang==='en-US'?'Remaining for':'Faltam'} ${name}.</div>`;
-        showResult(html, `Faltam ${x.total} dias para ${name}!`);
+        showResult(html, `Faltam ${x.total} dias para ${rawName}!`);
       } else {
         if (today < evDate) return showResult(currentLang === 'en-US' ? 'Date is future!' : 'Data futura!', "", true);
         const html = `<div class="big">${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">${currentLang==='en-US'?'Passed since':'Passados desde'} ${name}.</div>`;
-        showResult(html, `Já se passaram ${x.total} dias desde ${name}.`);
+        showResult(html, `Já se passaram ${x.total} dias desde ${rawName}.`);
       }
     };
     $("#evName").oninput = calculate; $("#evDate").oninput = calculate; calculate();
@@ -1414,7 +1425,6 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (t === "running") renderRunning();
   }
 
-  // Suporte aos botões de voltar/avançar do navegador com hash routing
   window.addEventListener('hashchange', () => {
     const toolFromHash = getToolFromHash();
     if (toolFromHash && toolFromHash !== activeTool) {
