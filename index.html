@@ -54,14 +54,14 @@ body{
 }
 button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer}
 .app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
-header{height:76px;display:flex;align-items:center;justify-content:space-between}
+header{height:84px;display:flex;align-items:center;justify-content:space-between}
 
-.logo-container{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:opacity .2s, transform .15s ease}
+.logo-container{display:flex;align-items:baseline;gap:12px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:opacity .2s, transform .15s ease}
 .logo-container:hover{opacity:0.85}
 .logo-container:active{transform:scale(0.97)}
-.logo-main{font-size:21px;font-weight:850;letter-spacing:-.7px;color:var(--text)}
+.logo-main{font-size:26px;font-weight:900;letter-spacing:-1px;color:var(--text)}
 .logo-main span{color:var(--accent)}
-.logo-badge{font-size:10px;font-weight:750;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);background:rgba(124,92,255,0.12);padding:4px 9px;border-radius:20px;border:1px solid rgba(124,92,255,0.25)}
+.logo-sub{font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
 
 .header-actions{display:flex;gap:10px;align-items:center}
 .icon-btn{width:45px;height:45px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);display:grid;place-items:center;transition:transform .15s ease, background .2s, border-color .2s;outline:none}
@@ -157,7 +157,7 @@ footer a:hover{color:var(--accent)}
 <header>
   <div class="logo-container" id="logoBtn">
     <div class="logo-main">tempo<span>.</span>utility</div>
-    <div class="logo-badge">Utilitários</div>
+    <div class="logo-sub">utilitários</div>
   </div>
   <div class="header-actions">
     <button class="icon-btn" id="searchBtn" aria-label="Pesquisar (Ctrl+K)" title="Pesquisar (Ctrl+K)">
@@ -196,7 +196,7 @@ footer a:hover{color:var(--accent)}
     <div class="drawer-top"><strong id="menuTitle">tempo.utility</strong><button class="close" id="closeMenu" aria-label="Fechar menu">×</button></div>
     
     <div class="lang-selector">
-      <label for="langSelect" style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:6px;" id="langLabel">IDIOMA / LANGUAGE</label>
+      <label for="langSelect" style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:6px;" id="langLabel">IDIOMA / REGIONAL</label>
       <select id="langSelect">
         <option value="pt-BR">🇧🇷 Português (Brasil)</option>
         <option value="pt-PT">🇵🇹 Português (Portugal)</option>
@@ -531,67 +531,93 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // GERAÇÃO DO CARD NO ESTILO SPOTIFY WRAPPED (Com fundo claro creme, bloco central com número em verde vibrante, em português e com "tempo.utility")
+  // GERAÇÃO DO CARD ESTILO SPOTIFY WRAPPED USANDO AS CORES E ESTÉTICA DO SITE
   function generateShareCard(titleText, resultText) {
     const canvas = document.createElement('canvas');
     canvas.width = 600;
     canvas.height = 800;
     const ctx = canvas.getContext('2d');
 
-    // Fundo cor creme do Spotify Wrapped
-    ctx.fillStyle = '#f2f0ea';
+    // Fundo premium escuro idêntico ao site (#0b0d12)
+    ctx.fillStyle = '#0b0d12';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Linhas orgânicas / decorativas no topo
-    ctx.strokeStyle = '#111111';
+    // Linhas orgânicas / arcos decorativos no topo usando a cor accent do site (#7c5cff)
+    ctx.strokeStyle = '#7c5cff';
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(80, 50);
-    ctx.bezierCurveTo(150, 20, 250, 80, 320, 40);
+    ctx.bezierCurveTo(160, 20, 260, 90, 340, 45);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.arc(480, 60, 45, 0, Math.PI * 2);
-    ctx.fillStyle = '#d8d6ce';
+    ctx.arc(480, 65, 45, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a202b';
     ctx.fill();
+    ctx.strokeStyle = '#29313e';
+    ctx.lineWidth = 2;
+    ctx.stroke();
 
-    // Título da Ferramenta
-    ctx.fillStyle = '#111111';
-    ctx.font = '800 24px system-ui, -apple-system, sans-serif';
+    // Título da Ferramenta em Português
+    ctx.fillStyle = '#9199a8';
+    ctx.font = '800 16px system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(titleText, canvas.width / 2, 170);
+    ctx.fillText(titleText.toUpperCase(), canvas.width / 2, 170);
 
-    // Resultado Principal Gigante (Estilo verde limão Spotify Wrapped)
-    ctx.fillStyle = '#32cd32'; 
-    ctx.font = '900 78px system-ui, -apple-system, sans-serif';
-    ctx.fillText(resultText, canvas.width / 2, 330);
+    // RESULTADO GIGANTE EM DESTAQUE COM TAMANHO DINÂMICO (Para nunca estourar o card)
+    let fontSize = 72;
+    if (resultText.length > 15) fontSize = 54;
+    if (resultText.length > 30) fontSize = 38;
+    if (resultText.length > 50) fontSize = 28;
 
-    // Subtítulo descritivo
-    ctx.fillStyle = '#111111';
-    ctx.font = '700 16px system-ui, sans-serif';
-    ctx.fillText('Resultado calculado com precisão absoluta:', canvas.width / 2, 440);
+    ctx.fillStyle = '#7c5cff'; // Cor Accent do site para dar vida ao número/resultado
+    ctx.font = `900 ${fontSize}px system-ui, -apple-system, sans-serif`;
 
-    // Caixa inferior
-    ctx.fillStyle = '#e4e2da';
+    // Quebra automática de linha segura
+    const words = resultText.split(' ');
+    let line = '';
+    let lines = [];
+    for(let n = 0; n < words.length; n++) {
+      let testLine = line + words[n] + ' ';
+      let metrics = ctx.measureText(testLine);
+      if (metrics.width > 480 && n > 0) {
+        lines.push(line);
+        line = words[n] + ' ';
+      } else {
+        line = testLine;
+      }
+    }
+    lines.push(line);
+
+    let startY = 340 - ((lines.length * (fontSize + 10)) / 2);
+    lines.forEach((l, idx) => {
+      ctx.fillText(l.trim(), canvas.width / 2, startY + (idx * (fontSize + 10)));
+    });
+
+    // Caixa de destaque inferior com tom do site (#131720)
+    ctx.fillStyle = '#131720';
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(60, 485, 480, 100, 16);
+      ctx.roundRect(60, 490, 480, 90, 16);
     } else {
-      ctx.rect(60, 485, 480, 100);
+      ctx.rect(60, 490, 480, 90);
     }
     ctx.fill();
+    ctx.strokeStyle = '#29313e';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
 
-    ctx.fillStyle = '#333333';
+    ctx.fillStyle = '#f7f8fb';
     ctx.font = '800 18px system-ui, -apple-system, sans-serif';
-    ctx.fillText('tempo.utility', canvas.width / 2, 542);
+    ctx.fillText('tempo.utility utilitários', canvas.width / 2, 542);
 
-    // Rodapé Spotify Wrapped: Ícone e Link do site
-    ctx.fillStyle = '#111111';
+    // Rodapé estilo Spotify com as cores do site
+    ctx.fillStyle = '#f7f8fb';
     ctx.beginPath();
     ctx.arc(80, 720, 24, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.strokeStyle = '#f2f0ea';
+    ctx.strokeStyle = '#7c5cff';
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.arc(80, 720, 12, -Math.PI/2, Math.PI/2, false);
@@ -601,12 +627,12 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.stroke();
 
     ctx.textAlign = 'left';
-    ctx.fillStyle = '#111111';
+    ctx.fillStyle = '#f7f8fb';
     ctx.font = '900 18px system-ui, -apple-system, sans-serif';
     ctx.fillText('TEMPO.UTILITY', 120, 727);
 
     const link = document.createElement('a');
-    link.download = 'tempo-spotify-card.png';
+    link.download = 'tempo-utility-card.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
   }
@@ -623,7 +649,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveHistory(toolName || titleEl.textContent, plainText);
         extraActions = `
           <div class="action-buttons">
-            <button class="action-btn" id="shareCardBtn">🎨 Gerar Card Estilo Spotify</button>
+            <button class="action-btn" id="shareCardBtn">🎨 Gerar Card do tempo.utility</button>
             ${['Horas Extras', 'Rescisão Contratual (Acerto)'].includes(titleEl.textContent) ? '<button class="action-btn" id="printPdfBtn">🖨️ Exportar Relatório PDF</button>' : ''}
           </div>
         `;
