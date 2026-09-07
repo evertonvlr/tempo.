@@ -54,14 +54,14 @@ body{
 }
 button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer}
 .app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
-header{height:84px;display:flex;align-items:center;justify-content:space-between}
+header{height:76px;display:flex;align-items:center;justify-content:space-between}
 
-.logo-container{display:flex;align-items:baseline;gap:12px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:opacity .2s, transform .15s ease}
+.logo-container{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:opacity .2s, transform .15s ease}
 .logo-container:hover{opacity:0.85}
 .logo-container:active{transform:scale(0.97)}
-.logo-main{font-size:26px;font-weight:900;letter-spacing:-1px;color:var(--text)}
+.logo-main{font-size:22px;font-weight:850;letter-spacing:-.7px;color:var(--text)}
 .logo-main span{color:var(--accent)}
-.logo-sub{font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.logo-sub{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-top:2px}
 
 .header-actions{display:flex;gap:10px;align-items:center}
 .icon-btn{width:45px;height:45px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);display:grid;place-items:center;transition:transform .15s ease, background .2s, border-color .2s;outline:none}
@@ -156,7 +156,7 @@ footer a:hover{color:var(--accent)}
 <div class="app">
 <header>
   <div class="logo-container" id="logoBtn">
-    <div class="logo-main">tempo<span>.</span>utility</div>
+    <div class="logo-main">tempo<span>.</span></div>
     <div class="logo-sub">utilitários</div>
   </div>
   <div class="header-actions">
@@ -193,14 +193,13 @@ footer a:hover{color:var(--accent)}
 
 <div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="drawer-card" id="drawerCard">
-    <div class="drawer-top"><strong id="menuTitle">tempo.utility</strong><button class="close" id="closeMenu" aria-label="Fechar menu">×</button></div>
+    <div class="drawer-top"><strong id="menuTitle">tempo utilitários</strong><button class="close" id="closeMenu" aria-label="Fechar menu">×</button></div>
     
     <div class="lang-selector">
-      <label for="langSelect" style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:6px;" id="langLabel">IDIOMA / REGIONAL</label>
+      <label for="langSelect" style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:6px;" id="langLabel">IDIOMA / REGIÃO</label>
       <select id="langSelect">
         <option value="pt-BR">🇧🇷 Português (Brasil)</option>
         <option value="pt-PT">🇵🇹 Português (Portugal)</option>
-        <option value="en-US">🇺🇸 English (US)</option>
       </select>
     </div>
 
@@ -219,7 +218,7 @@ footer a:hover{color:var(--accent)}
     </button>
     <button class="menu-item" data-tool="worldclock">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-      <span data-i18n="tool_worldclock">Fusos Horários (World Clock)</span>
+      <span data-i18n="tool_worldclock">Fusos Horários (Relógio Mundial)</span>
     </button>
     <button class="menu-item" data-tool="meeting">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 15 15"></polyline></svg>
@@ -330,9 +329,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const i18n = {
     'pt-BR': {
-      page: "tempo.utility — Utilitários",
+      page: "tempo utilitários — Utilitários",
       footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>',
-      menu: "Utilitários", langLabel: "IDIOMA / REGIÃO",
+      menu: "tempo utilitários", langLabel: "IDIOMA / REGIÃO",
       g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHISTAS & FINANÇAS", g4: "ESPORTE & PERFORMANCE",
       copyHint: "Clique no cartão para copiar", copied: "✓ Copiado!",
       disclaimer: "* Valores estimados para fins orientativos. Consulte o RH ou um profissional contábil.",
@@ -340,7 +339,7 @@ document.addEventListener("DOMContentLoaded", () => {
         date: { title: "Calculadora de Data", subtitle: "Descubra exatamente quanto tempo existe entre duas datas.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Data" },
         time: { title: "Calculadora de Horas", subtitle: "Calcule a diferença entre dois horários.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Horas" },
         business: { title: "Calculadora de Dias Úteis", subtitle: "Calcule prazos desconsiderando os finais de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
-        worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte o horário em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
+        worldclock: { title: "Fusos Horários (Relógio Mundial)", subtitle: "Consulte o horário em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
         meeting: { title: "Planejador de Reuniões Globais", subtitle: "Encontre o horário ideal de trabalho em comum entre diferentes países.", badge: "UTILITÁRIO GLOBAL", menuName: "Planejador de Reuniões" },
         pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
         horoscope: { title: "Horóscopo Diário Completo", subtitle: "Previsões detalhadas de amor, trabalho, finanças e saúde para o seu signo.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
@@ -354,9 +353,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     },
     'pt-PT': {
-      page: "tempo.utility — Utilitários",
+      page: "tempo utilitários — Utilitários",
       footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>',
-      menu: "Utilitários", langLabel: "IDIOMA / REGIÃO",
+      menu: "tempo utilitários", langLabel: "IDIOMA / REGIÃO",
       g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHO & FINANÇAS", g4: "DESPORTO & PERFORMANCE",
       copyHint: "Clique no cartão para copiar", copied: "✓ Copiado!",
       disclaimer: "* Valores estimados para fins orientativos. Consulte os Recursos Humanos ou um contabilista.",
@@ -364,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
         date: { title: "Calculadora de Datas", subtitle: "Descubra exatamente quanto tempo decorre entre duas datas.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Datas" },
         time: { title: "Calculadora de Horas", subtitle: "Calcule a diferença entre dois horários.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Horas" },
         business: { title: "Dias Úteis", subtitle: "Calcule prazos descontando os fins de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
-        worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte a hora em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
+        worldclock: { title: "Fusos Horários (Relógio Mundial)", subtitle: "Consulte a hora em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
         meeting: { title: "Planejador de Reuniões Globais", subtitle: "Encontre o horário ideal de trabalho em comum entre diferentes países.", badge: "UTILITÁRIO GLOBAL", menuName: "Planejador de Reuniões" },
         pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie o seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
         horoscope: { title: "Horóscopo Diário Completo", subtitle: "Previsões detalhadas de amor, trabalho, finanças e saúde para o seu signo.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
@@ -376,30 +375,6 @@ document.addEventListener("DOMContentLoaded", () => {
         rescision: { title: "Rescisão de Contrato (Acerto)", subtitle: "Estime rapidamente os valores devidos em caso de cessação do contrato.", badge: "UTILITÁRIO LABORAL", menuName: "Rescisão de Contrato" },
         running: { title: "Ritmo de Corrida (Splits)", subtitle: "Descubra o ritmo por quilómetro necessário para atingir o seu objetivo.", badge: "DESPORTO & PERFORMANCE", menuName: "Ritmo de Corrida" }
       }
-    },
-    'en-US': {
-      page: "tempo.utility — Utilities",
-      footer: 'Simple. Fast. Accurate. &nbsp;·&nbsp; <a href="privacidade.html">Privacy Policy</a>',
-      menu: "Utilities", langLabel: "LANGUAGE / REGION",
-      g1: "ESSENTIALS", g2: "PERSONAL & LIFE", g3: "LABOR & FINANCE", g4: "SPORTS & PERFORMANCE",
-      copyHint: "Click card to copy", copied: "✓ Copiado!",
-      disclaimer: "* Estimated values for orientation purposes. Consult HR or a professional accountant.",
-      tools: {
-        date: { title: "Date Calculator", subtitle: "Find out exactly how much time exists between two dates.", badge: "TIME UTILITY", menuName: "Date Calculator" },
-        time: { title: "Time Calculator", subtitle: "Calculate the difference between two times.", badge: "TIME UTILITY", menuName: "Time Calculator" },
-        business: { title: "Business Days", subtitle: "Calculate deadlines excluding weekends.", badge: "TIME UTILITY", menuName: "Business Days" },
-        worldclock: { title: "World Clock & Timezones", subtitle: "Check real-time current time across major global financial hubs.", badge: "GLOBAL UTILITY", menuName: "World Clock" },
-        meeting: { title: "Global Meeting Planner", subtitle: "Find the ideal overlapping work hours across multiple timezones.", badge: "GLOBAL UTILITY", menuName: "Meeting Planner" },
-        pomodoro: { title: "Pomodoro Timer", subtitle: "Manage your focus time and breaks with productive cycles.", badge: "FOCUS UTILITY", menuName: "Pomodoro Timer" },
-        horoscope: { title: "Complete Daily Horoscope", subtitle: "Detailed love, career, money and health predictions for your sign.", badge: "ASTROLOGY UTILITY", menuName: "Daily Horoscope" },
-        age: { title: "Exact Age Calculator", subtitle: "Discover your exact age in years, months, and days.", badge: "PERSONAL & LIFE", menuName: "Exact Age" },
-        pregnancy: { title: "Pregnancy Calculator", subtitle: "Estimate gestational age and expected delivery date.", badge: "PERSONAL & LIFE", menuName: "Pregnancy & Due Date" },
-        countdown: { title: "Countdown Timer", subtitle: "Measure time remaining for a major event or time elapsed.", badge: "PERSONAL & LIFE", menuName: "Countdown" },
-        overtime: { title: "Overtime Calculator", subtitle: "Estimate your hourly rate and overtime earnings.", badge: "LABOR & FINANCE", menuName: "Overtime Calculator" },
-        vacation13: { title: "Vacation & Bonus Pay", subtitle: "Estimate proportional payouts following labor guidelines.", badge: "LABOR & FINANCE", menuName: "Vacation & Bonus" },
-        rescision: { title: "Severance Calculator", subtitle: "Quickly estimate payouts upon employment contract termination.", badge: "LABOR & FINANCE", menuName: "Severance Estimate" },
-        running: { title: "Running Splits Calculator", subtitle: "Discover the per-kilometer pace needed to reach your target time.", badge: "SPORTS & PERFORMANCE", menuName: "Running Splits" }
-      }
     }
   };
 
@@ -409,11 +384,7 @@ document.addEventListener("DOMContentLoaded", () => {
     currentLang = savedLang;
   } else {
     const navLang = navigator.language || navigator.userLanguage || 'pt-BR';
-    if (navLang.startsWith('pt')) {
-      currentLang = navLang.toLowerCase().includes('pt') && navLang.toLowerCase() !== 'pt-br' ? 'pt-PT' : 'pt-BR';
-    } else if (navLang.startsWith('en')) {
-      currentLang = 'en-US';
-    }
+    currentLang = navLang.toLowerCase().includes('pt') && navLang.toLowerCase() !== 'pt-br' ? 'pt-PT' : 'pt-BR';
   }
   langSelect.value = currentLang;
 
@@ -463,7 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function formatDate(d) {
-    return d.toLocaleDateString(currentLang === 'en-US' ? 'en-US' : 'pt-BR', { day: "2-digit", month: "2-digit", year: "numeric" });
+    return d.toLocaleDateString('pt-BR', { day: "2-digit", month: "2-digit", year: "numeric" });
   }
 
   function calendarDifference(start, end) {
@@ -531,18 +502,18 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // GERAÇÃO DO CARD ESTILO SPOTIFY WRAPPED USANDO AS CORES E ESTÉTICA DO SITE
+  // GERADOR DO CARD: Estilo Spotify refinado, 100% em português, usando as cores e identidade oficial do site ("tempo" e "utilitários")
   function generateShareCard(titleText, resultText) {
     const canvas = document.createElement('canvas');
     canvas.width = 600;
     canvas.height = 800;
     const ctx = canvas.getContext('2d');
 
-    // Fundo premium escuro idêntico ao site (#0b0d12)
+    // Fundo premium escuro (#0b0d12)
     ctx.fillStyle = '#0b0d12';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Linhas orgânicas / arcos decorativos no topo usando a cor accent do site (#7c5cff)
+    // Efeito visual sutil de ondas/arcos usando a cor principal do site (#7c5cff)
     ctx.strokeStyle = '#7c5cff';
     ctx.lineWidth = 3;
     ctx.beginPath();
@@ -558,22 +529,21 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Título da Ferramenta em Português
+    // Título da ferramenta no card (em português)
     ctx.fillStyle = '#9199a8';
-    ctx.font = '800 16px system-ui, -apple-system, sans-serif';
+    ctx.font = '800 15px system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(titleText.toUpperCase(), canvas.width / 2, 170);
 
-    // RESULTADO GIGANTE EM DESTAQUE COM TAMANHO DINÂMICO (Para nunca estourar o card)
-    let fontSize = 72;
-    if (resultText.length > 15) fontSize = 54;
-    if (resultText.length > 30) fontSize = 38;
-    if (resultText.length > 50) fontSize = 28;
+    // RESULTADO GIGANTE COM ESCALA DINÂMICA (Para nunca estourar ou bugar)
+    let fontSize = 68;
+    if (resultText.length > 15) fontSize = 52;
+    if (resultText.length > 30) fontSize = 36;
+    if (resultText.length > 50) fontSize = 26;
 
-    ctx.fillStyle = '#7c5cff'; // Cor Accent do site para dar vida ao número/resultado
+    ctx.fillStyle = '#7c5cff'; // Cor principal do site
     ctx.font = `900 ${fontSize}px system-ui, -apple-system, sans-serif`;
 
-    // Quebra automática de linha segura
     const words = resultText.split(' ');
     let line = '';
     let lines = [];
@@ -594,7 +564,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.fillText(l.trim(), canvas.width / 2, startY + (idx * (fontSize + 10)));
     });
 
-    // Caixa de destaque inferior com tom do site (#131720)
+    // Bloco central inferior com o estilo e cores dos cards do site (#131720)
     ctx.fillStyle = '#131720';
     ctx.beginPath();
     if (ctx.roundRect) {
@@ -608,10 +578,10 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.stroke();
 
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = '800 18px system-ui, -apple-system, sans-serif';
-    ctx.fillText('tempo.utility utilitários', canvas.width / 2, 542);
+    ctx.font = '800 17px system-ui, -apple-system, sans-serif';
+    ctx.fillText('tempo utilitários', canvas.width / 2, 542);
 
-    // Rodapé estilo Spotify com as cores do site
+    // Rodapé do card: tempo utilitários
     ctx.fillStyle = '#f7f8fb';
     ctx.beginPath();
     ctx.arc(80, 720, 24, 0, Math.PI * 2);
@@ -628,11 +598,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ctx.textAlign = 'left';
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = '900 18px system-ui, -apple-system, sans-serif';
-    ctx.fillText('TEMPO.UTILITY', 120, 727);
+    ctx.font = '900 16px system-ui, -apple-system, sans-serif';
+    ctx.fillText('tempo utilitários', 120, 726);
 
     const link = document.createElement('a');
-    link.download = 'tempo-utility-card.png';
+    link.download = 'tempo-utilitarios-card.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
   }
@@ -649,7 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveHistory(toolName || titleEl.textContent, plainText);
         extraActions = `
           <div class="action-buttons">
-            <button class="action-btn" id="shareCardBtn">🎨 Gerar Card do tempo.utility</button>
+            <button class="action-btn" id="shareCardBtn">🎨 Gerar Card do tempo utilitários</button>
             ${['Horas Extras', 'Rescisão Contratual (Acerto)'].includes(titleEl.textContent) ? '<button class="action-btn" id="printPdfBtn">🖨️ Exportar Relatório PDF</button>' : ''}
           </div>
         `;
@@ -721,9 +691,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const st = states.date;
     tool.innerHTML = `
       <div class="tabs">
-        <button class="tab ${st.mode === "diff" ? "active" : ""}" data-mode="diff">${currentLang === 'en-US' ? 'Difference' : 'Diferença'}</button>
-        <button class="tab ${st.mode === "add" ? "active" : ""}" data-mode="add">${currentLang === 'en-US' ? 'Add' : 'Adicionar'}</button>
-        <button class="tab ${st.mode === "sub" ? "active" : ""}" data-mode="sub">${currentLang === 'en-US' ? 'Subtract' : 'Subtrair'}</button>
+        <button class="tab ${st.mode === "diff" ? "active" : ""}" data-mode="diff">Diferença</button>
+        <button class="tab ${st.mode === "add" ? "active" : ""}" data-mode="add">Adicionar</button>
+        <button class="tab ${st.mode === "sub" ? "active" : ""}" data-mode="sub">Subtrair</button>
       </div>
       <div id="dateArea"></div>`;
     renderDateArea();
@@ -735,8 +705,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (st.mode === "diff") {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="date1">${currentLang === 'en-US' ? 'START DATE' : 'DATA INICIAL'}</label><input type="date" id="date1" value="${st.d1}"></div>
-          <div class="field"><label for="date2">${currentLang === 'en-US' ? 'END DATE' : 'DATA FINAL'}</label><input type="date" id="date2" value="${st.d2}"></div>
+          <div class="field"><label for="date1">DATA INICIAL</label><input type="date" id="date1" value="${st.d1}"></div>
+          <div class="field"><label for="date2">DATA FINAL</label><input type="date" id="date2" value="${st.d2}"></div>
         </div>
         <div class="result" id="result"></div>`;
       
@@ -744,9 +714,9 @@ document.addEventListener("DOMContentLoaded", () => {
         st.d1 = $("#date1").value;
         st.d2 = $("#date2").value;
         const a = dateFromInput("#date1"), b = dateFromInput("#date2");
-        if(!a || !b) return showResult(currentLang === 'en-US' ? 'Select both dates.' : 'Selecione as duas datas.', "", true);
+        if(!a || !b) return showResult("Selecione as duas datas.", "", true);
         const x = calendarDifference(a, b);
-        const html = `<div class="big">${x.y} ${x.y===1?(currentLang==='en-US'?'year':'ano'):(currentLang==='en-US'?'years':'anos')}, ${x.m} ${x.m===1?(currentLang==='en-US'?'month':'mês'):(currentLang==='en-US'?'months':'meses')} & ${x.d} ${x.d===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">Total: ${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div>`;
+        const html = `<div class="big">${x.y} ${x.y===1?'ano':'anos'}, ${x.m} ${x.m===1?'mês':'meses'} & ${x.d} ${x.d===1?'dia':'dias'}</div><div class="small">Total: ${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div>`;
         const plainText = `${x.y} anos, ${x.m} meses e ${x.d} dias`;
         showResult(html, plainText);
       };
@@ -754,8 +724,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="baseDate">${currentLang === 'en-US' ? 'DATE' : 'DATA'}</label><input type="date" id="baseDate" value="${st.base}"></div>
-          <div class="field"><label for="days">${currentLang === 'en-US' ? 'NUMBER OF DAYS' : 'QUANTIDADE DE DIAS'}</label><input type="number" id="days" min="0" step="1" value="${st.days}"></div>
+          <div class="field"><label for="baseDate">DATA</label><input type="date" id="baseDate" value="${st.base}"></div>
+          <div class="field"><label for="days">QUANTIDADE DE DIAS</label><input type="number" id="days" min="0" step="1" value="${st.days}"></div>
         </div>
         <div class="result" id="result"></div>`;
       
@@ -763,10 +733,10 @@ document.addEventListener("DOMContentLoaded", () => {
         st.base = $("#baseDate").value;
         st.days = $("#days").value;
         const base = dateFromInput("#baseDate"), n = Number($("#days").value);
-        if(!base || $("#days").value === "" || !Number.isInteger(n) || n < 0) return showResult(currentLang === 'en-US' ? 'Enter a valid date and number.' : 'Informe uma data e quantidade válida.', "", true);
+        if(!base || $("#days").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe uma data e quantidade válida.", "", true);
         const d = new Date(base);
         d.setDate(d.getDate() + (st.mode === "add" ? n : -n));
-        const html = `<div class="big">${formatDate(d)}</div><div class="small">${st.mode==="add"?(currentLang==='en-US'?'Added':'Adicionados'):(currentLang==='en-US'?'Subtracted':'Subtraídos')} ${n.toLocaleString(currentLang)} ${n===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}.</div>`;
+        const html = `<div class="big">${formatDate(d)}</div><div class="small">${st.mode==="add"?'Adicionados':'Subtraídos'} ${n.toLocaleString('pt-BR')} ${n===1?'dia':'dias'}.</div>`;
         const plainText = `${formatDate(d)}`;
         showResult(html, plainText);
       };
@@ -779,8 +749,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const st = states.time;
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="time1">${currentLang === 'en-US' ? 'START TIME' : 'HORÁRIO INICIAL'}</label><input type="time" id="time1" value="${st.t1}"></div>
-        <div class="field"><label for="time2">${currentLang === 'en-US' ? 'END TIME' : 'HORÁRIO FINAL'}</label><input type="time" id="time2" value="${st.t2}"></div>
+        <div class="field"><label for="time1">HORÁRIO INICIAL</label><input type="time" id="time1" value="${st.t1}"></div>
+        <div class="field"><label for="time2">HORÁRIO FINAL</label><input type="time" id="time2" value="${st.t2}"></div>
       </div>
       <div class="result" id="result"></div>`;
     
@@ -788,12 +758,12 @@ document.addEventListener("DOMContentLoaded", () => {
       st.t1 = $("#time1").value;
       st.t2 = $("#time2").value;
       const a = st.t1, b = st.t2;
-      if(!a || !b) return showResult(currentLang === 'en-US' ? 'Provide both times.' : 'Informe os dois horários.', "", true);
+      if(!a || !b) return showResult("Informe os dois horários.", "", true);
       let [ah, am] = a.split(":").map(Number), [bh, bm] = b.split(":").map(Number);
       let start = ah * 60 + am, end = bh * 60 + bm;
       if(end < start) end += 1440;
       const total = end - start, h = Math.floor(total / 60), m = total % 60;
-      const html = `<div class="big">${h}h ${m.toString().padStart(2, "0")}min</div><div class="small">Total: ${total.toLocaleString(currentLang)} ${currentLang==='en-US'?'minutes':'minutos'}</div>`;
+      const html = `<div class="big">${h}h ${m.toString().padStart(2, "0")}min</div><div class="small">Total: ${total.toLocaleString('pt-BR')} minutos</div>`;
       showResult(html, `${h}h ${m.toString().padStart(2, "0")}min`);
     };
     
@@ -804,9 +774,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const st = states.business;
     tool.innerHTML = `
       <div class="tabs">
-        <button class="tab ${st.mode === "diff" ? "active" : ""}" data-mode="diff">${currentLang === 'en-US' ? 'Difference' : 'Diferença'}</button>
-        <button class="tab ${st.mode === "add" ? "active" : ""}" data-mode="add">${currentLang === 'en-US' ? 'Add' : 'Adicionar'}</button>
-        <button class="tab ${st.mode === "sub" ? "active" : ""}" data-mode="sub">${currentLang === 'en-US' ? 'Subtract' : 'Subtrair'}</button>
+        <button class="tab ${st.mode === "diff" ? "active" : ""}" data-mode="diff">Diferença</button>
+        <button class="tab ${st.mode === "add" ? "active" : ""}" data-mode="add">Adicionar</button>
+        <button class="tab ${st.mode === "sub" ? "active" : ""}" data-mode="sub">Subtrair</button>
       </div>
       <div id="businessArea"></div>`;
     renderBusinessArea();
@@ -818,8 +788,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (st.mode === "diff") {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="bDate1">${currentLang === 'en-US' ? 'START DATE' : 'DATA INICIAL'}</label><input type="date" id="bDate1" value="${st.b1}"></div>
-          <div class="field"><label for="bDate2">${currentLang === 'en-US' ? 'END DATE' : 'DATA FINAL'}</label><input type="date" id="bDate2" value="${st.b2}"></div>
+          <div class="field"><label for="bDate1">DATA INICIAL</label><input type="date" id="bDate1" value="${st.b1}"></div>
+          <div class="field"><label for="bDate2">DATA FINAL</label><input type="date" id="bDate2" value="${st.b2}"></div>
         </div>
         <div class="result" id="result"></div>`;
       
@@ -827,17 +797,17 @@ document.addEventListener("DOMContentLoaded", () => {
         st.b1 = $("#bDate1").value;
         st.b2 = $("#bDate2").value;
         const a = dateFromInput("#bDate1"), b = dateFromInput("#bDate2");
-        if(!a || !b) return showResult(currentLang === 'en-US' ? 'Select both dates.' : 'Selecione as duas datas.', "", true);
+        if(!a || !b) return showResult("Selecione as duas datas.", "", true);
         const total = businessDaysDifference(a, b);
-        const html = `<div class="big">${total.toLocaleString(currentLang)} ${total===1?(currentLang==='en-US'?'business day':'dia útil'):(currentLang==='en-US'?'business days':'dias úteis')}</div><div class="small">${currentLang==='en-US'?'Excluding weekends.':'Intervalo sem finais de semana.'}</div>`;
+        const html = `<div class="big">${total.toLocaleString('pt-BR')} ${total===1?'dia útil':'dias úteis'}</div><div class="small">Intervalo sem finais de semana.</div>`;
         showResult(html, `${total} dias úteis`);
       };
       $("#bDate1").oninput = calculate; $("#bDate2").oninput = calculate; calculate();
     } else {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="bBaseDate">${currentLang === 'en-US' ? 'DATE' : 'DATA'}</label><input type="date" id="bBaseDate" value="${st.base}"></div>
-          <div class="field"><label for="bDays">${currentLang === 'en-US' ? 'BUSINESS DAYS' : 'DIAS ÚTEIS'}</label><input type="number" id="bDays" min="0" step="1" value="${st.days}"></div>
+          <div class="field"><label for="bBaseDate">DATA</label><input type="date" id="bBaseDate" value="${st.base}"></div>
+          <div class="field"><label for="bDays">DIAS ÚTEIS</label><input type="number" id="bDays" min="0" step="1" value="${st.days}"></div>
         </div>
         <div class="result" id="result"></div>`;
       
@@ -845,7 +815,7 @@ document.addEventListener("DOMContentLoaded", () => {
         st.base = $("#bBaseDate").value;
         st.days = $("#bDays").value;
         const base = dateFromInput("#bBaseDate"), n = Number($("#bDays").value);
-        if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult(currentLang === 'en-US' ? 'Provide date and days.' : 'Informe data e quantidade.', "", true);
+        if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe data e quantidade.", "", true);
         const d = addBusinessDays(base, n, st.mode === "add");
         const html = `<div class="big">${formatDate(d)}</div><div class="small">Resultado (${n} dias úteis).</div>`;
         showResult(html, `${formatDate(d)}`);
@@ -859,7 +829,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tool.innerHTML = `
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;" id="worldClockGrid"></div>
       <div class="result show" style="display:block">
-        <div class="small" style="font-weight:700; margin-bottom:4px;">${currentLang === 'en-US' ? 'Current Local Timezone:' : 'Seu Fuso Horário Local:'}</div>
+        <div class="small" style="font-weight:700; margin-bottom:4px;">Seu Fuso Horário Local:</div>
         <div class="big" id="localTzBox" style="font-size:18px;">--</div>
       </div>`;
     
@@ -889,8 +859,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const timeEl = $(`#wc-time-${idx}`);
         const dateEl = $(`#wc-date-${idx}`);
         if(timeEl && dateEl) {
-          timeEl.textContent = new Intl.DateTimeFormat('en-GB', { timeZone: z.tz, hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(now);
-          dateEl.textContent = new Intl.DateTimeFormat(currentLang, { timeZone: z.tz, weekday: 'short', day: 'numeric', month: 'short' }).format(now);
+          timeEl.textContent = new Intl.DateTimeFormat('pt-BR', { timeZone: z.tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(now);
+          dateEl.textContent = new Intl.DateTimeFormat('pt-BR', { timeZone: z.tz, weekday: 'short', day: 'numeric', month: 'short' }).format(now);
         }
       });
     }
@@ -900,16 +870,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderMeeting() {
     const st = states.meeting;
-    const isEn = currentLang === 'en-US';
     tool.innerHTML = `
       <div class="field" style="margin-bottom: 20px;">
-        <label for="meetHour">${isEn ? 'SELECT BASE HOUR (BRASÍLIA / LISBOA / NY)' : 'SELECIONE A HORA BASE (0 - 23)'}</label>
+        <label for="meetHour">SELECIONE A HORA BASE (0 - 23)</label>
         <input type="range" id="meetHour" min="0" max="23" value="${st.hour}" style="cursor: pointer;">
         <div style="text-align: center; font-size: 28px; font-weight: 900; margin-top: 8px;" id="meetHourDisplay">${st.hour.toString().padStart(2, '0')}:00</div>
       </div>
       <div style="display:flex; flex-direction:column; gap:10px;" id="meetZonesList"></div>
       <div class="result show" style="display:block; margin-top:20px; text-align:left;">
-        <div style="font-weight:700; margin-bottom:4px;">💡 ${isEn ? 'Overlapping Status:' : 'Estado da Janela:'}</div>
+        <div style="font-weight:700; margin-bottom:4px;">💡 Estado da Janela:</div>
         <div id="meetStatusText" style="color:var(--muted); font-size:14px;">--</div>
       </div>`;
 
@@ -936,7 +905,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       let workingCount = 0;
       listEl.innerHTML = cities.map(c => {
-        const timeStr = new Intl.DateTimeFormat('en-GB', { timeZone: c.tz, hour: '2-digit', minute: '2-digit', hour12: false }).format(refDate);
+        const timeStr = new Intl.DateTimeFormat('pt-BR', { timeZone: c.tz, hour: '2-digit', minute: '2-digit', hour12: false }).format(refDate);
         const hourNum = parseInt(timeStr.split(':')[0]);
         const isWorking = hourNum >= 9 && hourNum < 18;
         if (isWorking) workingCount++;
@@ -946,18 +915,18 @@ document.addEventListener("DOMContentLoaded", () => {
             <div><strong>${c.name}</strong></div>
             <div style="display:flex; align-items:center; gap:10px;">
               <span style="font-size:18px; font-weight:800;">${timeStr}</span>
-              <span style="font-size:11px; padding:3px 8px; border-radius:6px; font-weight:700; background:${isWorking ? 'rgba(74,222,128,0.15); color:#4ade80' : 'rgba(255,101,116,0.15); color:var(--danger)'}">${isWorking ? (isEn?'Business Hours':'Horário Comercial') : (isEn?'Outside Hours':'Fora do Expediente')}</span>
+              <span style="font-size:11px; padding:3px 8px; border-radius:6px; font-weight:700; background:${isWorking ? 'rgba(74,222,128,0.15); color:#4ade80' : 'rgba(255,101,116,0.15); color:var(--danger)'}">${isWorking ? 'Horário Comercial' : 'Fora do Expediente'}</span>
             </div>
           </div>
         `;
       }).join('');
 
       if (workingCount >= 4) {
-        statusEl.innerHTML = isEn ? '🌟 Excellent time! Most cities are in business hours.' : '🌟 Excelente horário! A maioria das cidades está no expediente.';
+        statusEl.innerHTML = '🌟 Excelente horário! A maioria das cidades está no expediente.';
       } else if (workingCount >= 2) {
-        statusEl.innerHTML = isEn ? '⚡ Reasonable time with some cities outside business hours.' : '⚡ Horário razoável, embora algumas cidades já estejam fora do expediente.';
+        statusEl.innerHTML = '⚡ Horário razoável, embora algumas cidades já estejam fora do expediente.';
       } else {
-        statusEl.innerHTML = isEn ? '🌙 Difficult time. Major overlap is outside office hours.' : '🌙 Horário difícil. Pouca sobreposição de horário de expediente.';
+        statusEl.innerHTML = '🌙 Horário difícil. Pouca sobreposição de horário de expediente.';
       }
     }
 
@@ -997,22 +966,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderPomodoro() {
     const st = states.pomodoro;
-    const isEn = currentLang === 'en-US';
     tool.innerHTML = `
       <div class="tabs">
-        <button class="tab ${st.mode === 'work' ? 'active' : ''}" data-pmode="work">${isEn ? 'Focus (25m)' : 'Foco (25m)'}</button>
-        <button class="tab ${st.mode === 'short' ? 'active' : ''}" data-pmode="short">${isEn ? 'Short Break (5m)' : 'Pausa Curta (5m)'}</button>
-        <button class="tab ${st.mode === 'long' ? 'active' : ''}" data-pmode="long">${isEn ? 'Long Break (15m)' : 'Pausa Longa (15m)'}</button>
+        <button class="tab ${st.mode === 'work' ? 'active' : ''}" data-pmode="work">Foco (25m)</button>
+        <button class="tab ${st.mode === 'short' ? 'active' : ''}" data-pmode="short">Pausa Curta (5m)</button>
+        <button class="tab ${st.mode === 'long' ? 'active' : ''}" data-pmode="long">Pausa Longa (15m)</button>
       </div>
       <div style="text-align: center; padding: 10px 0;">
         <div id="pomoDisplay" style="font-size: clamp(54px, 12vw, 84px); font-weight: 900; letter-spacing: -2px; margin: 15px 0; font-variant-numeric: tabular-nums;">25:00</div>
         <div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px;">
-          <button id="pomoToggleBtn" style="padding: 14px 32px; border-radius: 14px; border: 0; background: var(--accent); color: #fff; font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.15s;">${st.running ? (isEn ? 'Pause' : 'Pausar') : (isEn ? 'Start' : 'Iniciar')}</button>
-          <button id="pomoResetBtn" style="padding: 14px 24px; border-radius: 14px; border: 1px solid var(--line); background: var(--card2); color: var(--text); font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.15s;">${isEn ? 'Reset' : 'Reiniciar'}</button>
+          <button id="pomoToggleBtn" style="padding: 14px 32px; border-radius: 14px; border: 0; background: var(--accent); color: #fff; font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.15s;">${st.running ? 'Pausar' : 'Iniciar'}</button>
+          <button id="pomoResetBtn" style="padding: 14px 24px; border-radius: 14px; border: 1px solid var(--line); background: var(--card2); color: var(--text); font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.15s;">Reiniciar</button>
         </div>
       </div>
       <div class="result show" style="display:block; margin-top: 24px; text-align: center;">
-        <div class="small" id="pomoStatus" style="font-weight: 700;">${st.running ? (isEn ? 'Focus session in progress...' : 'Sessão em andamento...') : (isEn ? 'Ready to start focus session.' : 'Pronto para iniciar a sessão de foco.')}</div>
+        <div class="small" id="pomoStatus" style="font-weight: 700;">${st.running ? 'Sessão em andamento...' : 'Pronto para iniciar a sessão de foco.'}</div>
       </div>`;
 
     function getSecondsForMode(m) {
@@ -1051,8 +1019,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const tb = $("#pomoToggleBtn");
       const stEl = $("#pomoStatus");
-      if(tb) tb.textContent = isEn ? 'Pause' : 'Pausar';
-      if(stEl) stEl.textContent = isEn ? 'Focus session in progress...' : 'Sessão em andamento...';
+      if(tb) tb.textContent = 'Pausar';
+      if(stEl) stEl.textContent = 'Sessão em andamento...';
 
       if (window._pomodoroInterval) {
         clearInterval(window._pomodoroInterval);
@@ -1066,8 +1034,8 @@ document.addEventListener("DOMContentLoaded", () => {
           stopTimer();
           const tbDone = $("#pomoToggleBtn");
           const stDone = $("#pomoStatus");
-          if(tbDone) tbDone.textContent = isEn ? 'Start' : 'Iniciar';
-          if(stDone) stDone.textContent = isEn ? 'Time is up! Great job.' : 'Tempo esgotado! Excelente trabalho.';
+          if(tbDone) tbDone.textContent = 'Iniciar';
+          if(stDone) stDone.textContent = 'Tempo esgotado! Excelente trabalho.';
           playAlarm();
           haptic();
         }
@@ -1082,8 +1050,8 @@ document.addEventListener("DOMContentLoaded", () => {
       haptic();
       if (st.running) {
         stopTimer();
-        $("#pomoToggleBtn").textContent = isEn ? 'Start' : 'Iniciar';
-        $("#pomoStatus").textContent = isEn ? 'Paused.' : 'Pausado.';
+        $("#pomoToggleBtn").textContent = 'Iniciar';
+        $("#pomoStatus").textContent = 'Pausado.';
       } else {
         startTimer(false);
       }
@@ -1094,8 +1062,8 @@ document.addEventListener("DOMContentLoaded", () => {
       stopTimer();
       st.timeLeft = getSecondsForMode(st.mode);
       updateDisplay();
-      $("#pomoToggleBtn").textContent = isEn ? 'Start' : 'Iniciar';
-      $("#pomoStatus").textContent = isEn ? 'Timer reset.' : 'Cronómetro reiniciado.';
+      $("#pomoToggleBtn").textContent = 'Iniciar';
+      $("#pomoStatus").textContent = 'Cronômetro reiniciado.';
     };
 
     $$("[data-pmode]").forEach(tab => {
@@ -1111,25 +1079,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderHoroscope() {
     const st = states.horoscope;
-    const isEn = currentLang === 'en-US';
     const signs = [
-      { id: 'aries', name: isEn ? 'Aries' : 'Áries', symbol: '♈' },
-      { id: 'taurus', name: isEn ? 'Taurus' : 'Touro', symbol: '♉' },
-      { id: 'gemini', name: isEn ? 'Gemini' : 'Gêmeos', symbol: '♊' },
-      { id: 'cancer', name: isEn ? 'Cancer' : 'Câncer', symbol: '♋' },
-      { id: 'leo', name: isEn ? 'Leo' : 'Leão', symbol: '♌' },
-      { id: 'virgo', name: isEn ? 'Virgo' : 'Virgem', symbol: '♍' },
-      { id: 'libra', name: isEn ? 'Libra' : 'Libra', symbol: '♎' },
-      { id: 'scorpio', name: isEn ? 'Scorpio' : 'Escorpião', symbol: '♏' },
-      { id: 'sagittarius', name: isEn ? 'Sagittarius' : 'Sagitário', symbol: '♐' },
-      { id: 'capricorn', name: isEn ? 'Capricorn' : 'Capricórnio', symbol: '♑' },
-      { id: 'aquarius', name: isEn ? 'Aquarius' : 'Aquário', symbol: '♒' },
-      { id: 'pisces', name: isEn ? 'Pisces' : 'Peixes', symbol: '♓' }
+      { id: 'aries', name: 'Áries', symbol: '♈' },
+      { id: 'taurus', name: 'Touro', symbol: '♉' },
+      { id: 'gemini', name: 'Gêmeos', symbol: '♊' },
+      { id: 'cancer', name: 'Câncer', symbol: '♋' },
+      { id: 'leo', name: 'Leão', symbol: '♌' },
+      { id: 'virgo', name: 'Virgem', symbol: '♍' },
+      { id: 'libra', name: 'Libra', symbol: '♎' },
+      { id: 'scorpio', name: 'Escorpião', symbol: '♏' },
+      { id: 'sagittarius', name: 'Sagitário', symbol: '♐' },
+      { id: 'capricorn', name: 'Capricórnio', symbol: '♑' },
+      { id: 'aquarius', name: 'Aquário', symbol: '♒' },
+      { id: 'pisces', name: 'Peixes', symbol: '♓' }
     ];
 
     tool.innerHTML = `
       <div style="margin-bottom: 16px;">
-        <label style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:8px;" id="signLabel">${isEn ? 'SELECT YOUR SIGN' : 'SELECIONE O SEU SIGNO'}</label>
+        <label style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:8px;" id="signLabel">SELECIONE O SEU SIGNO</label>
         <select id="signSelect" style="font-weight:700;">
           ${signs.map(s => `<option value="${s.id}" ${st.sign === s.id ? 'selected' : ''}>${s.symbol} ${s.name}</option>`).join('')}
         </select>
@@ -1138,76 +1105,37 @@ document.addEventListener("DOMContentLoaded", () => {
         <div id="horoscopeContent"></div>
       </div>`;
 
-    const pools = {
-      pt: {
-        climate: [
-          "O céu astral favorece a clareza mental e a tomada de decisões importantes que estavam em banho-maria.",
-          "Uma forte onda de energia renovadora convida você a sair da zona de conforto e explorar novas perspectivas.",
-          "O momento pede cautela com impulsos repentinos; respire fundo antes de reagir a provocações.",
-          "Alinhamentos planetários auspiciosos trazem leveza e otimismo genuíno para o seu dia a dia.",
-          "Sensibilidade acirrada. Aproveite para olhar para dentro e alinhar suas verdadeiras prioridades de vida."
-        ],
-        love: [
-          "No amor, a cumplicidade ganha espaço. Se estiver comprometido(a), uma conversa sincera fortalece os laços. Solteiros podem atrair alguém com interesses intelectuais parecidos.",
-          "O magnetismo pessoal está em alta. O romance ganha contornos apaixonados, mas evite cobranças excessivas por atenção que possam gerar atritos desnecessários.",
-          "Sua empatia natural será o grande diferencial nas relações hoje. Ouça mais o coração de quem você ama e evite discussões por detalhes irrelevantes.",
-          "Fase excelente para resolver pendências afetivas do passado. Perdoar e virar a página abrirá portas para surpresas muito felizes no campo amoroso."
-        ],
-        work: [
-          "No campo profissional, sua capacidade de foco e produtividade impressionará superiores. É um ótimo dia para apresentar propostas ou liderar projetos complexos.",
-          "Desafios inesperados na rotina exigirão flexibilidade rápida. Sua habilidade de improviso garantirá que tudo termine dentro do prazo estabelecido.",
-          "Evite se sobrecarregar assumindo tarefas que pertencem a outros colegas. Foque nas suas metas principais para garantir entregas de excelência.",
-          "Momento altamente favorável para networking e parcerias estratégicas. Uma conversa informal pode se desdobrar em uma excelente oportunidade de carreira."
-        ],
-        money: [
-          "O setor financeiro pede cautela com gastos por impulso motivados pelo estresse. Organize suas contas antes de fechar qualquer nova compra.",
-          "Boas notícias relativas a investimentos ou entradas extras de dinheiro podem surgir. Mantenha o planejamento a longo prazo firme.",
-          "Fase estável para as finanças, ideal para renegociar dívidas ou traçar metas claras de economia para o próximo semestre."
-        ],
-        health: [
-          "Sua energia vital pede pausas estratégicas. Reserve alguns minutos do dia para respirar fundo, se alongar e cuidar da saúde mental.",
-          "Ótimo dia para iniciar uma nova rotina de exercícios físicos ou ajustar a hidratação e a qualidade do sono.",
-          "Evite o excesso de cafeína e telas antes de dormir; seu corpo agradecerá com um descanso muito mais revigorante."
-        ],
-        colors: ["Vermelho Rubi", "Azul Safira", "Amarelo Ouro", "Verde Esmeralda", "Violeta", "Branco Pérola", "Rosa Quartzo"],
-        numbers: ["07", "14", "22", "33", "41", "55", "09", "18"],
-        compatibilities: ["Áries", "Touro", "Gêmeos", "Câncer", "Leão", "Virgem", "Libra", "Escorpião", "Sagitário", "Capricórnio", "Aquário", "Peixes"]
-      },
-      en: {
-        climate: [
-          "The astral sky favors mental clarity and important decision-making that was previously on hold.",
-          "A strong wave of renewing energy invites you to step out of your comfort zone and explore new perspectives.",
-          "The moment calls for caution with sudden impulses; take a deep breath before reacting to provocations.",
-          "Auspicious planetary alignments bring lightness and genuine optimism to your daily routine.",
-          "Heightened sensitivity. Take the opportunity to look inward and align your true life priorities."
-        ],
-        love: [
-          "In love, complicity takes center stage. If committed, a sincere conversation strengthens ties. Singles might attract someone with similar intellectual interests.",
-          "Personal magnetism is peaking. Romance turns passionate, but avoid excessive demands for attention that could cause unnecessary friction.",
-          "Your natural empathy will be your greatest asset in relationships today. Listen more to your loved one's heart and avoid arguments over trivial details.",
-          "An excellent phase to resolve past emotional issues. Forgiving and turning the page will open doors for very happy surprises in love."
-        ],
-        work: [
-          "Professionally, your focus and productivity will impress superiors. It's a great day to pitch proposals or lead complex projects.",
-          "Unexpected routine challenges will demand quick flexibility. Your improvisation skills will ensure everything finishes on schedule.",
-          "Avoid overloading yourself by taking on tasks belonging to colleagues. Focus on core goals to guarantee excellence.",
-          "Highly favorable phase for networking and strategic partnerships. An informal chat could unfold into a great career opportunity."
-        ],
-        money: [
-          "The financial sector calls for caution against impulse purchases driven by stress. Organize accounts before any new buy.",
-          "Good news regarding investments or extra income may arise. Keep long-term planning steady.",
-          "A stable financial phase, ideal for renegotiating debts or outlining clear savings goals for the next semester."
-        ],
-        health: [
-          "Your vital energy calls for strategic breaks. Take a few minutes today to breathe, stretch, and nurture mental health.",
-          "Great day to start a new exercise routine or adjust hydration and sleep quality.",
-          "Avoid excessive caffeine and screens before bed; your body will thank you with much more refreshing rest."
-        ],
-        colors: ["Ruby Red", "Sapphire Blue", "Golden Yellow", "Emerald Green", "Violet", "Pearl White", "Quartz Pink"],
-        numbers: ["07", "14", "22", "33", "41", "55", "09", "18"],
-        compatibilities: ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
-      }
-    };
+    const climatePool = [
+      "O céu astral favorece a clareza mental e a tomada de decisões importantes que estavam em banho-maria.",
+      "Uma forte onda de energia renovadora convida você a sair da zona de conforto e explorar novas perspectivas.",
+      "O momento pede cautela com impulsos repentinos; respire fundo antes de reagir a provocações.",
+      "Alinhamentos planetários auspiciosos trazem leveza e otimismo genuíno para o seu dia a dia.",
+      "Sensibilidade acirrada. Aproveite para olhar para dentro e alinhar suas verdadeiras prioridades de vida."
+    ];
+    const lovePool = [
+      "No amor, a cumplicidade ganha espaço. Se estiver comprometido(a), uma conversa sincera fortalece os laços. Solteiros podem atrair alguém com interesses intelectuais parecidos.",
+      "O magnetismo pessoal está em alta. O romance ganha contornos apaixonados, mas evite cobranças excessivas por atenção que possam gerar atritos desnecessários.",
+      "Sua empatia natural será o grande diferencial nas relações hoje. Ouça mais o coração de quem você ama e evite discussões por detalhes irrelevantes.",
+      "Fase excelente para resolver pendências afetivas do passado. Perdoar e virar a página abrirá portas para surpresas muito felizes no campo amoroso."
+    ];
+    const workPool = [
+      "No campo profissional, sua capacidade de foco e produtividade impressionará superiores. É um ótimo dia para apresentar propostas ou liderar projetos complexos.",
+      "Desafios inesperados na rotina exigirão flexibilidade rápida. Sua habilidade de improviso garantirá que tudo termine dentro do prazo estabelecido.",
+      "Evite se sobrecarregar assumindo tarefas que pertencem a outros colegas. Foque nas suas metas principais para garantir entregas de excelência.",
+      "Momento altamente favorável para networking e parcerias estratégicas. Uma conversa informal pode se desdobrar em uma excelente oportunidade de carreira."
+    ];
+    const moneyPool = [
+      "O setor financeiro pede cautela com gastos por impulso motivados pelo estresse. Organize suas contas antes de fechar qualquer nova compra.",
+      "Boas notícias relativas a investimentos ou entradas extras de dinheiro podem surgir. Mantenha o planejamento a longo prazo firme.",
+      "Fase estável para as finanças, ideal para renegociar dívidas ou traçar metas claras de economia para o próximo semestre."
+    ];
+    const healthPool = [
+      "Sua energia vital pede pausas estratégicas. Reserve alguns minutos do dia para respirar fundo, se alongar e cuidar da saúde mental.",
+      "Ótimo dia para iniciar uma nova rotina de exercícios físicos ou ajustar a hidratação e a qualidade do sono.",
+      "Evite o excesso de cafeína e telas antes de dormir; seu corpo agradecerá com um descanso muito mais revigorante."
+    ];
+    const colors = ["Vermelho Rubi", "Azul Safira", "Amarelo Ouro", "Verde Esmeralda", "Violeta", "Branco Pérola", "Rosa Quartzo"];
+    const numbers = ["07", "14", "22", "33", "41", "55", "09", "18"];
 
     const selectEl = $("#signSelect");
     const contentEl = $("#horoscopeContent");
@@ -1215,21 +1143,19 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateHoroscope() {
       st.sign = selectEl.value;
       const signObj = signs.find(s => s.id === st.sign);
-      
       const todayEpochDays = Math.floor(Date.now() / 86400000);
       const signIndex = signs.findIndex(s => s.id === st.sign);
-      const langData = isEn ? pools.en : pools.pt;
       
-      const cIdx = (todayEpochDays + signIndex * 3) % langData.climate.length;
-      const lIdx = (todayEpochDays + signIndex * 7) % langData.love.length;
-      const wIdx = (todayEpochDays + signIndex * 11) % langData.work.length;
-      const mIdx = (todayEpochDays + signIndex * 13) % langData.money.length;
-      const hIdx = (todayEpochDays + signIndex * 17) % langData.health.length;
-      const colIdx = (todayEpochDays + signIndex * 5) % langData.colors.length;
-      const numIdx = (todayEpochDays + signIndex * 9) % langData.numbers.length;
+      const cIdx = (todayEpochDays + signIndex * 3) % climatePool.length;
+      const lIdx = (todayEpochDays + signIndex * 7) % lovePool.length;
+      const wIdx = (todayEpochDays + signIndex * 11) % workPool.length;
+      const mIdx = (todayEpochDays + signIndex * 13) % moneyPool.length;
+      const hIdx = (todayEpochDays + signIndex * 17) % healthPool.length;
+      const colIdx = (todayEpochDays + signIndex * 5) % colors.length;
+      const numIdx = (todayEpochDays + signIndex * 9) % numbers.length;
       const compIdx = (signIndex + (todayEpochDays % 4)) % signs.length;
 
-      const todayStr = new Date().toLocaleDateString(isEn ? 'en-US' : 'pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const todayStr = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
       contentEl.innerHTML = `
         <div style="font-size: 11px; font-weight: 750; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">${todayStr}</div>
@@ -1237,29 +1163,29 @@ document.addEventListener("DOMContentLoaded", () => {
           <span>${signObj.symbol}</span> <span>${signObj.name}</span>
         </div>
         <div style="margin-bottom: 16px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌤️ ${isEn ? 'Astral Climate' : 'Clima Astral'}</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.climate[cIdx]}</span>
+          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌤️ Clima Astral</strong>
+          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${climatePool[cIdx]}</span>
         </div>
         <div style="margin-bottom: 16px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">❤️ ${isEn ? 'Love & Relationships' : 'Amor & Relações'}</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.love[lIdx]}</span>
+          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">❤️ Amor & Relações</strong>
+          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${lovePool[lIdx]}</span>
         </div>
         <div style="margin-bottom: 16px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💼 ${isEn ? 'Career & Work' : 'Trabalho & Carreira'}</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.work[wIdx]}</span>
+          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💼 Trabalho & Carreira</strong>
+          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${workPool[wIdx]}</span>
         </div>
         <div style="margin-bottom: 16px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💰 ${isEn ? 'Money & Finances' : 'Dinheiro & Finanças'}</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.money[mIdx]}</span>
+          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💰 Dinheiro & Finanças</strong>
+          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${moneyPool[mIdx]}</span>
         </div>
         <div style="margin-bottom: 18px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌿 ${isEn ? 'Health & Wellness' : 'Saúde & Bem-estar'}</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.health[hIdx]}</span>
+          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌿 Saúde & Bem-estar</strong>
+          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${healthPool[hIdx]}</span>
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted);">
-          <div>🎨 <strong>${isEn ? 'Color:' : 'Cor:'}</strong> <span style="color:var(--text);">${langData.colors[colIdx]}</span></div>
-          <div>🍀 <strong>${isEn ? 'Number:' : 'Número:'}</strong> <span style="color:var(--text);">${langData.numbers[numIdx]}</span></div>
-          <div>✨ <strong>${isEn ? 'Match:' : 'Combina com:'}</strong> <span style="color:var(--text);">${signs[compIdx].name}</span></div>
+          <div>🎨 <strong>Cor:</strong> <span style="color:var(--text);">${colors[colIdx]}</span></div>
+          <div>🍀 <strong>Número:</strong> <span style="color:var(--text);">${numbers[numIdx]}</span></div>
+          <div>✨ <strong>Combina com:</strong> <span style="color:var(--text);">${signs[compIdx].name}</span></div>
         </div>`;
     }
 
@@ -1271,8 +1197,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const st = states.age;
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="birthDate">${currentLang === 'en-US' ? 'DATE OF BIRTH' : 'DATA DE NASCIMENTO'}</label><input type="date" id="birthDate" value="${st.birth}"></div>
-        <div class="field"><label for="refDate">${currentLang === 'en-US' ? 'REFERENCE DATE' : 'DATA DE REFERÊNCIA'}</label><input type="date" id="refDate" value="${st.ref}"></div>
+        <div class="field"><label for="birthDate">DATA DE NASCIMENTO</label><input type="date" id="birthDate" value="${st.birth}"></div>
+        <div class="field"><label for="refDate">DATA DE REFERÊNCIA</label><input type="date" id="refDate" value="${st.ref}"></div>
       </div>
       <div class="result" id="result"></div>`;
       
@@ -1280,10 +1206,10 @@ document.addEventListener("DOMContentLoaded", () => {
       st.birth = $("#birthDate").value;
       st.ref = $("#refDate").value;
       const birth = dateFromInput("#birthDate"), ref = dateFromInput("#refDate");
-      if(!birth || !ref) return showResult(currentLang === 'en-US' ? 'Select dates.' : 'Selecione as datas.', "", true);
-      if(birth > ref) return showResult(currentLang === 'en-US' ? 'Birth date cannot be future.' : 'Data futura inválida.', "", true);
+      if(!birth || !ref) return showResult("Selecione as datas.", "", true);
+      if(birth > ref) return showResult("Data futura inválida.", "", true);
       const x = calendarDifference(birth, ref);
-      const html = `<div class="big">${x.y} ${currentLang==='en-US'?'years':'anos'}, ${x.m} ${currentLang==='en-US'?'months':'meses'} & ${x.d} ${currentLang==='en-US'?'days':'dias'}</div><div class="small">Total: ~${x.total.toLocaleString(currentLang)} dias.</div>`;
+      const html = `<div class="big">${x.y} anos, ${x.m} meses & ${x.d} dias</div><div class="small">Total: ~${x.total.toLocaleString('pt-BR')} dias.</div>`;
       showResult(html, `${x.y} anos, ${x.m} meses e ${x.d} dias`);
     };
     $("#birthDate").oninput = calculate; $("#refDate").oninput = calculate; calculate();
@@ -1293,24 +1219,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const st = states.pregnancy;
     tool.innerHTML = `
       <div class="grid" style="grid-template-columns:1fr">
-        <div class="field"><label for="dumDate">${currentLang === 'en-US' ? 'LAST MENSTRUAL PERIOD (LMP)' : 'DATA DA ÚLTIMA MENSTRUAÇÃO (DUM)'}</label><input type="date" id="dumDate" value="${st.dum}"></div>
+        <div class="field"><label for="dumDate">DATA DA ÚLTIMA MENSTRUAÇÃO (DUM)</label><input type="date" id="dumDate" value="${st.dum}"></div>
       </div>
       <div class="result" id="result"></div>`;
       
     const calculate = () => {
       st.dum = $("#dumDate").value;
       const dum = dateFromInput("#dumDate");
-      if(!dum) return showResult(currentLang === 'en-US' ? 'Provide LMP.' : 'Informe a DUM.', "", true);
+      if(!dum) return showResult("Informe a DUM.", "", true);
       
       const today = new Date(); today.setHours(12, 0, 0, 0);
-      if(dum > today) return showResult(currentLang === 'en-US' ? 'LMP cannot be future.' : 'DUM futura inválida.', "", true);
+      if(dum > today) return showResult("DUM futura inválida.", "", true);
       
       const diffDays = Math.round((today - dum) / 86400000);
       const weeks = Math.floor(diffDays / 7);
       const days = diffDays % 7;
       const dueDate = new Date(dum); dueDate.setDate(dueDate.getDate() + 280); 
       
-      const html = `<div class="big">${weeks} ${currentLang==='en-US'?'weeks':'semanas'} & ${days} ${currentLang==='en-US'?'days':'dias'}</div><div class="small">${currentLang==='en-US'?'Due date:':'Previsão do parto:'} <strong>${formatDate(dueDate)}</strong></div>`;
+      const html = `<div class="big">${weeks} semanas & ${days} dias</div><div class="small">Previsão do parto: <strong>${formatDate(dueDate)}</strong></div>`;
       showResult(html, `${weeks} semanas e ${days} dias`);
     };
     $("#dumDate").oninput = calculate; calculate();
@@ -1320,8 +1246,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const st = states.countdown;
     tool.innerHTML = `
       <div class="tabs">
-        <button class="tab ${st.mode === "down" ? "active" : ""}" data-mode="down">${currentLang === 'en-US' ? 'Countdown' : 'Contagem Regressiva'}</button>
-        <button class="tab ${st.mode === "passed" ? "active" : ""}" data-mode="passed">${currentLang === 'en-US' ? 'Time Elapsed' : 'Tempo Passado'}</button>
+        <button class="tab ${st.mode === "down" ? "active" : ""}" data-mode="down">Contagem Regressiva</button>
+        <button class="tab ${st.mode === "passed" ? "active" : ""}" data-mode="passed">Tempo Passado</button>
       </div>
       <div id="countArea"></div>`;
     renderCountArea();
@@ -1332,8 +1258,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const area = $("#countArea");
     area.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="evName">${currentLang === 'en-US' ? 'EVENT NAME' : 'NOME DO EVENTO'}</label><input type="text" id="evName" value="${st.name}"></div>
-        <div class="field"><label for="evDate">${currentLang === 'en-US' ? 'DATE' : 'DATA'}</label><input type="date" id="evDate" value="${st.date}"></div>
+        <div class="field"><label for="evName">NOME DO EVENTO</label><input type="text" id="evName" value="${st.name}"></div>
+        <div class="field"><label for="evDate">DATA</label><input type="date" id="evDate" value="${st.date}"></div>
       </div>
       <div class="result" id="result"></div>`;
     
@@ -1345,18 +1271,18 @@ document.addEventListener("DOMContentLoaded", () => {
       const name = escapeHTML(rawName);
       
       const evDate = dateFromInput("#evDate");
-      if(!evDate) return showResult(currentLang === 'en-US' ? 'Select valid date.' : 'Selecione data válida.', "", true);
+      if(!evDate) return showResult("Selecione data válida.", "", true);
       
       const today = new Date(); today.setHours(12,0,0,0);
       const x = calendarDifference(today, evDate);
       
       if (st.mode === "down") {
-        if (today > evDate) return showResult(currentLang === 'en-US' ? 'Date has passed!' : 'Data já passou!', "", true);
-        const html = `<div class="big">${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">${currentLang==='en-US'?'Remaining for':'Faltam'} ${name}.</div>`;
+        if (today > evDate) return showResult("Data já passou!", "", true);
+        const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Faltam para ${name}.</div>`;
         showResult(html, `${x.total} dias para ${rawName}`);
       } else {
-        if (today < evDate) return showResult(currentLang === 'en-US' ? 'Date is future!' : 'Data futura!', "", true);
-        const html = `<div class="big">${x.total.toLocaleString(currentLang)} ${x.total===1?(currentLang==='en-US'?'day':'dia'):(currentLang==='en-US'?'days':'dias')}</div><div class="small">${currentLang==='en-US'?'Passed since':'Passados desde'} ${name}.</div>`;
+        if (today < evDate) return showResult("Data futura!", "", true);
+        const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Passados desde ${name}.</div>`;
         showResult(html, `${x.total} dias desde ${rawName}`);
       }
     };
@@ -1366,21 +1292,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderOvertime() {
     const st = states.overtime;
-    const isEn = currentLang === 'en-US';
-    const label50 = isEn ? '50% (Normal / Weekday)' : '50% (Dias úteis / Normal)';
-    const label100 = isEn ? '100% (Sunday / Holiday)' : '100% (Domingos / Feriados)';
-
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="sal">${isEn ? 'MONTHLY SALARY' : 'SALÁRIO MENSAL'} (R$)</label><input type="number" id="sal" step="0.01" min="0" value="${st.sal}"></div>
-        <div class="field"><label for="jor">${isEn ? 'MONTHLY HOURS' : 'JORNADA MENSAL (HORAS)'}</label><input type="number" id="jor" value="${st.jor}" min="1"></div>
+        <div class="field"><label for="sal">SALÁRIO MENSAL (R$)</label><input type="number" id="sal" step="0.01" min="0" value="${st.sal}"></div>
+        <div class="field"><label for="jor">JORNADA MENSAL (HORAS)</label><input type="number" id="jor" value="${st.jor}" min="1"></div>
       </div>
       <div class="grid" style="margin-top:14px">
-        <div class="field"><label for="qtd">${isEn ? 'OVERTIME HOURS' : 'QTD. HORAS EXTRAS'}</label><input type="number" id="qtd" step="0.5" min="0" value="${st.qtd}"></div>
-        <div class="field"><label for="rate">${isEn ? 'PREMIUM RATE' : 'ACRÉSCIMO LEGAL'}</label>
+        <div class="field"><label for="qtd">QTD. HORAS EXTRAS</label><input type="number" id="qtd" step="0.5" min="0" value="${st.qtd}"></div>
+        <div class="field"><label for="rate">ACRÉSCIMO LEGAL</label>
           <select id="rate">
-            <option value="50" ${st.rate===50?'selected':''}>${label50}</option>
-            <option value="100" ${st.rate===100?'selected':''}>${label100}</option>
+            <option value="50" ${st.rate===50?'selected':''}>50% (Dias úteis / Normal)</option>
+            <option value="100" ${st.rate===100?'selected':''}>100% (Domingos / Feriados)</option>
           </select>
         </div>
       </div>
@@ -1393,13 +1315,13 @@ document.addEventListener("DOMContentLoaded", () => {
       st.rate = Number($("#rate").value);
       
       const sal = st.sal, jor = st.jor, qtd = st.qtd, rate = st.rate;
-      if(!sal || sal<=0 || !jor || jor<=0 || isNaN(qtd) || qtd<0) return showResult(isEn ? 'Invalid values.' : 'Valores inválidos.', "", true);
+      if(!sal || sal<=0 || !jor || jor<=0 || isNaN(qtd) || qtd<0) return showResult("Valores inválidos.", "", true);
       
       const vHora = sal / jor, vExtra = vHora * (1 + rate / 100), total = vExtra * qtd;
       const html = `
-        <div class="big">R$ ${total.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+        <div class="big">R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
         <div class="small">Normal: R$ ${vHora.toFixed(2)} | Extra (${rate}%): R$ ${vExtra.toFixed(2)}</div>
-        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>
+        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
       `;
       showResult(html, `R$ ${total.toFixed(2)}`);
     };
@@ -1410,7 +1332,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tool.innerHTML = `
       <div class="tabs">
         <button class="tab ${states.vacation13.mode === "13" ? "active" : ""}" data-mode="13">13º Salário</button>
-        <button class="tab ${states.vacation13.mode === "vacation" ? "active" : ""}" data-mode="vacation">${currentLang === 'en-US' ? 'Vacation + 1/3' : 'Férias + 1/3'}</button>
+        <button class="tab ${states.vacation13.mode === "vacation" ? "active" : ""}" data-mode="vacation">Férias + 1/3</button>
       </div>
       <div id="vArea"></div>`;
     renderVArea();
@@ -1422,8 +1344,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if(st.mode === "13"){
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="vSal">${currentLang === 'en-US' ? 'GROSS SALARY' : 'SALÁRIO BRUTO'} (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="${st.sal}"></div>
-          <div class="field"><label for="vMeses">${currentLang === 'en-US' ? 'MONTHS WORKED (1-12)' : 'MESES TRABALHADOS (1 a 12)'}</label><input type="number" id="vMeses" min="1" max="12" value="${st.meses}"></div>
+          <div class="field"><label for="vSal">SALÁRIO BRUTO (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="${st.sal}"></div>
+          <div class="field"><label for="vMeses">MESES TRABALHADOS (1 a 12)</label><input type="number" id="vMeses" min="1" max="12" value="${st.meses}"></div>
         </div>
         <div class="result" id="result"></div>`;
       
@@ -1431,12 +1353,12 @@ document.addEventListener("DOMContentLoaded", () => {
         st.sal = Number($("#vSal").value);
         st.meses = Number($("#vMeses").value);
         const sal = st.sal, meses = st.meses;
-        if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
+        if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult("Valores inválidos.", "", true);
         const val = (sal / 12) * meses;
         const html = `
-          <div class="big">R$ ${val.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
-          <div class="small">${currentLang==='en-US'?'Proportional to':'Proporcional a'} ${meses} ${meses===1?'mês':'meses'}.</div>
-          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>
+          <div class="big">R$ ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+          <div class="small">Proporcional a ${meses} ${meses===1?'mês':'meses'}.</div>
+          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
         `;
         showResult(html, `R$ ${val.toFixed(2)}`);
       };
@@ -1444,8 +1366,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       area.innerHTML = `
         <div class="grid">
-          <div class="field"><label for="vSal">${currentLang === 'en-US' ? 'GROSS SALARY' : 'SALÁRIO BRUTO'} (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="${st.sal}"></div>
-          <div class="field"><label for="vMeses">${currentLang === 'en-US' ? 'PERIOD MONTHS (1-12)' : 'MESES NO PERÍODO (1 a 12)'}</label><input type="number" id="vMeses" min="1" max="12" value="${st.meses}"></div>
+          <div class="field"><label for="vSal">SALÁRIO BRUTO (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="${st.sal}"></div>
+          <div class="field"><label for="vMeses">MESES NO PERÍODO (1 a 12)</label><input type="number" id="vMeses" min="1" max="12" value="${st.meses}"></div>
         </div>
         <div class="result" id="result"></div>`;
       
@@ -1453,12 +1375,12 @@ document.addEventListener("DOMContentLoaded", () => {
         st.sal = Number($("#vSal").value);
         st.meses = Number($("#vMeses").value);
         const sal = st.sal, meses = st.meses;
-        if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
+        if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult("Valores inválidos.", "", true);
         const base = (sal / 12) * meses, terço = base / 3, total = base + terço;
         const html = `
-          <div class="big">R$ ${total.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
-          <div class="small">${currentLang==='en-US'?'Vacation:':'Férias:'} R$ ${base.toFixed(2)} | 1/3: R$ ${terço.toFixed(2)}</div>
-          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>
+          <div class="big">R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+          <div class="small">Férias: R$ ${base.toFixed(2)} | 1/3: R$ ${terço.toFixed(2)}</div>
+          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
         `;
         showResult(html, `R$ ${total.toFixed(2)}`);
       };
@@ -1471,18 +1393,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const st = states.rescision;
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="rSal">${currentLang === 'en-US' ? 'GROSS SALARY' : 'SALÁRIO BRUTO'} (R$)</label><input type="number" id="rSal" step="0.01" min="0" value="${st.sal}"></div>
-        <div class="field"><label for="rReason">${currentLang === 'en-US' ? 'TERMINATION REASON' : 'MOTIVO DA SAÍDA'}</label>
+        <div class="field"><label for="rSal">SALÁRIO BRUTO (R$)</label><input type="number" id="rSal" step="0.01" min="0" value="${st.sal}"></div>
+        <div class="field"><label for="rReason">MOTIVO DA SAÍDA</label>
           <select id="rReason">
-            <option value="sem_justa" ${st.reason==='sem_justa'?'selected':''}>${currentLang === 'en-US' ? 'Without cause' : 'Dispensa sem justa causa'}</option>
-            <option value="pedido" ${st.reason==='pedido'?'selected':''}>${currentLang === 'en-US' ? 'Resignation' : 'Pedido de demissão'}</option>
-            <option value="acordo" ${st.reason==='acordo'?'selected':''}>${currentLang === 'en-US' ? 'Mutual agreement' : 'Acordo comum (Art. 484-A)'}</option>
+            <option value="sem_justa" ${st.reason==='sem_justa'?'selected':''}>Dispensa sem justa causa</option>
+            <option value="pedido" ${st.reason==='pedido'?'selected':''}>Pedido de demissão</option>
+            <option value="acordo" ${st.reason==='acordo'?'selected':''}>Acordo comum (Art. 484-A)</option>
           </select>
         </div>
       </div>
       <div class="grid" style="margin-top:14px">
-        <div class="field"><label for="rAdm">${currentLang === 'en-US' ? 'HIRE DATE' : 'DATA DE ADMISSÃO'}</label><input type="date" id="rAdm" value="${st.adm}"></div>
-        <div class="field"><label for="rTerm">${currentLang === 'en-US' ? 'TERMINATION DATE' : 'DATA DE DEMISSÃO'}</label><input type="date" id="rTerm" value="${st.term}"></div>
+        <div class="field"><label for="rAdm">DATA DE ADMISSÃO</label><input type="date" id="rAdm" value="${st.adm}"></div>
+        <div class="field"><label for="rTerm">DATA DE DEMISSÃO</label><input type="date" id="rTerm" value="${st.term}"></div>
       </div>
       <div class="result" id="result"></div>`;
     
@@ -1493,8 +1415,8 @@ document.addEventListener("DOMContentLoaded", () => {
       st.term = $("#rTerm").value;
 
       const sal = st.sal, reason = st.reason, dAdm = dateFromInput("#rAdm"), dTerm = dateFromInput("#rTerm");
-      if(!sal || sal<=0 || !dAdm || !dTerm) return showResult(currentLang === 'en-US' ? 'Fill all fields.' : 'Preencha todos os campos.', "", true);
-      if(dAdm > dTerm) return showResult(currentLang === 'en-US' ? 'Hire date cannot be after termination.' : 'Admissão posterior à demissão.', "", true);
+      if(!sal || sal<=0 || !dAdm || !dTerm) return showResult("Preencha todos os campos.", "", true);
+      if(dAdm > dTerm) return showResult("Admissão posterior à demissão.", "", true);
       
       const timeDiffReal = calendarDifference(dAdm, dTerm);
       
@@ -1555,14 +1477,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const totalRescisao = saldoSalario + decimoTerceiro + feriasTotal + avisoPrevio + multaFgts;
       
       const html = `
-        <div class="big">R$ ${totalRescisao.toLocaleString(currentLang,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+        <div class="big">R$ ${totalRescisao.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
         <div class="small" style="margin-top:8px; line-height:1.6;">
           Saldo: R$ ${saldoSalario.toFixed(2)} | 13º Prop.: R$ ${decimoTerceiro.toFixed(2)}<br>
           ${reason !== 'pedido' ? `Aviso Prévio (${diasAviso}d): R$ ${avisoPrevio.toFixed(2)}<br>` : ''}
           Férias (Venc./Prop. + ⅓): R$ ${feriasTotal.toFixed(2)}<br>
           ${reason !== 'pedido' ? `Multa FGTS: R$ ${multaFgts.toFixed(2)}` : ''}
         </div>
-        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>
+        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
       `;
       showResult(html, `R$ ${totalRescisao.toFixed(2)}`);
     };
@@ -1573,8 +1495,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const st = states.running;
     tool.innerHTML = `
       <div class="grid">
-        <div class="field"><label for="runDist">${currentLang === 'en-US' ? 'DISTANCE (KM)' : 'DISTÂNCIA (KM)'}</label><input type="number" id="runDist" step="0.5" min="1" value="${st.dist}"></div>
-        <div class="field"><label for="runTime">${currentLang === 'en-US' ? 'TARGET TIME (MINUTES)' : 'TEMPO DESEJADO (MINUTOS)'}</label><input type="number" id="runTime" min="1" value="${st.time}"></div>
+        <div class="field"><label for="runDist">DISTÂNCIA (KM)</label><input type="number" id="runDist" step="0.5" min="1" value="${st.dist}"></div>
+        <div class="field"><label for="runTime">TEMPO DESEJADO (MINUTOS)</label><input type="number" id="runTime" min="1" value="${st.time}"></div>
       </div>
       <div class="result" id="result"></div>`;
       
@@ -1582,7 +1504,7 @@ document.addEventListener("DOMContentLoaded", () => {
       st.dist = Number($("#runDist").value);
       st.time = Number($("#runTime").value);
       const dist = st.dist, totalMin = st.time;
-      if(!dist || dist <= 0 || !totalMin || totalMin <= 0) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
+      if(!dist || dist <= 0 || !totalMin || totalMin <= 0) return showResult("Valores inválidos.", "", true);
       
       let paceDec = totalMin / dist, paceMin = Math.floor(paceDec), paceSec = Math.round((paceDec - paceMin) * 60);
       if (paceSec === 60) { paceMin += 1; paceSec = 0; }
@@ -1591,7 +1513,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const html = `
         <div class="big">${paceFormatted} <span style="font-size:16px; font-weight:normal; color:var(--muted);">min/km</span></div>
-        <div class="small" style="margin-top:8px;">${currentLang==='en-US'?'Average Speed:':'Velocidade Média:'} <strong>${speed} km/h</strong></div>
+        <div class="small" style="margin-top:8px;">Velocidade Média: <strong>${speed} km/h</strong></div>
       `;
       showResult(html, `${paceFormatted} min/km`);
     };
@@ -1626,8 +1548,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderPaletteList(query) {
-    const list = Object.keys(i18n[currentLang].tools).map(key => ({
-      key, name: i18n[currentLang].tools[key].menuName, badge: i18n[currentLang].tools[key].badge
+    const list = Object.keys(i18n['pt-BR'].tools).map(key => ({
+      key, name: i18n['pt-BR'].tools[key].menuName, badge: i18n['pt-BR'].tools[key].badge
     })).filter(x => x.name.toLowerCase().includes(query.toLowerCase()));
 
     paletteList.innerHTML = list.map((item, idx) => `
@@ -1690,28 +1612,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateGreeting() {
     const hour = new Date().getHours();
-    const isEn = currentLang === 'en-US';
     let text = '';
     let emoji = '';
     
-    if (hour < 12) { text = isEn ? 'Good morning' : 'Bom dia'; emoji = '☀️'; }
-    else if (hour < 18) { text = isEn ? 'Good afternoon' : 'Boa tarde'; emoji = '🌤️'; }
-    else { text = isEn ? 'Good evening' : 'Boa noite'; emoji = '🌙'; }
+    if (hour < 12) { text = 'Bom dia'; emoji = '☀️'; }
+    else if (hour < 18) { text = 'Boa tarde'; emoji = '🌤️'; }
+    else { text = 'Boa noite'; emoji = '🌙'; }
     
     if(greetingEl) greetingEl.textContent = `${text} ${emoji}`;
   }
 
   function renderChips() {
     const chips = [
-      { id: 'overtime', icon: '💼', pt: 'Horas Extras', en: 'Overtime' },
-      { id: 'pomodoro', icon: '🍅', pt: 'Pomodoro', en: 'Pomodoro' },
-      { id: 'meeting', icon: '🌍', pt: 'Reuniões', en: 'Meetings' },
-      { id: 'rescision', icon: '📄', pt: 'Rescisão', en: 'Severance' },
-      { id: 'horoscope', icon: '✨', pt: 'Horóscopo', en: 'Horoscope' }
+      { id: 'overtime', icon: '💼', pt: 'Horas Extras' },
+      { id: 'pomodoro', icon: '🍅', pt: 'Pomodoro' },
+      { id: 'meeting', icon: '🌍', pt: 'Reuniões' },
+      { id: 'rescision', icon: '📄', pt: 'Rescisão' },
+      { id: 'horoscope', icon: '✨', pt: 'Horóscopo' }
     ];
-    const isEn = currentLang === 'en-US';
     if(quickChips) {
-      quickChips.innerHTML = chips.map(c => `<button class="chip" data-tool="${c.id}">${c.icon} ${isEn ? c.en : c.pt}</button>`).join('');
+      quickChips.innerHTML = chips.map(c => `<button class="chip" data-tool="${c.id}">${c.icon} ${c.pt}</button>`).join('');
       $$('#quickChips .chip').forEach(btn => {
         btn.onclick = () => {
           haptic();
@@ -1724,19 +1644,19 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateStaticTexts() {
     updateGreeting();
     renderChips();
-    footerText.innerHTML = i18n[currentLang].footer;
-    menuTitle.textContent = i18n[currentLang].menu;
-    langLabel.textContent = i18n[currentLang].langLabel;
-    groupEssential.textContent = i18n[currentLang].g1;
-    groupPersonal.textContent = i18n[currentLang].g2;
-    groupLabor.textContent = i18n[currentLang].g3;
-    groupSport.textContent = i18n[currentLang].g4;
+    footerText.innerHTML = i18n['pt-BR'].footer;
+    menuTitle.textContent = i18n['pt-BR'].menu;
+    langLabel.textContent = i18n['pt-BR'].langLabel;
+    groupEssential.textContent = i18n['pt-BR'].g1;
+    groupPersonal.textContent = i18n['pt-BR'].g2;
+    groupLabor.textContent = i18n['pt-BR'].g3;
+    groupSport.textContent = i18n['pt-BR'].g4;
 
     $$("[data-i18n]").forEach(el => {
       const k = el.getAttribute("data-i18n");
       const toolKey = k.replace("tool_", "");
-      if (i18n[currentLang].tools[toolKey]) {
-        el.textContent = i18n[currentLang].tools[toolKey].menuName;
+      if (i18n['pt-BR'].tools[toolKey]) {
+        el.textContent = i18n['pt-BR'].tools[toolKey].menuName;
       }
     });
   }
@@ -1754,8 +1674,8 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.hash = t;
     }
 
-    const meta = i18n[currentLang].tools[t] || i18n[currentLang].tools['date'];
-    pageTitle.textContent = "tempo.utility — " + meta.title;
+    const meta = i18n['pt-BR'].tools[t] || i18n['pt-BR'].tools['date'];
+    pageTitle.textContent = "tempo utilitários — " + meta.title;
     titleEl.textContent = meta.title;
     subtitleEl.textContent = meta.subtitle;
     toolBadge.textContent = meta.badge;
