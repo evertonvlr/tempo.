@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" id="metaThemeColor" content="#0b0d12">
-<meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte, foco e horóscopo diário completo. Sem anúncios e direto ao ponto.">
+<meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, reuniões globais, esporte, foco e horóscopo diário completo. Sem anúncios e direto ao ponto.">
 <meta property="og:title" content="tempo. — Utilitários">
-<meta property="og:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte, foco e horóscopo.">
+<meta property="og:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças e reuniões globais.">
 <meta property="og:type" content="website">
 
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -22,7 +22,7 @@
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "description": "Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, esporte, foco e horóscopo."
+  "description": "Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos e reuniões globais."
 }
 </script>
 
@@ -49,7 +49,6 @@ body{
   0% { background-position: 50% 0%; }
   100% { background-position: 50% 100%; }
 }
-/* Melhoria 3: Desliga animação de fundo se houver economia de bateria/redução de movimento */
 @media (prefers-reduced-motion: reduce) {
   body { animation: none; background-position: 50% 0%; }
 }
@@ -68,7 +67,6 @@ header{height:76px;display:flex;align-items:center;justify-content:space-between
 .icon-btn:hover{transform:scale(1.04);background:var(--card2);border-color:var(--accent)}
 .icon-btn:active{transform:scale(0.95)}
 
-/* Chips / Atalhos Rápidos */
 .chips-wrapper{width:100%;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:10px 0 20px;display:flex;gap:8px;justify-content:center}
 @media(max-width:700px){.chips-wrapper{justify-content:flex-start}}
 .chips-wrapper::-webkit-scrollbar{display:none}
@@ -81,7 +79,6 @@ header{height:76px;display:flex;align-items:center;justify-content:space-between
 h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bottom:15px}
 .hero p{color:var(--muted);font-size:15px;line-height:1.6}
 
-/* Correção Android Repaint: transform:translateZ(0) aciona renderização via Placa Gráfica */
 .panel{width:min(100%,760px);margin:auto;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:23px;box-shadow:0 25px 80px rgba(0,0,0,.15);transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform}
 
 .tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:14px;margin-bottom:23px;border:1px solid var(--line)}
@@ -101,11 +98,15 @@ select{cursor:pointer}
 .result .big{font-size:clamp(22px,4.5vw,30px);font-weight:900;letter-spacing:-1px;word-break:break-word}
 .result .small{color:var(--muted);margin-top:7px;font-size:13px;line-height:1.5}
 .error{color:var(--danger)!important}
-.result.has-copy{cursor:pointer;position:relative;padding-bottom:30px}
-.result.has-copy::after{content:'Clique no card para copiar';position:absolute;bottom:10px;left:0;right:0;font-size:11px;font-weight:750;color:var(--muted);opacity:0.6;transition:0.2s}
+.result.has-copy{cursor:pointer;position:relative;padding-bottom:46px}
+.result.has-copy::after{content:'Clique no cartão para copiar';position:absolute;bottom:10px;left:0;right:0;font-size:11px;font-weight:750;color:var(--muted);opacity:0.6;transition:0.2s}
 .result.has-copy:hover::after{opacity:1;color:var(--accent)}
 .result.has-copy.copied{border-color:#4ade80}
 .result.has-copy.copied::after{content:'✓ Copiado!';color:#4ade80;opacity:1}
+
+.action-buttons{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.action-btn{background:var(--card2);border:1px solid var(--line);color:var(--text);padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:0.2s}
+.action-btn:hover{border-color:var(--accent);background:var(--bg)}
 
 /* Command Palette Modal */
 .palette-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:.2s;z-index:100;display:grid;place-items:center;padding:20px}
@@ -132,6 +133,15 @@ select{cursor:pointer}
 .menu-item svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;flex-shrink:0}
 .menu-item:hover,.menu-item.active{border-color:var(--accent);background:var(--card2)}
 .menu-item span{opacity:.9}
+
+/* Print / PDF Styling */
+@media print {
+  body { background: #fff !important; color: #000 !important; }
+  header, .chips-wrapper, .drawer, .palette-overlay, footer, .tabs, .action-buttons, .icon-btn { display: none !important; }
+  .panel { border: none !important; box-shadow: none !important; padding: 0 !important; width: 100% !important; background: #fff !important; color: #000 !important; }
+  input, select { border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; }
+  .result { background: #f9f9f9 !important; border: 1px solid #ccc !important; color: #000 !important; }
+}
 
 footer{text-align:center;color:var(--muted);font-size:11px;margin-top:42px}
 footer a{color:var(--muted);text-decoration:none;transition:.2s}
@@ -172,7 +182,7 @@ footer a:hover{color:var(--accent)}
 
 <div class="palette-overlay" id="paletteModal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="palette-box">
-    <input type="text" class="palette-input" id="paletteInput" placeholder="Digite para buscar uma ferramenta...">
+    <input type="text" class="palette-input" id="paletteInput" placeholder="Digite para buscar uma ferramenta ou calcular...">
     <div class="palette-list" id="paletteList"></div>
   </div>
 </div>
@@ -207,6 +217,10 @@ footer a:hover{color:var(--accent)}
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
       <span data-i18n="tool_worldclock">Fusos Horários (World Clock)</span>
     </button>
+    <button class="menu-item" data-tool="meeting">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 15 15"></polyline></svg>
+      <span data-i18n="tool_meeting">Planejador de Reuniões</span>
+    </button>
     <button class="menu-item" data-tool="pomodoro">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 15 15"></polyline></svg>
       <span data-i18n="tool_pomodoro">Temporizador Pomodoro</span>
@@ -230,7 +244,7 @@ footer a:hover{color:var(--accent)}
       <span data-i18n="tool_countdown">Contagem Regressiva</span>
     </button>
     
-    <div class="menu-group" id="groupLabor">TRABALHISTAS (CLT)</div>
+    <div class="menu-group" id="groupLabor">TRABALHISTAS & FINANÇAS</div>
     <button class="menu-item" data-tool="overtime">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2"></path><path d="M5 3 2 6"></path><path d="m22 6-3-3"></path><path d="M12 2v1"></path></svg>
       <span data-i18n="tool_overtime">Horas Extras</span>
@@ -254,7 +268,6 @@ footer a:hover{color:var(--accent)}
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // Melhoria 4: Utilitário $$ (DRY)
   const $ = s => document.querySelector(s);
   const $$ = s => document.querySelectorAll(s);
   
@@ -273,6 +286,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  // Feature 4: Histórico local recente
+  function saveHistory(title, text) {
+    try {
+      let history = JSON.parse(storage.get('tempo_history', '[]'));
+      history.unshift({ title, text, date: new Date().toLocaleDateString() });
+      if (history.length > 10) history.pop();
+      storage.set('tempo_history', JSON.stringify(history));
+    } catch(e){}
+  }
+
   function escapeHTML(str) {
     return str.replace(/[&<>'"]/g, tag => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
@@ -290,6 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
     time: { t1: "08:00", t2: "17:40" },
     business: { mode: "diff", b1: getLocalISODate(), b2: (() => { const d = new Date(); d.setDate(d.getDate() + 15); return getLocalISODate(d); })(), base: getLocalISODate(), days: 10 },
     worldclock: {},
+    meeting: { hour: 14 },
     pomodoro: { mode: 'work', timeLeft: 25 * 60, running: false },
     horoscope: { sign: 'aries' },
     age: { birth: "2000-01-01", ref: getLocalISODate() },
@@ -306,14 +330,15 @@ document.addEventListener("DOMContentLoaded", () => {
       page: "tempo. — Utilitários",
       footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>',
       menu: "Utilitários", langLabel: "IDIOMA / REGIÃO",
-      g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHISTAS (CLT)", g4: "ESPORTE & PERFORMANCE",
-      copyHint: "Clique no card para copiar", copied: "✓ Copiado!",
+      g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHISTAS & FINANÇAS", g4: "ESPORTE & PERFORMANCE",
+      copyHint: "Clique no cartão para copiar", copied: "✓ Copiado!",
       disclaimer: "* Valores estimados para fins orientativos. Consulte o RH ou um profissional contábil.",
       tools: {
         date: { title: "Calculadora de Data", subtitle: "Descubra exatamente quanto tempo existe entre duas datas.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Data" },
         time: { title: "Calculadora de Horas", subtitle: "Calcule a diferença entre dois horários.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Horas" },
         business: { title: "Calculadora de Dias Úteis", subtitle: "Calcule prazos desconsiderando os finais de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
         worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte o horário em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
+        meeting: { title: "Planejador de Reuniões Globais", subtitle: "Encontre o horário ideal de trabalho em comum entre diferentes países.", badge: "UTILITÁRIO GLOBAL", menuName: "Planejador de Reuniões" },
         pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
         horoscope: { title: "Horóscopo Diário Completo", subtitle: "Previsões detalhadas de amor, trabalho, finanças e saúde para o seu signo.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
         age: { title: "Calculadora de Idade Exata", subtitle: "Descubra sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" },
@@ -329,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
       page: "tempo. — Utilitários",
       footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>',
       menu: "Utilitários", langLabel: "IDIOMA / REGIÃO",
-      g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHISTAS (CÓDIGO DO TRABALHO)", g4: "DESPORTO & PERFORMANCE",
+      g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHO & FINANÇAS", g4: "DESPORTO & PERFORMANCE",
       copyHint: "Clique no cartão para copiar", copied: "✓ Copiado!",
       disclaimer: "* Valores estimados para fins orientativos. Consulte os Recursos Humanos ou um contabilista.",
       tools: {
@@ -337,6 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
         time: { title: "Calculadora de Horas", subtitle: "Calcule a diferença entre dois horários.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Horas" },
         business: { title: "Dias Úteis", subtitle: "Calcule prazos descontando os fins de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" },
         worldclock: { title: "Fusos Horários (World Clock)", subtitle: "Consulte a hora em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" },
+        meeting: { title: "Planejador de Reuniões Globais", subtitle: "Encontre o horário ideal de trabalho em comum entre diferentes países.", badge: "UTILITÁRIO GLOBAL", menuName: "Planejador de Reuniões" },
         pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie o seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
         horoscope: { title: "Horóscopo Diário Completo", subtitle: "Previsões detalhadas de amor, trabalho, finanças e saúde para o seu signo.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
         age: { title: "Idade Exata", subtitle: "Descubra a sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" },
@@ -360,6 +386,7 @@ document.addEventListener("DOMContentLoaded", () => {
         time: { title: "Time Calculator", subtitle: "Calculate the difference between two times.", badge: "TIME UTILITY", menuName: "Time Calculator" },
         business: { title: "Business Days", subtitle: "Calculate deadlines excluding weekends.", badge: "TIME UTILITY", menuName: "Business Days" },
         worldclock: { title: "World Clock & Timezones", subtitle: "Check real-time current time across major global financial hubs.", badge: "GLOBAL UTILITY", menuName: "World Clock" },
+        meeting: { title: "Global Meeting Planner", subtitle: "Find the ideal overlapping work hours across multiple timezones.", badge: "GLOBAL UTILITY", menuName: "Meeting Planner" },
         pomodoro: { title: "Pomodoro Timer", subtitle: "Manage your focus time and breaks with productive cycles.", badge: "FOCUS UTILITY", menuName: "Pomodoro Timer" },
         horoscope: { title: "Complete Daily Horoscope", subtitle: "Detailed love, career, money and health predictions for your sign.", badge: "ASTROLOGY UTILITY", menuName: "Daily Horoscope" },
         age: { title: "Exact Age Calculator", subtitle: "Discover your exact age in years, months, and days.", badge: "PERSONAL & LIFE", menuName: "Exact Age" },
@@ -394,7 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function applyTheme(theme) {
     currentTheme = theme;
-    const metaTheme = $("#metaThemeColor"); // Melhoria 2: Pinta a barra de status dinâmica
+    const metaTheme = $("#metaThemeColor");
     if (theme === 'light') {
       document.documentElement.classList.add('light');
       themeBtn.innerHTML = moonSvg;
@@ -413,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
     applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
   });
 
-  const validTools = ['date', 'time', 'business', 'worldclock', 'pomodoro', 'horoscope', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
+  const validTools = ['date', 'time', 'business', 'worldclock', 'meeting', 'pomodoro', 'horoscope', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
   
   function getToolFromHash() {
     const hash = window.location.hash.replace('#', '');
@@ -501,19 +528,96 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  function showResult(html, plainText = "", error = false) {
+  // Feature 1: Gerador de Cards Visuais em Canvas e Exportação PDF
+  function generateShareCard(titleText, resultText) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 800;
+    canvas.height = 450;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#0b0d12';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#7c5cff';
+    ctx.font = 'bold 24px system-ui, sans-serif';
+    ctx.fillText('tempo. — Utilitários', 60, 80);
+
+    ctx.fillStyle = '#9199a8';
+    ctx.font = '18px system-ui, sans-serif';
+    ctx.fillText(titleText.toUpperCase(), 60, 130);
+
+    ctx.fillStyle = '#f7f8fb';
+    ctx.font = 'bold 36px system-ui, sans-serif';
+    
+    // Word wrap for result text
+    const words = resultText.split(' ');
+    let line = '';
+    let y = 210;
+    for(let n = 0; n < words.length; n++) {
+      let testLine = line + words[n] + ' ';
+      let metrics = ctx.measureText(testLine);
+      if (metrics.width > 680 && n > 0) {
+        ctx.fillText(line, 60, y);
+        line = words[n] + ' ';
+        y += 50;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, 60, y);
+
+    ctx.fillStyle = '#9199a8';
+    ctx.font = '14px system-ui, sans-serif';
+    ctx.fillText('Calculado com tempo. — Sem anúncios e direto ao ponto.', 60, 390);
+
+    const link = document.createElement('a');
+    link.download = 'tempo-resultado.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }
+
+  function showResult(html, plainText = "", error = false, toolName = "") {
     const r = $("#result");
     if(r) {
       r.setAttribute('aria-live', 'polite');
       r.setAttribute('aria-atomic', 'true');
       textToCopy = plainText;
       
-      // Melhoria 5: Virtual DOM Lite para evitar Layout Thrashing pesado
-      if (r.innerHTML !== html) {
-        r.innerHTML = html;
+      let extraActions = '';
+      if (!error && plainText) {
+        saveHistory(toolName || titleEl.textContent, plainText);
+        extraActions = `
+          <div class="action-buttons">
+            <button class="action-btn" id="shareCardBtn">🎨 Gerar Card</button>
+            ${['Horas Extras', 'Rescisão Contratual (Acerto)'].includes(titleEl.textContent) ? '<button class="action-btn" id="printPdfBtn">🖨️ Exportar Relatório PDF</button>' : ''}
+          </div>
+        `;
+      }
+
+      const fullHtml = html + extraActions;
+      if (r.innerHTML !== fullHtml) {
+        r.innerHTML = fullHtml;
         r.classList.remove("show", "copied");
         void r.offsetWidth; 
         r.classList.add("show");
+        
+        const shareBtn = $("#shareCardBtn");
+        if (shareBtn) {
+          shareBtn.onclick = (ev) => {
+            ev.stopPropagation();
+            haptic();
+            generateShareCard(titleEl.textContent, plainText);
+          };
+        }
+
+        const printBtn = $("#printPdfBtn");
+        if (printBtn) {
+          printBtn.onclick = (ev) => {
+            ev.stopPropagation();
+            haptic();
+            window.print();
+          };
+        }
       }
       
       if (error) {
@@ -528,7 +632,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener('click', e => {
     const r = e.target.closest('.result.has-copy');
-    if (r && !r.classList.contains('error') && textToCopy) {
+    if (r && !r.classList.contains('error') && textToCopy && !e.target.closest('.action-buttons')) {
       haptic();
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(textToCopy).then(() => {
@@ -733,6 +837,74 @@ document.addEventListener("DOMContentLoaded", () => {
     window._wcInterval = setInterval(updateClocks, 1000);
   }
 
+  // Feature 2: Planejador de Reuniões Globais
+  function renderMeeting() {
+    const st = states.meeting;
+    const isEn = currentLang === 'en-US';
+    tool.innerHTML = `
+      <div class="field" style="margin-bottom: 20px;">
+        <label for="meetHour">${isEn ? 'SELECT BASE HOUR (BRASÍLIA / LISBOA / NY)' : 'SELECIONE A HORA BASE (0 - 23)'}</label>
+        <input type="range" id="meetHour" min="0" max="23" value="${st.hour}" style="cursor: pointer;">
+        <div style="text-align: center; font-size: 28px; font-weight: 900; margin-top: 8px;" id="meetHourDisplay">${st.hour.toString().padStart(2, '0')}:00</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;" id="meetZonesList"></div>
+      <div class="result show" style="display:block; margin-top:20px; text-align:left;">
+        <div style="font-weight:700; margin-bottom:4px;">💡 ${isEn ? 'Overlapping Status:' : 'Estado da Janela:'}</div>
+        <div id="meetStatusText" style="color:var(--muted); font-size:14px;">--</div>
+      </div>`;
+
+    const cities = [
+      { name: 'Brasília', tz: 'America/Sao_Paulo' },
+      { name: 'Lisboa', tz: 'Europe/Lisbon' },
+      { name: 'London', tz: 'Europe/London' },
+      { name: 'New York', tz: 'America/New_York' },
+      { name: 'Tokyo', tz: 'Asia/Tokyo' }
+    ];
+
+    const rangeInput = $("#meetHour");
+    const displayEl = $("#meetHourDisplay");
+    const listEl = $("#meetZonesList");
+    const statusEl = $("#meetStatusText");
+
+    function updateMeetingPlanner() {
+      const h = Number(rangeInput.value);
+      st.hour = h;
+      displayEl.textContent = `${h.toString().padStart(2, '0')}:00`;
+
+      const refDate = new Date();
+      refDate.setHours(h, 0, 0, 0);
+
+      let workingCount = 0;
+      listEl.innerHTML = cities.map(c => {
+        const timeStr = new Intl.DateTimeFormat('en-GB', { timeZone: c.tz, hour: '2-digit', minute: '2-digit', hour12: false }).format(refDate);
+        const hourNum = parseInt(timeStr.split(':')[0]);
+        const isWorking = hourNum >= 9 && hourNum < 18;
+        if (isWorking) workingCount++;
+
+        return `
+          <div style="background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:12px; display:flex; justify-content:space-between; align-items:center;">
+            <div><strong>${c.name}</strong></div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:18px; font-weight:800;">${timeStr}</span>
+              <span style="font-size:11px; padding:3px 8px; border-radius:6px; font-weight:700; background:${isWorking ? 'rgba(74,222,128,0.15); color:#4ade80' : 'rgba(255,101,116,0.15); color:var(--danger)'}">${isWorking ? (isEn?'Business Hours':'Horário Comercial') : (isEn?'Outside Hours':'Fora do Expediente')}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (workingCount >= 4) {
+        statusEl.innerHTML = isEn ? '🌟 Excellent time! Most cities are in business hours.' : '🌟 Excelente horário! A maioria das cidades está no expediente.';
+      } else if (workingCount >= 2) {
+        statusEl.innerHTML = isEn ? '⚡ Reasonable time with some cities outside business hours.' : '⚡ Horário razoável, embora algumas cidades já estejam fora do expediente.';
+      } else {
+        statusEl.innerHTML = isEn ? '🌙 Difficult time. Major overlap is outside office hours.' : '🌙 Horário difícil. Pouca sobreposição de horário de expediente.';
+      }
+    }
+
+    rangeInput.oninput = updateMeetingPlanner;
+    updateMeetingPlanner();
+  }
+
   let audioCtx = null;
   function playAlarm() {
     try {
@@ -789,10 +961,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return 15 * 60;
     }
 
-    // Melhoria 1: Proteção ao acessar elementos em background
     function updateDisplay() {
       const displayEl = $("#pomoDisplay");
-      if (!displayEl) return; // Se usuário saiu da aba do Pomodoro, ignora o re-render UI na tela oculta.
+      if (!displayEl) return;
       const m = Math.floor(st.timeLeft / 60);
       const s = st.timeLeft % 60;
       displayEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
@@ -833,7 +1004,6 @@ document.addEventListener("DOMContentLoaded", () => {
           updateDisplay();
         } else {
           stopTimer();
-          // Verifica a presença do botão caso o usuário tenha trocado de aba.
           const tbDone = $("#pomoToggleBtn");
           const stDone = $("#pomoStatus");
           if(tbDone) tbDone.textContent = isEn ? 'Start' : 'Iniciar';
@@ -865,7 +1035,7 @@ document.addEventListener("DOMContentLoaded", () => {
       st.timeLeft = getSecondsForMode(st.mode);
       updateDisplay();
       $("#pomoToggleBtn").textContent = isEn ? 'Start' : 'Iniciar';
-      $("#pomoStatus").textContent = isEn ? 'Timer reset.' : 'Cronômetro reiniciado.';
+      $("#pomoStatus").textContent = isEn ? 'Timer reset.' : 'Cronómetro reiniciado.';
     };
 
     $$("[data-pmode]").forEach(tab => {
@@ -899,7 +1069,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     tool.innerHTML = `
       <div style="margin-bottom: 16px;">
-        <label style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:8px;" id="signLabel">${isEn ? 'SELECT YOUR SIGN' : 'SELECIONE SEU SIGNO'}</label>
+        <label style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:8px;" id="signLabel">${isEn ? 'SELECT YOUR SIGN' : 'SELECIONE O SEU SIGNO'}</label>
         <select id="signSelect" style="font-weight:700;">
           ${signs.map(s => `<option value="${s.id}" ${st.sign === s.id ? 'selected' : ''}>${s.symbol} ${s.name}</option>`).join('')}
         </select>
@@ -988,7 +1158,6 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const todayEpochDays = Math.floor(Date.now() / 86400000);
       const signIndex = signs.findIndex(s => s.id === st.sign);
-      
       const langData = isEn ? pools.en : pools.pt;
       
       const cIdx = (todayEpochDays + signIndex * 3) % langData.climate.length;
@@ -1007,32 +1176,26 @@ document.addEventListener("DOMContentLoaded", () => {
         <div style="font-size: 26px; font-weight: 900; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
           <span>${signObj.symbol}</span> <span>${signObj.name}</span>
         </div>
-
         <div style="margin-bottom: 16px;">
           <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌤️ ${isEn ? 'Astral Climate' : 'Clima Astral'}</strong>
           <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.climate[cIdx]}</span>
         </div>
-
         <div style="margin-bottom: 16px;">
           <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">❤️ ${isEn ? 'Love & Relationships' : 'Amor & Relações'}</strong>
           <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.love[lIdx]}</span>
         </div>
-
         <div style="margin-bottom: 16px;">
           <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💼 ${isEn ? 'Career & Work' : 'Trabalho & Carreira'}</strong>
           <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.work[wIdx]}</span>
         </div>
-
         <div style="margin-bottom: 16px;">
           <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💰 ${isEn ? 'Money & Finances' : 'Dinheiro & Finanças'}</strong>
           <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.money[mIdx]}</span>
         </div>
-
         <div style="margin-bottom: 18px;">
           <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌿 ${isEn ? 'Health & Wellness' : 'Saúde & Bem-estar'}</strong>
           <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${langData.health[hIdx]}</span>
         </div>
-
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted);">
           <div>🎨 <strong>${isEn ? 'Color:' : 'Cor:'}</strong> <span style="color:var(--text);">${langData.colors[colIdx]}</span></div>
           <div>🍀 <strong>${isEn ? 'Number:' : 'Número:'}</strong> <span style="color:var(--text);">${langData.numbers[numIdx]}</span></div>
@@ -1362,7 +1525,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if(!dist || dist <= 0 || !totalMin || totalMin <= 0) return showResult(currentLang === 'en-US' ? 'Invalid values.' : 'Valores inválidos.', "", true);
       
       let paceDec = totalMin / dist, paceMin = Math.floor(paceDec), paceSec = Math.round((paceDec - paceMin) * 60);
-      
       if (paceSec === 60) { paceMin += 1; paceSec = 0; }
       
       const paceFormatted = `${paceMin}:${paceSec < 10 ? '0' : ''}${paceSec}`, speed = (dist / (totalMin / 60)).toFixed(1);
@@ -1483,8 +1645,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const chips = [
       { id: 'overtime', icon: '💼', pt: 'Horas Extras', en: 'Overtime' },
       { id: 'pomodoro', icon: '🍅', pt: 'Pomodoro', en: 'Pomodoro' },
+      { id: 'meeting', icon: '🌍', pt: 'Reuniões', en: 'Meetings' },
       { id: 'rescision', icon: '📄', pt: 'Rescisão', en: 'Severance' },
-      { id: 'worldclock', icon: '🌍', pt: 'Fuso Horário', en: 'Timezones' },
       { id: 'horoscope', icon: '✨', pt: 'Horóscopo', en: 'Horoscope' }
     ];
     const isEn = currentLang === 'en-US';
@@ -1546,6 +1708,7 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (t === "time") renderTime();
     else if (t === "business") renderBusiness();
     else if (t === "worldclock") renderWorldClock();
+    else if (t === "meeting") renderMeeting();
     else if (t === "pomodoro") renderPomodoro();
     else if (t === "horoscope") renderHoroscope();
     else if (t === "age") renderAge();
@@ -1594,7 +1757,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
   
-  // Gatilho imperceptível para o navegador Android repintar o ecrã no clique
   tool.addEventListener('click', () => {
     requestAnimationFrame(() => {
       tool.style.transform = 'scale(0.999)';
