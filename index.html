@@ -512,15 +512,12 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.height = 1920;
     const ctx = canvas.getContext('2d');
 
-    // SISTEMA DE GERAÇÃO INFINITA DE CORES HSL (Mais de 1 milhão de combinações sem perder a harmonia ou estragar o design)
-    // Sorteia um matiz (hue) base de 0 a 360
     const randomHue = Math.floor(Math.random() * 360);
     const bg1Color = `hsl(${randomHue}, 45%, 14%)`;
     const bg2Color = `hsl(${(randomHue + 40) % 360}, 35%, 7%)`;
     const cardColor = `hsl(${randomHue}, 30%, 11%)`;
     const accentColor = `hsl(${(randomHue + 50) % 360}, 85%, 65%)`;
 
-    // 1. Fundo Gradiente Radial Dinâmico e Imersivo
     const bgGrad = ctx.createRadialGradient(540, 500, 120, 540, 960, 1100);
     bgGrad.addColorStop(0, bg1Color);
     bgGrad.addColorStop(0.6, bg2Color);
@@ -528,7 +525,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. Elementos Gráficos Geométricos Dinâmicos
     ctx.fillStyle = accentColor;
     ctx.globalAlpha = 0.12;
     ctx.beginPath();
@@ -539,7 +535,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fill();
     ctx.globalAlpha = 1.0;
 
-    // 3. Bloco Principal do Card Flutuante 9:16
     ctx.fillStyle = cardColor;
     ctx.beginPath();
     if (ctx.roundRect) {
@@ -552,7 +547,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineWidth = 3;
     ctx.stroke();
 
-    // 4. Badge Superior Dinâmica da Ferramenta
     ctx.fillStyle = '#111522';
     ctx.beginPath();
     if (ctx.roundRect) {
@@ -571,12 +565,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const toolBadgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "tempo.utilitários").toUpperCase();
     ctx.fillText(toolBadgeText, 160, 327);
 
-    // 5. Título da Ferramenta em Grande Destaque
     ctx.fillStyle = '#f7f8fb';
     ctx.font = '800 40px system-ui, -apple-system, sans-serif';
     ctx.fillText(titleText, 130, 425);
 
-    // 6. Bloco Central com o Resultado Principal (Escala Dinâmica Inteligente)
     let fontSize = 76;
     if (resultText.length > 15) fontSize = 60;
     if (resultText.length > 30) fontSize = 44;
@@ -605,7 +597,6 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.fillText(l.trim(), 130, startY + (idx * (fontSize + 14)));
     });
 
-    // 7. SEÇÃO DE DETALHES INFORMATIVOS ADICIONAIS
     if (extraDetails && Object.keys(extraDetails).length > 0) {
       ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
       ctx.beginPath();
@@ -639,7 +630,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // 8. Linha Divisória Inferior
     ctx.strokeStyle = '#29313e';
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -647,7 +637,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineTo(950, 1530);
     ctx.stroke();
 
-    // 9. Rodapé Oficial Integrado ("tempo.utilitários")
     ctx.fillStyle = '#9199a8';
     ctx.font = '750 15px system-ui, -apple-system, sans-serif';
     ctx.fillText('CRIADO E COMPARTILHADO VIA', 130, 1585);
@@ -1180,9 +1169,8 @@ document.addEventListener("DOMContentLoaded", () => {
           ${signs.map(s => `<option value="${s.id}" ${st.sign === s.id ? 'selected' : ''}>${s.symbol} ${s.name}</option>`).join('')}
         </select>
       </div>
-      <div class="result show" id="horoscopeResult" style="display:block; text-align: left; padding: 24px;">
-        <div id="horoscopeContent"></div>
-      </div>`;
+      <div id="horoscopeContent" style="margin-top: 16px;"></div>
+      <div class="result" id="result"></div>`;
 
     const climatePool = [
       "O céu astral favorece a clareza mental e a tomada de decisões importantes que estavam em banho-maria.",
@@ -1237,34 +1225,36 @@ document.addEventListener("DOMContentLoaded", () => {
       const todayStr = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
       contentEl.innerHTML = `
-        <div style="font-size: 11px; font-weight: 750; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">${todayStr}</div>
-        <div style="font-size: 26px; font-weight: 900; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
-          <span>${signObj.symbol}</span> <span>${signObj.name}</span>
-        </div>
-        <div style="margin-bottom: 16px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌤️ Clima Astral</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${climatePool[cIdx]}</span>
-        </div>
-        <div style="margin-bottom: 16px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">❤️ Amor & Relações</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${lovePool[lIdx]}</span>
-        </div>
-        <div style="margin-bottom: 16px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💼 Trabalho & Carreira</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${workPool[wIdx]}</span>
-        </div>
-        <div style="margin-bottom: 16px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💰 Dinheiro & Finanças</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${moneyPool[mIdx]}</span>
-        </div>
-        <div style="margin-bottom: 18px;">
-          <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌿 Saúde & Bem-estar</strong>
-          <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${healthPool[hIdx]}</span>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted);">
-          <div>🎨 <strong>Cor:</strong> <span style="color:var(--text);">${colors[colIdx]}</span></div>
-          <div>🍀 <strong>Número:</strong> <span style="color:var(--text);">${numbers[numIdx]}</span></div>
-          <div>✨ <strong>Combina com:</strong> <span style="color:var(--text);">${signs[compIdx].name}</span></div>
+        <div style="background:var(--bg); border:1px solid var(--line); border-radius:16px; padding:20px; text-align: left;">
+          <div style="font-size: 11px; font-weight: 750; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">${todayStr}</div>
+          <div style="font-size: 26px; font-weight: 900; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
+            <span>${signObj.symbol}</span> <span>${signObj.name}</span>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌤️ Clima Astral</strong>
+            <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${climatePool[cIdx]}</span>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">❤️ Amor & Relações</strong>
+            <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${lovePool[lIdx]}</span>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💼 Trabalho & Carreira</strong>
+            <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${workPool[wIdx]}</span>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">💰 Dinheiro & Finanças</strong>
+            <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${moneyPool[mIdx]}</span>
+          </div>
+          <div style="margin-bottom: 18px;">
+            <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">🌿 Saúde & Bem-estar</strong>
+            <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${healthPool[hIdx]}</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted);">
+            <div>🎨 <strong>Cor:</strong> <span style="color:var(--text);">${colors[colIdx]}</span></div>
+            <div>🍀 <strong>Número:</strong> <span style="color:var(--text);">${numbers[numIdx]}</span></div>
+            <div>✨ <strong>Combina com:</strong> <span style="color:var(--text);">${signs[compIdx].name}</span></div>
+          </div>
         </div>`;
 
       const details = { "Signo": `${signObj.symbol} ${signObj.name}`, "Cor da Sorte": colors[colIdx], "Número Sorte": numbers[numIdx], "Harmonia": signs[compIdx].name };
