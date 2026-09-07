@@ -9,11 +9,13 @@
 <meta property="og:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças e reuniões globais.">
 <meta property="og:type" content="website">
 
+<!-- PWA & Mobile Meta Tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="tempo.utility">
 <link rel="manifest" href="manifest.json">
 
+<!-- Schema.org Structured Data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -26,7 +28,7 @@
 }
 </script>
 
-<title id="pageTitle">tempo.utility — Utilitários</title>
+<title id="pageTitle">tempo utilitários — Utilitários</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230b0d12%22/><text x=%2250%22 y=%2270%22 font-size=%2260%22 font-weight=%22900%22 font-family=%22system-ui, sans-serif%22 fill=%22%23f7f8fb%22 text-anchor=%22middle%22>t<tspan fill=%22%237c5cff%22>.</tspan></text></svg>">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -184,6 +186,7 @@ footer a:hover{color:var(--accent)}
 <footer id="footerText">Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a></footer>
 </div>
 
+<!-- Command Palette Modal -->
 <div class="palette-overlay" id="paletteModal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="palette-box">
     <input type="text" class="palette-input" id="paletteInput" placeholder="Digite para buscar uma ferramenta ou calcular...">
@@ -502,47 +505,66 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // GERADOR DO CARD: Estilo Spotify refinado, 100% em português, usando as cores e identidade oficial do site ("tempo" e "utilitários")
+  // GERADOR DO CARD TURBINADO: Estilo Spotify refinado, gradiente, proporções ajustadas e 100% em português
   function generateShareCard(titleText, resultText) {
     const canvas = document.createElement('canvas');
     canvas.width = 600;
     canvas.height = 800;
     const ctx = canvas.getContext('2d');
 
-    // Fundo premium escuro (#0b0d12)
-    ctx.fillStyle = '#0b0d12';
+    // 1. Fundo com gradiente radial sutil (remetendo à iluminação do site)
+    const bgGrad = ctx.createRadialGradient(300, 200, 50, 300, 400, 500);
+    bgGrad.addColorStop(0, '#1a202b');
+    bgGrad.addColorStop(1, '#0b0d12');
+    ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Efeito visual sutil de ondas/arcos usando a cor principal do site (#7c5cff)
-    ctx.strokeStyle = '#7c5cff';
-    ctx.lineWidth = 3;
+    // 2. Elemento gráfico decorativo estilo "Wrapped" no topo
+    ctx.strokeStyle = 'rgba(124, 92, 255, 0.3)';
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(80, 50);
-    ctx.bezierCurveTo(160, 20, 260, 90, 340, 45);
+    ctx.moveTo(60, 80);
+    ctx.bezierCurveTo(180, 20, 300, 140, 540, 60);
     ctx.stroke();
 
+    // 3. Card interno flutuante com borda refinada
+    ctx.fillStyle = '#131720';
     ctx.beginPath();
-    ctx.arc(480, 65, 45, 0, Math.PI * 2);
-    ctx.fillStyle = '#1a202b';
+    if (ctx.roundRect) {
+      ctx.roundRect(40, 110, 520, 580, 24);
+    } else {
+      ctx.rect(40, 110, 520, 580);
+    }
     ctx.fill();
     ctx.strokeStyle = '#29313e';
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Título da ferramenta no card (em português)
+    // 4. Cabeçalho interno do card (Título da ferramenta)
     ctx.fillStyle = '#9199a8';
-    ctx.font = '800 15px system-ui, -apple-system, sans-serif';
+    ctx.font = '800 13px system-ui, -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(titleText.toUpperCase(), 75, 165);
+
+    // 5. Selo / Ícone decorativo minimalista à direita
+    ctx.fillStyle = 'rgba(124, 92, 255, 0.15)';
+    ctx.beginPath();
+    ctx.arc(505, 160, 18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#7c5cff';
+    ctx.font = 'bold 14px system-ui';
     ctx.textAlign = 'center';
-    ctx.fillText(titleText.toUpperCase(), canvas.width / 2, 170);
+    ctx.fillText('✨', 505, 165);
 
-    // RESULTADO GIGANTE COM ESCALA DINÂMICA (Para nunca estourar ou bugar)
-    let fontSize = 68;
-    if (resultText.length > 15) fontSize = 52;
-    if (resultText.length > 30) fontSize = 36;
-    if (resultText.length > 50) fontSize = 26;
+    // 6. RESULTADO GIGANTE COM ESCALA DINÂMICA INTELIGENTE
+    let fontSize = 64;
+    if (resultText.length > 15) fontSize = 48;
+    if (resultText.length > 30) fontSize = 34;
+    if (resultText.length > 50) fontSize = 24;
 
-    ctx.fillStyle = '#7c5cff'; // Cor principal do site
+    ctx.fillStyle = '#f7f8fb';
     ctx.font = `900 ${fontSize}px system-ui, -apple-system, sans-serif`;
+    ctx.textAlign = 'left';
 
     const words = resultText.split(' ');
     let line = '';
@@ -550,7 +572,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for(let n = 0; n < words.length; n++) {
       let testLine = line + words[n] + ' ';
       let metrics = ctx.measureText(testLine);
-      if (metrics.width > 480 && n > 0) {
+      if (metrics.width > 440 && n > 0) {
         lines.push(line);
         line = words[n] + ' ';
       } else {
@@ -559,47 +581,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     lines.push(line);
 
-    let startY = 340 - ((lines.length * (fontSize + 10)) / 2);
+    let startY = 380 - ((lines.length * (fontSize + 12)) / 2);
     lines.forEach((l, idx) => {
-      ctx.fillText(l.trim(), canvas.width / 2, startY + (idx * (fontSize + 10)));
+      ctx.fillText(l.trim(), 75, startY + (idx * (fontSize + 12)));
     });
 
-    // Bloco central inferior com o estilo e cores dos cards do site (#131720)
-    ctx.fillStyle = '#131720';
-    ctx.beginPath();
-    if (ctx.roundRect) {
-      ctx.roundRect(60, 490, 480, 90, 16);
-    } else {
-      ctx.rect(60, 490, 480, 90);
-    }
-    ctx.fill();
+    // 7. Linha divisória interna elegante
     ctx.strokeStyle = '#29313e';
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(75, 560);
+    ctx.lineTo(525, 560);
     ctx.stroke();
 
-    ctx.fillStyle = '#f7f8fb';
-    ctx.font = '800 17px system-ui, -apple-system, sans-serif';
-    ctx.fillText('tempo utilitários', canvas.width / 2, 542);
+    // 8. Rodapé do Card: "tempo" com ponto roxo e "utilitários"
+    ctx.fillStyle = '#9199a8';
+    ctx.font = '750 11px system-ui, -apple-system, sans-serif';
+    ctx.fillText('GERADO EM', 75, 605);
 
-    // Rodapé do card: tempo utilitários
     ctx.fillStyle = '#f7f8fb';
-    ctx.beginPath();
-    ctx.arc(80, 720, 24, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.strokeStyle = '#7c5cff';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(80, 720, 12, -Math.PI/2, Math.PI/2, false);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(80, 720, 7, -Math.PI/2, Math.PI/2, false);
-    ctx.stroke();
-
-    ctx.textAlign = 'left';
+    ctx.font = '850 18px system-ui, -apple-system, sans-serif';
+    ctx.fillText('tempo', 75, 632);
+    const w = ctx.measureText('tempo').width;
+    ctx.fillStyle = '#7c5cff';
+    ctx.fillText('.', 75 + w, 632);
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = '900 16px system-ui, -apple-system, sans-serif';
-    ctx.fillText('tempo utilitários', 120, 726);
+    ctx.fillText(' utilitários', 75 + w + 4, 632);
 
     const link = document.createElement('a');
     link.download = 'tempo-utilitarios-card.png';
