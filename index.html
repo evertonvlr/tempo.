@@ -56,10 +56,13 @@ button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{
 .app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
 header{height:76px;display:flex;align-items:center;justify-content:space-between}
 
-.logo{font-size:21px;font-weight:850;letter-spacing:-.7px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:opacity .2s, transform .15s ease}
-.logo:hover{opacity:0.75}
-.logo:active{transform:scale(0.97)}
-.logo span{color:var(--accent)}
+/* Novo Redesign do Logo / Branding */
+.logo-container{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:opacity .2s, transform .15s ease}
+.logo-container:hover{opacity:0.85}
+.logo-container:active{transform:scale(0.97)}
+.logo-main{font-size:21px;font-weight:850;letter-spacing:-.7px;color:var(--text)}
+.logo-main span{color:var(--accent)}
+.logo-badge{font-size:10px;font-weight:750;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);background:rgba(124,92,255,0.12);padding:4px 9px;border-radius:20px;border:1px solid rgba(124,92,255,0.25)}
 
 .header-actions{display:flex;gap:10px;align-items:center}
 .icon-btn{width:45px;height:45px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);display:grid;place-items:center;transition:transform .15s ease, background .2s, border-color .2s;outline:none}
@@ -134,7 +137,6 @@ select{cursor:pointer}
 .menu-item:hover,.menu-item.active{border-color:var(--accent);background:var(--card2)}
 .menu-item span{opacity:.9}
 
-/* Print / PDF Styling */
 @media print {
   body { background: #fff !important; color: #000 !important; }
   header, .chips-wrapper, .drawer, .palette-overlay, footer, .tabs, .action-buttons, .icon-btn { display: none !important; }
@@ -154,7 +156,10 @@ footer a:hover{color:var(--accent)}
 <body>
 <div class="app">
 <header>
-  <div class="logo" id="logoBtn">tempo<span>.</span></div>
+  <div class="logo-container" id="logoBtn">
+    <div class="logo-main">tempo<span>.</span></div>
+    <div class="logo-badge">Utilitários</div>
+  </div>
   <div class="header-actions">
     <button class="icon-btn" id="searchBtn" aria-label="Pesquisar (Ctrl+K)" title="Pesquisar (Ctrl+K)">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -286,7 +291,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Feature 4: Histórico local recente
   function saveHistory(title, text) {
     try {
       let history = JSON.parse(storage.get('tempo_history', '[]'));
@@ -528,7 +532,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // Feature 1: Gerador de Cards Visuais em Canvas e Exportação PDF
   function generateShareCard(titleText, resultText) {
     const canvas = document.createElement('canvas');
     canvas.width = 800;
@@ -540,7 +543,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ctx.fillStyle = '#7c5cff';
     ctx.font = 'bold 24px system-ui, sans-serif';
-    ctx.fillText('tempo. — Utilitários', 60, 80);
+    ctx.fillText('tempo. (Utilitários)', 60, 80);
 
     ctx.fillStyle = '#9199a8';
     ctx.font = '18px system-ui, sans-serif';
@@ -549,7 +552,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = '#f7f8fb';
     ctx.font = 'bold 36px system-ui, sans-serif';
     
-    // Word wrap for result text
     const words = resultText.split(' ');
     let line = '';
     let y = 210;
@@ -837,7 +839,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window._wcInterval = setInterval(updateClocks, 1000);
   }
 
-  // Feature 2: Planejador de Reuniões Globais
   function renderMeeting() {
     const st = states.meeting;
     const isEn = currentLang === 'en-US';
