@@ -56,7 +56,6 @@ button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{
 .app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
 header{height:76px;display:flex;align-items:center;justify-content:space-between}
 
-/* Novo Redesign do Logo / Branding */
 .logo-container{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:opacity .2s, transform .15s ease}
 .logo-container:hover{opacity:0.85}
 .logo-container:active{transform:scale(0.97)}
@@ -532,36 +531,37 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
+  // Card em formato retrato (Vertical - 600x800) otimizado para mobile, WhatsApp e Stories
   function generateShareCard(titleText, resultText) {
     const canvas = document.createElement('canvas');
-    canvas.width = 800;
-    canvas.height = 450;
+    canvas.width = 600;
+    canvas.height = 800;
     const ctx = canvas.getContext('2d');
 
     ctx.fillStyle = '#0b0d12';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = '#7c5cff';
-    ctx.font = 'bold 24px system-ui, sans-serif';
-    ctx.fillText('tempo. (Utilitários)', 60, 80);
+    ctx.font = 'bold 22px system-ui, sans-serif';
+    ctx.fillText('tempo. (Utilitários)', 60, 90);
 
     ctx.fillStyle = '#9199a8';
-    ctx.font = '18px system-ui, sans-serif';
-    ctx.fillText(titleText.toUpperCase(), 60, 130);
+    ctx.font = '16px system-ui, sans-serif';
+    ctx.fillText(titleText.toUpperCase(), 60, 140);
 
     ctx.fillStyle = '#f7f8fb';
     ctx.font = 'bold 36px system-ui, sans-serif';
     
     const words = resultText.split(' ');
     let line = '';
-    let y = 210;
+    let y = 260;
     for(let n = 0; n < words.length; n++) {
       let testLine = line + words[n] + ' ';
       let metrics = ctx.measureText(testLine);
-      if (metrics.width > 680 && n > 0) {
+      if (metrics.width > 480 && n > 0) {
         ctx.fillText(line, 60, y);
         line = words[n] + ' ';
-        y += 50;
+        y += 55;
       } else {
         line = testLine;
       }
@@ -570,7 +570,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ctx.fillStyle = '#9199a8';
     ctx.font = '14px system-ui, sans-serif';
-    ctx.fillText('Calculado com tempo. — Sem anúncios e direto ao ponto.', 60, 390);
+    ctx.fillText('Calculado com tempo. — Sem anúncios.', 60, 720);
 
     const link = document.createElement('a');
     link.download = 'tempo-resultado.png';
