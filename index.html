@@ -43,16 +43,7 @@ body{
   color:var(--text);
   min-height:100vh;
   transition:background 0.3s, color 0.3s;
-  background: radial-gradient(circle at 50% -20%, var(--card2) 0, var(--bg) 60%);
-  background-size: 100% 200%;
-  animation: ambientGlow 15s ease-in-out infinite alternate;
-}
-@keyframes ambientGlow {
-  0% { background-position: 50% 0%; }
-  100% { background-position: 50% 100%; }
-}
-@media (prefers-reduced-motion: reduce) {
-  body { animation: none; background-position: 50% 0%; }
+  background: var(--bg);
 }
 button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer}
 .app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
@@ -506,108 +497,89 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // NOVO GERADOR DE CARD 9:16 (ESTILO DASHBOARD PROFISSIONAL)
+  // GERADOR DE CARD 9:16 ESTÁVEL, SÓBRIO E LIMPO (ESTILO AMBIENTE-DARK)
   function generateShareCard(toolKey, titleText, resultText, extraDetails = {}) {
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
     canvas.height = 1920;
     const ctx = canvas.getContext('2d');
 
-    const randomHue = Math.floor(Math.random() * 360);
-    const bg1Color = `hsl(${randomHue}, 50%, 12%)`;
-    const bg2Color = `hsl(${(randomHue + 45) % 360}, 40%, 6%)`;
-    const cardColor = `hsl(${randomHue}, 25%, 10%)`;
-    const accentColor = `hsl(${(randomHue + 55) % 360}, 85%, 65%)`;
-
-    // 1. Fundo Gradiente Orgânico com Glows Luminosos
-    const bgGrad = ctx.createRadialGradient(540, 400, 80, 540, 960, 1200);
-    bgGrad.addColorStop(0, bg1Color);
-    bgGrad.addColorStop(0.6, bg2Color);
-    bgGrad.addColorStop(1, '#050608');
+    // 1. Fundo Fiel ao Design do Site (#0b0d12) com Gradiente Discreto
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 1920);
+    bgGrad.addColorStop(0, '#131720');
+    bgGrad.addColorStop(1, '#0b0d12');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = accentColor;
-    ctx.globalAlpha = 0.15;
-    ctx.beginPath();
-    ctx.arc(900, 260, 220, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(180, 1680, 280, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.globalAlpha = 1.0;
-
-    // 2. Painel Principal Estilo Card de Vidro/Sólido
-    ctx.fillStyle = cardColor;
+    // 2. Painel Principal com o Mesmo Padrão Visual (#131720 com Borda #29313e)
+    ctx.fillStyle = '#131720';
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(60, 140, 960, 1640, 48);
+      ctx.roundRect(60, 140, 960, 1640, 24);
     } else {
       ctx.rect(60, 140, 960, 1640);
     }
     ctx.fill();
     ctx.strokeStyle = '#29313e';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Linha de Destaque Superior no Card
-    ctx.fillStyle = accentColor;
+    // Detalhe de Destaque Superior em Accent (#7c5cff)
+    ctx.fillStyle = '#7c5cff';
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(60, 140, 960, 8, [48, 48, 0, 0]);
+      ctx.roundRect(60, 140, 960, 6, [24, 24, 0, 0]);
     } else {
-      ctx.rect(60, 140, 960, 8);
+      ctx.rect(60, 140, 960, 6);
     }
     ctx.fill();
 
     // 3. Pílula de Categoria (Badge)
-    ctx.fillStyle = '#161c28';
+    ctx.fillStyle = '#1a202b';
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(120, 220, 560, 64, 32);
+      ctx.roundRect(110, 210, 420, 52, 26);
     } else {
-      ctx.rect(120, 220, 560, 64);
-    }
-    ctx.fill();
-    ctx.strokeStyle = accentColor;
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    ctx.fillStyle = accentColor;
-    ctx.font = '850 20px system-ui, -apple-system, sans-serif';
-    ctx.textAlign = 'left';
-    const toolBadgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "tempo.utilitários").toUpperCase();
-    ctx.fillText("⚡ " + toolBadgeText, 155, 262);
-
-    // 4. Título Principal
-    ctx.fillStyle = '#f7f8fb';
-    ctx.font = '800 44px system-ui, -apple-system, sans-serif';
-    ctx.fillText(titleText, 120, 360);
-
-    // 5. Caixa Hero de Resultado Principal
-    ctx.fillStyle = '#161c28';
-    ctx.beginPath();
-    if (ctx.roundRect) {
-      ctx.roundRect(120, 420, 840, 240, 28);
-    } else {
-      ctx.rect(120, 420, 840, 240);
+      ctx.rect(110, 210, 420, 52);
     }
     ctx.fill();
     ctx.strokeStyle = '#29313e';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    ctx.fillStyle = '#7c5cff';
+    ctx.font = '750 16px system-ui, -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    const toolBadgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "tempo.utilitários").toUpperCase();
+    ctx.fillText(toolBadgeText, 140, 243);
+
+    // 4. Título Principal da Ferramenta
+    ctx.fillStyle = '#f7f8fb';
+    ctx.font = '800 42px system-ui, -apple-system, sans-serif';
+    ctx.fillText(titleText, 110, 325);
+
+    // 5. Bloco Hero do Resultado Principal
+    ctx.fillStyle = '#0b0d12';
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(110, 380, 860, 220, 16);
+    } else {
+      ctx.rect(110, 380, 860, 220);
+    }
+    ctx.fill();
+    ctx.strokeStyle = '#29313e';
+    ctx.lineWidth = 1;
     ctx.stroke();
 
     ctx.fillStyle = '#9199a8';
-    ctx.font = '750 16px system-ui';
-    ctx.fillText("RESULTADO PRINCIPAL", 160, 475);
+    ctx.font = '750 14px system-ui';
+    ctx.fillText("RESULTADO DA ANÁLISE", 150, 435);
 
-    // Renderização do resultado com quebra de linha dinâmica
-    let fontSize = 54;
-    if (resultText.length > 18) fontSize = 44;
-    if (resultText.length > 35) fontSize = 34;
-    if (resultText.length > 55) fontSize = 26;
+    let fontSize = 48;
+    if (resultText.length > 20) fontSize = 38;
+    if (resultText.length > 40) fontSize = 30;
 
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#f7f8fb';
     ctx.font = `900 ${fontSize}px system-ui, -apple-system, sans-serif`;
 
     const words = resultText.split(' ');
@@ -616,7 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for(let n = 0; n < words.length; n++) {
       let testLine = line + words[n] + ' ';
       let metrics = ctx.measureText(testLine);
-      if (metrics.width > 760 && n > 0) {
+      if (metrics.width > 780 && n > 0) {
         lines.push(line);
         line = words[n] + ' ';
       } else {
@@ -625,79 +597,77 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     lines.push(line);
 
-    let resStartY = 560 - ((lines.length * (fontSize + 8)) / 2);
+    let resStartY = 500 - ((lines.length * (fontSize + 6)) / 2);
     lines.forEach((l, idx) => {
-      ctx.fillText(l.trim(), 160, resStartY + (idx * (fontSize + 8)));
+      ctx.fillText(l.trim(), 150, resStartY + (idx * (fontSize + 6)));
     });
 
-    // 6. Grid Estilo Dashboard para Mais Informações (extraDetails)
+    // 6. Seção de Informações Detalhadas (Mais Dados dos Utilitários)
     if (extraDetails && Object.keys(extraDetails).length > 0) {
-      ctx.fillStyle = '#161c28';
+      ctx.fillStyle = '#0b0d12';
       ctx.beginPath();
       if (ctx.roundRect) {
-        ctx.roundRect(120, 700, 840, 840, 28);
+        ctx.roundRect(110, 630, 860, 880, 16);
       } else {
-        ctx.rect(120, 700, 840, 840);
+        ctx.rect(110, 630, 860, 880);
       }
       ctx.fill();
       ctx.strokeStyle = '#29313e';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 1;
       ctx.stroke();
 
-      ctx.fillStyle = accentColor;
-      ctx.font = '800 18px system-ui, -apple-system, sans-serif';
-      ctx.fillText("📊 DETALHES COMPLETOS DA ANÁLISE", 160, 765);
+      ctx.fillStyle = '#f7f8fb';
+      ctx.font = '800 16px system-ui, -apple-system, sans-serif';
+      ctx.fillText("DETALHES DO UTILITÁRIO", 150, 695);
 
       let entries = Object.entries(extraDetails);
-      let detailY = 825;
+      let detailY = 755;
 
       entries.forEach(([key, val], i) => {
-        // Linha divisória interna para cada métrica
         if (i > 0) {
-          ctx.strokeStyle = '#222938';
+          ctx.strokeStyle = '#1a202b';
           ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.moveTo(160, detailY - 25);
-          ctx.lineTo(920, detailY - 25);
+          ctx.moveTo(150, detailY - 25);
+          ctx.lineTo(930, detailY - 25);
           ctx.stroke();
         }
 
         ctx.fillStyle = '#9199a8';
-        ctx.font = '750 15px system-ui';
-        ctx.fillText(key.toUpperCase(), 160, detailY);
+        ctx.font = '750 14px system-ui';
+        ctx.fillText(key.toUpperCase(), 150, detailY);
 
         ctx.fillStyle = '#f7f8fb';
-        ctx.font = '800 22px system-ui';
+        ctx.font = '800 18px system-ui';
         ctx.textAlign = 'right';
-        ctx.fillText(val, 920, detailY);
+        ctx.fillText(val, 930, detailY);
         ctx.textAlign = 'left';
 
-        detailY += 75;
+        detailY += 65;
       });
     }
 
-    // 7. Rodapé do Card
+    // 7. Rodapé Discreto e Elegante
     ctx.strokeStyle = '#29313e';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(120, 1610);
-    ctx.lineTo(960, 1610);
+    ctx.moveTo(110, 1660);
+    ctx.lineTo(970, 1660);
     ctx.stroke();
 
     ctx.fillStyle = '#9199a8';
-    ctx.font = '750 16px system-ui, -apple-system, sans-serif';
-    ctx.fillText("CRIADO E COMPARTILHADO VIA", 120, 1670);
+    ctx.font = '750 14px system-ui, -apple-system, sans-serif';
+    ctx.fillText("GERADO VIA", 110, 1715);
 
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = '850 32px system-ui, -apple-system, sans-serif';
-    ctx.fillText("tempo", 120, 1715);
+    ctx.font = '850 26px system-ui, -apple-system, sans-serif';
+    ctx.fillText("tempo", 225, 1716);
     const w = ctx.measureText('tempo').width;
-    ctx.fillStyle = accentColor;
-    ctx.fillText('.', 120 + w, 1715);
+    ctx.fillStyle = '#7c5cff';
+    ctx.fillText('.', 225 + w, 1716);
     ctx.fillStyle = '#f7f8fb';
-    ctx.fillText(' utilitários', 120 + w + 4, 1715);
+    ctx.fillText(' utilitários', 225 + w + 3, 1716);
 
-    // Exportação automática do arquivo PNG para Stories
     const link = document.createElement('a');
     link.download = `tempo-${toolKey}-story.png`;
     link.href = canvas.toDataURL('image/png');
@@ -716,7 +686,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveHistory(toolName || titleEl.textContent, plainText);
         extraActions = `
           <div class="action-buttons">
-            <button class="action-btn" id="shareCardBtn">🎨 Gerar Card Exclusivo 9:16 (Stories)</button>
+            <button class="action-btn" id="shareCardBtn">🎨 Gerar Card 9:16 (Stories)</button>
             ${['Horas Extras (CLT)', 'Rescisão Contratual (Acerto)'].includes(titleEl.textContent) ? '<button class="action-btn" id="printPdfBtn">🖨️ Exportar Relatório PDF</button>' : ''}
           </div>
         `;
