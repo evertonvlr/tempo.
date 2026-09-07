@@ -497,89 +497,101 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // GERADOR DE CARD 9:16 ESTÁVEL, SÓBRIO E LIMPO (ESTILO AMBIENTE-DARK)
+  // GERADOR DE CARD 9:16 REDESENHADO (DNA VISUAL SPOTIFY WRAPPED)
   function generateShareCard(toolKey, titleText, resultText, extraDetails = {}) {
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
     canvas.height = 1920;
     const ctx = canvas.getContext('2d');
 
-    // 1. Fundo Fiel ao Design do Site (#0b0d12) com Gradiente Discreto
-    const bgGrad = ctx.createLinearGradient(0, 0, 0, 1920);
-    bgGrad.addColorStop(0, '#131720');
-    bgGrad.addColorStop(1, '#0b0d12');
+    // 1. Fundo Gradiente Imersivo Estilo Wrapped
+    const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
+    bgGrad.addColorStop(0, '#121622');
+    bgGrad.addColorStop(0.5, '#0b0d12');
+    bgGrad.addColorStop(1, '#05070a');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. Painel Principal com o Mesmo Padrão Visual (#131720 com Borda #29313e)
-    ctx.fillStyle = '#131720';
+    // Efeitos de Luz de Fundo Neon Ambientais
+    ctx.fillStyle = '#7c5cff';
+    ctx.globalAlpha = 0.15;
+    ctx.beginPath();
+    ctx.arc(900, 250, 300, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#4ade80';
+    ctx.globalAlpha = 0.08;
+    ctx.beginPath();
+    ctx.arc(180, 1650, 350, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1.0;
+
+    // 2. Card Central com Bordas Sofisticadas
+    ctx.fillStyle = '#161b26';
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(60, 140, 960, 1640, 24);
+      ctx.roundRect(70, 110, 940, 1700, 36);
     } else {
-      ctx.rect(60, 140, 960, 1640);
+      ctx.rect(70, 110, 940, 1700);
+    }
+    ctx.fill();
+    ctx.strokeStyle = '#2f384d';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Barra Superior de Destaque Accent
+    ctx.fillStyle = '#7c5cff';
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(70, 110, 940, 12, [36, 36, 0, 0]);
+    } else {
+      ctx.rect(70, 110, 940, 12);
+    }
+    ctx.fill();
+
+    // 3. Pílula de Categoria (Badge Sólida Estilo Wrapped)
+    ctx.fillStyle = '#7c5cff';
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(130, 180, 440, 56, 28);
+    } else {
+      ctx.rect(130, 180, 440, 56);
+    }
+    ctx.fill();
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '850 18px system-ui, -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    const toolBadgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "tempo.utilitários").toUpperCase();
+    ctx.fillText("✦ " + toolBadgeText, 165, 217);
+
+    // 4. Título Principal em Tipografia Bold
+    ctx.fillStyle = '#f7f8fb';
+    ctx.font = '850 44px system-ui, -apple-system, sans-serif';
+    ctx.fillText(titleText, 130, 305);
+
+    // 5. Bloco Hero do Resultado Principal (Destaque Central)
+    ctx.fillStyle = '#0b0d12';
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(130, 360, 820, 240, 24);
+    } else {
+      ctx.rect(130, 360, 820, 240);
     }
     ctx.fill();
     ctx.strokeStyle = '#29313e';
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Detalhe de Destaque Superior em Accent (#7c5cff)
-    ctx.fillStyle = '#7c5cff';
-    ctx.beginPath();
-    if (ctx.roundRect) {
-      ctx.roundRect(60, 140, 960, 6, [24, 24, 0, 0]);
-    } else {
-      ctx.rect(60, 140, 960, 6);
-    }
-    ctx.fill();
-
-    // 3. Pílula de Categoria (Badge)
-    ctx.fillStyle = '#1a202b';
-    ctx.beginPath();
-    if (ctx.roundRect) {
-      ctx.roundRect(110, 210, 420, 52, 26);
-    } else {
-      ctx.rect(110, 210, 420, 52);
-    }
-    ctx.fill();
-    ctx.strokeStyle = '#29313e';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    ctx.fillStyle = '#7c5cff';
-    ctx.font = '750 16px system-ui, -apple-system, sans-serif';
-    ctx.textAlign = 'left';
-    const toolBadgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "tempo.utilitários").toUpperCase();
-    ctx.fillText(toolBadgeText, 140, 243);
-
-    // 4. Título Principal da Ferramenta
-    ctx.fillStyle = '#f7f8fb';
-    ctx.font = '800 42px system-ui, -apple-system, sans-serif';
-    ctx.fillText(titleText, 110, 325);
-
-    // 5. Bloco Hero do Resultado Principal
-    ctx.fillStyle = '#0b0d12';
-    ctx.beginPath();
-    if (ctx.roundRect) {
-      ctx.roundRect(110, 380, 860, 220, 16);
-    } else {
-      ctx.rect(110, 380, 860, 220);
-    }
-    ctx.fill();
-    ctx.strokeStyle = '#29313e';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
     ctx.fillStyle = '#9199a8';
-    ctx.font = '750 14px system-ui';
-    ctx.fillText("RESULTADO DA ANÁLISE", 150, 435);
+    ctx.font = '750 15px system-ui';
+    ctx.fillText("RESULTADO PRINCIPAL", 170, 415);
 
-    let fontSize = 48;
-    if (resultText.length > 20) fontSize = 38;
-    if (resultText.length > 40) fontSize = 30;
+    let fontSize = 52;
+    if (resultText.length > 18) fontSize = 42;
+    if (resultText.length > 35) fontSize = 32;
 
-    ctx.fillStyle = '#f7f8fb';
+    ctx.fillStyle = '#ffffff';
     ctx.font = `900 ${fontSize}px system-ui, -apple-system, sans-serif`;
 
     const words = resultText.split(' ');
@@ -588,7 +600,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for(let n = 0; n < words.length; n++) {
       let testLine = line + words[n] + ' ';
       let metrics = ctx.measureText(testLine);
-      if (metrics.width > 780 && n > 0) {
+      if (metrics.width > 720 && n > 0) {
         lines.push(line);
         line = words[n] + ' ';
       } else {
@@ -599,74 +611,74 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let resStartY = 500 - ((lines.length * (fontSize + 6)) / 2);
     lines.forEach((l, idx) => {
-      ctx.fillText(l.trim(), 150, resStartY + (idx * (fontSize + 6)));
+      ctx.fillText(l.trim(), 170, resStartY + (idx * (fontSize + 6)));
     });
 
-    // 6. Seção de Informações Detalhadas (Mais Dados dos Utilitários)
+    // 6. Bloco de Informações Detalhadas (Alinhado e Perfeitamente Estruturado)
     if (extraDetails && Object.keys(extraDetails).length > 0) {
       ctx.fillStyle = '#0b0d12';
       ctx.beginPath();
       if (ctx.roundRect) {
-        ctx.roundRect(110, 630, 860, 880, 16);
+        ctx.roundRect(130, 630, 820, 940, 24);
       } else {
-        ctx.rect(110, 630, 860, 880);
+        ctx.rect(130, 630, 820, 940);
       }
       ctx.fill();
       ctx.strokeStyle = '#29313e';
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 2;
       ctx.stroke();
 
-      ctx.fillStyle = '#f7f8fb';
-      ctx.font = '800 16px system-ui, -apple-system, sans-serif';
-      ctx.fillText("DETALHES DO UTILITÁRIO", 150, 695);
+      ctx.fillStyle = '#4ade80';
+      ctx.font = '800 17px system-ui, -apple-system, sans-serif';
+      ctx.fillText("📊 DETALHES COMPLETOS DA ANÁLISE", 170, 700);
 
       let entries = Object.entries(extraDetails);
-      let detailY = 755;
+      let detailY = 770;
 
       entries.forEach(([key, val], i) => {
         if (i > 0) {
-          ctx.strokeStyle = '#1a202b';
+          ctx.strokeStyle = '#1e2533';
           ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.moveTo(150, detailY - 25);
-          ctx.lineTo(930, detailY - 25);
+          ctx.moveTo(170, detailY - 28);
+          ctx.lineTo(910, detailY - 28);
           ctx.stroke();
         }
 
         ctx.fillStyle = '#9199a8';
-        ctx.font = '750 14px system-ui';
-        ctx.fillText(key.toUpperCase(), 150, detailY);
+        ctx.font = '750 15px system-ui';
+        ctx.fillText(key.toUpperCase(), 170, detailY);
 
         ctx.fillStyle = '#f7f8fb';
-        ctx.font = '800 18px system-ui';
+        ctx.font = '800 21px system-ui';
         ctx.textAlign = 'right';
-        ctx.fillText(val, 930, detailY);
+        ctx.fillText(val, 910, detailY);
         ctx.textAlign = 'left';
 
-        detailY += 65;
+        detailY += 75;
       });
     }
 
-    // 7. Rodapé Discreto e Elegante
+    // 7. Rodapé Editorial de Assinatura
     ctx.strokeStyle = '#29313e';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(110, 1660);
-    ctx.lineTo(970, 1660);
+    ctx.moveTo(130, 1650);
+    ctx.lineTo(950, 1650);
     ctx.stroke();
 
     ctx.fillStyle = '#9199a8';
-    ctx.font = '750 14px system-ui, -apple-system, sans-serif';
-    ctx.fillText("GERADO VIA", 110, 1715);
+    ctx.font = '750 15px system-ui, -apple-system, sans-serif';
+    ctx.fillText("COMPARTILHADO VIA", 130, 1710);
 
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = '850 26px system-ui, -apple-system, sans-serif';
-    ctx.fillText("tempo", 225, 1716);
+    ctx.font = '850 28px system-ui, -apple-system, sans-serif';
+    ctx.fillText("tempo", 340, 1711);
     const w = ctx.measureText('tempo').width;
     ctx.fillStyle = '#7c5cff';
-    ctx.fillText('.', 225 + w, 1716);
+    ctx.fillText('.', 340 + w, 1711);
     ctx.fillStyle = '#f7f8fb';
-    ctx.fillText(' utilitários', 225 + w + 3, 1716);
+    ctx.fillText(' utilitários', 340 + w + 4, 1711);
 
     const link = document.createElement('a');
     link.download = `tempo-${toolKey}-story.png`;
