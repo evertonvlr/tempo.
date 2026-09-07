@@ -371,7 +371,7 @@ document.addEventListener("DOMContentLoaded", () => {
         pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie o seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" },
         horoscope: { title: "Horóscopo Diário Completo", subtitle: "Previsões detalhadas de amor, trabalho, finanças e saúde para o seu signo.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" },
         age: { title: "Idade Exata", subtitle: "Descubra a sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" },
-        pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime o tempo de gestação e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" },
+        pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime o tempo de gestação e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Calculadora de Gestação" },
         countdown: { title: "Contagem Decrescente", subtitle: "Saiba quanto tempo falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Decrescente" },
         overtime: { title: "Trabalho Suplementar (Horas Extras)", subtitle: "Estime o valor da sua hora e o acréscimo por trabalho suplementar.", badge: "UTILITÁRIO LABORAL", menuName: "Trabalho Suplementar" },
         vacation13: { title: "Férias & Subsídio de Natal", subtitle: "Estime os valores proporcionais seguindo a legislação laboral.", badge: "UTILITÁRIO LABORAL", menuName: "Férias & Subsídios" },
@@ -505,62 +505,78 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // GERADOR DO CARD 9:16 (ESTILO SPOTIFY STORIES): Perfeito para postar nas redes sociais
+  // GERADOR DE CARD 9:16 (ESTILO RETROSPECTIVA / STORIES DO SPOTIFY)
   function generateShareCard(titleText, resultText) {
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
     canvas.height = 1920;
     const ctx = canvas.getContext('2d');
 
-    // 1. Fundo com gradiente radial imersivo
-    const bgGrad = ctx.createRadialGradient(540, 600, 100, 540, 960, 1000);
+    // 1. Fundo com gradiente imersivo de alto impacto visual
+    const bgGrad = ctx.createRadialGradient(540, 500, 100, 540, 960, 1100);
     bgGrad.addColorStop(0, '#1a202b');
-    bgGrad.addColorStop(1, '#0b0d12');
+    bgGrad.addColorStop(0.6, '#0b0d12');
+    bgGrad.addColorStop(1, '#050608');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. Elemento gráfico decorativo estilo "Wrapped" topo
-    ctx.strokeStyle = 'rgba(124, 92, 255, 0.25)';
-    ctx.lineWidth = 3;
+    // 2. Elementos gráficos geométricos flutuantes inspirados na referência Wrapped
+    ctx.fillStyle = 'rgba(124, 92, 255, 0.12)';
     ctx.beginPath();
-    ctx.moveTo(120, 240);
-    ctx.bezierCurveTo(360, 140, 720, 340, 960, 200);
-    ctx.stroke();
+    ctx.arc(880, 240, 180, 0, Math.PI * 2);
+    ctx.fill();
 
-    // 3. Card central flutuante vertical proporcional 9:16
+    ctx.fillStyle = 'rgba(74, 222, 128, 0.08)';
+    ctx.beginPath();
+    ctx.arc(200, 1680, 220, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 3. Bloco central flutuante principal (Estilo Card Spotify)
     ctx.fillStyle = '#131720';
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(80, 280, 920, 1360, 36);
+      ctx.roundRect(80, 260, 920, 1400, 40);
     } else {
-      ctx.rect(80, 280, 920, 1360);
+      ctx.rect(80, 260, 920, 1400);
     }
     ctx.fill();
     ctx.strokeStyle = '#29313e';
     ctx.lineWidth = 3;
     ctx.stroke();
 
-    // 4. Cabeçalho interno do card (Título da ferramenta)
-    ctx.fillStyle = '#9199a8';
-    ctx.font = '800 24px system-ui, -apple-system, sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText(titleText.toUpperCase(), 140, 380);
-
-    // 5. Selo / Ícone decorativo minimalista à direita do cabeçalho
-    ctx.fillStyle = 'rgba(124, 92, 255, 0.15)';
+    // 4. Bloco de destaque superior (Tag da Ferramenta)
+    ctx.fillStyle = '#1a202b';
     ctx.beginPath();
-    ctx.arc(920, 372, 32, 0, Math.PI * 2);
+    if (ctx.roundRect) {
+      ctx.roundRect(140, 340, 440, 60, 30);
+    } else {
+      ctx.rect(140, 340, 440, 60);
+    }
+    ctx.fill();
+    ctx.strokeStyle = '#7c5cff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = '#7c5cff';
+    ctx.font = '850 20px system-ui, -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(titleText.toUpperCase(), 175, 377);
+
+    // 5. Ícone de destaque brilhante (Estilo selo)
+    ctx.fillStyle = 'rgba(124, 92, 255, 0.2)';
+    ctx.beginPath();
+    ctx.arc(900, 370, 36, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#7c5cff';
-    ctx.font = 'bold 24px system-ui';
+    ctx.font = 'bold 26px system-ui';
     ctx.textAlign = 'center';
-    ctx.fillText('✨', 920, 381);
+    ctx.fillText('✨', 900, 379);
 
-    // 6. RESULTADO GIGANTE COM ESCALA DINÂMICA PARA VERTICAL
-    let fontSize = 92;
-    if (resultText.length > 15) fontSize = 72;
-    if (resultText.length > 30) fontSize = 52;
-    if (resultText.length > 50) fontSize = 38;
+    // 6. RESULTADO PRINCIPAL COM ESCALA DINÂMICA INTELIGENTE VERTICAL
+    let fontSize = 88;
+    if (resultText.length > 15) fontSize = 68;
+    if (resultText.length > 30) fontSize = 48;
+    if (resultText.length > 50) fontSize = 34;
 
     ctx.fillStyle = '#f7f8fb';
     ctx.font = `900 ${fontSize}px system-ui, -apple-system, sans-serif`;
@@ -572,7 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for(let n = 0; n < words.length; n++) {
       let testLine = line + words[n] + ' ';
       let metrics = ctx.measureText(testLine);
-      if (metrics.width > 780 && n > 0) {
+      if (metrics.width > 760 && n > 0) {
         lines.push(line);
         line = words[n] + ' ';
       } else {
@@ -581,32 +597,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     lines.push(line);
 
-    let startY = 960 - ((lines.length * (fontSize + 18)) / 2);
+    let startY = 980 - ((lines.length * (fontSize + 16)) / 2);
     lines.forEach((l, idx) => {
-      ctx.fillText(l.trim(), 140, startY + (idx * (fontSize + 18)));
+      ctx.fillText(l.trim(), 140, startY + (idx * (fontSize + 16)));
     });
 
     // 7. Linha divisória interna elegante
     ctx.strokeStyle = '#29313e';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(140, 1480);
-    ctx.lineTo(940, 1480);
+    ctx.moveTo(140, 1500);
+    ctx.lineTo(940, 1500);
     ctx.stroke();
 
-    // 8. Rodapé do Card: "tempo" com ponto roxo e "utilitários"
+    // 8. Rodapé do Card com identidade oficial unificada ("tempo" e "utilitários")
     ctx.fillStyle = '#9199a8';
-    ctx.font = '750 18px system-ui, -apple-system, sans-serif';
-    ctx.fillText('GERADO EM', 140, 1540);
+    ctx.font = '750 16px system-ui, -apple-system, sans-serif';
+    ctx.fillText('COMPARTILHADO VIA', 140, 1555);
 
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = '850 32px system-ui, -apple-system, sans-serif';
-    ctx.fillText('tempo', 140, 1585);
+    ctx.font = '850 30px system-ui, -apple-system, sans-serif';
+    ctx.fillText('tempo', 140, 1598);
     const w = ctx.measureText('tempo').width;
     ctx.fillStyle = '#7c5cff';
-    ctx.fillText('.', 140 + w, 1585);
+    ctx.fillText('.', 140 + w, 1598);
     ctx.fillStyle = '#f7f8fb';
-    ctx.fillText(' utilitários', 140 + w + 6, 1585);
+    ctx.fillText(' utilitários', 140 + w + 4, 1598);
 
     const link = document.createElement('a');
     link.download = 'tempo-utilitarios-story-9-16.png';
