@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" id="metaThemeColor" content="#0b0d12">
 <meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, reuniões globais, esporte, foco e horóscopo diário completo. Sem anúncios e direto ao ponto.">
-<meta property="og:title" content="tempo.utility">
+<meta property="og:title" content="tempo.utilitários — Calculadoras Rápidas">
 <meta property="og:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças e reuniões globais.">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://tempo.utilitarios/og-cover.png">
 
 <!-- PWA & Mobile Meta Tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -63,6 +64,10 @@ h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bot
 .hero p{color:var(--muted);font-size:15px;line-height:1.6}
 
 .panel{width:min(100%,760px);margin:auto;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:23px;box-shadow:0 25px 80px rgba(0,0,0,.15);transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform}
+
+/* Bloco Nativo para Monetização (Anúncio Sutil) */
+.ad-container{width:min(100%,760px);margin:20px auto 0;background:var(--card);border:1px dashed var(--line);border-radius:18px;padding:14px;text-align:center;color:var(--muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px}
+.ad-tag{background:var(--card2);color:var(--accent);padding:2px 6px;border-radius:6px;font-size:9px;letter-spacing:.5px}
 
 .tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:14px;margin-bottom:23px;border:1px solid var(--line)}
 .tab{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 8px;border-radius:10px;font-weight:750;font-size:13px;transition:.2s}
@@ -120,7 +125,7 @@ select{cursor:pointer}
 
 @media print {
   body { background: #fff !important; color: #000 !important; }
-  header, .chips-wrapper, .drawer, .modal-overlay, footer, .tabs, .action-buttons, .icon-btn { display: none !important; }
+  header, .chips-wrapper, .drawer, .modal-overlay, .ad-container, footer, .tabs, .action-buttons, .icon-btn { display: none !important; }
   .panel { border: none !important; box-shadow: none !important; padding: 0 !important; width: 100% !important; background: #fff !important; color: #000 !important; }
   input, select { border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; }
   .result { background: #f9f9f9 !important; border: 1px solid #ccc !important; color: #000 !important; }
@@ -162,6 +167,12 @@ footer a:hover{color:var(--accent)}
   <p id="subtitle">Descubra exatamente quanto tempo existe entre duas datas.</p>
 </section>
 <section class="panel" id="tool"></section>
+
+<!-- Bloco de Monetização Nativo (Ads Adaptativo Claro/Escuro) -->
+<div class="ad-container">
+  <span class="ad-tag">PATROCINADO</span>
+  <span>Espaço reservado para parceiros — Apoie o projeto sem anúncios intrusivos.</span>
+</div>
 </main>
 <footer id="footerText">Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a></footer>
 </div>
@@ -210,6 +221,12 @@ footer a:hover{color:var(--accent)}
         <option value="pt-BR">🇧🇷 Português (Brasil)</option>
         <option value="pt-PT">🇵🇹 Português (Portugal)</option>
       </select>
+    </div>
+
+    <!-- Histórico Recente de Consultas -->
+    <div class="menu-group" id="groupHistory">HISTÓRICO RECENTE</div>
+    <div id="drawerHistoryList" style="display:flex; flex-direction:column; gap:6px; margin-bottom:14px;">
+      <div style="font-size:12px; color:var(--muted); padding:4px;">Nenhum cálculo recente.</div>
     </div>
 
     <div class="menu-group" id="groupEssential">ESSENCIAIS</div>
@@ -283,7 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const $ = s => document.querySelector(s);
   const $$ = s => document.querySelectorAll(s);
   
-  const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), styleModal = $("#styleModal"), cancelStyleBtn = $("#cancelStyleBtn"), confirmStyleBtn = $("#confirmStyleBtn"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport"), quickChips = $("#quickChips"), greetingEl = $("#greeting");
+  const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), styleModal = $("#styleModal"), cancelStyleBtn = $("#cancelStyleBtn"), confirmStyleBtn = $("#confirmStyleBtn"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupHistory = $("#groupHistory"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport"), quickChips = $("#quickChips"), greetingEl = $("#greeting"), drawerHistoryList = $("#drawerHistoryList");
 
   function haptic() {
     try { if (navigator.vibrate) navigator.vibrate(20); } catch(e){}
@@ -298,14 +315,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  // PWA Service Worker Registration
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
+
   function saveHistory(title, text) {
     try {
       let history = JSON.parse(storage.get('tempo_history', '[]'));
-      history.unshift({ title, text, date: new Date().toLocaleDateString() });
-      if (history.length > 10) history.pop();
+      history.unshift({ title, text, date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+      if (history.length > 8) history.pop();
       storage.set('tempo_history', JSON.stringify(history));
+      renderDrawerHistory();
     } catch(e){}
   }
+
+  function renderDrawerHistory() {
+    try {
+      let history = JSON.parse(storage.get('tempo_history', '[]'));
+      if (history.length === 0) {
+        drawerHistoryList.innerHTML = `<div style="font-size:12px; color:var(--muted); padding:4px;">Nenhum cálculo recente.</div>`;
+        return;
+      }
+      drawerHistoryList.innerHTML = history.map(item => `
+        <div style="background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:10px; font-size:12px;">
+          <div style="display:flex; justify-content:space-between; color:var(--muted); font-size:10px; font-weight:700; margin-bottom:2px;">
+            <span>${escapeHTML(item.title)}</span>
+            <span>${item.date}</span>
+          </div>
+          <div style="font-weight:800; color:var(--text);">${escapeHTML(item.text)}</div>
+        </div>
+      `).join('');
+    } catch(e) {}
+  }
+  renderDrawerHistory();
 
   function escapeHTML(str) {
     return str.replace(/[&<>'"]/g, tag => ({
@@ -319,7 +364,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return adjusted.toISOString().slice(0, 10);
   };
 
-  const states = {
+  // Persistência automática de estados
+  const defaultStates = {
     date: { mode: "diff", d1: getLocalISODate(), d2: getLocalISODate(), base: getLocalISODate(), days: 30 },
     time: { t1: "08:00", t2: "17:40" },
     business: { mode: "diff", b1: getLocalISODate(), b2: (() => { const d = new Date(); d.setDate(d.getDate() + 15); return getLocalISODate(d); })(), base: getLocalISODate(), days: 10 },
@@ -336,12 +382,26 @@ document.addEventListener("DOMContentLoaded", () => {
     running: { dist: 10, time: 50 }
   };
 
+  function getStoredState(toolKey) {
+    try {
+      const saved = storage.get('tempo_state_' + toolKey, null);
+      if (saved) return JSON.parse(saved);
+    } catch(e){}
+    return defaultStates[toolKey];
+  }
+
+  function saveStoredState(toolKey, stateObj) {
+    try {
+      storage.set('tempo_state_' + toolKey, JSON.stringify(stateObj));
+    } catch(e){}
+  }
+
   const i18n = {
     'pt-BR': {
       page: "tempo utilitários — Utilitários",
       footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>',
       menu: "tempo utilitários", langLabel: "IDIOMA / REGIÃO",
-      g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHISTAS & FINANÇAS", g4: "ESPORTE & PERFORMANCE",
+      gh: "HISTÓRICO RECENTE", g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHISTAS & FINANÇAS", g4: "ESPORTE & PERFORMANCE",
       copyHint: "Clique no cartão para copiar", copied: "✓ Copiado!",
       disclaimer: "* Valores estimados para fins orientativos. Consulte o RH ou um profissional contábil.",
       tools: {
@@ -480,7 +540,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // GERADOR DE CARD 9:16 - 1 MILHÃO DE TONS, RUÍDO, VINHETA, ÍCONES CONTEXTUAIS E CTA ESTRATÉGICA
   function executeGenerateShareCard(toolKey, titleText, resultText, extraDetails = {}, styleMood = 'sofisticado') {
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
@@ -488,7 +547,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const ctx = canvas.getContext('2d');
 
     const randomHue = Math.floor(Math.random() * 360);
-    
     let baseBgColor, cardBgColor, panelBgColor, borderColor, accentColor;
 
     if (styleMood === 'glass') {
@@ -504,7 +562,6 @@ document.addEventListener("DOMContentLoaded", () => {
       borderColor = `#3f3f46`;
       accentColor = `#f4f4f5`;
     } else {
-      // Sofisticado (padrão)
       baseBgColor = `hsl(${randomHue}, 35% , 7%)`;
       cardBgColor = `hsl(${randomHue}, 30% , 11%)`;
       panelBgColor = `hsl(${randomHue}, 25% , 15%)`;
@@ -512,11 +569,9 @@ document.addEventListener("DOMContentLoaded", () => {
       accentColor = `hsl(${(randomHue + 45) % 360}, 85%, 68%)`;
     }
 
-    // 1. Fundo Base
     ctx.fillStyle = baseBgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. Orbs / Gradientes de iluminação ambiente
     const g1 = ctx.createRadialGradient(150, 150, 20, 150, 150, 600);
     g1.addColorStop(0, `hsla(${randomHue}, 70%, 50%, 0.12)`);
     g1.addColorStop(1, 'transparent');
@@ -529,7 +584,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = g2;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 3. Textura de Ruído (Grain) Editorial sutil
     const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const data = imgData.data;
     for (let i = 0; i < data.length; i += 16) {
@@ -540,14 +594,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     ctx.putImageData(imgData, 0, 0);
 
-    // 4. Vinheta nas Bordas
     const vignette = ctx.createRadialGradient(540, 960, 400, 540, 960, 1100);
     vignette.addColorStop(0, 'transparent');
     vignette.addColorStop(1, 'rgba(0, 0, 0, 0.45)');
     ctx.fillStyle = vignette;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 5. Cartão Central Principal
     const cardX = 90;
     const cardY = 140;
     const cardW = 900;
@@ -559,11 +611,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ctx.fillStyle = cardBgColor;
     ctx.beginPath();
-    if (ctx.roundRect) {
-      ctx.roundRect(cardX, cardY, cardW, cardH, 32);
-    } else {
-      ctx.rect(cardX, cardY, cardW, cardH);
-    }
+    if (ctx.roundRect) ctx.roundRect(cardX, cardY, cardW, cardH, 32);
+    else ctx.rect(cardX, cardY, cardW, cardH);
     ctx.fill();
     ctx.shadowColor = 'transparent';
 
@@ -571,7 +620,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // 6. Pill Badge no Topo com Ícone Contextual Desenhado
     const badgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "UTILITÁRIO").toUpperCase();
     ctx.font = '700 16px system-ui, sans-serif';
     const badgeMetrics = ctx.measureText(badgeText);
@@ -582,18 +630,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ctx.fillStyle = panelBgColor;
     ctx.beginPath();
-    if (ctx.roundRect) {
-      ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 22);
-    } else {
-      ctx.rect(badgeX, badgeY, badgeW, badgeH);
-    }
+    if (ctx.roundRect) ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 22);
+    else ctx.rect(badgeX, badgeY, badgeW, badgeH);
     ctx.fill();
 
     ctx.strokeStyle = borderColor;
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    // Desenha ícone contextual vetorial dentro do badge
     ctx.save();
     ctx.translate(badgeX + 22, badgeY + 22);
     ctx.strokeStyle = accentColor;
@@ -603,57 +647,21 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = 'none';
 
     if (toolKey.includes('overtime') || toolKey.includes('vacation') || toolKey.includes('rescision')) {
-      // Símbolo de Cifrão / Dinheiro
-      ctx.beginPath();
-      ctx.arc(0, 0, 8, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(0, -11); ctx.lineTo(0, 11);
-      ctx.stroke();
-    } else if (toolKey.includes('date') || toolKey.includes('business') || toolKey.includes('countdown')) {
-      // Símbolo de Calendário
-      ctx.strokeRect(-8, -8, 16, 16);
-      ctx.beginPath();
-      ctx.moveTo(-8, -3); ctx.lineTo(8, -3);
-      ctx.moveTo(-4, -10); ctx.lineTo(-4, -6);
-      ctx.moveTo(4, -10); ctx.lineTo(4, -6);
-      ctx.stroke();
-    } else if (toolKey.includes('time') || toolKey.includes('worldclock') || toolKey.includes('meeting')) {
-      // Símbolo de Relógio
-      ctx.beginPath();
-      ctx.arc(0, 0, 8, 0, Math.PI * 2);
-      ctx.moveTo(0, 0); ctx.lineTo(0, -4);
-      ctx.moveTo(0, 0); ctx.lineTo(4, 2);
-      ctx.stroke();
-    } else if (toolKey.includes('pomodoro')) {
-      // Símbolo de Cronômetro
-      ctx.beginPath();
-      ctx.arc(0, 1, 7, 0, Math.PI * 2);
-      ctx.moveTo(-3, -9); ctx.lineTo(3, -9);
-      ctx.moveTo(0, -9); ctx.lineTo(0, -6);
-      ctx.stroke();
-    } else if (toolKey.includes('running')) {
-      // Símbolo de Raio / Esporte
-      ctx.beginPath();
-      ctx.moveTo(2, -9); ctx.lineTo(-4, 0); ctx.lineTo(2, 0); ctx.lineTo(-2, 9);
-      ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, -11); ctx.lineTo(0, 11); ctx.stroke();
     } else {
-      // Símbolo de Estrela / Horóscopo / Pessoal
-      ctx.beginPath();
-      ctx.moveTo(0, -8); ctx.lineTo(2, -2); ctx.lineTo(8, 0); ctx.lineTo(2, 2); ctx.lineTo(0, 8); ctx.lineTo(-2, 2); ctx.lineTo(-8, 0); ctx.lineTo(-2, -2); ctx.closePath();
-      ctx.stroke();
+      ctx.strokeRect(-8, -8, 16, 16);
+      ctx.beginPath(); ctx.moveTo(-8, -3); ctx.lineTo(8, -3); ctx.stroke();
     }
     ctx.restore();
 
     ctx.fillStyle = '#f7f8fb';
     ctx.fillText(badgeText, badgeX + 46, badgeY + 27);
 
-    // 7. Título da Ferramenta
     ctx.fillStyle = '#f7f8fb';
     ctx.font = '700 42px system-ui, sans-serif';
     ctx.fillText(titleText, cardX + 70, badgeY + 110);
 
-    // 8. Resultado Principal (Gigante)
     let resFontSize = 96;
     if (resultText.length > 15) resFontSize = 76;
     if (resultText.length > 25) resFontSize = 56;
@@ -680,7 +688,6 @@ document.addEventListener("DOMContentLoaded", () => {
       resStartY += resFontSize + 15;
     });
 
-    // 9. Bloco de Detalhes Expandido (Mais Informações)
     if (extraDetails && Object.keys(extraDetails).length > 0) {
       const boxX = cardX + 70;
       const boxY = cardY + cardH - 620;
@@ -689,14 +696,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       ctx.fillStyle = panelBgColor;
       ctx.beginPath();
-      if (ctx.roundRect) {
-        ctx.roundRect(boxX, boxY, boxW, boxH, 20);
-      } else {
-        ctx.rect(boxX, boxY, boxW, boxH);
-      }
+      if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 20);
+      else ctx.rect(boxX, boxY, boxW, boxH);
       ctx.fill();
 
-      // Título "Detalhes da Análise"
       ctx.fillStyle = accentColor;
       ctx.font = '750 13px system-ui, sans-serif';
       ctx.fillText("DETALHES DA ANÁLISE & MÉTRICAS", boxX + 35, boxY + 40);
@@ -729,7 +732,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // 10. Rodapé com CTA Estratégica
     ctx.strokeStyle = borderColor;
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -745,7 +747,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.font = '800 16px system-ui, sans-serif';
     ctx.fillText("👉 Calcule o seu em tempo.utilitarios", cardX + 70, cardY + cardH - 42);
 
-    // Download do arquivo gerado
     const link = document.createElement('a');
     link.download = `tempo-${toolKey}-story.png`;
     link.href = canvas.toDataURL('image/png');
@@ -863,7 +864,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function renderDate() {
-    const st = states.date;
+    const st = getStoredState('date');
     tool.innerHTML = `
       <div class="tabs">
         <button class="tab ${st.mode === "diff" ? "active" : ""}" data-mode="diff">Diferença</button>
@@ -871,11 +872,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <button class="tab ${st.mode === "sub" ? "active" : ""}" data-mode="sub">Subtrair</button>
       </div>
       <div id="dateArea"></div>`;
-    renderDateArea();
+    renderDateArea(st);
   }
 
-  function renderDateArea() {
-    const st = states.date;
+  function renderDateArea(st) {
     const area = $("#dateArea");
     if (st.mode === "diff") {
       area.innerHTML = `
@@ -888,6 +888,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const calculate = () => {
         st.d1 = $("#date1").value;
         st.d2 = $("#date2").value;
+        saveStoredState('date', st);
         const a = dateFromInput("#date1"), b = dateFromInput("#date2");
         if(!a || !b) return showResult("Selecione as duas datas.", "", true);
         const x = calendarDifference(a, b);
@@ -908,6 +909,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const calculate = () => {
         st.base = $("#baseDate").value;
         st.days = $("#days").value;
+        saveStoredState('date', st);
         const base = dateFromInput("#baseDate"), n = Number($("#days").value);
         if(!base || $("#days").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe uma data e quantidade válida.", "", true);
         const d = new Date(base);
@@ -919,11 +921,11 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       $("#baseDate").oninput = calculate; $("#days").oninput = calculate; calculate();
     }
-    $$(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; renderDate(); });
+    $$(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; saveStoredState('date', st); renderDate(); });
   }
 
   function renderTime() {
-    const st = states.time;
+    const st = getStoredState('time');
     tool.innerHTML = `
       <div class="grid">
         <div class="field"><label for="time1">HORÁRIO INICIAL</label><input type="time" id="time1" value="${st.t1}"></div>
@@ -934,6 +936,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const calculate = () => {
       st.t1 = $("#time1").value;
       st.t2 = $("#time2").value;
+      saveStoredState('time', st);
       const a = st.t1, b = st.t2;
       if(!a || !b) return showResult("Informe os dois horários.", "", true);
       let [ah, am] = a.split(":").map(Number), [bh, bm] = b.split(":").map(Number);
@@ -949,7 +952,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderBusiness() {
-    const st = states.business;
+    const st = getStoredState('business');
     tool.innerHTML = `
       <div class="tabs">
         <button class="tab ${st.mode === "diff" ? "active" : ""}" data-mode="diff">Diferença</button>
@@ -957,11 +960,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <button class="tab ${st.mode === "sub" ? "active" : ""}" data-mode="sub">Subtrair</button>
       </div>
       <div id="businessArea"></div>`;
-    renderBusinessArea();
+    renderBusinessArea(st);
   }
 
-  function renderBusinessArea() {
-    const st = states.business;
+  function renderBusinessArea(st) {
     const area = $("#businessArea");
     if (st.mode === "diff") {
       area.innerHTML = `
@@ -974,6 +976,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const calculate = () => {
         st.b1 = $("#bDate1").value;
         st.b2 = $("#bDate2").value;
+        saveStoredState('business', st);
         const a = dateFromInput("#bDate1"), b = dateFromInput("#bDate2");
         if(!a || !b) return showResult("Selecione as duas datas.", "", true);
         const total = businessDaysDifference(a, b);
@@ -993,6 +996,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const calculate = () => {
         st.base = $("#bBaseDate").value;
         st.days = $("#bDays").value;
+        saveStoredState('business', st);
         const base = dateFromInput("#bBaseDate"), n = Number($("#bDays").value);
         if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe data e quantidade.", "", true);
         const d = addBusinessDays(base, n, st.mode === "add");
@@ -1002,7 +1006,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       $("#bBaseDate").oninput = calculate; $("#bDays").oninput = calculate; calculate();
     }
-    $$(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; renderBusiness(); });
+    $$(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; saveStoredState('business', st); renderBusiness(); });
   }
 
   function renderWorldClock() {
@@ -1052,7 +1056,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderMeeting() {
-    const st = states.meeting;
+    const st = getStoredState('meeting');
     tool.innerHTML = `
       <div class="field" style="margin-bottom: 20px;">
         <label for="meetHour">SELECIONE A HORA BASE (0 - 23)</label>
@@ -1081,6 +1085,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateMeetingPlanner() {
       const h = Number(rangeInput.value);
       st.hour = h;
+      saveStoredState('meeting', st);
       displayEl.textContent = `${h.toString().padStart(2, '0')}:00`;
 
       const refDate = new Date();
@@ -1128,12 +1133,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let audioCtx = null;
   function playAlarm() {
     try {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
       const notes = [587.33, 659.25, 783.99];
       notes.forEach((freq, idx) => {
         const osc = audioCtx.createOscillator();
@@ -1142,13 +1143,10 @@ document.addEventListener("DOMContentLoaded", () => {
         osc.frequency.value = freq;
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-        
         const startTime = audioCtx.currentTime + (idx * 0.3);
         const duration = 0.25;
-        
         gain.gain.setValueAtTime(0.2, startTime);
         gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-        
         osc.start(startTime);
         osc.stop(startTime + duration);
       });
@@ -1156,7 +1154,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderPomodoro() {
-    const st = states.pomodoro;
+    const st = getStoredState('pomodoro');
     tool.innerHTML = `
       <div class="tabs">
         <button class="tab ${st.mode === 'work' ? 'active' : ''}" data-pmode="work">Foco (25m)</button>
@@ -1198,31 +1196,28 @@ document.addEventListener("DOMContentLoaded", () => {
         window._pomodoroInterval = null;
       }
       st.running = false;
+      saveStoredState('pomodoro', st);
     }
 
     function startTimer(isResume = false) {
       if (!isResume) {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
         st.running = true;
       }
+      saveStoredState('pomodoro', st);
 
       const tb = $("#pomoToggleBtn");
       const stEl = $("#pomoStatus");
       if(tb) tb.textContent = 'Pausar';
       if(stEl) stEl.textContent = 'Sessão em andamento...';
 
-      if (window._pomodoroInterval) {
-        clearInterval(window._pomodoroInterval);
-      }
+      if (window._pomodoroInterval) clearInterval(window._pomodoroInterval);
 
       window._pomodoroInterval = setInterval(() => {
         if (st.timeLeft > 0) {
           st.timeLeft--;
+          saveStoredState('pomodoro', st);
           updateDisplay();
         } else {
           stopTimer();
@@ -1236,9 +1231,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 1000);
     }
 
-    if (st.running) {
-      startTimer(true);
-    }
+    if (st.running) startTimer(true);
 
     $("#pomoToggleBtn").onclick = () => {
       haptic();
@@ -1255,6 +1248,7 @@ document.addEventListener("DOMContentLoaded", () => {
       haptic();
       stopTimer();
       st.timeLeft = getSecondsForMode(st.mode);
+      saveStoredState('pomodoro', st);
       updateDisplay();
       $("#pomoToggleBtn").textContent = 'Iniciar';
       $("#pomoStatus").textContent = 'Cronômetro reiniciado.';
@@ -1266,13 +1260,14 @@ document.addEventListener("DOMContentLoaded", () => {
         stopTimer();
         st.mode = tab.dataset.pmode;
         st.timeLeft = getSecondsForMode(st.mode);
+        saveStoredState('pomodoro', st);
         renderPomodoro();
       };
     });
   }
 
   function renderHoroscope() {
-    const st = states.horoscope;
+    const st = getStoredState('horoscope');
     const signs = [
       { id: 'aries', name: 'Áries', symbol: '♈' },
       { id: 'taurus', name: 'Touro', symbol: '♉' },
@@ -1335,6 +1330,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateHoroscope() {
       st.sign = selectEl.value;
+      saveStoredState('horoscope', st);
       const signObj = signs.find(s => s.id === st.sign);
       const todayEpochDays = Math.floor(Date.now() / 86400000);
       const signIndex = signs.findIndex(s => s.id === st.sign);
@@ -1401,7 +1397,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderAge() {
-    const st = states.age;
+    const st = getStoredState('age');
     tool.innerHTML = `
       <div class="grid">
         <div class="field"><label for="birthDate">DATA DE NASCIMENTO</label><input type="date" id="birthDate" value="${st.birth}"></div>
@@ -1412,6 +1408,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const calculate = () => {
       st.birth = $("#birthDate").value;
       st.ref = $("#refDate").value;
+      saveStoredState('age', st);
       const birth = dateFromInput("#birthDate"), ref = dateFromInput("#refDate");
       if(!birth || !ref) return showResult("Selecione as datas.", "", true);
       if(birth > ref) return showResult("Data futura inválida.", "", true);
@@ -1425,7 +1422,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderPregnancy() {
-    const st = states.pregnancy;
+    const st = getStoredState('pregnancy');
     tool.innerHTML = `
       <div class="grid" style="grid-template-columns:1fr">
         <div class="field"><label for="dumDate">DATA DA ÚLTIMA MENSTRUAÇÃO (DUM)</label><input type="date" id="dumDate" value="${st.dum}"></div>
@@ -1434,6 +1431,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
     const calculate = () => {
       st.dum = $("#dumDate").value;
+      saveStoredState('pregnancy', st);
       const dum = dateFromInput("#dumDate");
       if(!dum) return showResult("Informe a DUM.", "", true);
       
@@ -1454,18 +1452,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderCountdown() {
-    const st = states.countdown;
+    const st = getStoredState('countdown');
     tool.innerHTML = `
       <div class="tabs">
         <button class="tab ${st.mode === "down" ? "active" : ""}" data-mode="down">Contagem Regressiva</button>
         <button class="tab ${st.mode === "passed" ? "active" : ""}" data-mode="passed">Tempo Passado</button>
       </div>
       <div id="countArea"></div>`;
-    renderCountArea();
+    renderCountArea(st);
   }
 
-  function renderCountArea() {
-    const st = states.countdown;
+  function renderCountArea(st) {
     const area = $("#countArea");
     area.innerHTML = `
       <div class="grid">
@@ -1477,6 +1474,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const calculate = () => {
       st.name = $("#evName").value;
       st.date = $("#evDate").value;
+      saveStoredState('countdown', st);
 
       const rawName = st.name || "Evento";
       const name = escapeHTML(rawName);
@@ -1500,11 +1498,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
     $("#evName").oninput = calculate; $("#evDate").oninput = calculate; calculate();
-    $$(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; renderCountdown(); });
+    $$(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; saveStoredState('countdown', st); renderCountdown(); });
   }
 
   function renderOvertime() {
-    const st = states.overtime;
+    const st = getStoredState('overtime');
     tool.innerHTML = `
       <div class="grid">
         <div class="field"><label for="sal">SALÁRIO MENSAL (R$)</label><input type="number" id="sal" step="0.01" min="0" value="${st.sal}"></div>
@@ -1526,6 +1524,7 @@ document.addEventListener("DOMContentLoaded", () => {
       st.jor = Number($("#jor").value);
       st.qtd = Number($("#qtd").value);
       st.rate = Number($("#rate").value);
+      saveStoredState('overtime', st);
       
       const sal = st.sal, jor = st.jor, qtd = st.qtd, rate = st.rate;
       if(!sal || sal<=0 || !jor || jor<=0 || isNaN(qtd) || qtd<0) return showResult("Valores inválidos.", "", true);
@@ -1545,15 +1544,15 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderVacation13() {
     tool.innerHTML = `
       <div class="tabs">
-        <button class="tab ${states.vacation13.mode === "13" ? "active" : ""}" data-mode="13">13º Salário</button>
-        <button class="tab ${states.vacation13.mode === "vacation" ? "active" : ""}" data-mode="vacation">Férias + 1/3</button>
+        <button class="tab ${getStoredState('vacation13').mode === "13" ? "active" : ""}" data-mode="13">13º Salário</button>
+        <button class="tab ${getStoredState('vacation13').mode === "vacation" ? "active" : ""}" data-mode="vacation">Férias + 1/3</button>
       </div>
       <div id="vArea"></div>`;
     renderVArea();
   }
 
   function renderVArea() {
-    const st = states.vacation13;
+    const st = getStoredState('vacation13');
     const area = $("#vArea");
     if(st.mode === "13"){
       area.innerHTML = `
@@ -1566,6 +1565,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const calculate = () => {
         st.sal = Number($("#vSal").value);
         st.meses = Number($("#vMeses").value);
+        saveStoredState('vacation13', st);
         const sal = st.sal, meses = st.meses;
         if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult("Valores inválidos.", "", true);
         const val = (sal / 12) * meses;
@@ -1589,6 +1589,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const calculate = () => {
         st.sal = Number($("#vSal").value);
         st.meses = Number($("#vMeses").value);
+        saveStoredState('vacation13', st);
         const sal = st.sal, meses = st.meses;
         if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult("Valores inválidos.", "", true);
         const base = (sal / 12) * meses, terço = base / 3, total = base + terço;
@@ -1602,11 +1603,11 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
     }
-    $$(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; renderVacation13(); });
+    $$(".tab").forEach(b => b.onclick = () => { haptic(); st.mode = b.dataset.mode; saveStoredState('vacation13', st); renderVacation13(); });
   }
 
   function renderRescision() {
-    const st = states.rescision;
+    const st = getStoredState('rescision');
     tool.innerHTML = `
       <div class="grid">
         <div class="field"><label for="rSal">SALÁRIO BRUTO (R$)</label><input type="number" id="rSal" step="0.01" min="0" value="${st.sal}"></div>
@@ -1629,6 +1630,7 @@ document.addEventListener("DOMContentLoaded", () => {
       st.reason = $("#rReason").value;
       st.adm = $("#rAdm").value;
       st.term = $("#rTerm").value;
+      saveStoredState('rescision', st);
 
       const sal = st.sal, reason = st.reason, dAdm = dateFromInput("#rAdm"), dTerm = dateFromInput("#rTerm");
       if(!sal || sal<=0 || !dAdm || !dTerm) return showResult("Preencha todos os campos.", "", true);
@@ -1717,7 +1719,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderRunning() {
-    const st = states.running;
+    const st = getStoredState('running');
     tool.innerHTML = `
       <div class="grid">
         <div class="field"><label for="runDist">DISTÂNCIA (KM)</label><input type="number" id="runDist" step="0.5" min="1" value="${st.dist}"></div>
@@ -1728,6 +1730,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const calculate = () => {
       st.dist = Number($("#runDist").value);
       st.time = Number($("#runTime").value);
+      saveStoredState('running', st);
       const dist = st.dist, totalMin = st.time;
       if(!dist || dist <= 0 || !totalMin || totalMin <= 0) return showResult("Valores inválidos.", "", true);
       
@@ -1806,15 +1809,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (e.key === 'Tab') {
       if (e.shiftKey) {
-        if (document.activeElement === first) {
-          last.focus();
-          e.preventDefault();
-        }
+        if (document.activeElement === first) { last.focus(); e.preventDefault(); }
       } else {
-        if (document.activeElement === last) {
-          first.focus();
-          e.preventDefault();
-        }
+        if (document.activeElement === last) { first.focus(); e.preventDefault(); }
       }
     }
   }
@@ -1830,20 +1827,14 @@ document.addEventListener("DOMContentLoaded", () => {
       closeDrawer();
       closeStyleModal();
     }
-    if (paletteModal.classList.contains('open')) {
-      trapFocus(e, paletteModal);
-    } else if (drawer.classList.contains('open')) {
-      trapFocus(e, drawer);
-    } else if (styleModal.classList.contains('open')) {
-      trapFocus(e, styleModal);
-    }
+    if (paletteModal.classList.contains('open')) trapFocus(e, paletteModal);
+    else if (drawer.classList.contains('open')) trapFocus(e, drawer);
+    else if (styleModal.classList.contains('open')) trapFocus(e, styleModal);
   });
 
   function updateGreeting() {
     const hour = new Date().getHours();
-    let text = '';
-    let svgIcon = '';
-    
+    let text = '', svgIcon = '';
     if (hour < 12) { 
       text = 'Bom dia'; 
       svgIcon = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line></svg>`; 
@@ -1854,7 +1845,6 @@ document.addEventListener("DOMContentLoaded", () => {
       text = 'Boa noite'; 
       svgIcon = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`; 
     }
-    
     if(greetingEl) greetingEl.innerHTML = `${svgIcon} <span>${text}</span>`;
   }
 
@@ -1869,10 +1859,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(quickChips) {
       quickChips.innerHTML = chips.map(c => `<button class="chip" data-tool="${c.id}">${c.svg} ${c.pt}</button>`).join('');
       $$('#quickChips .chip').forEach(btn => {
-        btn.onclick = () => {
-          haptic();
-          loadTool(btn.dataset.tool);
-        };
+        btn.onclick = () => { haptic(); loadTool(btn.dataset.tool); };
       });
     }
   }
@@ -1883,6 +1870,7 @@ document.addEventListener("DOMContentLoaded", () => {
     footerText.innerHTML = i18n['pt-BR'].footer;
     menuTitle.textContent = i18n['pt-BR'].menu;
     langLabel.textContent = i18n['pt-BR'].langLabel;
+    groupHistory.textContent = i18n['pt-BR'].gh;
     groupEssential.textContent = i18n['pt-BR'].g1;
     groupPersonal.textContent = i18n['pt-BR'].g2;
     groupLabor.textContent = i18n['pt-BR'].g3;
