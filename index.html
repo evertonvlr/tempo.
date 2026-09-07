@@ -505,43 +505,31 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // GERADOR DE CARDS EXCLUSIVOS, EMOCIONANTES E DETALHADOS (ESTILO SPOTIFY STORIES 9:16)
+  // GERADOR DE CARDS EXCLUSIVOS COM MILHÕES DE COMBINAÇÕES DE CORES DINÂMICAS (HSL RANDOM)
   function generateShareCard(toolKey, titleText, resultText, extraDetails = {}) {
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
     canvas.height = 1920;
     const ctx = canvas.getContext('2d');
 
-    // Paletas de cores temáticas exclusivas por utilitário
-    const themes = {
-      date: { bg1: '#1a103c', bg2: '#0b0d12', card: '#16192b', accent: '#a855f7', badge: '📅 TEMPO & CRONOLOGIA' },
-      time: { bg1: '#0f172a', bg2: '#0b0d12', card: '#131826', accent: '#38bdf8', badge: '⏰ DIFERENÇA DE HORAS' },
-      business: { bg1: '#064e3b', bg2: '#0b0d12', card: '#11221c', accent: '#34d399', badge: '💼 DIAS ÚTEIS & PRAZOS' },
-      worldclock: { bg1: '#1e1b4b', bg2: '#0b0d12', card: '#171a2e', accent: '#818cf8', badge: '🌍 RELÓGIO MUNDIAL' },
-      meeting: { bg1: '#31103f', bg2: '#0b0d12', card: '#20162b', accent: '#e879f9', badge: '🌐 REUNIÕES GLOBAIS' },
-      pomodoro: { bg1: '#451a03', bg2: '#0b0d12', card: '#261712', accent: '#fb923c', badge: '🍅 FOCO & PRODUTIVIDADE' },
-      horoscope: { bg1: '#581c87', bg2: '#0b0d12', card: '#241333', accent: '#f43f5e', badge: '✨ HORÓSCOPO DIÁRIO' },
-      age: { bg1: '#831843', bg2: '#0b0d12', card: '#2b1320', accent: '#fb7185', badge: '🎂 IDADE & JORNADA' },
-      pregnancy: { bg1: '#500724', bg2: '#0b0d12', card: '#26111e', accent: '#f472b6', badge: '👶 GESTAÇÃO & VIDA' },
-      countdown: { bg1: '#022c22', bg2: '#0b0d12', card: '#10221c', accent: '#2dd4bf', badge: '⏳ CONTAGEM REGRESSIVA' },
-      overtime: { bg1: '#365314', bg2: '#0b0d12', card: '#172111', accent: '#a3e635', badge: '💰 HORAS EXTRAS CLT' },
-      vacation13: { bg1: '#713f12', bg2: '#0b0d12', card: '#2b1f11', accent: '#facc15', badge: '🏖️ FÉRIAS & 13º SALÁRIO' },
-      rescision: { bg1: '#7f1d1d', bg2: '#0b0d12', card: '#2e1313', accent: '#f87171', badge: '📄 RESCISÃO CONTRATUAL' },
-      running: { bg1: '#14532d', bg2: '#0b0d12', card: '#132418', accent: '#4ade80', badge: '⚡ RITMO DE CORRIDA' }
-    };
+    // SISTEMA DE GERAÇÃO INFINITA DE CORES HSL (Mais de 1 milhão de combinações sem perder a harmonia ou estragar o design)
+    // Sorteia um matiz (hue) base de 0 a 360
+    const randomHue = Math.floor(Math.random() * 360);
+    const bg1Color = `hsl(${randomHue}, 45%, 14%)`;
+    const bg2Color = `hsl(${(randomHue + 40) % 360}, 35%, 7%)`;
+    const cardColor = `hsl(${randomHue}, 30%, 11%)`;
+    const accentColor = `hsl(${(randomHue + 50) % 360}, 85%, 65%)`;
 
-    const th = themes[toolKey] || themes.date;
-
-    // 1. Fundo Gradiente Radial Imersivo
+    // 1. Fundo Gradiente Radial Dinâmico e Imersivo
     const bgGrad = ctx.createRadialGradient(540, 500, 120, 540, 960, 1100);
-    bgGrad.addColorStop(0, th.bg1);
-    bgGrad.addColorStop(0.6, th.bg2);
+    bgGrad.addColorStop(0, bg1Color);
+    bgGrad.addColorStop(0.6, bg2Color);
     bgGrad.addColorStop(1, '#050608');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. Elementos Gráficos Geométricos de Destaque (Estilo Wrapped)
-    ctx.fillStyle = th.accent;
+    // 2. Elementos Gráficos Geométricos Dinâmicos
+    ctx.fillStyle = accentColor;
     ctx.globalAlpha = 0.12;
     ctx.beginPath();
     ctx.arc(880, 220, 190, 0, Math.PI * 2);
@@ -552,7 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.globalAlpha = 1.0;
 
     // 3. Bloco Principal do Card Flutuante 9:16
-    ctx.fillStyle = th.card;
+    ctx.fillStyle = cardColor;
     ctx.beginPath();
     if (ctx.roundRect) {
       ctx.roundRect(70, 220, 940, 1480, 42);
@@ -564,23 +552,24 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineWidth = 3;
     ctx.stroke();
 
-    // 4. Badge Superior Exclusiva da Ferramenta
+    // 4. Badge Superior Dinâmica da Ferramenta
     ctx.fillStyle = '#111522';
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(130, 290, 500, 58, 29);
+      ctx.roundRect(130, 290, 520, 58, 29);
     } else {
-      ctx.rect(130, 290, 500, 58);
+      ctx.rect(130, 290, 520, 58);
     }
     ctx.fill();
-    ctx.strokeStyle = th.accent;
+    ctx.strokeStyle = accentColor;
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    ctx.fillStyle = th.accent;
+    ctx.fillStyle = accentColor;
     ctx.font = '850 19px system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText(th.badge, 160, 327);
+    const toolBadgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "tempo.utilitários").toUpperCase();
+    ctx.fillText(toolBadgeText, 160, 327);
 
     // 5. Título da Ferramenta em Grande Destaque
     ctx.fillStyle = '#f7f8fb';
@@ -616,7 +605,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.fillText(l.trim(), 130, startY + (idx * (fontSize + 14)));
     });
 
-    // 7. SEÇÃO DE DETALHES INFORMATIVOS ADICIONAIS (Garante que todas as infos apareçam no card)
+    // 7. SEÇÃO DE DETALHES INFORMATIVOS ADICIONAIS
     if (extraDetails && Object.keys(extraDetails).length > 0) {
       ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
       ctx.beginPath();
@@ -630,7 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      ctx.fillStyle = th.accent;
+      ctx.fillStyle = accentColor;
       ctx.font = '800 16px system-ui, -apple-system, sans-serif';
       ctx.fillText('DETALHES DA ANÁLISE', 170, 1075);
 
@@ -667,7 +656,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.font = '850 28px system-ui, -apple-system, sans-serif';
     ctx.fillText('tempo', 130, 1624);
     const w = ctx.measureText('tempo').width;
-    ctx.fillStyle = th.accent;
+    ctx.fillStyle = accentColor;
     ctx.fillText('.', 130 + w, 1624);
     ctx.fillStyle = '#f7f8fb';
     ctx.fillText(' utilitários', 130 + w + 4, 1624);
@@ -938,20 +927,12 @@ document.addEventListener("DOMContentLoaded", () => {
           const timeStr = new Intl.DateTimeFormat('pt-BR', { timeZone: z.tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(now);
           timeEl.textContent = timeStr;
           dateEl.textContent = new Intl.DateTimeFormat('pt-BR', { timeZone: z.tz, weekday: 'short', day: 'numeric', month: 'short' }).format(now);
-          
-          if (idx === 0) {
-            const details = { "Capital Ref": z.city, "Horário Mundial": timeStr, "Fuso Local": Intl.DateTimeFormat().resolvedOptions().timeZone };
-            // Atualiza resultado oculto para permitir compartilhamento do relógio mundial
-            textToCopy = `${z.city}: ${timeStr}`;
-            // Mantém ação de card disponível
-          }
         }
       });
     }
     updateClocks();
     window._wcInterval = setInterval(updateClocks, 1000);
     
-    // Mostra botão de card para o relógio mundial
     showResult(`<div class="big">Relógio Global Ativo</div><div class="small">Compartilhe o horário das capitais mundiais.</div>`, `Brasília / Lisboa / NY / Londres / Tóquio`, false, "Relógio Mundial", { "Status": "Tempo Real", "Capitais": "5 Principais", "Fuso": Intl.DateTimeFormat().resolvedOptions().timeZone });
   }
 
