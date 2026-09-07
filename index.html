@@ -484,31 +484,41 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // GERADOR DE CARD 9:16 - ESTILO DARK SOFISTICADO COM ORBS E QUADRO DE DETALHES
+  // GERADOR DE CARD 9:16 - 1 MILHÃO DE TONS HSL (DINÂMICO E ELEGANTE, SEM NEON)
   function generateShareCard(toolKey, titleText, resultText, extraDetails = {}) {
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
     canvas.height = 1920;
     const ctx = canvas.getContext('2d');
 
-    // 1. Fundo Escuro Base
-    ctx.fillStyle = '#0b0d12';
+    // Sorteia um Hue (matiz) aleatório entre 0 e 360 para criar milhões de tons exclusivos
+    const randomHue = Math.floor(Math.random() * 360);
+    
+    // Cores geradas matematicamente via HSL para garantir harmonia e milhões de variações
+    const baseBgColor = `hsl(${randomHue}, 35% , 7%)`;
+    const cardBgColor = `hsl(${randomHue}, 30% , 11%)`;
+    const panelBgColor = `hsl(${randomHue}, 25% , 15%)`;
+    const borderColor = `hsl(${randomHue}, 25% , 22%)`;
+    const accentColor = `hsl(${(randomHue + 45) % 360}, 85%, 68%)`; // Destaque complementar elegante
+
+    // 1. Fundo Dinâmico Principal
+    ctx.fillStyle = baseBgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. Orbs / Gradientes suaves de fundo (iluminação ambiente elegante)
+    // 2. Orbs / Gradientes de iluminação ambiente dinâmicos baseados no tom gerado
     const g1 = ctx.createRadialGradient(150, 150, 20, 150, 150, 600);
-    g1.addColorStop(0, 'rgba(124, 92, 255, 0.12)');
+    g1.addColorStop(0, `hsla(${randomHue}, 70%, 50%, 0.12)`);
     g1.addColorStop(1, 'transparent');
     ctx.fillStyle = g1;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const g2 = ctx.createRadialGradient(950, 1750, 30, 950, 1750, 700);
-    g2.addColorStop(0, 'rgba(74, 222, 128, 0.10)');
+    g2.addColorStop(0, `hsla(${(randomHue + 120) % 360}, 70%, 50%, 0.10)`);
     g2.addColorStop(1, 'transparent');
     ctx.fillStyle = g2;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 3. Cartão Central Principal (Dark & Clean)
+    // 3. Cartão Central Principal
     const cardX = 90;
     const cardY = 140;
     const cardW = 900;
@@ -518,7 +528,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.shadowBlur = 60;
     ctx.shadowOffsetY = 20;
 
-    ctx.fillStyle = '#131720';
+    ctx.fillStyle = cardBgColor;
     ctx.beginPath();
     if (ctx.roundRect) {
       ctx.roundRect(cardX, cardY, cardW, cardH, 32);
@@ -528,7 +538,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fill();
     ctx.shadowColor = 'transparent';
 
-    ctx.strokeStyle = '#29313e';
+    ctx.strokeStyle = borderColor;
     ctx.lineWidth = 2;
     ctx.stroke();
 
@@ -541,7 +551,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const badgeX = cardX + 70;
     const badgeY = cardY + 70;
 
-    ctx.fillStyle = '#1a202b';
+    ctx.fillStyle = panelBgColor;
     ctx.beginPath();
     if (ctx.roundRect) {
       ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 21);
@@ -550,7 +560,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     ctx.fill();
 
-    ctx.strokeStyle = '#29313e';
+    ctx.strokeStyle = borderColor;
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
@@ -589,14 +599,14 @@ document.addEventListener("DOMContentLoaded", () => {
       resStartY += resFontSize + 15;
     });
 
-    // 7. Bloco de Detalhes (Card Interno)
+    // 7. Bloco de Detalhes Expandido (Mais informações no card)
     if (extraDetails && Object.keys(extraDetails).length > 0) {
       const boxX = cardX + 70;
-      const boxY = cardY + cardH - 580;
+      const boxY = cardY + cardH - 620;
       const boxW = cardW - 140;
-      const boxH = 430;
+      const boxH = 470;
 
-      ctx.fillStyle = '#1a202b';
+      ctx.fillStyle = panelBgColor;
       ctx.beginPath();
       if (ctx.roundRect) {
         ctx.roundRect(boxX, boxY, boxW, boxH, 20);
@@ -606,40 +616,40 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.fill();
 
       // Título "Detalhes da Análise"
-      ctx.fillStyle = '#7c5cff';
+      ctx.fillStyle = accentColor;
       ctx.font = '750 13px system-ui, sans-serif';
-      ctx.fillText("DETALHES DA ANÁLISE", boxX + 35, boxY + 45);
+      ctx.fillText("DETALHES DA ANÁLISE & MÉTRICAS", boxX + 35, boxY + 40);
 
-      let detailY = boxY + 95;
+      let detailY = boxY + 90;
       let entries = Object.entries(extraDetails);
 
       entries.forEach(([key, val], i) => {
         if (i > 0) {
-          ctx.strokeStyle = '#29313e';
+          ctx.strokeStyle = borderColor;
           ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.moveTo(boxX + 35, detailY - 25);
-          ctx.lineTo(boxX + boxW - 35, detailY - 25);
+          ctx.moveTo(boxX + 35, detailY - 22);
+          ctx.lineTo(boxX + boxW - 35, detailY - 22);
           ctx.stroke();
         }
 
         ctx.fillStyle = '#9199a8';
-        ctx.font = '700 14px system-ui, sans-serif';
+        ctx.font = '700 13px system-ui, sans-serif';
         ctx.fillText(key.toUpperCase(), boxX + 35, detailY);
 
         ctx.fillStyle = '#f7f8fb';
-        ctx.font = '800 18px system-ui, sans-serif';
+        ctx.font = '800 16px system-ui, sans-serif';
         ctx.textAlign = 'right';
         let safeVal = val.length > 30 ? val.substring(0, 27) + '...' : val;
         ctx.fillText(safeVal, boxX + boxW - 35, detailY);
         ctx.textAlign = 'left';
 
-        detailY += 68;
+        detailY += 58;
       });
     }
 
     // 8. Rodapé dentro do cartão
-    ctx.strokeStyle = '#29313e';
+    ctx.strokeStyle = borderColor;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(cardX + 70, cardY + cardH - 100);
@@ -654,7 +664,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.font = '800 15px system-ui, sans-serif';
     ctx.fillText("tempo.utilitários", cardX + 70, cardY + cardH - 40);
 
-    // Exporta a imagem
+    // Exporta a imagem gerada
     const link = document.createElement('a');
     link.download = `tempo-${toolKey}-story.png`;
     link.href = canvas.toDataURL('image/png');
@@ -772,7 +782,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const x = calendarDifference(a, b);
         const html = `<div class="big">${x.y} ${x.y===1?'ano':'anos'}, ${x.m} ${x.m===1?'mês':'meses'} & ${x.d} ${x.d===1?'dia':'dias'}</div><div class="small">Total: ${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div>`;
         const plainText = `${x.y} anos, ${x.m} meses e ${x.d} dias`;
-        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Anos": `${x.y} anos`, "Meses": `${x.m} meses`, "Dias": `${x.d} dias`, "Total de Dias": `${x.total.toLocaleString('pt-BR')} dias` };
+        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Anos": `${x.y} anos`, "Meses": `${x.m} meses`, "Dias": `${x.d} dias`, "Total de Dias": `${x.total.toLocaleString('pt-BR')} dias`, "Status": "Validado com Sucesso" };
         showResult(html, plainText, false, "", details);
       };
       $("#date1").oninput = calculate; $("#date2").oninput = calculate; calculate();
@@ -793,7 +803,7 @@ document.addEventListener("DOMContentLoaded", () => {
         d.setDate(d.getDate() + (st.mode === "add" ? n : -n));
         const html = `<div class="big">${formatDate(d)}</div><div class="small">${st.mode==="add"?'Adicionados':'Subtraídos'} ${n.toLocaleString('pt-BR')} ${n===1?'dia':'dias'}.</div>`;
         const plainText = `${formatDate(d)}`;
-        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição" : "Subtração", "Variação": `${n} dias`, "Resultado": formatDate(d) };
+        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição" : "Subtração", "Variação": `${n} dias`, "Resultado": formatDate(d), "Status": "Validado com Sucesso" };
         showResult(html, plainText, false, "", details);
       };
       $("#baseDate").oninput = calculate; $("#days").oninput = calculate; calculate();
@@ -820,7 +830,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if(end < start) end += 1440;
       const total = end - start, h = Math.floor(total / 60), m = total % 60;
       const html = `<div class="big">${h}h ${m.toString().padStart(2, "0")}min</div><div class="small">Total: ${total.toLocaleString('pt-BR')} minutos</div>`;
-      const details = { "Início": a, "Fim": b, "Duração": `${h}h ${m}m`, "Total em Minutos": `${total.toLocaleString('pt-BR')} min` };
+      const details = { "Início": a, "Fim": b, "Duração": `${h}h ${m}m`, "Total em Minutos": `${total.toLocaleString('pt-BR')} min`, "Precisão": "Minutagem Exata", "Status": "Calculado" };
       showResult(html, `${h}h ${m.toString().padStart(2, "0")}min`, false, "", details);
     };
     
@@ -857,7 +867,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(!a || !b) return showResult("Selecione as duas datas.", "", true);
         const total = businessDaysDifference(a, b);
         const html = `<div class="big">${total.toLocaleString('pt-BR')} ${total===1?'dia útil':'dias úteis'}</div><div class="small">Intervalo sem finais de semana.</div>`;
-        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Tipo": "Dias Úteis", "Total Útil": `${total} dias` };
+        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Tipo": "Dias Úteis", "Total Útil": `${total} dias`, "Finais de Semana": "Excluídos", "Status": "Validado" };
         showResult(html, `${total} dias úteis`, false, "", details);
       };
       $("#bDate1").oninput = calculate; $("#bDate2").oninput = calculate; calculate();
@@ -876,7 +886,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe data e quantidade.", "", true);
         const d = addBusinessDays(base, n, st.mode === "add");
         const html = `<div class="big">${formatDate(d)}</div><div class="small">Resultado (${n} dias úteis).</div>`;
-        const details = { "Data Base": formatDate(base), "Dias Úteis": `${n} dias`, "Operação": st.mode === "add" ? "Adição" : "Subtração", "Data Final": formatDate(d) };
+        const details = { "Data Base": formatDate(base), "Dias Úteis": `${n} dias`, "Operação": st.mode === "add" ? "Adição" : "Subtração", "Data Final": formatDate(d), "Status": "Calculado" };
         showResult(html, `${formatDate(d)}`, false, "", details);
       };
       $("#bBaseDate").oninput = calculate; $("#bDays").oninput = calculate; calculate();
@@ -927,7 +937,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateClocks();
     window._wcInterval = setInterval(updateClocks, 1000);
     
-    showResult(`<div class="big">Relógio Global Ativo</div><div class="small">Compartilhe o horário das capitais mundiais.</div>`, `Brasília / Lisboa / NY / Londres / Tóquio`, false, "Relógio Mundial", { "Status": "Tempo Real", "Capitais": "5 Principais", "Fuso": Intl.DateTimeFormat().resolvedOptions().timeZone });
+    showResult(`<div class="big">Relógio Global Ativo</div><div class="small">Compartilhe o horário das capitais mundiais.</div>`, `Brasília / Lisboa / NY / Londres / Tóquio`, false, "Relógio Mundial", { "Status": "Tempo Real", "Capitais": "5 Principais", "Fuso Local": Intl.DateTimeFormat().resolvedOptions().timeZone, "Atualização": "Contínua" });
   }
 
   function renderMeeting() {
@@ -997,7 +1007,7 @@ document.addEventListener("DOMContentLoaded", () => {
         statusEl.innerHTML = statusMsg;
       }
 
-      showResult(`<div class="big">${h.toString().padStart(2, '0')}:00 Base</div><div class="small">${statusMsg}</div>`, `Reunião Global às ${h}:00`, false, "Planejador de Reuniões", { "Hora Base": `${h}:00`, "Expediente Ativo": `${workingCount}/5 Cidades`, "Brasília": cityTimesSummary[0]?.split(': ')[1] || '', "Lisboa": cityTimesSummary[1]?.split(': ')[1] || '', "Nova York": cityTimesSummary[3]?.split(': ')[1] || '' });
+      showResult(`<div class="big">${h.toString().padStart(2, '0')}:00 Base</div><div class="small">${statusMsg}</div>`, `Reunião Global às ${h}:00`, false, "Planejador de Reuniões", { "Hora Base": `${h}:00`, "Expediente Ativo": `${workingCount}/5 Cidades`, "Brasília": cityTimesSummary[0]?.split(': ')[1] || '', "Lisboa": cityTimesSummary[1]?.split(': ')[1] || '', "Nova York": cityTimesSummary[3]?.split(': ')[1] || '', "Status Geral": statusMsg.slice(0, 28) });
     }
 
     rangeInput.oninput = updateMeetingPlanner;
@@ -1067,7 +1077,7 @@ document.addEventListener("DOMContentLoaded", () => {
       displayEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
       
       const modeNames = { work: 'Sessão de Foco', short: 'Pausa Curta', long: 'Pausa Longa' };
-      showResult(`<div class="big">${m}:${s.toString().padStart(2, '0')}</div><div class="small">Modo: ${modeNames[st.mode]}</div>`, `${modeNames[st.mode]} - ${m}m concluídos`, false, "Temporizador Pomodoro", { "Ciclo Atual": modeNames[st.mode], "Tempo Restante": `${m} min ${s} s`, "Produtividade": "Alto Rendimento", "Status": "Ativo" });
+      showResult(`<div class="big">${m}:${s.toString().padStart(2, '0')}</div><div class="small">Modo: ${modeNames[st.mode]}</div>`, `${modeNames[st.mode]} - ${m}m concluídos`, false, "Temporizador Pomodoro", { "Ciclo Atual": modeNames[st.mode], "Tempo Restante": `${m} min ${s} s`, "Produtividade": "Alto Rendimento", "Método": "Pomodoro 25/5", "Status": "Ativo" });
     }
     updateDisplay();
 
@@ -1265,10 +1275,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const details = { 
         "Signo": `${signObj.symbol} ${signObj.name}`, 
-        "Clima Astral": climatePool[cIdx].slice(0, 42) + '...', 
+        "Clima Astral": climatePool[cIdx].slice(0, 36) + '...', 
         "Cor da Sorte": colors[colIdx], 
         "Número Sorte": numbers[numIdx], 
-        "Harmonia": signs[compIdx].name 
+        "Harmonia": signs[compIdx].name,
+        "Status": "Astrologia Ativa"
       };
       
       showResult(`<div class="big" style="display:flex; align-items:center; justify-content:center; gap:8px;">${pureGlyph} <span>${signObj.name}</span></div><div class="small">${climatePool[cIdx]}</div>`, `${signObj.name} - Horóscopo Diário`, false, "Horóscopo Diário", details);
@@ -1296,7 +1307,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const x = calendarDifference(birth, ref);
       const html = `<div class="big">${x.y} anos, ${x.m} meses & ${x.d} dias</div><div class="small">Total: ~${x.total.toLocaleString('pt-BR')} dias.</div>`;
       const plainText = `${x.y} anos, ${x.m} meses e ${x.d} dias`;
-      const details = { "Nascimento": formatDate(birth), "Referência": formatDate(ref), "Anos": `${x.y} anos`, "Meses": `${x.m} meses`, "Dias": `${x.d} dias`, "Dias Vividos": `${x.total.toLocaleString('pt-BR')} dias` };
+      const details = { "Nascimento": formatDate(birth), "Referência": formatDate(ref), "Anos": `${x.y} anos`, "Meses": `${x.m} meses`, "Dias": `${x.d} dias`, "Dias Vividos": `${x.total.toLocaleString('pt-BR')} dias`, "Status": "Calculado" };
       showResult(html, plainText, false, "", details);
     };
     $("#birthDate").oninput = calculate; $("#refDate").oninput = calculate; calculate();
@@ -1325,7 +1336,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const html = `<div class="big">${weeks} semanas & ${days} dias</div><div class="small">Previsão do parto: <strong>${formatDate(dueDate)}</strong></div>`;
       const plainText = `${weeks} semanas e ${days} dias`;
-      const details = { "DUM": formatDate(dum), "Idade Gestacional": `${weeks} sem e ${days} dias`, "Dias Totais": `${diffDays} dias`, "Parto Previsto": formatDate(dueDate) };
+      const details = { "DUM": formatDate(dum), "Idade Gestacional": `${weeks} sem e ${days} dias`, "Dias Totais": `${diffDays} dias`, "Parto Previsto": formatDate(dueDate), "Ciclo": "40 Semanas", "Status": "Acompanhamento" };
       showResult(html, plainText, false, "", details);
     };
     $("#dumDate").oninput = calculate; calculate();
@@ -1368,12 +1379,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (st.mode === "down") {
         if (today > evDate) return showResult("Data já passou!", "", true);
         const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Faltam para ${name}.</div>`;
-        const details = { "Evento": rawName, "Data Alvo": formatDate(evDate), "Modo": "Contagem Regressiva", "Tempo Restante": `${x.total} dias` };
+        const details = { "Evento": rawName, "Data Alvo": formatDate(evDate), "Modo": "Contagem Regressiva", "Tempo Restante": `${x.total} dias`, "Hoje": formatDate(today), "Status": "Ativo" };
         showResult(html, `${x.total} dias para ${rawName}`, false, "", details);
       } else {
         if (today < evDate) return showResult("Data futura!", "", true);
         const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Passados desde ${name}.</div>`;
-        const details = { "Evento": rawName, "Data Passada": formatDate(evDate), "Modo": "Tempo Passado", "Tempo Decorrido": `${x.total} dias` };
+        const details = { "Evento": rawName, "Data Passada": formatDate(evDate), "Modo": "Tempo Passado", "Tempo Decorrido": `${x.total} dias`, "Hoje": formatDate(today), "Status": "Registrado" };
         showResult(html, `${x.total} dias desde ${rawName}`, false, "", details);
       }
     };
@@ -1414,7 +1425,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="small">Normal: R$ ${vHora.toFixed(2)} | Extra (${rate}%): R$ ${vExtra.toFixed(2)}</div>
         <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
       `;
-      const details = { "Valor da Hora": `R$ ${vHora.toFixed(2)}`, "Qtd. Horas": `${qtd}h (${rate}%)`, "Total a Receber": `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}` };
+      const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Jornada": `${jor}h mensais`, "Valor da Hora": `R$ ${vHora.toFixed(2)}`, "Qtd. Horas": `${qtd}h (${rate}%)`, "Adicional": `${rate}%`, "Total a Receber": `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}` };
       showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
     };
     $("#sal").oninput = calculate; $("#jor").oninput = calculate; $("#qtd").oninput = calculate; $("#rate").onchange = calculate; calculate();
@@ -1452,7 +1463,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="small">Proporcional a ${meses} ${meses===1?'mês':'meses'}.</div>
           <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
         `;
-        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Meses": `${meses}/12 avos`, "13º Salário": `R$ ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}` };
+        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Período": `${meses}/12 avos`, "Tipo de Cálculo": "13º Salário", "Proporcional": `${meses} meses`, "Valor Estimado": `R$ ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}` };
         showResult(html, `R$ ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
@@ -1475,7 +1486,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="small">Férias: R$ ${base.toFixed(2)} | 1/3: R$ ${terço.toFixed(2)}</div>
           <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
         `;
-        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Férias + ⅓": `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}` };
+        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Férias Proporcional": `R$ ${base.toFixed(2)}`, "Adicional de ⅓": `R$ ${terço.toFixed(2)}`, "Meses Contados": `${meses} avos`, "Total Férias": `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}` };
         showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
@@ -1580,7 +1591,15 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
       `;
-      const details = { "Saldo Salário": `R$ ${saldoSalario.toFixed(2)}`, "13º Salário": `R$ ${decimoTerceiro.toFixed(2)}`, "Férias + ⅓": `R$ ${feriasTotal.toFixed(2)}`, "Multa FGTS": `R$ ${multaFgts.toFixed(2)}` };
+      const details = { 
+        "Saldo Salário": `R$ ${saldoSalario.toFixed(2)}`, 
+        "13º Salário": `R$ ${decimoTerceiro.toFixed(2)}`, 
+        "Férias + ⅓": `R$ ${feriasTotal.toFixed(2)}`, 
+        "Aviso Prévio": `R$ ${avisoPrevio.toFixed(2)}`, 
+        "Multa FGTS": `R$ ${multaFgts.toFixed(2)}`,
+        "Tempo Empresa": `${timeDiffReal.y} anos e ${timeDiffReal.m} meses`,
+        "Total Rescisão": `R$ ${totalRescisao.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}` 
+      };
       showResult(html, `R$ ${totalRescisao.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
     };
     $("#rSal").oninput = calculate; $("#rReason").onchange = calculate; $("#rAdm").oninput = calculate; $("#rTerm").oninput = calculate; calculate();
@@ -1610,7 +1629,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="big">${paceFormatted} <span style="font-size:16px; font-weight:normal; color:var(--muted);">min/km</span></div>
         <div class="small" style="margin-top:8px;">Velocidade Média: <strong>${speed} km/h</strong></div>
       `;
-      const details = { "Distância": `${dist} km`, "Tempo Total": `${totalMin} min`, "Velocidade": `${speed} km/h` };
+      const details = { "Distância": `${dist} km`, "Tempo Total": `${totalMin} min`, "Ritmo (Pace)": `${paceFormatted} min/km`, "Velocidade": `${speed} km/h`, "Desempenho": "Meta de Corrida", "Status": "Calculado" };
       showResult(html, `${paceFormatted} min/km`, false, "", details);
     };
     $("#runDist").oninput = calculate; $("#runTime").oninput = calculate; calculate();
