@@ -505,62 +505,62 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // GERADOR DO CARD TURBINADO: Estilo Spotify refinado, gradiente, proporções ajustadas e 100% em português
+  // GERADOR DO CARD 9:16 (ESTILO SPOTIFY STORIES): Perfeito para postar nas redes sociais
   function generateShareCard(titleText, resultText) {
     const canvas = document.createElement('canvas');
-    canvas.width = 600;
-    canvas.height = 800;
+    canvas.width = 1080;
+    canvas.height = 1920;
     const ctx = canvas.getContext('2d');
 
-    // 1. Fundo com gradiente radial sutil (remetendo à iluminação do site)
-    const bgGrad = ctx.createRadialGradient(300, 200, 50, 300, 400, 500);
+    // 1. Fundo com gradiente radial imersivo
+    const bgGrad = ctx.createRadialGradient(540, 600, 100, 540, 960, 1000);
     bgGrad.addColorStop(0, '#1a202b');
     bgGrad.addColorStop(1, '#0b0d12');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. Elemento gráfico decorativo estilo "Wrapped" no topo
-    ctx.strokeStyle = 'rgba(124, 92, 255, 0.3)';
-    ctx.lineWidth = 2;
+    // 2. Elemento gráfico decorativo estilo "Wrapped" topo
+    ctx.strokeStyle = 'rgba(124, 92, 255, 0.25)';
+    ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo(60, 80);
-    ctx.bezierCurveTo(180, 20, 300, 140, 540, 60);
+    ctx.moveTo(120, 240);
+    ctx.bezierCurveTo(360, 140, 720, 340, 960, 200);
     ctx.stroke();
 
-    // 3. Card interno flutuante com borda refinada
+    // 3. Card central flutuante vertical proporcional 9:16
     ctx.fillStyle = '#131720';
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(40, 110, 520, 580, 24);
+      ctx.roundRect(80, 280, 920, 1360, 36);
     } else {
-      ctx.rect(40, 110, 520, 580);
+      ctx.rect(80, 280, 920, 1360);
     }
     ctx.fill();
     ctx.strokeStyle = '#29313e';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     ctx.stroke();
 
     // 4. Cabeçalho interno do card (Título da ferramenta)
     ctx.fillStyle = '#9199a8';
-    ctx.font = '800 13px system-ui, -apple-system, sans-serif';
+    ctx.font = '800 24px system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText(titleText.toUpperCase(), 75, 165);
+    ctx.fillText(titleText.toUpperCase(), 140, 380);
 
-    // 5. Selo / Ícone decorativo minimalista à direita
+    // 5. Selo / Ícone decorativo minimalista à direita do cabeçalho
     ctx.fillStyle = 'rgba(124, 92, 255, 0.15)';
     ctx.beginPath();
-    ctx.arc(505, 160, 18, 0, Math.PI * 2);
+    ctx.arc(920, 372, 32, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#7c5cff';
-    ctx.font = 'bold 14px system-ui';
+    ctx.font = 'bold 24px system-ui';
     ctx.textAlign = 'center';
-    ctx.fillText('✨', 505, 165);
+    ctx.fillText('✨', 920, 381);
 
-    // 6. RESULTADO GIGANTE COM ESCALA DINÂMICA INTELIGENTE
-    let fontSize = 64;
-    if (resultText.length > 15) fontSize = 48;
-    if (resultText.length > 30) fontSize = 34;
-    if (resultText.length > 50) fontSize = 24;
+    // 6. RESULTADO GIGANTE COM ESCALA DINÂMICA PARA VERTICAL
+    let fontSize = 92;
+    if (resultText.length > 15) fontSize = 72;
+    if (resultText.length > 30) fontSize = 52;
+    if (resultText.length > 50) fontSize = 38;
 
     ctx.fillStyle = '#f7f8fb';
     ctx.font = `900 ${fontSize}px system-ui, -apple-system, sans-serif`;
@@ -572,7 +572,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for(let n = 0; n < words.length; n++) {
       let testLine = line + words[n] + ' ';
       let metrics = ctx.measureText(testLine);
-      if (metrics.width > 440 && n > 0) {
+      if (metrics.width > 780 && n > 0) {
         lines.push(line);
         line = words[n] + ' ';
       } else {
@@ -581,35 +581,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     lines.push(line);
 
-    let startY = 380 - ((lines.length * (fontSize + 12)) / 2);
+    let startY = 960 - ((lines.length * (fontSize + 18)) / 2);
     lines.forEach((l, idx) => {
-      ctx.fillText(l.trim(), 75, startY + (idx * (fontSize + 12)));
+      ctx.fillText(l.trim(), 140, startY + (idx * (fontSize + 18)));
     });
 
     // 7. Linha divisória interna elegante
     ctx.strokeStyle = '#29313e';
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(75, 560);
-    ctx.lineTo(525, 560);
+    ctx.moveTo(140, 1480);
+    ctx.lineTo(940, 1480);
     ctx.stroke();
 
     // 8. Rodapé do Card: "tempo" com ponto roxo e "utilitários"
     ctx.fillStyle = '#9199a8';
-    ctx.font = '750 11px system-ui, -apple-system, sans-serif';
-    ctx.fillText('GERADO EM', 75, 605);
+    ctx.font = '750 18px system-ui, -apple-system, sans-serif';
+    ctx.fillText('GERADO EM', 140, 1540);
 
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = '850 18px system-ui, -apple-system, sans-serif';
-    ctx.fillText('tempo', 75, 632);
+    ctx.font = '850 32px system-ui, -apple-system, sans-serif';
+    ctx.fillText('tempo', 140, 1585);
     const w = ctx.measureText('tempo').width;
     ctx.fillStyle = '#7c5cff';
-    ctx.fillText('.', 75 + w, 632);
+    ctx.fillText('.', 140 + w, 1585);
     ctx.fillStyle = '#f7f8fb';
-    ctx.fillText(' utilitários', 75 + w + 4, 632);
+    ctx.fillText(' utilitários', 140 + w + 6, 1585);
 
     const link = document.createElement('a');
-    link.download = 'tempo-utilitarios-card.png';
+    link.download = 'tempo-utilitarios-story-9-16.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
   }
@@ -626,7 +626,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveHistory(toolName || titleEl.textContent, plainText);
         extraActions = `
           <div class="action-buttons">
-            <button class="action-btn" id="shareCardBtn">🎨 Gerar Card do tempo utilitários</button>
+            <button class="action-btn" id="shareCardBtn">🎨 Gerar Card 9:16 (Stories)</button>
             ${['Horas Extras', 'Rescisão Contratual (Acerto)'].includes(titleEl.textContent) ? '<button class="action-btn" id="printPdfBtn">🖨️ Exportar Relatório PDF</button>' : ''}
           </div>
         `;
