@@ -484,100 +484,87 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // NOVA FUNÇÃO: GERADOR DE CARD - ESTILO SPOTIFY WRAPPED AUTÊNTICO (Matemático, Limpo e Elegante)
-  function drawStarburst(ctx, cx, cy, spikes, outerRadius, innerRadius, color) {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    let rot = Math.PI / 2 * 3;
-    let step = Math.PI / spikes;
-    let x = cx, y = cy;
-    ctx.moveTo(cx, cy - outerRadius);
-    for(let i = 0; i < spikes; i++) {
-        x = cx + Math.cos(rot) * outerRadius;
-        y = cy + Math.sin(rot) * outerRadius;
-        ctx.lineTo(x, y);
-        rot += step;
-        x = cx + Math.cos(rot) * innerRadius;
-        y = cy + Math.sin(rot) * innerRadius;
-        ctx.lineTo(x, y);
-        rot += step;
-    }
-    ctx.lineTo(cx, cy - outerRadius);
-    ctx.closePath();
-    ctx.fill();
-  }
-
+  // GERADOR DE CARD 9:16 - DESIGN EDITORIAL MINIMALISTA & LIMPO (SEM NEON)
   function generateShareCard(toolKey, titleText, resultText, extraDetails = {}) {
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
     canvas.height = 1920;
     const ctx = canvas.getContext('2d');
 
-    // Motor de Cores HSL (Garante 1 Milhão de Combinações, mas SEMPRE harmônicas e de alto contraste)
-    const baseHue = Math.floor(Math.random() * 360);
-    
-    // Fundo: Cor sólida, saturada e escura (estilo poster)
-    const bgHue = baseHue;
-    const bgColor = `hsl(${bgHue}, 85%, 20%)`;
-    
-    // Forma 1 (Burst): Cor complementar exata para estourar na tela sem virar carnaval
-    const burstHue = (baseHue + 180) % 360;
-    const burstColor = `hsl(${burstHue}, 90%, 65%)`;
+    // Paletas Premium, Sóbreas e Elegantes (Sem Neon)
+    const elegantPalettes = [
+      { bg: '#F4F4F0', card: '#FFFFFF', text: '#2C2C2C', accent: '#D95D39', grid: 'rgba(0,0,0,0.04)' }, // Creme & Terracota
+      { bg: '#E9ECE8', card: '#F5F7F5', text: '#2A362D', accent: '#8A9A86', grid: 'rgba(0,0,0,0.04)' }, // Sálvia Natural
+      { bg: '#E4E9ED', card: '#F0F3F7', text: '#1A2938', accent: '#6D8B96', grid: 'rgba(0,0,0,0.04)' }, // Ardósia & Aço
+      { bg: '#F6EFEB', card: '#FFFFFF', text: '#3E2A27', accent: '#B56A5B', grid: 'rgba(0,0,0,0.04)' }, // Blush & Tijolo
+      { bg: '#1C1C1E', card: '#2C2C2E', text: '#F2F2F7', accent: '#D4AF37', grid: 'rgba(255,255,255,0.04)' } // Dark Premium (Grafite & Ouro)
+    ];
 
-    // Forma 2 (Blob): Cor análoga à forma 1
-    const blobHue = (burstHue + 30) % 360;
-    const blobColor = `hsl(${blobHue}, 80%, 55%)`;
+    // Sorteia uma das paletas elegantes a cada clique
+    const pal = elegantPalettes[Math.floor(Math.random() * elegantPalettes.length)];
 
-    // 1. Pinta o Fundo Sólido
-    ctx.fillStyle = bgColor;
+    // 1. Fundo Sólido e Limpo
+    ctx.fillStyle = pal.bg;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 2. Desenha a Forma Orgânica de Fundo (Blob)
-    ctx.fillStyle = blobColor;
+    // 2. Grade (Grid) de Fundo muito sutil (Traz a estética utilitária/técnica)
+    ctx.strokeStyle = pal.grid;
+    ctx.lineWidth = 1;
+    for (let i = 0; i < canvas.width; i += 60) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+    }
+    for (let i = 0; i < canvas.height; i += 60) {
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+    }
+
+    // 3. Cartão Central Principal (Clean)
+    const cardX = 90;
+    const cardY = 220;
+    const cardW = 900;
+    const cardH = 1480;
+
+    // Sombra premium super suave
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.06)';
+    ctx.shadowBlur = 50;
+    ctx.shadowOffsetY = 15;
+    
+    ctx.fillStyle = pal.card;
     ctx.beginPath();
-    ctx.arc(850, 400, 350, 0, Math.PI * 2); // Círculo grande no topo direito
+    if (ctx.roundRect) {
+      ctx.roundRect(cardX, cardY, cardW, cardH, 32);
+    } else {
+      ctx.rect(cardX, cardY, cardW, cardH);
+    }
+    ctx.fill();
+    ctx.shadowColor = 'transparent'; // Reseta a sombra
+
+    // Detalhe de cor sutil no topo do cartão
+    ctx.fillStyle = pal.accent;
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(cardX, cardY, cardW, 12, [32, 32, 0, 0]);
+    } else {
+      ctx.rect(cardX, cardY, cardW, 12);
+    }
     ctx.fill();
 
-    // 3. Desenha a Starburst (Estrela Brutalista) no fundo
-    drawStarburst(ctx, 300, 1100, 12, 600, 450, burstColor);
+    // 4. Cabeçalho do Cartão (Categoria da Ferramenta)
+    ctx.fillStyle = pal.accent;
+    ctx.font = '700 18px system-ui, sans-serif';
+    const toolBadgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "TEMPO.UTILITÁRIOS").toUpperCase();
+    ctx.fillText("/// " + toolBadgeText, cardX + 70, cardY + 100);
 
-    // 4. Marca d'água discreta no topo esquerdo
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '800 24px system-ui, sans-serif';
-    ctx.fillText("tempo.utilitários", 80, 100);
+    // 5. Título da Ferramenta
+    ctx.fillStyle = pal.text;
+    ctx.font = '300 48px system-ui, sans-serif';
+    ctx.fillText(titleText, cardX + 70, cardY + 180);
 
-    // 5. Título da Ferramenta (Gigante, Brutalista, Branco Puro)
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '900 85px system-ui, sans-serif';
-    
-    // Quebra o título se for muito longo
-    const words = titleText.split(' ');
-    let line = '';
-    let titleLines = [];
-    for(let n = 0; n < words.length; n++) {
-      let testLine = line + words[n] + ' ';
-      let metrics = ctx.measureText(testLine);
-      if (metrics.width > 900 && n > 0) {
-        titleLines.push(line);
-        line = words[n] + ' ';
-      } else {
-        line = testLine;
-      }
-    }
-    titleLines.push(line);
-
-    let titleY = 320;
-    titleLines.forEach(l => {
-      ctx.fillText(l.trim(), 80, titleY);
-      titleY += 90;
-    });
-
-    // 6. Texto de Resultado (Ainda maior)
-    ctx.fillStyle = '#ffffff';
-    let resFontSize = 130;
-    if (resultText.length > 15) resFontSize = 100;
-    if (resultText.length > 25) resFontSize = 75;
-    ctx.font = `900 ${resFontSize}px system-ui, sans-serif`;
+    // 6. Bloco do Resultado Principal
+    ctx.fillStyle = pal.text;
+    let resFontSize = 95;
+    if (resultText.length > 15) resFontSize = 80;
+    if (resultText.length > 25) resFontSize = 60;
+    ctx.font = `800 ${resFontSize}px system-ui, sans-serif`;
 
     const resWords = resultText.split(' ');
     let resLine = '';
@@ -585,7 +572,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for(let n = 0; n < resWords.length; n++) {
       let testLine = resLine + resWords[n] + ' ';
       let metrics = ctx.measureText(testLine);
-      if (metrics.width > 920 && n > 0) {
+      if (metrics.width > 760 && n > 0) {
         resLines.push(resLine);
         resLine = resWords[n] + ' ';
       } else {
@@ -594,62 +581,59 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     resLines.push(resLine);
 
-    let resStartY = titleY + 80;
+    let resStartY = cardY + 320;
     resLines.forEach((l) => {
-      ctx.fillText(l.trim(), 80, resStartY);
-      resStartY += resFontSize + 10;
+      ctx.fillText(l.trim(), cardX + 70, resStartY);
+      resStartY += resFontSize + 15;
     });
 
-    // 7. O "Sticker" de Detalhes (Quadro escuro e elegante na base)
-    if (extraDetails && Object.keys(extraDetails).length > 0) {
-      const boxY = 1200;
-      const boxHeight = 620;
-      
-      // Fundo do quadro de detalhes (Preto translúcido para fundir com o fundo colorido)
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'; 
-      ctx.beginPath();
-      if (ctx.roundRect) {
-        ctx.roundRect(80, boxY, 920, boxHeight, 40);
-      } else {
-        ctx.rect(80, boxY, 920, boxHeight);
-      }
-      ctx.fill();
+    // Linha divisória minimalista
+    let divisorY = resStartY + 40;
+    ctx.strokeStyle = pal.grid;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cardX + 70, divisorY);
+    ctx.lineTo(cardX + cardW - 70, divisorY);
+    ctx.stroke();
 
-      // Detalhes em texto
-      let detailY = boxY + 80;
+    // 7. Lista de Detalhes (Estilo Recibo Limpo)
+    if (extraDetails && Object.keys(extraDetails).length > 0) {
+      let detailY = divisorY + 80;
       let entries = Object.entries(extraDetails);
 
       entries.forEach(([key, val], i) => {
-        // Linha divisória
-        if (i > 0) {
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.moveTo(130, detailY - 35);
-          ctx.lineTo(950, detailY - 35);
-          ctx.stroke();
-        }
+        // Título do dado
+        ctx.fillStyle = pal.text;
+        ctx.globalAlpha = 0.5;
+        ctx.font = '600 20px system-ui, sans-serif';
+        ctx.fillText(key.toUpperCase(), cardX + 70, detailY);
+        ctx.globalAlpha = 1.0;
 
-        // Título do Detalhe (Esquerda)
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-        ctx.font = '700 22px system-ui, sans-serif';
-        ctx.fillText(key.toUpperCase(), 130, detailY);
-
-        // Valor do Detalhe (Direita)
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '800 28px system-ui, sans-serif';
+        // Valor do dado
+        ctx.fillStyle = pal.text;
+        ctx.font = '500 24px system-ui, sans-serif';
         ctx.textAlign = 'right';
-        
-        // Truncar valor se for muito longo
         let safeVal = val.length > 30 ? val.substring(0, 27) + '...' : val;
-        ctx.fillText(safeVal, 950, detailY);
-        
+        ctx.fillText(safeVal, cardX + cardW - 70, detailY);
         ctx.textAlign = 'left';
-        detailY += 85;
+        
+        detailY += 75;
       });
     }
 
-    // Exporta a imagem
+    // 8. Rodapé fora do cartão (Branding e Data)
+    ctx.fillStyle = pal.text;
+    ctx.font = '700 24px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText("tempo.utilitários", canvas.width / 2, cardY + cardH + 70);
+
+    const dataStr = new Date().toLocaleDateString('pt-BR');
+    ctx.globalAlpha = 0.5;
+    ctx.font = '500 18px system-ui, sans-serif';
+    ctx.fillText(`Cálculo gerado em ${dataStr}`, canvas.width / 2, cardY + cardH + 110);
+    ctx.globalAlpha = 1.0;
+
+    // Exporta a imagem final
     const link = document.createElement('a');
     link.download = `tempo-${toolKey}-story.png`;
     link.href = canvas.toDataURL('image/png');
