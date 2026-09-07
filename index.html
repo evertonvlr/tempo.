@@ -531,49 +531,90 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // Card em formato retrato (Vertical - 600x800) otimizado para mobile, WhatsApp e Stories
+  // Novo design de Card estilo Spotify (Vertical 600x800 com bloco flutuante e rodapé de link)
   function generateShareCard(titleText, resultText) {
     const canvas = document.createElement('canvas');
     canvas.width = 600;
     canvas.height = 800;
     const ctx = canvas.getContext('2d');
 
+    // Fundo geral escuro com granulação leve
     ctx.fillStyle = '#0b0d12';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Card flutuante interno estilo Spotify Story
+    ctx.fillStyle = '#131720';
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(40, 40, 520, 720, 24);
+    } else {
+      ctx.rect(40, 40, 520, 720);
+    }
+    ctx.fill();
+    ctx.strokeStyle = '#29313e';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Topo do Card: Logo "tempo." + Tag
     ctx.fillStyle = '#7c5cff';
-    ctx.font = 'bold 22px system-ui, sans-serif';
-    ctx.fillText('tempo. (Utilitários)', 60, 90);
+    ctx.font = '800 24px system-ui, sans-serif';
+    ctx.fillText('tempo', 80, 105);
+    const w = ctx.measureText('tempo').width;
+    ctx.fillStyle = '#7c5cff';
+    ctx.fillText('.', 80 + w, 105);
 
     ctx.fillStyle = '#9199a8';
-    ctx.font = '16px system-ui, sans-serif';
-    ctx.fillText(titleText.toUpperCase(), 60, 140);
+    ctx.font = '750 11px system-ui, sans-serif';
+    ctx.fillText('• UTILITY', 150, 104);
 
+    // Título da Ferramenta / Categoria
+    ctx.fillStyle = '#9199a8';
+    ctx.font = '750 12px system-ui, sans-serif';
+    ctx.fillText(titleText.toUpperCase(), 80, 175);
+
+    // Resultado Principal em Destaque (Estilo Título de Música do Spotify)
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = 'bold 36px system-ui, sans-serif';
+    ctx.font = '900 38px system-ui, sans-serif';
     
     const words = resultText.split(' ');
     let line = '';
-    let y = 260;
+    let y = 250;
     for(let n = 0; n < words.length; n++) {
       let testLine = line + words[n] + ' ';
       let metrics = ctx.measureText(testLine);
-      if (metrics.width > 480 && n > 0) {
-        ctx.fillText(line, 60, y);
+      if (metrics.width > 440 && n > 0) {
+        ctx.fillText(line, 80, y);
         line = words[n] + ' ';
-        y += 55;
+        y += 52;
       } else {
         line = testLine;
       }
     }
-    ctx.fillText(line, 60, y);
+    ctx.fillText(line, 80, y);
 
+    // Linha divisoria refinada
+    ctx.strokeStyle = '#29313e';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(80, 620);
+    ctx.lineTo(520, 620);
+    ctx.stroke();
+
+    // Rodapé estilo Spotify com o link do site
     ctx.fillStyle = '#9199a8';
-    ctx.font = '14px system-ui, sans-serif';
-    ctx.fillText('Calculado com tempo. — Sem anúncios.', 60, 720);
+    ctx.font = '750 12px system-ui, sans-serif';
+    ctx.fillText('CALCULADO EM', 80, 665);
+
+    ctx.fillStyle = '#f7f8fb';
+    ctx.font = '800 20px system-ui, sans-serif';
+    ctx.fillText('tempo.app.br', 80, 695);
+
+    ctx.fillStyle = '#7c5cff';
+    ctx.font = '750 12px system-ui, sans-serif';
+    ctx.fillText('✨ Sem anúncios', 415, 694);
 
     const link = document.createElement('a');
-    link.download = 'tempo-resultado.png';
+    link.download = 'tempo-spotify-card.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
   }
