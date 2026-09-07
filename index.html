@@ -506,6 +506,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
+  // NOVO GERADOR DE CARD 9:16 (ESTILO DASHBOARD PROFISSIONAL)
   function generateShareCard(toolKey, titleText, resultText, extraDetails = {}) {
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
@@ -513,12 +514,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const ctx = canvas.getContext('2d');
 
     const randomHue = Math.floor(Math.random() * 360);
-    const bg1Color = `hsl(${randomHue}, 45%, 14%)`;
-    const bg2Color = `hsl(${(randomHue + 40) % 360}, 35%, 7%)`;
-    const cardColor = `hsl(${randomHue}, 30%, 11%)`;
-    const accentColor = `hsl(${(randomHue + 50) % 360}, 85%, 65%)`;
+    const bg1Color = `hsl(${randomHue}, 50%, 12%)`;
+    const bg2Color = `hsl(${(randomHue + 45) % 360}, 40%, 6%)`;
+    const cardColor = `hsl(${randomHue}, 25%, 10%)`;
+    const accentColor = `hsl(${(randomHue + 55) % 360}, 85%, 65%)`;
 
-    const bgGrad = ctx.createRadialGradient(540, 500, 120, 540, 960, 1100);
+    // 1. Fundo Gradiente Orgânico com Glows Luminosos
+    const bgGrad = ctx.createRadialGradient(540, 400, 80, 540, 960, 1200);
     bgGrad.addColorStop(0, bg1Color);
     bgGrad.addColorStop(0.6, bg2Color);
     bgGrad.addColorStop(1, '#050608');
@@ -526,33 +528,45 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = accentColor;
-    ctx.globalAlpha = 0.12;
+    ctx.globalAlpha = 0.15;
     ctx.beginPath();
-    ctx.arc(880, 220, 190, 0, Math.PI * 2);
+    ctx.arc(900, 260, 220, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(200, 1720, 240, 0, Math.PI * 2);
+    ctx.arc(180, 1680, 280, 0, Math.PI * 2);
     ctx.fill();
     ctx.globalAlpha = 1.0;
 
+    // 2. Painel Principal Estilo Card de Vidro/Sólido
     ctx.fillStyle = cardColor;
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(70, 220, 940, 1480, 42);
+      ctx.roundRect(60, 140, 960, 1640, 48);
     } else {
-      ctx.rect(70, 220, 940, 1480);
+      ctx.rect(60, 140, 960, 1640);
     }
     ctx.fill();
     ctx.strokeStyle = '#29313e';
     ctx.lineWidth = 3;
     ctx.stroke();
 
-    ctx.fillStyle = '#111522';
+    // Linha de Destaque Superior no Card
+    ctx.fillStyle = accentColor;
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(130, 290, 520, 58, 29);
+      ctx.roundRect(60, 140, 960, 8, [48, 48, 0, 0]);
     } else {
-      ctx.rect(130, 290, 520, 58);
+      ctx.rect(60, 140, 960, 8);
+    }
+    ctx.fill();
+
+    // 3. Pílula de Categoria (Badge)
+    ctx.fillStyle = '#161c28';
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(120, 220, 560, 64, 32);
+    } else {
+      ctx.rect(120, 220, 560, 64);
     }
     ctx.fill();
     ctx.strokeStyle = accentColor;
@@ -560,19 +574,38 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.stroke();
 
     ctx.fillStyle = accentColor;
-    ctx.font = '850 19px system-ui, -apple-system, sans-serif';
+    ctx.font = '850 20px system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'left';
     const toolBadgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "tempo.utilitários").toUpperCase();
-    ctx.fillText(toolBadgeText, 160, 327);
+    ctx.fillText("⚡ " + toolBadgeText, 155, 262);
 
+    // 4. Título Principal
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = '800 40px system-ui, -apple-system, sans-serif';
-    ctx.fillText(titleText, 130, 425);
+    ctx.font = '800 44px system-ui, -apple-system, sans-serif';
+    ctx.fillText(titleText, 120, 360);
 
-    let fontSize = 76;
-    if (resultText.length > 15) fontSize = 60;
-    if (resultText.length > 30) fontSize = 44;
-    if (resultText.length > 50) fontSize = 32;
+    // 5. Caixa Hero de Resultado Principal
+    ctx.fillStyle = '#161c28';
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(120, 420, 840, 240, 28);
+    } else {
+      ctx.rect(120, 420, 840, 240);
+    }
+    ctx.fill();
+    ctx.strokeStyle = '#29313e';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = '#9199a8';
+    ctx.font = '750 16px system-ui';
+    ctx.fillText("RESULTADO PRINCIPAL", 160, 475);
+
+    // Renderização do resultado com quebra de linha dinâmica
+    let fontSize = 54;
+    if (resultText.length > 18) fontSize = 44;
+    if (resultText.length > 35) fontSize = 34;
+    if (resultText.length > 55) fontSize = 26;
 
     ctx.fillStyle = '#ffffff';
     ctx.font = `900 ${fontSize}px system-ui, -apple-system, sans-serif`;
@@ -583,7 +616,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for(let n = 0; n < words.length; n++) {
       let testLine = line + words[n] + ' ';
       let metrics = ctx.measureText(testLine);
-      if (metrics.width > 780 && n > 0) {
+      if (metrics.width > 760 && n > 0) {
         lines.push(line);
         line = words[n] + ' ';
       } else {
@@ -592,64 +625,79 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     lines.push(line);
 
-    let startY = 780 - ((lines.length * (fontSize + 14)) / 2);
+    let resStartY = 560 - ((lines.length * (fontSize + 8)) / 2);
     lines.forEach((l, idx) => {
-      ctx.fillText(l.trim(), 130, startY + (idx * (fontSize + 14)));
+      ctx.fillText(l.trim(), 160, resStartY + (idx * (fontSize + 8)));
     });
 
+    // 6. Grid Estilo Dashboard para Mais Informações (extraDetails)
     if (extraDetails && Object.keys(extraDetails).length > 0) {
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+      ctx.fillStyle = '#161c28';
       ctx.beginPath();
       if (ctx.roundRect) {
-        ctx.roundRect(130, 1020, 820, 360, 24);
+        ctx.roundRect(120, 700, 840, 840, 28);
       } else {
-        ctx.rect(130, 1020, 820, 360);
+        ctx.rect(120, 700, 840, 840);
       }
       ctx.fill();
       ctx.strokeStyle = '#29313e';
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 2;
       ctx.stroke();
 
       ctx.fillStyle = accentColor;
-      ctx.font = '800 16px system-ui, -apple-system, sans-serif';
-      ctx.fillText('DETALHES DA ANÁLISE', 170, 1075);
+      ctx.font = '800 18px system-ui, -apple-system, sans-serif';
+      ctx.fillText("📊 DETALHES COMPLETOS DA ANÁLISE", 160, 765);
 
-      let detailY = 1125;
-      Object.entries(extraDetails).forEach(([key, val]) => {
+      let entries = Object.entries(extraDetails);
+      let detailY = 825;
+
+      entries.forEach(([key, val], i) => {
+        // Linha divisória interna para cada métrica
+        if (i > 0) {
+          ctx.strokeStyle = '#222938';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(160, detailY - 25);
+          ctx.lineTo(920, detailY - 25);
+          ctx.stroke();
+        }
+
         ctx.fillStyle = '#9199a8';
-        ctx.font = '700 16px system-ui';
-        ctx.fillText(key.toUpperCase(), 170, detailY);
+        ctx.font = '750 15px system-ui';
+        ctx.fillText(key.toUpperCase(), 160, detailY);
 
         ctx.fillStyle = '#f7f8fb';
-        ctx.font = '800 20px system-ui';
+        ctx.font = '800 22px system-ui';
         ctx.textAlign = 'right';
-        ctx.fillText(val, 910, detailY);
+        ctx.fillText(val, 920, detailY);
         ctx.textAlign = 'left';
 
-        detailY += 52;
+        detailY += 75;
       });
     }
 
+    // 7. Rodapé do Card
     ctx.strokeStyle = '#29313e';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(130, 1530);
-    ctx.lineTo(950, 1530);
+    ctx.moveTo(120, 1610);
+    ctx.lineTo(960, 1610);
     ctx.stroke();
 
     ctx.fillStyle = '#9199a8';
-    ctx.font = '750 15px system-ui, -apple-system, sans-serif';
-    ctx.fillText('CRIADO E COMPARTILHADO VIA', 130, 1585);
+    ctx.font = '750 16px system-ui, -apple-system, sans-serif';
+    ctx.fillText("CRIADO E COMPARTILHADO VIA", 120, 1670);
 
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = '850 28px system-ui, -apple-system, sans-serif';
-    ctx.fillText('tempo', 130, 1624);
+    ctx.font = '850 32px system-ui, -apple-system, sans-serif';
+    ctx.fillText("tempo", 120, 1715);
     const w = ctx.measureText('tempo').width;
     ctx.fillStyle = accentColor;
-    ctx.fillText('.', 130 + w, 1624);
+    ctx.fillText('.', 120 + w, 1715);
     ctx.fillStyle = '#f7f8fb';
-    ctx.fillText(' utilitários', 130 + w + 4, 1624);
+    ctx.fillText(' utilitários', 120 + w + 4, 1715);
 
+    // Exportação automática do arquivo PNG para Stories
     const link = document.createElement('a');
     link.download = `tempo-${toolKey}-story.png`;
     link.href = canvas.toDataURL('image/png');
@@ -767,7 +815,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const x = calendarDifference(a, b);
         const html = `<div class="big">${x.y} ${x.y===1?'ano':'anos'}, ${x.m} ${x.m===1?'mês':'meses'} & ${x.d} ${x.d===1?'dia':'dias'}</div><div class="small">Total: ${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div>`;
         const plainText = `${x.y} anos, ${x.m} meses e ${x.d} dias`;
-        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Total de Dias": `${x.total.toLocaleString('pt-BR')} dias` };
+        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Anos": `${x.y} anos`, "Meses": `${x.m} meses`, "Dias": `${x.d} dias`, "Total de Dias": `${x.total.toLocaleString('pt-BR')} dias` };
         showResult(html, plainText, false, "", details);
       };
       $("#date1").oninput = calculate; $("#date2").oninput = calculate; calculate();
@@ -788,7 +836,7 @@ document.addEventListener("DOMContentLoaded", () => {
         d.setDate(d.getDate() + (st.mode === "add" ? n : -n));
         const html = `<div class="big">${formatDate(d)}</div><div class="small">${st.mode==="add"?'Adicionados':'Subtraídos'} ${n.toLocaleString('pt-BR')} ${n===1?'dia':'dias'}.</div>`;
         const plainText = `${formatDate(d)}`;
-        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição" : "Subtração", "Variação": `${n} dias` };
+        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição" : "Subtração", "Variação": `${n} dias`, "Resultado": formatDate(d) };
         showResult(html, plainText, false, "", details);
       };
       $("#baseDate").oninput = calculate; $("#days").oninput = calculate; calculate();
@@ -815,7 +863,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if(end < start) end += 1440;
       const total = end - start, h = Math.floor(total / 60), m = total % 60;
       const html = `<div class="big">${h}h ${m.toString().padStart(2, "0")}min</div><div class="small">Total: ${total.toLocaleString('pt-BR')} minutos</div>`;
-      const details = { "Início": a, "Fim": b, "Total em Minutos": `${total.toLocaleString('pt-BR')} min` };
+      const details = { "Início": a, "Fim": b, "Duração": `${h}h ${m}m`, "Total em Minutos": `${total.toLocaleString('pt-BR')} min` };
       showResult(html, `${h}h ${m.toString().padStart(2, "0")}min`, false, "", details);
     };
     
@@ -852,7 +900,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(!a || !b) return showResult("Selecione as duas datas.", "", true);
         const total = businessDaysDifference(a, b);
         const html = `<div class="big">${total.toLocaleString('pt-BR')} ${total===1?'dia útil':'dias úteis'}</div><div class="small">Intervalo sem finais de semana.</div>`;
-        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Tipo": "Dias Úteis" };
+        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Tipo": "Dias Úteis", "Total Útil": `${total} dias` };
         showResult(html, `${total} dias úteis`, false, "", details);
       };
       $("#bDate1").oninput = calculate; $("#bDate2").oninput = calculate; calculate();
@@ -871,7 +919,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe data e quantidade.", "", true);
         const d = addBusinessDays(base, n, st.mode === "add");
         const html = `<div class="big">${formatDate(d)}</div><div class="small">Resultado (${n} dias úteis).</div>`;
-        const details = { "Data Base": formatDate(base), "Dias Úteis": `${n} dias`, "Operação": st.mode === "add" ? "Adição" : "Subtração" };
+        const details = { "Data Base": formatDate(base), "Dias Úteis": `${n} dias`, "Operação": st.mode === "add" ? "Adição" : "Subtração", "Data Final": formatDate(d) };
         showResult(html, `${formatDate(d)}`, false, "", details);
       };
       $("#bBaseDate").oninput = calculate; $("#bDays").oninput = calculate; calculate();
@@ -992,7 +1040,7 @@ document.addEventListener("DOMContentLoaded", () => {
         statusEl.innerHTML = statusMsg;
       }
 
-      showResult(`<div class="big">${h.toString().padStart(2, '0')}:00 Base</div><div class="small">${statusMsg}</div>`, `Reunião Global às ${h}:00`, false, "Planejador de Reuniões", { "Hora Base": `${h}:00`, "Cidades em Expediente": `${workingCount}/5`, "Lisboa": cityTimesSummary[1]?.split(': ')[1] || '', "Nova York": cityTimesSummary[3]?.split(': ')[1] || '' });
+      showResult(`<div class="big">${h.toString().padStart(2, '0')}:00 Base</div><div class="small">${statusMsg}</div>`, `Reunião Global às ${h}:00`, false, "Planejador de Reuniões", { "Hora Base": `${h}:00`, "Expediente Ativo": `${workingCount}/5 Cidades`, "Brasília": cityTimesSummary[0]?.split(': ')[1] || '', "Lisboa": cityTimesSummary[1]?.split(': ')[1] || '', "Nova York": cityTimesSummary[3]?.split(': ')[1] || '' });
     }
 
     rangeInput.oninput = updateMeetingPlanner;
@@ -1062,7 +1110,7 @@ document.addEventListener("DOMContentLoaded", () => {
       displayEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
       
       const modeNames = { work: 'Sessão de Foco', short: 'Pausa Curta', long: 'Pausa Longa' };
-      showResult(`<div class="big">${m}:${s.toString().padStart(2, '0')}</div><div class="small">Modo: ${modeNames[st.mode]}</div>`, `${modeNames[st.mode]} - ${m}m concluídos`, false, "Temporizador Pomodoro", { "Ciclo": modeNames[st.mode], "Tempo Restante": `${m} min ${s} s`, "Foco": "Alto Rendimento" });
+      showResult(`<div class="big">${m}:${s.toString().padStart(2, '0')}</div><div class="small">Modo: ${modeNames[st.mode]}</div>`, `${modeNames[st.mode]} - ${m}m concluídos`, false, "Temporizador Pomodoro", { "Ciclo Atual": modeNames[st.mode], "Tempo Restante": `${m} min ${s} s`, "Produtividade": "Alto Rendimento", "Status": "Ativo" });
     }
     updateDisplay();
 
@@ -1166,7 +1214,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div style="margin-bottom: 16px;">
         <label style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:8px;" id="signLabel">SELECIONE O SEU SIGNO</label>
         <select id="signSelect" style="font-weight:700;">
-          ${signs.map(s => `<option value="${s.id}" ${st.sign === s.id ? 'selected' : ''}>${s.symbol} ${s.name}</option>`).join('')}
+          ${signs.map(s => `<option value="${s.id}" ${st.sign === s.id ? 'selected' : ''}>${s.name}</option>`).join('')}
         </select>
       </div>
       <div id="horoscopeContent" style="margin-top: 16px;"></div>
@@ -1223,12 +1271,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const compIdx = (signIndex + (todayEpochDays % 4)) % signs.length;
 
       const todayStr = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const pureGlyph = `<span style="font-size:24px; line-height:1; color:var(--text); display:inline-flex; align-items:center; background:transparent;">${signObj.symbol}</span>`;
 
       contentEl.innerHTML = `
         <div style="background:var(--bg); border:1px solid var(--line); border-radius:16px; padding:20px; text-align: left;">
           <div style="font-size: 11px; font-weight: 750; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">${todayStr}</div>
           <div style="font-size: 26px; font-weight: 900; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
-            <span>${signObj.symbol}</span> <span>${signObj.name}</span>
+            ${pureGlyph} <span>${signObj.name}</span>
           </div>
           <div style="margin-bottom: 16px;">
             <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Clima Astral</strong>
@@ -1257,8 +1306,15 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         </div>`;
 
-      const details = { "Signo": `${signObj.symbol} ${signObj.name}`, "Cor da Sorte": colors[colIdx], "Número Sorte": numbers[numIdx], "Harmonia": signs[compIdx].name };
-      showResult(`<div class="big">${signObj.symbol} ${signObj.name}</div><div class="small">${climatePool[cIdx]}</div>`, `${signObj.name} - Horóscopo Diário`, false, "Horóscopo Diário", details);
+      const details = { 
+        "Signo": `${signObj.symbol} ${signObj.name}`, 
+        "Clima Astral": climatePool[cIdx].slice(0, 42) + '...', 
+        "Cor da Sorte": colors[colIdx], 
+        "Número Sorte": numbers[numIdx], 
+        "Harmonia": signs[compIdx].name 
+      };
+      
+      showResult(`<div class="big" style="display:flex; align-items:center; justify-content:center; gap:8px;">${pureGlyph} <span>${signObj.name}</span></div><div class="small">${climatePool[cIdx]}</div>`, `${signObj.name} - Horóscopo Diário`, false, "Horóscopo Diário", details);
     }
 
     selectEl.onchange = () => { haptic(); updateHoroscope(); };
@@ -1283,7 +1339,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const x = calendarDifference(birth, ref);
       const html = `<div class="big">${x.y} anos, ${x.m} meses & ${x.d} dias</div><div class="small">Total: ~${x.total.toLocaleString('pt-BR')} dias.</div>`;
       const plainText = `${x.y} anos, ${x.m} meses e ${x.d} dias`;
-      const details = { "Nascimento": formatDate(birth), "Referência": formatDate(ref), "Dias Vividos": `${x.total.toLocaleString('pt-BR')} dias` };
+      const details = { "Nascimento": formatDate(birth), "Referência": formatDate(ref), "Anos": `${x.y} anos`, "Meses": `${x.m} meses`, "Dias": `${x.d} dias`, "Dias Vividos": `${x.total.toLocaleString('pt-BR')} dias` };
       showResult(html, plainText, false, "", details);
     };
     $("#birthDate").oninput = calculate; $("#refDate").oninput = calculate; calculate();
@@ -1312,7 +1368,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const html = `<div class="big">${weeks} semanas & ${days} dias</div><div class="small">Previsão do parto: <strong>${formatDate(dueDate)}</strong></div>`;
       const plainText = `${weeks} semanas e ${days} dias`;
-      const details = { "DUM": formatDate(dum), "Idade Gestacional": `${weeks} sem e ${days} dias`, "Parto Previsto": formatDate(dueDate) };
+      const details = { "DUM": formatDate(dum), "Idade Gestacional": `${weeks} sem e ${days} dias`, "Dias Totais": `${diffDays} dias`, "Parto Previsto": formatDate(dueDate) };
       showResult(html, plainText, false, "", details);
     };
     $("#dumDate").oninput = calculate; calculate();
@@ -1355,12 +1411,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (st.mode === "down") {
         if (today > evDate) return showResult("Data já passou!", "", true);
         const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Faltam para ${name}.</div>`;
-        const details = { "Evento": rawName, "Data Alvo": formatDate(evDate), "Contagem": `${x.total} dias restantes` };
+        const details = { "Evento": rawName, "Data Alvo": formatDate(evDate), "Modo": "Contagem Regressiva", "Tempo Restante": `${x.total} dias` };
         showResult(html, `${x.total} dias para ${rawName}`, false, "", details);
       } else {
         if (today < evDate) return showResult("Data futura!", "", true);
         const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Passados desde ${name}.</div>`;
-        const details = { "Evento": rawName, "Data Passada": formatDate(evDate), "Tempo Decorrido": `${x.total} dias` };
+        const details = { "Evento": rawName, "Data Passada": formatDate(evDate), "Modo": "Tempo Passado", "Tempo Decorrido": `${x.total} dias` };
         showResult(html, `${x.total} dias desde ${rawName}`, false, "", details);
       }
     };
@@ -1401,7 +1457,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="small">Normal: R$ ${vHora.toFixed(2)} | Extra (${rate}%): R$ ${vExtra.toFixed(2)}</div>
         <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
       `;
-      const details = { "Valor da Hora": `R$ ${vHora.toFixed(2)}`, "Qtd. Horas": `${qtd}h (${rate}%)`, "Total a Receber": `R$ ${total.toFixed(2)}` };
+      const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Jornada": `${jor}h`, "Valor da Hora": `R$ ${vHora.toFixed(2)}`, "Qtd. Horas": `${qtd}h (${rate}%)`, "Total a Receber": `R$ ${total.toFixed(2)}` };
       showResult(html, `R$ ${total.toFixed(2)}`, false, "", details);
     };
     $("#sal").oninput = calculate; $("#jor").oninput = calculate; $("#qtd").oninput = calculate; $("#rate").onchange = calculate; calculate();
@@ -1439,7 +1495,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="small">Proporcional a ${meses} ${meses===1?'mês':'meses'}.</div>
           <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
         `;
-        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Meses": `${meses}/12 avos`, "13º Salário": `R$ ${val.toFixed(2)}` };
+        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Período": `${meses}/12 avos`, "Tipo": "13º Salário", "Valor Estimado": `R$ ${val.toFixed(2)}` };
         showResult(html, `R$ ${val.toFixed(2)}`, false, "", details);
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
@@ -1462,7 +1518,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="small">Férias: R$ ${base.toFixed(2)} | 1/3: R$ ${terço.toFixed(2)}</div>
           <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
         `;
-        const details = { "Férias Prop.": `R$ ${base.toFixed(2)}`, "Adicional 1/3": `R$ ${terço.toFixed(2)}`, "Total Férias": `R$ ${total.toFixed(2)}` };
+        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Férias Prop.": `R$ ${base.toFixed(2)}`, "Adicional 1/3": `R$ ${terço.toFixed(2)}`, "Total Férias": `R$ ${total.toFixed(2)}` };
         showResult(html, `R$ ${total.toFixed(2)}`, false, "", details);
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
@@ -1567,7 +1623,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
       `;
-      const details = { "Saldo Salário": `R$ ${saldoSalario.toFixed(2)}`, "13º Salário": `R$ ${decimoTerceiro.toFixed(2)}`, "Férias + ⅓": `R$ ${feriasTotal.toFixed(2)}`, "Multa FGTS": `R$ ${multaFgts.toFixed(2)}` };
+      const details = { "Saldo Salário": `R$ ${saldoSalario.toFixed(2)}`, "13º Salário": `R$ ${decimoTerceiro.toFixed(2)}`, "Férias + ⅓": `R$ ${feriasTotal.toFixed(2)}`, "Aviso Prévio": `R$ ${avisoPrevio.toFixed(2)}`, "Multa FGTS": `R$ ${multaFgts.toFixed(2)}`, "Total Bruto": `R$ ${totalRescisao.toFixed(2)}` };
       showResult(html, `R$ ${totalRescisao.toFixed(2)}`, false, "", details);
     };
     $("#rSal").oninput = calculate; $("#rReason").onchange = calculate; $("#rAdm").oninput = calculate; $("#rTerm").oninput = calculate; calculate();
@@ -1597,7 +1653,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="big">${paceFormatted} <span style="font-size:16px; font-weight:normal; color:var(--muted);">min/km</span></div>
         <div class="small" style="margin-top:8px;">Velocidade Média: <strong>${speed} km/h</strong></div>
       `;
-      const details = { "Distância": `${dist} km`, "Tempo Total": `${totalMin} min`, "Velocidade": `${speed} km/h` };
+      const details = { "Distância": `${dist} km`, "Tempo Total": `${totalMin} min`, "Ritmo (Pace)": `${paceFormatted} min/km`, "Velocidade Média": `${speed} km/h` };
       showResult(html, `${paceFormatted} min/km`, false, "", details);
     };
     $("#runDist").oninput = calculate; $("#runTime").oninput = calculate; calculate();
