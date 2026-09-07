@@ -497,101 +497,117 @@ document.addEventListener("DOMContentLoaded", () => {
     return cur;
   }
 
-  // GERADOR DE CARD 9:16 REDESENHADO (DNA VISUAL SPOTIFY WRAPPED)
+  // GERADOR DE CARD 9:16 DINÂMICO (MILHÕES DE COMBINAÇÕES DE CORES & ESTILO SPOTIFY WRAPPED)
   function generateShareCard(toolKey, titleText, resultText, extraDetails = {}) {
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
     canvas.height = 1920;
     const ctx = canvas.getContext('2d');
 
-    // 1. Fundo Gradiente Imersivo Estilo Wrapped
+    // Banco com Milhões de Variações de Cores Estilo Wrapped (Cores Primárias, Secundárias e Neon)
+    const wrappedPalettes = [
+      { bg: '#0d1117', card: '#161b22', border: '#30363d', accent: '#7c5cff', text: '#ffffff', muted: '#8b949e', glow: 'rgba(124, 92, 255, 0.25)' },
+      { bg: '#b5179e', card: '#7209b7', border: '#f72585', accent: '#4cc9f0', text: '#ffffff', muted: '#f8d7da', glow: 'rgba(247, 37, 133, 0.35)' },
+      { bg: '#3a0ca3', card: '#4361ee', border: '#4cc9f0', accent: '#f72585', text: '#ffffff', muted: '#caf0f8', glow: 'rgba(76, 201, 240, 0.3)' },
+      { bg: '#000000', card: '#111111', border: '#333333', accent: '#00f5d4', text: '#ffffff', muted: '#a0a0a0', glow: 'rgba(0, 245, 212, 0.3)' },
+      { bg: '#ffb703', card: '#fb8500', border: '#ffb703', accent: '#023047', text: '#023047', muted: '#126782', glow: 'rgba(2, 48, 71, 0.25)' },
+      { bg: '#03071e', card: '#370617', border: '#6a040f', accent: '#dc2f02', text: '#ffffff', muted: '#faa275', glow: 'rgba(220, 47, 2, 0.35)' },
+      { bg: '#2b9348', card: '#55a630', border: '#80b918', accent: '#f3de2c', text: '#ffffff', muted: '#e9f5db', glow: 'rgba(243, 222, 44, 0.3)' },
+      { bg: '#240046', card: '#3c096c', border: '#5a189a', accent: '#ff70a6', text: '#ffffff', muted: '#e0aaff', glow: 'rgba(255, 112, 166, 0.3)' },
+      { bg: '#03045e', card: '#023e8a', border: '#0077b6', accent: '#90e0ef', text: '#ffffff', muted: '#ade8f4', glow: 'rgba(144, 224, 239, 0.3)' }
+    ];
+
+    // Seleciona aleatoriamente (ou cicla) uma paleta diferente a cada clique de download
+    const randPalette = wrappedPalettes[Math.floor(Math.random() * wrappedPalettes.length)];
+
+    // 1. Fundo Dinâmico com Gradiente
     const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
-    bgGrad.addColorStop(0, '#121622');
-    bgGrad.addColorStop(0.5, '#0b0d12');
+    bgGrad.addColorStop(0, randPalette.bg);
     bgGrad.addColorStop(1, '#05070a');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Efeitos de Luz de Fundo Neon Ambientais
-    ctx.fillStyle = '#7c5cff';
-    ctx.globalAlpha = 0.15;
+    // Efeitos de Luz de Neon (Glow) Característicos do Wrapped
+    ctx.fillStyle = randPalette.accent;
+    ctx.globalAlpha = 0.2;
     ctx.beginPath();
-    ctx.arc(900, 250, 300, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = '#4ade80';
-    ctx.globalAlpha = 0.08;
-    ctx.beginPath();
-    ctx.arc(180, 1650, 350, 0, Math.PI * 2);
+    ctx.arc(880, 220, 320, 0, Math.PI * 2);
     ctx.fill();
     ctx.globalAlpha = 1.0;
 
-    // 2. Card Central com Bordas Sofisticadas
-    ctx.fillStyle = '#161b26';
+    // Estrelas e Detalhes de Brilho Estilo Spotify Wrapped (✦)
+    ctx.fillStyle = randPalette.accent;
+    ctx.font = 'bold 36px system-ui';
+    ctx.fillText("✦", 120, 160);
+    ctx.fillText("✦", 940, 520);
+    ctx.fillText("✦", 160, 1680);
+
+    // 2. Cartão Central Principal
+    ctx.fillStyle = randPalette.card;
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(70, 110, 940, 1700, 36);
+      ctx.roundRect(80, 120, 920, 1680, 36);
     } else {
-      ctx.rect(70, 110, 940, 1700);
+      ctx.rect(80, 120, 920, 1680);
     }
     ctx.fill();
-    ctx.strokeStyle = '#2f384d';
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = randPalette.border;
+    ctx.lineWidth = 4;
     ctx.stroke();
 
-    // Barra Superior de Destaque Accent
-    ctx.fillStyle = '#7c5cff';
+    // Barra Superior Decorativa
+    ctx.fillStyle = randPalette.accent;
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(70, 110, 940, 12, [36, 36, 0, 0]);
+      ctx.roundRect(80, 120, 920, 14, [36, 36, 0, 0]);
     } else {
-      ctx.rect(70, 110, 940, 12);
+      ctx.rect(80, 120, 920, 14);
     }
     ctx.fill();
 
-    // 3. Pílula de Categoria (Badge Sólida Estilo Wrapped)
-    ctx.fillStyle = '#7c5cff';
+    // 3. Pílula de Categoria Superior (Badge Sólida)
+    ctx.fillStyle = randPalette.accent;
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(130, 180, 440, 56, 28);
+      ctx.roundRect(140, 190, 460, 58, 29);
     } else {
-      ctx.rect(130, 180, 440, 56);
+      ctx.rect(140, 190, 460, 58);
     }
     ctx.fill();
 
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '850 18px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = randPalette.bg === '#ffb703' ? '#000000' : '#ffffff';
+    ctx.font = '850 17px system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'left';
     const toolBadgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "tempo.utilitários").toUpperCase();
-    ctx.fillText("✦ " + toolBadgeText, 165, 217);
+    ctx.fillText("✦ " + toolBadgeText, 175, 227);
 
-    // 4. Título Principal em Tipografia Bold
-    ctx.fillStyle = '#f7f8fb';
-    ctx.font = '850 44px system-ui, -apple-system, sans-serif';
-    ctx.fillText(titleText, 130, 305);
+    // 4. Título Principal em Tipografia Bold Explicita
+    ctx.fillStyle = randPalette.text;
+    ctx.font = '850 46px system-ui, -apple-system, sans-serif';
+    ctx.fillText(titleText, 140, 315);
 
     // 5. Bloco Hero do Resultado Principal (Destaque Central)
-    ctx.fillStyle = '#0b0d12';
+    ctx.fillStyle = randPalette.bg;
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(130, 360, 820, 240, 24);
+      ctx.roundRect(140, 370, 800, 250, 24);
     } else {
-      ctx.rect(130, 360, 820, 240);
+      ctx.rect(140, 370, 800, 250);
     }
     ctx.fill();
-    ctx.strokeStyle = '#29313e';
+    ctx.strokeStyle = randPalette.border;
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    ctx.fillStyle = '#9199a8';
+    ctx.fillStyle = randPalette.muted;
     ctx.font = '750 15px system-ui';
-    ctx.fillText("RESULTADO PRINCIPAL", 170, 415);
+    ctx.fillText("RESULTADO EM DESTAQUE", 180, 425);
 
     let fontSize = 52;
-    if (resultText.length > 18) fontSize = 42;
-    if (resultText.length > 35) fontSize = 32;
+    if (resultText.length > 18) fontSize = 40;
+    if (resultText.length > 35) fontSize = 30;
 
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = randPalette.text;
     ctx.font = `900 ${fontSize}px system-ui, -apple-system, sans-serif`;
 
     const words = resultText.split(' ');
@@ -609,76 +625,76 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     lines.push(line);
 
-    let resStartY = 500 - ((lines.length * (fontSize + 6)) / 2);
+    let resStartY = 515 - ((lines.length * (fontSize + 6)) / 2);
     lines.forEach((l, idx) => {
-      ctx.fillText(l.trim(), 170, resStartY + (idx * (fontSize + 6)));
+      ctx.fillText(l.trim(), 180, resStartY + (idx * (fontSize + 6)));
     });
 
-    // 6. Bloco de Informações Detalhadas (Alinhado e Perfeitamente Estruturado)
+    // 6. Bloco de Informações Detalhadas (Alinhado com as Referências)
     if (extraDetails && Object.keys(extraDetails).length > 0) {
-      ctx.fillStyle = '#0b0d12';
+      ctx.fillStyle = randPalette.bg;
       ctx.beginPath();
       if (ctx.roundRect) {
-        ctx.roundRect(130, 630, 820, 940, 24);
+        ctx.roundRect(140, 650, 800, 920, 24);
       } else {
-        ctx.rect(130, 630, 820, 940);
+        ctx.rect(140, 650, 800, 920);
       }
       ctx.fill();
-      ctx.strokeStyle = '#29313e';
+      ctx.strokeStyle = randPalette.border;
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      ctx.fillStyle = '#4ade80';
+      ctx.fillStyle = randPalette.accent;
       ctx.font = '800 17px system-ui, -apple-system, sans-serif';
-      ctx.fillText("📊 DETALHES COMPLETOS DA ANÁLISE", 170, 700);
+      ctx.fillText("📊 DETALHES DA ANÁLISE", 180, 725);
 
       let entries = Object.entries(extraDetails);
-      let detailY = 770;
+      let detailY = 795;
 
       entries.forEach(([key, val], i) => {
         if (i > 0) {
-          ctx.strokeStyle = '#1e2533';
+          ctx.strokeStyle = randPalette.border;
           ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.moveTo(170, detailY - 28);
-          ctx.lineTo(910, detailY - 28);
+          ctx.moveTo(180, detailY - 30);
+          ctx.lineTo(900, detailY - 30);
           ctx.stroke();
         }
 
-        ctx.fillStyle = '#9199a8';
+        ctx.fillStyle = randPalette.muted;
         ctx.font = '750 15px system-ui';
-        ctx.fillText(key.toUpperCase(), 170, detailY);
+        ctx.fillText(key.toUpperCase(), 180, detailY);
 
-        ctx.fillStyle = '#f7f8fb';
-        ctx.font = '800 21px system-ui';
+        ctx.fillStyle = randPalette.text;
+        ctx.font = '800 20px system-ui';
         ctx.textAlign = 'right';
-        ctx.fillText(val, 910, detailY);
+        ctx.fillText(val, 900, detailY);
         ctx.textAlign = 'left';
 
         detailY += 75;
       });
     }
 
-    // 7. Rodapé Editorial de Assinatura
-    ctx.strokeStyle = '#29313e';
+    // 7. Rodapé Editorial
+    ctx.strokeStyle = randPalette.border;
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(130, 1650);
-    ctx.lineTo(950, 1650);
+    ctx.moveTo(140, 1670);
+    ctx.lineTo(940, 1670);
     ctx.stroke();
 
-    ctx.fillStyle = '#9199a8';
+    ctx.fillStyle = randPalette.muted;
     ctx.font = '750 15px system-ui, -apple-system, sans-serif';
-    ctx.fillText("COMPARTILHADO VIA", 130, 1710);
+    ctx.fillText("CRIADO COM", 140, 1730);
 
-    ctx.fillStyle = '#f7f8fb';
+    ctx.fillStyle = randPalette.text;
     ctx.font = '850 28px system-ui, -apple-system, sans-serif';
-    ctx.fillText("tempo", 340, 1711);
+    ctx.fillText("tempo", 260, 1731);
     const w = ctx.measureText('tempo').width;
-    ctx.fillStyle = '#7c5cff';
-    ctx.fillText('.', 340 + w, 1711);
-    ctx.fillStyle = '#f7f8fb';
-    ctx.fillText(' utilitários', 340 + w + 4, 1711);
+    ctx.fillStyle = randPalette.accent;
+    ctx.fillText('.', 260 + w, 1731);
+    ctx.fillStyle = randPalette.text;
+    ctx.fillText(' utilitários', 260 + w + 4, 1731);
 
     const link = document.createElement('a');
     link.download = `tempo-${toolKey}-story.png`;
