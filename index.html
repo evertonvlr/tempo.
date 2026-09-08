@@ -644,92 +644,98 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineWidth = 2.5;
     ctx.stroke();
 
-    // --- MARCAS D'ÁGUA TEMÁTICAS NO FUNDO DO CARD ---
+    // --- ELEMENTOS ILUSTRATIVOS TEMÁTICOS DEDICADOS (FORA/NAS BORDAS DO CARD) ---
     ctx.save();
-    // Criamos uma máscara para os desenhos não vazarem das bordas arredondadas do card
     ctx.beginPath();
     if (ctx.roundRect) ctx.roundRect(cardX, cardY, cardW, cardH, 40);
     else ctx.rect(cardX, cardY, cardW, cardH);
     ctx.clip();
 
-    ctx.globalAlpha = 0.05; // Opacidade quase transparente (Fundo sutil)
+    ctx.globalAlpha = 0.08; // Visibilidade sutil, elegante e integrada
     ctx.strokeStyle = accentColor;
     ctx.fillStyle = accentColor;
+    ctx.lineWidth = 14;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
     if (toolKey.includes('pregnancy')) {
-      // Coração abstrato gigante
-      ctx.lineWidth = 20;
-      ctx.beginPath();
-      ctx.moveTo(cardX + cardW / 2, cardY + 350);
-      ctx.bezierCurveTo(cardX + cardW / 2, cardY + 200, cardX + cardW - 200, cardY + 200, cardX + cardW - 200, cardY + 400);
-      ctx.bezierCurveTo(cardX + cardW - 200, cardY + 600, cardX + cardW / 2, cardY + 750, cardX + cardW / 2, cardY + 750);
-      ctx.bezierCurveTo(cardX + cardW / 2, cardY + 750, cardX + 200, cardY + 600, cardX + 200, cardY + 400);
-      ctx.bezierCurveTo(cardX + 200, cardY + 200, cardX + cardW / 2, cardY + 200, cardX + cardW / 2, cardY + 350);
-      ctx.stroke();
+      // ELEMENTOS DE GESTAÇÃO: Mamadeira & Chupeta Minimalistas
+      // 1. Chupeta (Canto Superior Direito)
+      ctx.save();
+      ctx.translate(cardX + cardW - 160, cardY + 160);
+      ctx.beginPath(); ctx.arc(0, 0, 45, 0, Math.PI*2); ctx.stroke(); // Argola
+      ctx.fillRect(-15, -45, 30, 25); // Escudo
+      ctx.beginPath(); ctx.arc(0, 30, 22, 0, Math.PI); ctx.fill(); // Bico
+      ctx.restore();
+
+      // 2. Mamadeira (Canto Inferior Esquerdo)
+      ctx.save();
+      ctx.translate(cardX + 160, cardY + cardH - 220);
+      ctx.rotate(-Math.PI / 6);
+      ctx.strokeRect(-25, -50, 50, 100); // Corpo
+      ctx.beginPath(); ctx.moveTo(-35, -50); ctx.lineTo(35, -50); ctx.lineTo(0, -95); ctx.closePath(); ctx.fill(); // Bico
+      ctx.restore();
     } 
     else if (['date', 'business', 'age', 'countdown'].includes(toolKey)) {
-      // Grid de pontos de Calendário
-      ctx.beginPath();
-      for(let x = cardX + 150; x < cardX + cardW - 50; x += 100) {
-        for(let y = cardY + 150; y < cardY + 700; y += 100) {
-          ctx.moveTo(x, y);
-          ctx.arc(x, y, 10, 0, Math.PI*2);
-        }
-      }
-      ctx.fill();
+      // ELEMENTOS DE TEMPO/CALENDÁRIO: Calendário & Relógio de Bolso
+      ctx.save();
+      ctx.translate(cardX + cardW - 180, cardY + 180);
+      ctx.strokeRect(-50, -40, 100, 90);
+      ctx.beginPath(); ctx.moveTo(-50, -5); ctx.lineTo(50, -5); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-25, -60); ctx.lineTo(-25, -40); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(25, -60); ctx.lineTo(25, -40); ctx.stroke();
+      ctx.restore();
     } 
     else if (['overtime', 'vacation13', 'rescision'].includes(toolKey)) {
-      // Gráfico financeiro de alta
-      ctx.lineWidth = 30;
-      ctx.lineJoin = 'round';
-      ctx.beginPath();
-      ctx.moveTo(cardX + 100, cardY + 700);
-      ctx.lineTo(cardX + 350, cardY + 550);
-      ctx.lineTo(cardX + 550, cardY + 650);
-      ctx.lineTo(cardX + 850, cardY + 250);
-      ctx.stroke();
-      [ [cardX + 100, cardY + 700], [cardX + 350, cardY + 550], [cardX + 550, cardY + 650], [cardX + 850, cardY + 250] ].forEach(([nx, ny]) => {
-        ctx.beginPath(); ctx.arc(nx, ny, 40, 0, Math.PI*2); ctx.fill();
-      });
+      // ELEMENTOS FINANCEIROS/CLT: Cédulas & Moedas
+      ctx.save();
+      ctx.translate(cardX + cardW - 180, cardY + 180);
+      ctx.strokeRect(-70, -40, 140, 80);
+      ctx.beginPath(); ctx.arc(0, 0, 22, 0, Math.PI*2); ctx.stroke();
+      ctx.restore();
     } 
     else if (['time', 'worldclock', 'meeting', 'pomodoro'].includes(toolKey)) {
-      // Aros gigantes (Cronômetro/Radar)
-      ctx.lineWidth = 15;
-      ctx.setLineDash([50, 40]);
-      ctx.beginPath(); ctx.arc(cardX + cardW, cardY, 400, 0, Math.PI*2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(cardX + cardW, cardY, 650, 0, Math.PI*2); ctx.stroke();
-      ctx.setLineDash([]);
+      // ELEMENTOS DE HORAS: Relógio Clássico Minimalista
+      ctx.save();
+      ctx.translate(cardX + cardW - 180, cardY + 180);
+      ctx.beginPath(); ctx.arc(0, 0, 55, 0, Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -30); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(25, 10); ctx.stroke();
+      ctx.restore();
     } 
     else if (toolKey === 'sleep') {
-      // Elementos de Sono (Zzz)
-      ctx.lineWidth = 20;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.beginPath(); ctx.moveTo(cardX + 600, cardY + 250); ctx.lineTo(cardX + 800, cardY + 250); ctx.lineTo(cardX + 600, cardY + 450); ctx.lineTo(cardX + 800, cardY + 450); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(cardX + 450, cardY + 500); ctx.lineTo(cardX + 550, cardY + 500); ctx.lineTo(cardX + 450, cardY + 600); ctx.lineTo(cardX + 550, cardY + 600); ctx.stroke();
+      // ELEMENTOS DE SONO: Lua Crescente & Estrelas
+      ctx.save();
+      ctx.translate(cardX + cardW - 180, cardY + 180);
+      ctx.beginPath();
+      ctx.arc(0, 0, 50, -Math.PI/2, Math.PI/2, false);
+      ctx.arc(15, 0, 45, Math.PI/2, -Math.PI/2, true);
+      ctx.fill();
+      ctx.restore();
     } 
     else if (toolKey === 'running') {
-      // Pista de velocidade
-      ctx.lineWidth = 40;
-      ctx.lineCap = 'round';
-      for(let i=0; i<4; i++) {
-        ctx.beginPath();
-        ctx.moveTo(cardX + 150 + (i*120), cardY + 250 + (i*100));
-        ctx.lineTo(cardX + cardW + 200, cardY + 250 + (i*100));
-        ctx.stroke();
-      }
+      // ELEMENTOS DE ESPORTE: Tênis de Corrida / Pegada
+      ctx.save();
+      ctx.translate(cardX + cardW - 180, cardY + 180);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 60, 30, Math.PI/6, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
     } 
     else if (toolKey === 'horoscope') {
-      // Constelação Geométrica Astrológica
-      ctx.lineWidth = 8;
-      const pts = [ [cardX+250, cardY+250], [cardX+600, cardY+150], [cardX+750, cardY+450], [cardX+450, cardY+600], [cardX+700, cardY+800] ];
-      ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
-      pts.forEach(p => ctx.lineTo(p[0], p[1])); ctx.stroke();
-      pts.forEach(p => { ctx.beginPath(); ctx.arc(p[0], p[1], 20, 0, Math.PI*2); ctx.fill(); });
+      // ELEMENTOS DE ASTROLOGIA: Estrela Mística / Constelação Geométrica
+      ctx.save();
+      ctx.translate(cardX + cardW - 180, cardY + 180);
+      ctx.beginPath();
+      ctx.moveTo(0, -60); ctx.lineTo(15, -15); ctx.lineTo(60, 0); ctx.lineTo(15, 15);
+      ctx.lineTo(0, 60); ctx.lineTo(-15, 15); ctx.lineTo(-60, 0); ctx.lineTo(-15, -15);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
     }
 
     ctx.restore();
-    // ------------------------------------------------
+    // -------------------------------------------------------------
 
     // --- Badge (Categoria da Ferramenta) ---
     const badgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "UTILITÁRIO").toUpperCase();
@@ -759,22 +765,18 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = 'none';
 
     if (toolKey.includes('overtime') || toolKey.includes('vacation') || toolKey.includes('rescision')) {
-      // Ícone Dinheiro/Trabalhista (Carteira minimalista)
       ctx.strokeRect(-14, -10, 28, 20);
       ctx.beginPath(); ctx.arc(0, 0, 4, 0, Math.PI * 2); ctx.stroke();
     } else if (toolKey.includes('sleep') || toolKey.includes('time') || toolKey.includes('worldclock') || toolKey.includes('meeting') || toolKey.includes('pomodoro') || toolKey.includes('countdown')) {
-      // Ícone Relógio
       ctx.beginPath(); ctx.arc(0, 0, 14, 0, Math.PI * 2); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(0, -6); ctx.lineTo(0, 0); ctx.lineTo(4, 4); ctx.stroke();
     } else if (toolKey.includes('horoscope')) {
-      // Ícone Astrologia (Estrela geométrica 100% SVG via paths)
       ctx.beginPath();
       ctx.moveTo(0, -14); ctx.lineTo(3, -4); ctx.lineTo(13, -4); ctx.lineTo(5, 2);
       ctx.lineTo(8, 12); ctx.lineTo(0, 6); ctx.lineTo(-8, 12); ctx.lineTo(-5, 2);
       ctx.lineTo(-13, -4); ctx.lineTo(-3, -4); ctx.closePath();
       ctx.stroke();
     } else {
-      // Ícone Padrão (Calendário)
       ctx.strokeRect(-12, -10, 24, 22);
       ctx.beginPath(); ctx.moveTo(-12, -2); ctx.lineTo(12, -2); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(-6, -14); ctx.lineTo(-6, -6); ctx.stroke();
@@ -787,7 +789,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Título Principal ---
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = '800 64px system-ui, sans-serif'; // Fonte altamente legível
+    ctx.font = '800 64px system-ui, sans-serif';
     ctx.fillText(titleText, cardX + 70, badgeY + 160);
 
     // --- Resultado do Cálculo ---
@@ -808,40 +810,32 @@ document.addEventListener("DOMContentLoaded", () => {
       const boxX = cardX + 70;
       const boxW = cardW - 140;
 
-      // Pré-calcular o tamanho necessário da caixa para abraçar todos os textos sem cortar
       ctx.font = '800 32px system-ui, sans-serif'; 
       let detailLayout = [];
       let totalDetailsHeight = 0;
 
       Object.entries(extraDetails).forEach(([key, val]) => {
-        // Reservamos 340px para a chave na esquerda, o restante pra quebra de linha do valor (ex: Clima Astral)
         let lines = wrapTextCanvas(ctx, val.toString(), boxW - 340);
         let itemHeight = Math.max(76, lines.length * 40 + 36);
         detailLayout.push({ key, lines, height: itemHeight });
         totalDetailsHeight += itemHeight;
       });
 
-      // Calcular H e Y com base no conteúdo gerado
       let boxH = totalDetailsHeight + 110; 
-      let boxY = cardY + cardH - 240 - boxH; // Posicionado dinamicamente acima do footer
+      let boxY = cardY + cardH - 240 - boxH;
 
-      // Desenhar Fundo da Caixa de Detalhes
       ctx.fillStyle = panelBgColor;
       ctx.beginPath();
       if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 32);
       else ctx.rect(boxX, boxY, boxW, boxH);
       ctx.fill();
 
-      // Cabeçalho da Caixa
       ctx.fillStyle = accentColor;
       ctx.font = '800 24px system-ui, sans-serif';
       ctx.fillText("DETALHES DA ANÁLISE & MÉTRICAS", boxX + 45, boxY + 55);
 
-      // Loop desenhando as Chaves e os Valores já com multi-line processado
       let currentY = boxY + 130;
       detailLayout.forEach((item, i) => {
-        
-        // Linha divisória
         if (i > 0) {
           ctx.strokeStyle = borderColor;
           ctx.lineWidth = 2;
@@ -851,13 +845,11 @@ document.addEventListener("DOMContentLoaded", () => {
           ctx.stroke();
         }
 
-        // Desenhar Chave (Esquerda)
         ctx.fillStyle = '#9199a8';
         ctx.font = '750 28px system-ui, sans-serif';
         ctx.textAlign = 'left';
         ctx.fillText(item.key.toUpperCase(), boxX + 45, currentY);
 
-        // Desenhar Valores (Direita, Suportando N Linhas!)
         ctx.fillStyle = '#f7f8fb';
         ctx.font = '800 32px system-ui, sans-serif';
         ctx.textAlign = 'right';
@@ -866,7 +858,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ctx.fillText(line, boxX + boxW - 45, lineY);
           lineY += 40;
         });
-        ctx.textAlign = 'left'; // Reset
+        ctx.textAlign = 'left';
 
         currentY += item.height;
       });
@@ -888,7 +880,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.font = '900 32px system-ui, sans-serif';
     ctx.fillText("→ Calcule o seu em tempo.utilitarios", cardX + 70, cardY + cardH - 50);
 
-    // Baixar o Card
     const link = document.createElement('a');
     link.download = `tempo-${toolKey}-story.png`;
     link.href = canvas.toDataURL('image/png');
@@ -1592,10 +1583,9 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         </div>`;
 
-      // NENHUM EMOJI AQUI MAIS: String limpas passadas para a geração do Card!
       const details = { 
         "Signo": signObj.name, 
-        "Clima Astral": climatePool[cIdx], // Sem cortes!
+        "Clima Astral": climatePool[cIdx],
         "Cor da Sorte": colors[colIdx], 
         "Número Sorte": numbers[numIdx], 
         "Harmonia": signs[compIdx].name,
