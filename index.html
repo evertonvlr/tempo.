@@ -644,6 +644,93 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineWidth = 2.5;
     ctx.stroke();
 
+    // --- MARCAS D'ÁGUA TEMÁTICAS NO FUNDO DO CARD ---
+    ctx.save();
+    // Criamos uma máscara para os desenhos não vazarem das bordas arredondadas do card
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(cardX, cardY, cardW, cardH, 40);
+    else ctx.rect(cardX, cardY, cardW, cardH);
+    ctx.clip();
+
+    ctx.globalAlpha = 0.05; // Opacidade quase transparente (Fundo sutil)
+    ctx.strokeStyle = accentColor;
+    ctx.fillStyle = accentColor;
+
+    if (toolKey.includes('pregnancy')) {
+      // Coração abstrato gigante
+      ctx.lineWidth = 20;
+      ctx.beginPath();
+      ctx.moveTo(cardX + cardW / 2, cardY + 350);
+      ctx.bezierCurveTo(cardX + cardW / 2, cardY + 200, cardX + cardW - 200, cardY + 200, cardX + cardW - 200, cardY + 400);
+      ctx.bezierCurveTo(cardX + cardW - 200, cardY + 600, cardX + cardW / 2, cardY + 750, cardX + cardW / 2, cardY + 750);
+      ctx.bezierCurveTo(cardX + cardW / 2, cardY + 750, cardX + 200, cardY + 600, cardX + 200, cardY + 400);
+      ctx.bezierCurveTo(cardX + 200, cardY + 200, cardX + cardW / 2, cardY + 200, cardX + cardW / 2, cardY + 350);
+      ctx.stroke();
+    } 
+    else if (['date', 'business', 'age', 'countdown'].includes(toolKey)) {
+      // Grid de pontos de Calendário
+      ctx.beginPath();
+      for(let x = cardX + 150; x < cardX + cardW - 50; x += 100) {
+        for(let y = cardY + 150; y < cardY + 700; y += 100) {
+          ctx.moveTo(x, y);
+          ctx.arc(x, y, 10, 0, Math.PI*2);
+        }
+      }
+      ctx.fill();
+    } 
+    else if (['overtime', 'vacation13', 'rescision'].includes(toolKey)) {
+      // Gráfico financeiro de alta
+      ctx.lineWidth = 30;
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(cardX + 100, cardY + 700);
+      ctx.lineTo(cardX + 350, cardY + 550);
+      ctx.lineTo(cardX + 550, cardY + 650);
+      ctx.lineTo(cardX + 850, cardY + 250);
+      ctx.stroke();
+      [ [cardX + 100, cardY + 700], [cardX + 350, cardY + 550], [cardX + 550, cardY + 650], [cardX + 850, cardY + 250] ].forEach(([nx, ny]) => {
+        ctx.beginPath(); ctx.arc(nx, ny, 40, 0, Math.PI*2); ctx.fill();
+      });
+    } 
+    else if (['time', 'worldclock', 'meeting', 'pomodoro'].includes(toolKey)) {
+      // Aros gigantes (Cronômetro/Radar)
+      ctx.lineWidth = 15;
+      ctx.setLineDash([50, 40]);
+      ctx.beginPath(); ctx.arc(cardX + cardW, cardY, 400, 0, Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cardX + cardW, cardY, 650, 0, Math.PI*2); ctx.stroke();
+      ctx.setLineDash([]);
+    } 
+    else if (toolKey === 'sleep') {
+      // Elementos de Sono (Zzz)
+      ctx.lineWidth = 20;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(cardX + 600, cardY + 250); ctx.lineTo(cardX + 800, cardY + 250); ctx.lineTo(cardX + 600, cardY + 450); ctx.lineTo(cardX + 800, cardY + 450); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cardX + 450, cardY + 500); ctx.lineTo(cardX + 550, cardY + 500); ctx.lineTo(cardX + 450, cardY + 600); ctx.lineTo(cardX + 550, cardY + 600); ctx.stroke();
+    } 
+    else if (toolKey === 'running') {
+      // Pista de velocidade
+      ctx.lineWidth = 40;
+      ctx.lineCap = 'round';
+      for(let i=0; i<4; i++) {
+        ctx.beginPath();
+        ctx.moveTo(cardX + 150 + (i*120), cardY + 250 + (i*100));
+        ctx.lineTo(cardX + cardW + 200, cardY + 250 + (i*100));
+        ctx.stroke();
+      }
+    } 
+    else if (toolKey === 'horoscope') {
+      // Constelação Geométrica Astrológica
+      ctx.lineWidth = 8;
+      const pts = [ [cardX+250, cardY+250], [cardX+600, cardY+150], [cardX+750, cardY+450], [cardX+450, cardY+600], [cardX+700, cardY+800] ];
+      ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+      pts.forEach(p => ctx.lineTo(p[0], p[1])); ctx.stroke();
+      pts.forEach(p => { ctx.beginPath(); ctx.arc(p[0], p[1], 20, 0, Math.PI*2); ctx.fill(); });
+    }
+
+    ctx.restore();
+    // ------------------------------------------------
+
     // --- Badge (Categoria da Ferramenta) ---
     const badgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "UTILITÁRIO").toUpperCase();
     ctx.font = '800 24px system-ui, sans-serif';
