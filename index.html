@@ -558,23 +558,23 @@ document.addEventListener("DOMContentLoaded", () => {
     return lines;
   }
 
-  // --- MOTOR DE GERAÇÃO DE CARDS RESTAURADO (COM CORES DINÂMICAS ALEATÓRIAS) ---
+  // --- MOTOR DE GERAÇÃO DE CARDS POSTÁVEIS (ORGANIC TRAFFIC ENGINE) ---
   function executeGenerateShareCard(toolKey, titleText, resultText, extraDetails = {}, styleMood = 'sofisticado') {
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
     canvas.height = 1920;
     const ctx = canvas.getContext('2d');
 
-    // Geração de tom aleatório elegante a cada clique no card
+    // Matizes dinâmicos aleatórios por nicho/clique para garantir cores novas e atrativas
     const randomHue = Math.floor(Math.random() * 360);
     let baseBgColor, cardBgColor, panelBgColor, borderColor, accentColor;
 
     if (styleMood === 'glass') {
       baseBgColor = `hsl(${randomHue}, 24%, 6%)`;
-      cardBgColor = `hsla(${randomHue}, 22%, 13%, 0.90)`;
-      panelBgColor = `hsla(${randomHue}, 18%, 18%, 0.75)`;
+      cardBgColor = `hsla(${randomHue}, 22%, 13%, 0.92)`;
+      panelBgColor = `hsla(${randomHue}, 18%, 18%, 0.78)`;
       borderColor = `hsla(${randomHue}, 30%, 45%, 0.35)`;
-      accentColor = `hsl(${(randomHue + 40) % 360}, 85%, 70%)`;
+      accentColor = `hsl(${(randomHue + 45) % 360}, 85%, 72%)`;
     } else if (styleMood === 'mono') {
       baseBgColor = `#09090b`;
       cardBgColor = `#18181b`;
@@ -582,7 +582,7 @@ document.addEventListener("DOMContentLoaded", () => {
       borderColor = `#3f3f46`;
       accentColor = `#f4f4f5`;
     } else {
-      // Dark Sofisticado com Orbs de atmosfera colorida dinâmica
+      // Dark Sofisticado com Atmosfera Dinâmica
       baseBgColor = `#0b0d12`;
       cardBgColor = `#131720`;
       panelBgColor = `#1a202b`;
@@ -594,33 +594,33 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = baseBgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Orbes Luminosas de Atmosfera Dinâmica
+    // Orbes Luminosas de Atmosfera para chamar atenção no Story
     if (styleMood === 'sofisticado') {
-      const g1 = ctx.createRadialGradient(200, 200, 20, 200, 200, 600);
-      g1.addColorStop(0, `hsla(${randomHue}, 80%, 55%, 0.14)`);
+      const g1 = ctx.createRadialGradient(220, 250, 30, 220, 250, 650);
+      g1.addColorStop(0, `hsla(${randomHue}, 85%, 55%, 0.16)`);
       g1.addColorStop(1, 'transparent');
       ctx.fillStyle = g1;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      const g2 = ctx.createRadialGradient(880, 1720, 30, 880, 1720, 700);
-      g2.addColorStop(0, `hsla(${(randomHue + 140) % 360}, 80%, 55%, 0.12)`);
+      const g2 = ctx.createRadialGradient(860, 1680, 40, 860, 1680, 750);
+      g2.addColorStop(0, `hsla(${(randomHue + 130) % 360}, 85%, 55%, 0.14)`);
       g2.addColorStop(1, 'transparent');
       ctx.fillStyle = g2;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    const cardX = 80;
-    const cardY = 130;
-    const cardW = 920;
-    const cardH = 1660;
+    const cardX = 70;
+    const cardY = 110;
+    const cardW = 940;
+    const cardH = 1700;
 
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
-    ctx.shadowBlur = 45;
-    ctx.shadowOffsetY = 14;
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
+    ctx.shadowBlur = 50;
+    ctx.shadowOffsetY = 16;
 
     ctx.fillStyle = cardBgColor;
     ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(cardX, cardY, cardW, cardH, 32);
+    if (ctx.roundRect) ctx.roundRect(cardX, cardY, cardW, cardH, 36);
     else ctx.rect(cardX, cardY, cardW, cardH);
     ctx.fill();
     ctx.shadowColor = 'transparent';
@@ -629,7 +629,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // --- ÍCONE VETORIAL SUPERIOR ---
+    // --- ELEMENTOS VISUAIS ESPECÍFICOS POR UTILITÁRIO (ÍCONES & SELOS TEMÁTICOS) ---
     ctx.save();
     ctx.strokeStyle = accentColor;
     ctx.fillStyle = accentColor;
@@ -725,11 +725,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     ctx.restore();
 
-    // --- Badge ---
+    // --- Badge Temático Superior ---
     const badgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "UTILITÁRIO").toUpperCase();
-    ctx.font = '800 20px system-ui, sans-serif';
+    ctx.font = '800 19px system-ui, sans-serif';
     const badgeMetrics = ctx.measureText(badgeText);
-    const badgeW = badgeMetrics.width + 52;
+    const badgeW = badgeMetrics.width + 56;
     const badgeH = 50;
     const badgeX = cardX + 60;
     const badgeY = cardY + 60;
@@ -744,48 +744,48 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.stroke();
 
     ctx.fillStyle = accentColor;
-    ctx.fillText(badgeText, badgeX + 26, badgeY + 32);
+    ctx.fillText(badgeText, badgeX + 28, badgeY + 32);
 
     // --- Título Principal ---
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = '800 48px system-ui, sans-serif';
-    ctx.fillText(titleText, cardX + 60, badgeY + 135);
+    ctx.font = '800 44px system-ui, sans-serif';
+    ctx.fillText(titleText, cardX + 60, badgeY + 130);
 
-    // --- Resultado Principal ---
-    let resFontSize = 92;
-    if (resultText.length > 18) resFontSize = 74;
-    if (resultText.length > 30) resFontSize = 54;
+    // --- Resultado Principal Destacado ---
+    let resFontSize = 84;
+    if (resultText.length > 18) resFontSize = 66;
+    if (resultText.length > 30) resFontSize = 48;
     ctx.font = `900 ${resFontSize}px system-ui, sans-serif`;
 
     let resLines = wrapTextCanvas(ctx, resultText, cardW - 120);
-    let resStartY = badgeY + 245;
+    let resStartY = badgeY + 235;
     resLines.forEach((l) => {
       ctx.fillText(l.trim(), cardX + 60, resStartY);
-      resStartY += resFontSize + 10;
+      resStartY += resFontSize + 12;
     });
 
-    // --- Bloco de Métricas do Rodapé ---
+    // --- Bloco de Métricas Detalhadas Específicas do Utilitário ---
     if (extraDetails && Object.keys(extraDetails).length > 0) {
       const boxX = cardX + 60;
       const boxW = cardW - 120;
 
-      ctx.font = '800 22px system-ui, sans-serif'; 
+      ctx.font = '800 20px system-ui, sans-serif'; 
       let detailLayout = [];
       let totalDetailsHeight = 0;
 
       Object.entries(extraDetails).forEach(([key, val]) => {
-        let lines = wrapTextCanvas(ctx, val.toString(), boxW - 250);
-        let itemHeight = Math.max(60, lines.length * 30 + 20);
+        let lines = wrapTextCanvas(ctx, val.toString(), boxW - 240);
+        let itemHeight = Math.max(64, lines.length * 30 + 22);
         detailLayout.push({ key, lines, height: itemHeight });
         totalDetailsHeight += itemHeight;
       });
 
       let boxH = totalDetailsHeight + 84; 
-      let boxY = cardY + cardH - 180 - boxH;
+      let boxY = cardY + cardH - 185 - boxH;
 
       ctx.fillStyle = panelBgColor;
       ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 24);
+      if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 26);
       else ctx.rect(boxX, boxY, boxW, boxH);
       ctx.fill();
       ctx.strokeStyle = borderColor;
@@ -793,10 +793,10 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.stroke();
 
       ctx.fillStyle = accentColor;
-      ctx.font = '800 18px system-ui, sans-serif';
-      ctx.fillText("MÉTRICAS DA ANÁLISE", boxX + 32, boxY + 40);
+      ctx.font = '800 17px system-ui, sans-serif';
+      ctx.fillText("INDICADORES DA ANÁLISE", boxX + 32, boxY + 38);
 
-      let currentY = boxY + 95;
+      let currentY = boxY + 92;
       detailLayout.forEach((item, i) => {
         if (i > 0) {
           ctx.strokeStyle = borderColor;
@@ -808,12 +808,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         ctx.fillStyle = '#9199a8';
-        ctx.font = '750 20px system-ui, sans-serif';
+        ctx.font = '750 19px system-ui, sans-serif';
         ctx.textAlign = 'left';
         ctx.fillText(item.key.toUpperCase(), boxX + 32, currentY);
 
         ctx.fillStyle = '#f7f8fb';
-        ctx.font = '800 22px system-ui, sans-serif';
+        ctx.font = '800 21px system-ui, sans-serif';
         ctx.textAlign = 'right';
         let lineY = currentY;
         item.lines.forEach(line => {
@@ -826,7 +826,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // --- Footer do Card ---
+    // --- Footer de Chamada para Ação (Call to Action Orgânica para Tráfego) ---
     ctx.strokeStyle = borderColor;
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -835,8 +835,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.stroke();
 
     ctx.fillStyle = '#9199a8';
-    ctx.font = '750 19px system-ui, sans-serif';
-    ctx.fillText("CRIADO VIA tempo.utilitários", cardX + 60, cardY + cardH - 65);
+    ctx.font = '750 18px system-ui, sans-serif';
+    ctx.fillText("QUER CALCULAR O SEU TAMBÉM?", cardX + 60, cardY + cardH - 65);
 
     ctx.fillStyle = accentColor;
     ctx.font = '900 22px system-ui, sans-serif';
@@ -864,7 +864,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         extraActions = `
           <div class="action-buttons">
-            <button class="action-btn" id="shareCardBtn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Gerar Card 9:16 (Stories)</button>
+            <button class="action-btn" id="shareCardBtn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Gerar Card Postável 9:16 (Stories)</button>
             ${shareHtml}
             ${['Horas Extras (CLT)', 'Rescisão Contratual (Acerto)'].includes(titleEl.textContent) ? '<button class="action-btn" id="printPdfBtn"><svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> Exportar PDF</button>' : ''}
           </div>
@@ -895,7 +895,7 @@ document.addEventListener("DOMContentLoaded", () => {
             haptic();
             navigator.share({
               title: titleEl.textContent,
-              text: `Confira este cálculo do tempo.utilitários:\n\n${titleEl.textContent}\nResultado: ${plainText}\n`,
+              text: `Confira este cálculo no tempo.utilitários:\n\n${titleEl.textContent}\nResultado: ${plainText}\n`,
               url: window.location.href
             }).catch(console.error);
           };
@@ -1005,7 +1005,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const x = calendarDifference(a, b);
         const html = `<div class="big">${x.y} ${x.y===1?'ano':'anos'}, ${x.m} ${x.m===1?'mês':'meses'} & ${x.d} ${x.d===1?'dia':'dias'}</div><div class="small">Total: ${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div>`;
         const plainText = `${x.y} anos, ${x.m} meses e ${x.d} dias`;
-        const details = { "Início": formatDate(a), "Fim": formatDate(b) };
+        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Total de Dias": `${x.total.toLocaleString('pt-BR')} dias` };
         showResult(html, plainText, false, "", details);
       };
       $("#date1").oninput = calculate; $("#date2").oninput = calculate; calculate();
@@ -1027,7 +1027,7 @@ document.addEventListener("DOMContentLoaded", () => {
         d.setDate(d.getDate() + (st.mode === "add" ? n : -n));
         const html = `<div class="big">${formatDate(d)}</div><div class="small">${st.mode==="add"?'Adicionados':'Subtraídos'} ${n.toLocaleString('pt-BR')} ${n===1?'dia':'dias'}.</div>`;
         const plainText = `${formatDate(d)}`;
-        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição" : "Subtração" };
+        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição de Dias" : "Subtração de Dias", "Variação": `${n} dias` };
         showResult(html, plainText, false, "", details);
       };
       $("#baseDate").oninput = calculate; $("#days").oninput = calculate; calculate();
@@ -1055,7 +1055,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if(end < start) end += 1440;
       const total = end - start, h = Math.floor(total / 60), m = total % 60;
       const html = `<div class="big">${h}h ${m.toString().padStart(2, "0")}min</div><div class="small">Total: ${total.toLocaleString('pt-BR')} minutos</div>`;
-      const details = { "Início": a, "Fim": b };
+      const details = { "Início": a, "Fim": b, "Total em Minutos": `${total.toLocaleString('pt-BR')} min` };
       showResult(html, `${h}h ${m.toString().padStart(2, "0")}min`, false, "", details);
     };
     
@@ -1092,7 +1092,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(!a || !b) return showResult("Selecione as duas datas.", "", true);
         const total = businessDaysDifference(a, b);
         const html = `<div class="big">${total.toLocaleString('pt-BR')} ${total===1?'dia útil':'dias úteis'}</div><div class="small">Intervalo sem finais de semana.</div>`;
-        const details = { "Início": formatDate(a), "Fim": formatDate(b) };
+        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Regime": "Dias Úteis (Seg-Sex)" };
         showResult(html, `${total} dias úteis`, false, "", details);
       };
       $("#bDate1").oninput = calculate; $("#bDate2").oninput = calculate; calculate();
@@ -1112,7 +1112,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe data e quantidade.", "", true);
         const d = addBusinessDays(base, n, st.mode === "add");
         const html = `<div class="big">${formatDate(d)}</div><div class="small">Resultado (${n} dias úteis).</div>`;
-        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição" : "Subtração" };
+        const details = { "Data Base": formatDate(base), "Ação": st.mode === "add" ? "Prazo Final Útil" : "Retroativo Útil", "Qtd. Úteis": `${n} dias` };
         showResult(html, `${formatDate(d)}`, false, "", details);
       };
       $("#bBaseDate").oninput = calculate; $("#bDays").oninput = calculate; calculate();
@@ -1163,7 +1163,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateClocks();
     window._wcInterval = setInterval(updateClocks, 1000);
     
-    showResult(`<div class="big">Relógio Global Ativo</div><div class="small">Compartilhe o horário das capitais mundiais.</div>`, `Brasília / Lisboa / NY / Londres / Tóquio`, false, "Relógio Mundial", { "Fuso Local": Intl.DateTimeFormat().resolvedOptions().timeZone });
+    showResult(`<div class="big">Relógio Global Ativo</div><div class="small">Monitore o horário nas principais capitais do planeta.</div>`, `Brasília / Lisboa / NY / Londres / Tóquio`, false, "Relógio Mundial", { "Fuso Local": Intl.DateTimeFormat().resolvedOptions().timeZone, "Monitorados": "5 Capitais Globais" });
   }
 
   function renderMeeting() {
@@ -1277,7 +1277,7 @@ document.addEventListener("DOMContentLoaded", () => {
       displayEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
       
       const modeNames = { work: 'Sessão de Foco', short: 'Pausa Curta', long: 'Pausa Longa' };
-      showResult(`<div class="big">${m}:${s.toString().padStart(2, '0')}</div><div class="small">Modo: ${modeNames[st.mode]}</div>`, `${modeNames[st.mode]} - ${m}m`, false, "Temporizador Pomodoro", { "Método": "Pomodoro 25/5" });
+      showResult(`<div class="big">${m}:${s.toString().padStart(2, '0')}</div><div class="small">Modo: ${modeNames[st.mode]}</div>`, `${modeNames[st.mode]} - ${m}m`, false, "Temporizador Pomodoro", { "Método": "Pomodoro 25/5", "Status": st.running ? "Em Andamento" : "Pausado" });
     }
     updateDisplay();
 
@@ -1395,7 +1395,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
         const bestTime = times.find(t=>t.c===5).time;
-        showResult(html, `Durma às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Melhor Horário": bestTime, "Tempo Adormecer": "15 minutos" });
+        showResult(html, `Durma às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Melhor Horário": bestTime, "Duração Ideal": "7h 30m (5 ciclos)", "Adormecer": "15 minutos" });
       
       } else {
         const times = [];
@@ -1414,7 +1414,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
         const bestTime = times.find(t=>t.c===5).time;
-        showResult(html, `Acorde às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Base Científica": "Ciclos de 90m" });
+        showResult(html, `Acorde às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Alarme Recomendado": bestTime, "Base Científica": "Ciclos de 90m do sono" });
       }
     };
 
@@ -1575,9 +1575,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if(!birth || !ref) return showResult("Selecione as datas.", "", true);
       if(birth > ref) return showResult("Data futura inválida.", "", true);
       const x = calendarDifference(birth, ref);
-      const html = `<div class="big">${x.y} anos, ${x.m} meses & ${x.d} dias</div><div class="small">Total: ~${x.total.toLocaleString('pt-BR')} dias.</div>`;
+      const html = `<div class="big">${x.y} anos, ${x.m} meses & ${x.d} dias</div><div class="small">Total: ~${x.total.toLocaleString('pt-BR')} dias vividos.</div>`;
       const plainText = `${x.y} anos, ${x.m} meses e ${x.d} dias`;
-      const details = { "Nascimento": formatDate(birth), "Referência": formatDate(ref) };
+      const details = { "Nascimento": formatDate(birth), "Referência": formatDate(ref), "Total em Dias": `${x.total.toLocaleString('pt-BR')} dias` };
       showResult(html, plainText, false, "", details);
     };
     $("#birthDate").oninput = calculate; $("#refDate").oninput = calculate; calculate();
@@ -1607,7 +1607,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const html = `<div class="big">${weeks} semanas & ${days} dias</div><div class="small">Previsão do parto: <strong>${formatDate(dueDate)}</strong></div>`;
       const plainText = `${weeks} semanas e ${days} dias`;
-      const details = { "DUM": formatDate(dum), "Parto Previsto": formatDate(dueDate) };
+      const details = { "DUM": formatDate(dum), "Idade Gestacional": `${weeks} semanas`, "Parto Previsto": formatDate(dueDate) };
       showResult(html, plainText, false, "", details);
     };
     $("#dumDate").oninput = calculate; calculate();
@@ -1650,12 +1650,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (st.mode === "down") {
         if (today > evDate) return showResult("Data já passou!", "", true);
         const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Faltam para ${name}.</div>`;
-        const details = { "Data Alvo": formatDate(evDate), "Modo": "Contagem Regressiva" };
+        const details = { "Evento": rawName, "Data Alvo": formatDate(evDate), "Contagem": `${x.total} dias restantes` };
         showResult(html, `${x.total} dias para ${rawName}`, false, "", details);
       } else {
         if (today < evDate) return showResult("Data futura!", "", true);
         const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Passados desde ${name}.</div>`;
-        const details = { "Data Passada": formatDate(evDate), "Modo": "Tempo Passado" };
+        const details = { "Evento": rawName, "Data Passada": formatDate(evDate), "Tempo Decorrido": `${x.total} dias` };
         showResult(html, `${x.total} dias desde ${rawName}`, false, "", details);
       }
     };
@@ -1697,7 +1697,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="small">Normal: R$ ${vHora.toFixed(2)} | Extra (${rate}%): R$ ${vExtra.toFixed(2)}</div>
         <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
       `;
-      const details = { "Valor da Hora": `R$ ${vHora.toFixed(2)}`, "Qtd. Horas": `${qtd}h`, "Adicional": `${rate}%` };
+      const details = { "Valor da Hora": `R$ ${vHora.toFixed(2)}`, "Qtd. Horas": `${qtd}h`, "Adicional": `${rate}%`, "Valor da Hora Extra": `R$ ${vExtra.toFixed(2)}` };
       showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
     };
     $("#sal").oninput = calculate; $("#jor").oninput = calculate; $("#qtd").oninput = calculate; $("#rate").onchange = calculate; calculate();
@@ -1736,7 +1736,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="small">Proporcional a ${meses} ${meses===1?'mês':'meses'}.</div>
           <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
         `;
-        const details = { "Período": `${meses}/12 avos`, "Tipo": "13º Salário" };
+        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Período": `${meses}/12 avos`, "Benefício": "13º Salário Proporcional" };
         showResult(html, `R$ ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
@@ -1904,7 +1904,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="big">${paceFormatted} <span style="font-size:16px; font-weight:normal; color:var(--muted);">min/km</span></div>
         <div class="small" style="margin-top:8px;">Velocidade Média: <strong>${speed} km/h</strong></div>
       `;
-      const details = { "Distância": `${dist} km`, "Velocidade": `${speed} km/h` };
+      const details = { "Distância": `${dist} km`, "Pace Médio": `${paceFormatted} min/km`, "Velocidade": `${speed} km/h` };
       showResult(html, `${paceFormatted} min/km`, false, "", details);
     };
     $("#runDist").oninput = calculate; $("#runTime").oninput = calculate; calculate();
@@ -2087,7 +2087,7 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(() => {
       if (window.innerWidth > 900) {
         const firstEl = tool.querySelector('input, select, button');
-        if (firstEl) firstEl.focus();
+        if (firstEl) first_el.focus();
       } else {
         const y = tool.getBoundingClientRect().top + window.scrollY - 80;
         window.scrollTo({ top: y, behavior: 'smooth' });
