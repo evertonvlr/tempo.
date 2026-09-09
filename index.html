@@ -569,8 +569,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (styleMood === 'glass') {
       baseBgColor = `hsl(${randomHue}, 25%, 9%)`;
-      cardBgColor = `hsla(${randomHue}, 25%, 15%, 0.85)`;
-      panelBgColor = `hsla(${randomHue}, 20%, 22%, 0.65)`;
+      cardBgColor = `hsla(${randomHue}, 25%, 15%, 0.88)`;
+      panelBgColor = `hsla(${randomHue}, 20%, 22%, 0.70)`;
       borderColor = `hsla(${randomHue}, 30%, 45%, 0.35)`;
       accentColor = `hsl(${(randomHue + 50) % 360}, 90%, 72%)`;
     } else if (styleMood === 'mono') {
@@ -591,288 +591,243 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = baseBgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const g1 = ctx.createRadialGradient(150, 150, 20, 150, 150, 600);
-    g1.addColorStop(0, `hsla(${randomHue}, 70%, 50%, 0.12)`);
+    const g1 = ctx.createRadialGradient(180, 180, 20, 180, 180, 550);
+    g1.addColorStop(0, `hsla(${randomHue}, 70%, 50%, 0.15)`);
     g1.addColorStop(1, 'transparent');
     ctx.fillStyle = g1;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const g2 = ctx.createRadialGradient(950, 1750, 30, 950, 1750, 700);
-    g2.addColorStop(0, `hsla(${(randomHue + 120) % 360}, 70%, 50%, 0.10)`);
+    const g2 = ctx.createRadialGradient(900, 1740, 30, 900, 1740, 650);
+    g2.addColorStop(0, `hsla(${(randomHue + 120) % 360}, 70%, 50%, 0.12)`);
     g2.addColorStop(1, 'transparent');
     ctx.fillStyle = g2;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // --- Base do Card Central ---
-    const cardX = 90;
-    const cardY = 140;
-    const cardW = 900;
-    const cardH = 1640;
+    // --- Dimensões do Card Central ---
+    const cardX = 80;
+    const cardY = 130;
+    const cardW = 920;
+    const cardH = 1660;
 
-    // --- ELEMENTOS ILUSTRATIVOS TEMÁTICOS ESPECÍFICOS PARA OS 15 UTILITÁRIOS ---
+    // --- ILUSTRAÇÃO ORGÂNICA DE TOPO (VETORIAL CUSTOMIZADA) ---
     ctx.save();
     ctx.strokeStyle = accentColor;
     ctx.fillStyle = accentColor;
-    ctx.lineWidth = 6;
+    ctx.lineWidth = 5;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.globalAlpha = 0.35;
+    ctx.globalAlpha = 0.45;
+
+    ctx.translate(cardX + cardW - 75, cardY + 75);
 
     if (toolKey === 'date') {
-      // Calendário com Marcação
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
-      ctx.strokeRect(-35, -35, 70, 70);
-      ctx.beginPath(); ctx.moveTo(-35, -15); ctx.lineTo(35, -15); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 10, 8, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
+      // Ícone orgânico de Calendário Fluido
+      ctx.beginPath(); ctx.roundRect(-24, -28, 48, 52, 10); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-24, -8); ctx.lineTo(24, -8); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 10, 5, 0, Math.PI * 2); ctx.fill();
     } 
     else if (toolKey === 'time') {
-      // Relógio Minimalista com Ponteiros
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
-      ctx.beginPath(); ctx.arc(0, 0, 38, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -20); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(16, 8); ctx.stroke();
-      ctx.restore();
+      // Relógio Minimalista Fluido
+      ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -14); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(10, 4); ctx.stroke();
     }
     else if (toolKey === 'business') {
-      // Maleta de Negócios / Pasta Executiva
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
-      ctx.strokeRect(-40, -25, 80, 50);
-      ctx.beginPath(); ctx.roundRect(-15, -35, 30, 12, 4); ctx.stroke();
-      ctx.restore();
+      // Maleta / Pasta Executiva Orgânica
+      ctx.beginPath(); ctx.roundRect(-28, -18, 56, 36, 8); ctx.stroke();
+      ctx.beginPath(); ctx.roundRect(-10, -26, 20, 10, 4); ctx.stroke();
     }
     else if (toolKey === 'worldclock') {
-      // Globo Terrestre Estilizado
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
-      ctx.beginPath(); ctx.arc(0, 0, 38, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.ellipse(0, 0, 18, 38, 0, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-38, 0); ctx.lineTo(38, 0); ctx.stroke();
-      ctx.restore();
+      // Globo Terrestre Curvilíneo
+      ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(0, 0, 12, 28, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-28, 0); ctx.lineTo(28, 0); ctx.stroke();
     }
     else if (toolKey === 'meeting') {
-      // Balões de Diálogo / Conexão Global
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
-      ctx.beginPath(); ctx.roundRect(-42, -30, 55, 35, 10); ctx.stroke();
-      ctx.beginPath(); ctx.roundRect(-12, -2, 55, 35, 10); ctx.fill();
-      ctx.restore();
+      // Balões de Diálogo Conectados
+      ctx.beginPath(); ctx.roundRect(-30, -20, 36, 24, 8); ctx.stroke();
+      ctx.beginPath(); ctx.roundRect(-6, -2, 36, 24, 8); ctx.fill();
     }
     else if (toolKey === 'pomodoro') {
-      // Alvo / Foco Pomodoro
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
-      ctx.beginPath(); ctx.arc(0, 0, 38, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 0, 22, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
+      // Alvo / Foco Circular Orgânico
+      ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, 16, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI * 2); ctx.fill();
     }
     else if (toolKey === 'sleep') {
-      // Lua Crescente e Estrelas de Descanso
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
+      // Lua Crescente Suave com Estrela
       ctx.beginPath();
-      ctx.arc(0, 0, 36, -Math.PI/2, Math.PI/2, false);
-      ctx.arc(12, 0, 30, Math.PI/2, -Math.PI/2, true);
+      ctx.arc(0, 0, 26, -Math.PI/1.5, Math.PI/1.5, false);
+      ctx.arc(8, 0, 20, Math.PI/1.5, -Math.PI/1.5, true);
       ctx.fill();
-      ctx.restore();
     }
     else if (toolKey === 'horoscope') {
-      // Estrela Mística de 8 Pontas
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
+      // Estrela Mística Fluida
       ctx.beginPath();
-      ctx.moveTo(0, -40); ctx.lineTo(12, -12); ctx.lineTo(40, 0); ctx.lineTo(12, 12);
-      ctx.lineTo(0, 40); ctx.lineTo(-12, 12); ctx.lineTo(-40, 0); ctx.lineTo(-12, -12);
+      ctx.moveTo(0, -30); ctx.lineTo(9, -9); ctx.lineTo(30, 0); ctx.lineTo(9, 9);
+      ctx.lineTo(0, 30); ctx.lineTo(-9, 9); ctx.lineTo(-30, 0); ctx.lineTo(-9, -9);
       ctx.closePath(); ctx.fill();
-      ctx.restore();
     }
     else if (toolKey === 'age') {
-      // Balança de Análise de Vida / Marcador de Anos
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
-      ctx.beginPath(); ctx.arc(0, -10, 26, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-35, 25); ctx.lineTo(35, 25); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(0, 16); ctx.lineTo(0, 25); ctx.stroke();
-      ctx.restore();
+      // Coração / Marcador de Vida
+      ctx.beginPath();
+      ctx.moveTo(0, 10);
+      ctx.bezierCurveTo(-25, -10, -25, -28, 0, -16);
+      ctx.bezierCurveTo(25, -28, 25, -10, 0, 10);
+      ctx.fill();
     }
     else if (toolKey === 'pregnancy') {
-      // Mamadeira e Chupeta Temática
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
-      ctx.rotate(Math.PI / 12);
-      ctx.beginPath(); ctx.roundRect(-18, -35, 36, 75, 6); ctx.stroke();
-      ctx.strokeRect(-10, -50, 20, 15);
-      ctx.beginPath(); ctx.moveTo(-15, -50); ctx.lineTo(15, -50); ctx.lineTo(0, -75); ctx.closePath(); ctx.fill();
-      ctx.restore();
+      // Coração Duplo Gestacional
+      ctx.beginPath();
+      ctx.arc(-8, -4, 14, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath();
+      ctx.arc(8, 4, 14, 0, Math.PI * 2); ctx.fill();
     }
     else if (toolKey === 'countdown') {
-      // Ampulheta / Contagem Regressiva
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
+      // Ampulheta Estilizada Orgânica
       ctx.beginPath();
-      ctx.moveTo(-28, -35); ctx.lineTo(28, -35);
+      ctx.moveTo(-20, -26); ctx.lineTo(20, -26);
       ctx.lineTo(0, 0);
-      ctx.lineTo(28, 35); ctx.lineTo(-28, 35);
+      ctx.lineTo(20, 26); ctx.lineTo(-20, 26);
       ctx.lineTo(0, 0);
       ctx.closePath(); ctx.stroke();
-      ctx.restore();
     }
     else if (toolKey === 'overtime') {
-      // Gráfico de Linha de Crescimento Financeiro
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
+      // Gráfico de Linha Ascendente Fluido
       ctx.beginPath();
-      ctx.moveTo(-35, 25); ctx.lineTo(-15, 5); ctx.lineTo(5, 15); ctx.lineTo(35, -25);
+      ctx.moveTo(-26, 18); ctx.lineTo(-10, 2); ctx.lineTo(6, 10); ctx.lineTo(26, -18);
       ctx.stroke();
-      ctx.beginPath(); ctx.arc(35, -25, 6, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
+      ctx.beginPath(); ctx.arc(26, -18, 5, 0, Math.PI * 2); ctx.fill();
     }
     else if (toolKey === 'vacation13') {
-      // Cédula de Dinheiro / Benefício
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
-      ctx.rotate(-Math.PI / 10);
-      ctx.strokeRect(-45, -28, 90, 56);
-      ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
+      // Cédula / Benefício Arredondado
+      ctx.rotate(-Math.PI / 12);
+      ctx.beginPath(); ctx.roundRect(-32, -20, 64, 40, 8); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI * 2); ctx.fill();
     }
     else if (toolKey === 'rescision') {
-      // Prancheta de Acordo / Contrato Trabalhista
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
-      ctx.strokeRect(-32, -38, 64, 76);
-      ctx.beginPath(); ctx.moveTo(-18, -15); ctx.lineTo(18, -15); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-18, 5); ctx.lineTo(12, 5); ctx.stroke();
-      ctx.restore();
+      // Prancheta de Acordo com Check
+      ctx.beginPath(); ctx.roundRect(-24, -28, 48, 56, 8); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-12, -8); ctx.lineTo(12, -8); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-12, 6); ctx.lineTo(6, 6); ctx.stroke();
     }
     else if (toolKey === 'running') {
-      // Tênis de Corrida Dinâmico
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
+      // Onda de Ritmo / Tênis Orgânico
       ctx.rotate(-Math.PI / 8);
-      ctx.beginPath(); ctx.roundRect(-40, -14, 80, 30, [16, 22, 10, 10]); ctx.fill();
-      ctx.restore();
+      ctx.beginPath(); ctx.roundRect(-30, -10, 60, 22, 11); ctx.fill();
     }
     else {
-      // Padrão Genérico Elegante
-      ctx.save();
-      ctx.translate(cardX + cardW + 45, cardY + 120);
-      ctx.beginPath(); ctx.arc(0, 0, 35, 0, Math.PI * 2); ctx.stroke();
-      ctx.restore();
+      ctx.beginPath(); ctx.arc(0, 0, 24, 0, Math.PI * 2); ctx.stroke();
     }
     ctx.restore();
 
     // Sombra e Corpo do Card
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-    ctx.shadowBlur = 60;
-    ctx.shadowOffsetY = 20;
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
+    ctx.shadowBlur = 50;
+    ctx.shadowOffsetY = 15;
 
     ctx.fillStyle = cardBgColor;
     ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(cardX, cardY, cardW, cardH, 40);
+    if (ctx.roundRect) ctx.roundRect(cardX, cardY, cardW, cardH, 36);
     else ctx.rect(cardX, cardY, cardW, cardH);
     ctx.fill();
     ctx.shadowColor = 'transparent';
 
     ctx.strokeStyle = borderColor;
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 2;
     ctx.stroke();
 
     // --- Badge ---
     const badgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "UTILITÁRIO").toUpperCase();
-    ctx.font = '800 24px system-ui, sans-serif';
+    ctx.font = '800 22px system-ui, sans-serif';
     const badgeMetrics = ctx.measureText(badgeText);
-    const badgeW = badgeMetrics.width + 100;
-    const badgeH = 64;
-    const badgeX = cardX + 70;
-    const badgeY = cardY + 70;
+    const badgeW = badgeMetrics.width + 60;
+    const badgeH = 54;
+    const badgeX = cardX + 60;
+    const badgeY = cardY + 60;
 
     ctx.fillStyle = panelBgColor;
     ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 32);
+    if (ctx.roundRect) ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 26);
     else ctx.rect(badgeX, badgeY, badgeW, badgeH);
     ctx.fill();
     ctx.strokeStyle = borderColor;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1.5;
     ctx.stroke();
 
     ctx.fillStyle = '#f7f8fb';
-    ctx.fillText(badgeText, badgeX + 68, badgeY + 41);
+    ctx.fillText(badgeText, badgeX + 30, badgeY + 34);
 
     // --- Título Principal ---
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = '800 58px system-ui, sans-serif';
-    ctx.fillText(titleText, cardX + 70, badgeY + 150);
+    ctx.font = '800 52px system-ui, sans-serif';
+    ctx.fillText(titleText, cardX + 60, badgeY + 140);
 
-    // --- Resultado com Ajuste Automático de Tamanho para Evitar Vazamento ---
-    let resFontSize = 110;
-    if (resultText.length > 18) resFontSize = 85;
-    if (resultText.length > 30) resFontSize = 65;
+    // --- Resultado com Ajuste Dinâmico de Fonte ---
+    let resFontSize = 100;
+    if (resultText.length > 18) resFontSize = 78;
+    if (resultText.length > 30) resFontSize = 58;
     ctx.font = `900 ${resFontSize}px system-ui, sans-serif`;
 
-    let resLines = wrapTextCanvas(ctx, resultText, cardW - 140);
-    let resStartY = badgeY + 280;
+    let resLines = wrapTextCanvas(ctx, resultText, cardW - 120);
+    let resStartY = badgeY + 250;
     resLines.forEach((l) => {
-      ctx.fillText(l.trim(), cardX + 70, resStartY);
-      resStartY += resFontSize + 12;
+      ctx.fillText(l.trim(), cardX + 60, resStartY);
+      resStartY += resFontSize + 10;
     });
 
-    // --- Caixa de Detalhes Estética com Margens Seguras ---
+    // --- Caixa de Detalhes Estética (Eliminando redundâncias) ---
     if (extraDetails && Object.keys(extraDetails).length > 0) {
-      const boxX = cardX + 70;
-      const boxW = cardW - 140;
+      const boxX = cardX + 60;
+      const boxW = cardW - 120;
 
-      ctx.font = '800 26px system-ui, sans-serif'; 
+      ctx.font = '800 24px system-ui, sans-serif'; 
       let detailLayout = [];
       let totalDetailsHeight = 0;
 
       Object.entries(extraDetails).forEach(([key, val]) => {
-        let lines = wrapTextCanvas(ctx, val.toString(), boxW - 320);
-        let itemHeight = Math.max(68, lines.length * 36 + 28);
+        let lines = wrapTextCanvas(ctx, val.toString(), boxW - 280);
+        let itemHeight = Math.max(62, lines.length * 32 + 24);
         detailLayout.push({ key, lines, height: itemHeight });
         totalDetailsHeight += itemHeight;
       });
 
-      let boxH = totalDetailsHeight + 100; 
-      let boxY = cardY + cardH - 220 - boxH;
+      let boxH = totalDetailsHeight + 90; 
+      let boxY = cardY + cardH - 180 - boxH;
 
       ctx.fillStyle = panelBgColor;
       ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 30);
+      if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 26);
       else ctx.rect(boxX, boxY, boxW, boxH);
       ctx.fill();
 
       ctx.fillStyle = accentColor;
-      ctx.font = '800 22px system-ui, sans-serif';
-      ctx.fillText("DETALHES DA ANÁLISE & MÉTRICAS", boxX + 40, boxY + 48);
+      ctx.font = '800 20px system-ui, sans-serif';
+      ctx.fillText("MÉTRICAS DA ANÁLISE", boxX + 36, boxY + 42);
 
-      let currentY = boxY + 115;
+      let currentY = boxY + 100;
       detailLayout.forEach((item, i) => {
         if (i > 0) {
           ctx.strokeStyle = borderColor;
-          ctx.lineWidth = 1.5;
+          ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.moveTo(boxX + 40, currentY - 35);
-          ctx.lineTo(boxX + boxW - 40, currentY - 35);
+          ctx.moveTo(boxX + 36, currentY - 30);
+          ctx.lineTo(boxX + boxW - 36, currentY - 30);
           ctx.stroke();
         }
 
         ctx.fillStyle = '#9199a8';
-        ctx.font = '750 24px system-ui, sans-serif';
+        ctx.font = '750 22px system-ui, sans-serif';
         ctx.textAlign = 'left';
-        ctx.fillText(item.key.toUpperCase(), boxX + 40, currentY);
+        ctx.fillText(item.key.toUpperCase(), boxX + 36, currentY);
 
         ctx.fillStyle = '#f7f8fb';
-        ctx.font = '800 26px system-ui, sans-serif';
+        ctx.font = '800 24px system-ui, sans-serif';
         ctx.textAlign = 'right';
         let lineY = currentY;
         item.lines.forEach(line => {
-          ctx.fillText(line, boxX + boxW - 40, lineY);
-          lineY += 36;
+          ctx.fillText(line, boxX + boxW - 36, lineY);
+          lineY += 32;
         });
         ctx.textAlign = 'left';
 
@@ -880,21 +835,21 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // --- Footer ---
+    // --- Footer do Card ---
     ctx.strokeStyle = borderColor;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(cardX + 70, cardY + cardH - 140);
-    ctx.lineTo(cardX + cardW - 70, cardY + cardH - 140);
+    ctx.moveTo(cardX + 60, cardY + cardH - 110);
+    ctx.lineTo(cardX + cardW - 60, cardY + cardH - 110);
     ctx.stroke();
 
     ctx.fillStyle = '#9199a8';
-    ctx.font = '750 22px system-ui, sans-serif';
-    ctx.fillText("CRIADO VIA tempo.utilitários", cardX + 70, cardY + cardH - 85);
+    ctx.font = '750 20px system-ui, sans-serif';
+    ctx.fillText("CRIADO VIA tempo.utilitários", cardX + 60, cardY + cardH - 68);
 
     ctx.fillStyle = accentColor;
-    ctx.font = '900 28px system-ui, sans-serif';
-    ctx.fillText("→ Calcule o seu em tempo.utilitarios", cardX + 70, cardY + cardH - 45);
+    ctx.font = '900 24px system-ui, sans-serif';
+    ctx.fillText("→ tempo.utilitarios", cardX + 60, cardY + cardH - 36);
 
     const link = document.createElement('a');
     link.download = `tempo-${toolKey}-story.png`;
@@ -1059,7 +1014,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const x = calendarDifference(a, b);
         const html = `<div class="big">${x.y} ${x.y===1?'ano':'anos'}, ${x.m} ${x.m===1?'mês':'meses'} & ${x.d} ${x.d===1?'dia':'dias'}</div><div class="small">Total: ${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div>`;
         const plainText = `${x.y} anos, ${x.m} meses e ${x.d} dias`;
-        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Anos": `${x.y} anos`, "Meses": `${x.m} meses`, "Dias": `${x.d} dias`, "Total de Dias": `${x.total.toLocaleString('pt-BR')} dias`, "Status": "Validado com Sucesso" };
+        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Total Dias": `${x.total.toLocaleString('pt-BR')} dias` };
         showResult(html, plainText, false, "", details);
       };
       $("#date1").oninput = calculate; $("#date2").oninput = calculate; calculate();
@@ -1081,7 +1036,7 @@ document.addEventListener("DOMContentLoaded", () => {
         d.setDate(d.getDate() + (st.mode === "add" ? n : -n));
         const html = `<div class="big">${formatDate(d)}</div><div class="small">${st.mode==="add"?'Adicionados':'Subtraídos'} ${n.toLocaleString('pt-BR')} ${n===1?'dia':'dias'}.</div>`;
         const plainText = `${formatDate(d)}`;
-        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição" : "Subtração", "Variação": `${n} dias`, "Resultado": formatDate(d), "Status": "Validado com Sucesso" };
+        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição" : "Subtração", "Variação": `${n} dias` };
         showResult(html, plainText, false, "", details);
       };
       $("#baseDate").oninput = calculate; $("#days").oninput = calculate; calculate();
@@ -1109,7 +1064,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if(end < start) end += 1440;
       const total = end - start, h = Math.floor(total / 60), m = total % 60;
       const html = `<div class="big">${h}h ${m.toString().padStart(2, "0")}min</div><div class="small">Total: ${total.toLocaleString('pt-BR')} minutos</div>`;
-      const details = { "Início": a, "Fim": b, "Duração": `${h}h ${m}m`, "Total em Minutos": `${total.toLocaleString('pt-BR')} min`, "Precisão": "Minutagem Exata", "Status": "Calculado" };
+      const details = { "Início": a, "Fim": b, "Total em Minutos": `${total.toLocaleString('pt-BR')} min` };
       showResult(html, `${h}h ${m.toString().padStart(2, "0")}min`, false, "", details);
     };
     
@@ -1146,7 +1101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(!a || !b) return showResult("Selecione as duas datas.", "", true);
         const total = businessDaysDifference(a, b);
         const html = `<div class="big">${total.toLocaleString('pt-BR')} ${total===1?'dia útil':'dias úteis'}</div><div class="small">Intervalo sem finais de semana.</div>`;
-        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Tipo": "Dias Úteis", "Total Útil": `${total} dias`, "Finais de Semana": "Excluídos", "Status": "Validado" };
+        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Regra": "Exclui fins de semana" };
         showResult(html, `${total} dias úteis`, false, "", details);
       };
       $("#bDate1").oninput = calculate; $("#bDate2").oninput = calculate; calculate();
@@ -1166,7 +1121,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe data e quantidade.", "", true);
         const d = addBusinessDays(base, n, st.mode === "add");
         const html = `<div class="big">${formatDate(d)}</div><div class="small">Resultado (${n} dias úteis).</div>`;
-        const details = { "Data Base": formatDate(base), "Dias Úteis": `${n} dias`, "Operação": st.mode === "add" ? "Adição" : "Subtração", "Data Final": formatDate(d), "Status": "Calculado" };
+        const details = { "Data Base": formatDate(base), "Dias Úteis": `${n} dias`, "Operação": st.mode === "add" ? "Adição" : "Subtração" };
         showResult(html, `${formatDate(d)}`, false, "", details);
       };
       $("#bBaseDate").oninput = calculate; $("#bDays").oninput = calculate; calculate();
@@ -1217,7 +1172,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateClocks();
     window._wcInterval = setInterval(updateClocks, 1000);
     
-    showResult(`<div class="big">Relógio Global Ativo</div><div class="small">Compartilhe o horário das capitais mundiais.</div>`, `Brasília / Lisboa / NY / Londres / Tóquio`, false, "Relógio Mundial", { "Status": "Tempo Real", "Capitais": "5 Principais", "Fuso Local": Intl.DateTimeFormat().resolvedOptions().timeZone, "Atualização": "Contínua" });
+    showResult(`<div class="big">Relógio Global Ativo</div><div class="small">Compartilhe o horário das capitais mundiais.</div>`, `Brasília / Lisboa / NY / Londres / Tóquio`, false, "Relógio Mundial", { "Capitais": "5 Principais", "Fuso Local": Intl.DateTimeFormat().resolvedOptions().timeZone });
   }
 
   function renderMeeting() {
@@ -1273,7 +1228,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div><strong>${c.name}</strong></div>
             <div style="display:flex; align-items:center; gap:10px;">
               <span style="font-size:18px; font-weight:800;">${timeStr}</span>
-              <span style="font-size:11px; padding:3px 8px; border-radius:6px; font-weight:700; background:${isWorking ? 'rgba(74,222,128,0.15); color:#4ade80' : 'rgba(255,101,116,0.15); color:var(--danger)'}">${isWorking ? 'Horário Comercial' : 'Fora do Expediente'}</span>
+              <span style="font-size:11px; padding:3px 8px; border-radius:6px; font-weight:700; background:${isWorking ? 'rgba(74,222,128,0.15); color:#4ade80' : 'rgba(255,101,116,0.15); color:var(--danger)'}">${isWorking ? 'Comercial' : 'Fora'}</span>
             </div>
           </div>
         `;
@@ -1281,17 +1236,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       let statusMsg = '';
       if (workingCount >= 4) {
-        statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:#4ade80;"><svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> <strong>Excelente horário!</strong> Maioria em expediente.</div>`;
+        statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:#4ade80;"><strong>Excelente horário!</strong> Maioria em expediente.</div>`;
         statusEl.innerHTML = statusMsg;
       } else if (workingCount >= 2) {
-        statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:#fbbf24;"><svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> <strong>Atenção!</strong> Horário razoável de sobreposição.</div>`;
+        statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:#fbbf24;"><strong>Atenção!</strong> Horário razoável de sobreposição.</div>`;
         statusEl.innerHTML = statusMsg;
       } else {
-        statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:var(--danger);"><svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg> <strong>Difícil.</strong> Fora de hora para reuniões.</div>`;
+        statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:var(--danger);"><strong>Difícil.</strong> Fora de hora para reuniões.</div>`;
         statusEl.innerHTML = statusMsg;
       }
 
-      showResult(`<div class="big">${h.toString().padStart(2, '0')}:00 Base</div><div class="small" style="margin-top:12px;">${statusMsg}</div>`, `Reunião Global às ${h}:00`, false, "Planejador de Reuniões", { "Hora Base": `${h}:00`, "Expediente Ativo": `${workingCount}/5 Cidades`, "Brasília": cityTimesSummary[0]?.split(': ')[1] || '', "Lisboa": cityTimesSummary[1]?.split(': ')[1] || '', "Nova York": cityTimesSummary[3]?.split(': ')[1] || '', "Status": `${workingCount >= 4 ? 'Excelente' : (workingCount >= 2 ? 'Razoável' : 'Ruim')}` });
+      showResult(`<div class="big">${h.toString().padStart(2, '0')}:00 Base</div><div class="small" style="margin-top:12px;">${statusMsg}</div>`, `Reunião Global às ${h}:00`, false, "Planejador de Reuniões", { "Brasília": cityTimesSummary[0]?.split(': ')[1] || '', "Lisboa": cityTimesSummary[1]?.split(': ')[1] || '', "Londres": cityTimesSummary[2]?.split(': ')[1] || '', "Nova York": cityTimesSummary[3]?.split(': ')[1] || '', "Tóquio": cityTimesSummary[4]?.split(': ')[1] || '' });
     }
 
     rangeInput.oninput = updateMeetingPlanner;
@@ -1331,7 +1286,7 @@ document.addEventListener("DOMContentLoaded", () => {
       displayEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
       
       const modeNames = { work: 'Sessão de Foco', short: 'Pausa Curta', long: 'Pausa Longa' };
-      showResult(`<div class="big">${m}:${s.toString().padStart(2, '0')}</div><div class="small">Modo: ${modeNames[st.mode]}</div>`, `${modeNames[st.mode]} - ${m}m concluídos`, false, "Temporizador Pomodoro", { "Ciclo Atual": modeNames[st.mode], "Tempo Restante": `${m} min ${s} s`, "Produtividade": "Alto Rendimento", "Método": "Pomodoro 25/5", "Status": "Ativo" });
+      showResult(`<div class="big">${m}:${s.toString().padStart(2, '0')}</div><div class="small">Modo: ${modeNames[st.mode]}</div>`, `${modeNames[st.mode]} - ${m}m`, false, "Temporizador Pomodoro", { "Ciclo Atual": modeNames[st.mode], "Método": "Pomodoro 25/5" });
     }
     updateDisplay();
 
@@ -1449,7 +1404,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
         const bestTime = times.find(t=>t.c===5).time;
-        showResult(html, `Para acordar às ${st.time}, durma às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Modo": "Hora de Acordar", "Alvo": st.time, "Melhor Horário": bestTime, "Tempo Adormecer": "15 minutos", "Ciclos Ideais": "5 a 6 ciclos" });
+        showResult(html, `Durma às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Alvo": st.time, "Melhor Horário": bestTime, "Tempo Adormecer": "15 minutos" });
       
       } else {
         const times = [];
@@ -1468,7 +1423,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
         const bestTime = times.find(t=>t.c===5).time;
-        showResult(html, `Dormindo agora, acorde às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Modo": "Dormir Agora", "Melhor Despertar": bestTime, "Tempo Adormecer": "15 minutos", "Base Científica": "Ciclos de 90m" });
+        showResult(html, `Acorde às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Melhor Despertar": bestTime, "Base Científica": "Ciclos de 90m" });
       }
     };
 
@@ -1600,12 +1555,9 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>`;
 
       const details = { 
-        "Signo": signObj.name, 
-        "Clima Astral": climatePool[cIdx],
         "Cor da Sorte": colors[colIdx], 
         "Número Sorte": numbers[numIdx], 
-        "Harmonia": signs[compIdx].name,
-        "Status": "Astrologia Ativa"
+        "Harmonia": signs[compIdx].name
       };
       
       showResult(`<div class="big" style="display:flex; align-items:center; justify-content:center; gap:8px;">${pureGlyph} <span>${signObj.name}</span></div><div class="small">${climatePool[cIdx]}</div>`, `${signObj.name} - Horóscopo Diário`, false, "Horóscopo Diário", details);
@@ -1634,7 +1586,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const x = calendarDifference(birth, ref);
       const html = `<div class="big">${x.y} anos, ${x.m} meses & ${x.d} dias</div><div class="small">Total: ~${x.total.toLocaleString('pt-BR')} dias.</div>`;
       const plainText = `${x.y} anos, ${x.m} meses e ${x.d} dias`;
-      const details = { "Nascimento": formatDate(birth), "Referência": formatDate(ref), "Anos": `${x.y} anos`, "Meses": `${x.m} meses`, "Dias": `${x.d} dias`, "Dias Vividos": `${x.total.toLocaleString('pt-BR')} dias`, "Status": "Calculado" };
+      const details = { "Nascimento": formatDate(birth), "Referência": formatDate(ref), "Dias Vividos": `${x.total.toLocaleString('pt-BR')} dias` };
       showResult(html, plainText, false, "", details);
     };
     $("#birthDate").oninput = calculate; $("#refDate").oninput = calculate; calculate();
@@ -1664,7 +1616,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const html = `<div class="big">${weeks} semanas & ${days} dias</div><div class="small">Previsão do parto: <strong>${formatDate(dueDate)}</strong></div>`;
       const plainText = `${weeks} semanas e ${days} dias`;
-      const details = { "DUM": formatDate(dum), "Idade Gestacional": `${weeks} sem e ${days} dias`, "Dias Totais": `${diffDays} dias`, "Parto Previsto": formatDate(dueDate), "Ciclo": "40 Semanas", "Status": "Acompanhamento" };
+      const details = { "DUM": formatDate(dum), "Dias Totais": `${diffDays} dias`, "Parto Previsto": formatDate(dueDate) };
       showResult(html, plainText, false, "", details);
     };
     $("#dumDate").oninput = calculate; calculate();
@@ -1707,12 +1659,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (st.mode === "down") {
         if (today > evDate) return showResult("Data já passou!", "", true);
         const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Faltam para ${name}.</div>`;
-        const details = { "Evento": rawName, "Data Alvo": formatDate(evDate), "Modo": "Contagem Regressiva", "Tempo Restante": `${x.total} dias`, "Hoje": formatDate(today), "Status": "Ativo" };
+        const details = { "Data Alvo": formatDate(evDate), "Modo": "Contagem Regressiva", "Hoje": formatDate(today) };
         showResult(html, `${x.total} dias para ${rawName}`, false, "", details);
       } else {
         if (today < evDate) return showResult("Data futura!", "", true);
         const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Passados desde ${name}.</div>`;
-        const details = { "Evento": rawName, "Data Passada": formatDate(evDate), "Modo": "Tempo Passado", "Tempo Decorrido": `${x.total} dias`, "Hoje": formatDate(today), "Status": "Registrado" };
+        const details = { "Data Passada": formatDate(evDate), "Modo": "Tempo Passado", "Hoje": formatDate(today) };
         showResult(html, `${x.total} dias desde ${rawName}`, false, "", details);
       }
     };
@@ -1754,7 +1706,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="small">Normal: R$ ${vHora.toFixed(2)} | Extra (${rate}%): R$ ${vExtra.toFixed(2)}</div>
         <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
       `;
-      const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Jornada": `${jor}h mensais`, "Valor da Hora": `R$ ${vHora.toFixed(2)}`, "Qtd. Horas": `${qtd}h (${rate}%)`, "Adicional": `${rate}%`, "Total a Receber": `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}` };
+      const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Jornada": `${jor}h mensais`, "Valor da Hora": `R$ ${vHora.toFixed(2)}`, "Qtd. Horas": `${qtd}h`, "Adicional": `${rate}%` };
       showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
     };
     $("#sal").oninput = calculate; $("#jor").oninput = calculate; $("#qtd").oninput = calculate; $("#rate").onchange = calculate; calculate();
@@ -1793,7 +1745,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="small">Proporcional a ${meses} ${meses===1?'mês':'meses'}.</div>
           <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
         `;
-        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Período": `${meses}/12 avos`, "Tipo de Cálculo": "13º Salário", "Proporcional": `${meses} meses`, "Valor Estimado": `R$ ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}` };
+        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Período": `${meses}/12 avos`, "Tipo de Cálculo": "13º Salário" };
         showResult(html, `R$ ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
@@ -1817,7 +1769,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="small">Férias: R$ ${base.toFixed(2)} | 1/3: R$ ${terço.toFixed(2)}</div>
           <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
         `;
-        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Férias Proporcional": `R$ ${base.toFixed(2)}`, "Adicional de ⅓": `R$ ${terço.toFixed(2)}`, "Meses Contados": `${meses} avos`, "Total Férias": `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}` };
+        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Férias Proporcional": `R$ ${base.toFixed(2)}`, "Adicional de ⅓": `R$ ${terço.toFixed(2)}`, "Meses Contados": `${meses} avos` };
         showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
@@ -1924,13 +1876,12 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
       `;
       const details = { 
+        "Tempo Empresa": `${timeDiffReal.y} anos e ${timeDiffReal.m} meses`,
         "Saldo Salário": `R$ ${saldoSalario.toFixed(2)}`, 
         "13º Salário": `R$ ${decimoTerceiro.toFixed(2)}`, 
         "Férias + ⅓": `R$ ${feriasTotal.toFixed(2)}`, 
         "Aviso Prévio": `R$ ${avisoPrevio.toFixed(2)}`, 
-        "Multa FGTS": `R$ ${multaFgts.toFixed(2)}`,
-        "Tempo Empresa": `${timeDiffReal.y} anos e ${timeDiffReal.m} meses`,
-        "Total Rescisão": `R$ ${totalRescisao.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}` 
+        "Multa FGTS": `R$ ${multaFgts.toFixed(2)}`
       };
       showResult(html, `R$ ${totalRescisao.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
     };
@@ -1962,7 +1913,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="big">${paceFormatted} <span style="font-size:16px; font-weight:normal; color:var(--muted);">min/km</span></div>
         <div class="small" style="margin-top:8px;">Velocidade Média: <strong>${speed} km/h</strong></div>
       `;
-      const details = { "Distância": `${dist} km`, "Tempo Total": `${totalMin} min`, "Ritmo (Pace)": `${paceFormatted} min/km`, "Velocidade": `${speed} km/h`, "Desempenho": "Meta de Corrida", "Status": "Calculado" };
+      const details = { "Distância": `${dist} km`, "Tempo Total": `${totalMin} min`, "Velocidade": `${speed} km/h` };
       showResult(html, `${paceFormatted} min/km`, false, "", details);
     };
     $("#runDist").oninput = calculate; $("#runTime").oninput = calculate; calculate();
