@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" id="metaThemeColor" content="#06080d">
+<meta name="theme-color" id="metaThemeColor" content="#0b0d12">
 <meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, reuniões globais, esporte, foco e horóscopo diário completo. Sem anúncios e direto ao ponto.">
 <meta property="og:title" content="tempo.utilitários — Calculadoras Rápidas">
 <meta property="og:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças e reuniões globais.">
@@ -17,14 +17,14 @@
 <link rel="manifest" href="manifest.json">
 
 <title id="pageTitle">tempo utilitários — Utilitários</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230b0d12%22/><text x=%2250%22 y=%2270%22 font-size=%2260%22 font-weight=%22900%22 font-family=%22system-ui, sans-serif%22 fill=%22%23f7f8fb%22 text-anchor=%22middle%22>t<tspan fill=%22%2300f2fe%22>.</tspan></text></svg>">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230b0d12%22/><text x=%2250%22 y=%2270%22 font-size=%2260%22 font-weight=%22900%22 font-family=%22system-ui, sans-serif%22 fill=%22%23f7f8fb%22 text-anchor=%22middle%22>t<tspan fill=%22%237c5cff%22>.</tspan></text></svg>">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#06080d;--card:#0e131f;--card2:#141c2e;--text:#f0f4f8;--muted:#8998b2;--line:#1e293b;--accent:#00f2fe;--danger:#ff4b6e;
+  --bg:#0b0d12;--card:#131720;--card2:#1a202b;--text:#f7f8fb;--muted:#9199a8;--line:#29313e;--accent:#7c5cff;--danger:#ff6574;
 }
 :root.light{
-  --bg:#f4f5f7;--card:#ffffff;--card2:#eef2f6;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#0284c7;--danger:#ef4444;
+  --bg:#f4f5f7;--card:#ffffff;--card2:#eef2f6;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#6366f1;--danger:#ef4444;
 }
 body{
   font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -63,7 +63,7 @@ header{height:76px;display:flex;align-items:center;justify-content:space-between
 h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bottom:15px}
 .hero p{color:var(--muted);font-size:15px;line-height:1.6}
 
-.panel{width:min(100%,760px);margin:auto;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:23px;box-shadow:0 25px 80px rgba(0,0,0,.25);transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform}
+.panel{width:min(100%,760px);margin:auto;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:23px;box-shadow:0 25px 80px rgba(0,0,0,.15);transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform}
 
 .ad-container{width:min(100%,760px);margin:20px auto 0;background:var(--card);border:1px dashed var(--line);border-radius:18px;padding:14px;text-align:center;color:var(--muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px}
 .ad-tag{background:var(--card2);color:var(--accent);padding:2px 6px;border-radius:6px;font-size:9px;letter-spacing:.5px}
@@ -77,7 +77,7 @@ h1{font-size:clamp(37px,7vw,64px);line-height:1;letter-spacing:-2.8px;margin-bot
 .field label{display:block;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.5px;margin:0 0 8px 3px}
 
 input,select{width:100%;max-width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:12px 14px;outline:none;transition:.2s;font-size:16px;-webkit-appearance:none}
-input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,242,254,.15)}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.12)}
 select{cursor:pointer}
 
 .result{margin-top:20px;padding:21px;border:1px solid var(--line);background:var(--bg);border-radius:16px;text-align:center;display:none;transition:border-color 0.2s}
@@ -100,9 +100,9 @@ select{cursor:pointer}
 .toast-container svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
 
 /* Modals Overlay */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:.2s;z-index:100;display:grid;place-items:center;padding:20px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:.2s;z-index:100;display:grid;place-items:center;padding:20px}
 .modal-overlay.open{opacity:1;pointer-events:auto}
-.modal-box{width:min(100%, 460px);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 25px 60px rgba(0,0,0,.4);transform:translateY(-10px);transition:.2s}
+.modal-box{width:min(100%, 460px);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 25px 60px rgba(0,0,0,.3);transform:translateY(-10px);transition:.2s}
 .modal-overlay.open .modal-box{transform:translateY(0)}
 
 .palette-input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);padding:14px;border-radius:12px;font-size:16px;outline:none;margin-bottom:12px}
@@ -112,7 +112,7 @@ select{cursor:pointer}
 .palette-item svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 
 /* Drawer Menu */
-.drawer{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:.25s;z-index:90}
+.drawer{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:.25s;z-index:90}
 .drawer.open{opacity:1;pointer-events:auto}
 .drawer-card{position:absolute;right:0;top:0;height:100%;width:min(350px,89vw);background:var(--card);border-left:1px solid var(--line);padding:22px;transform:translateX(100%);transition:.3s cubic-bezier(.2,.8,.2,1);overflow-y:auto}
 .drawer.open .drawer-card{transform:translateX(0)}
@@ -204,31 +204,31 @@ footer a:hover{color:var(--accent)}
     </h3>
     <p style="font-size: 13px; color: var(--muted); margin-bottom: 18px;">Selecione o mood visual para o seu Story:</p>
     <div style="display:flex; flex-direction:column; gap:8px;" id="styleOptionsList">
-      <button class="palette-item selected" data-style="hightech">
+      <button class="palette-item selected" data-style="sofisticado">
         <span style="display:flex; align-items:center; gap:8px;">
-          <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-          Cyber HUD High-Tech
+          <svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"></path></svg>
+          Dark Sofisticado
         </span>
-        <span style="font-size:11px; color:var(--muted);">Cyberpunk & Glow</span>
+        <span style="font-size:11px; color:var(--muted);">Orbs & Glow</span>
       </button>
       <button class="palette-item" data-style="glass">
         <span style="display:flex; align-items:center; gap:8px;">
           <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-          Glassmorphism Clean
+          Glassmorphism
         </span>
-        <span style="font-size:11px; color:var(--muted);">Moderno & Translúcido</span>
+        <span style="font-size:11px; color:var(--muted);">Moderno & Clean</span>
       </button>
       <button class="palette-item" data-style="mono">
         <span style="display:flex; align-items:center; gap:8px;">
           <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
           Minimal Mono
         </span>
-        <span style="font-size:11px; color:var(--muted);">Sóbrio & Industrial</span>
+        <span style="font-size:11px; color:var(--muted);">Sóbrio & Elegante</span>
       </button>
     </div>
     <div style="display: flex; gap: 8px; margin-top: 18px;">
       <button id="cancelStyleBtn" style="flex:1; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-weight: 700; cursor:pointer;">Cancelar</button>
-      <button id="confirmStyleBtn" style="flex:1; padding: 12px; border-radius: 12px; border: 0; background: var(--accent); color: #06080d; font-weight: 800; cursor:pointer;">Gerar Card</button>
+      <button id="confirmStyleBtn" style="flex:1; padding: 12px; border-radius: 12px; border: 0; background: var(--accent); color: #fff; font-weight: 700; cursor:pointer;">Gerar Card</button>
     </div>
   </div>
 </div>
@@ -437,7 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       document.documentElement.classList.remove('light');
       themeBtn.innerHTML = sunSvg;
-      if (metaTheme) metaTheme.setAttribute("content", "#06080d");
+      if (metaTheme) metaTheme.setAttribute("content", "#0b0d12");
     }
     storage.set('tempo_theme', theme);
   }
@@ -460,7 +460,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let textToCopy = "";
   let pendingCardData = null;
-  let selectedMoodStyle = 'hightech';
+  let selectedMoodStyle = 'sofisticado';
 
   function dateFromInput(id) {
     const v = $(id).value;
@@ -558,74 +558,47 @@ document.addEventListener("DOMContentLoaded", () => {
     return lines;
   }
 
-  // --- MOTOR DE GERAÇÃO DE CARDS CYBER HUD / HIGH-TECH ---
-  function executeGenerateShareCard(toolKey, titleText, resultText, extraDetails = {}, styleMood = 'hightech') {
+  // --- MOTOR DE GERAÇÃO DE CARDS ORIGINAL, SÓBRIO E LIMPO ---
+  function executeGenerateShareCard(toolKey, titleText, resultText, extraDetails = {}, styleMood = 'sofisticado') {
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
     canvas.height = 1920;
     const ctx = canvas.getContext('2d');
 
-    const randomHue = Math.floor(Math.random() * 360);
     let baseBgColor, cardBgColor, panelBgColor, borderColor, accentColor;
 
     if (styleMood === 'glass') {
-      baseBgColor = `hsl(${randomHue}, 28%, 7%)`;
-      cardBgColor = `hsla(${randomHue}, 25%, 13%, 0.92)`;
-      panelBgColor = `hsla(${randomHue}, 20%, 19%, 0.70)`;
-      borderColor = `hsla(${randomHue}, 35%, 50%, 0.32)`;
-      accentColor = `hsl(${(randomHue + 45) % 360}, 92%, 75%)`;
+      baseBgColor = `#0b0d12`;
+      cardBgColor = `rgba(19, 23, 32, 0.85)`;
+      panelBgColor = `rgba(26, 32, 43, 0.75)`;
+      borderColor = `rgba(41, 49, 62, 0.5)`;
+      accentColor = `#7c5cff`;
     } else if (styleMood === 'mono') {
-      baseBgColor = `#040406`;
-      cardBgColor = `#0f0f12`;
-      panelBgColor = `#18181b`;
-      borderColor = `#27272a`;
+      baseBgColor = `#09090b`;
+      cardBgColor = `#18181b`;
+      panelBgColor = `#27272a`;
+      borderColor = `#3f3f46`;
       accentColor = `#f4f4f5`;
     } else {
-      // Estilo High-Tech / Cyber HUD
-      baseBgColor = `#04060a`;
-      cardBgColor = `#0a0e17`;
-      panelBgColor = `#111827`;
-      borderColor = `#00f2fe`;
-      accentColor = `#00f2fe`;
+      // Dark Sofisticado (Original)
+      baseBgColor = `#0b0d12`;
+      cardBgColor = `#131720`;
+      panelBgColor = `#1a202b`;
+      borderColor = `#29313e`;
+      accentColor = `#7c5cff`;
     }
 
-    // Fundo Técnico com Grid Estilo Cyber / HUD
     ctx.fillStyle = baseBgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Linhas de Grid Tático de Fundo
-    ctx.strokeStyle = styleMood === 'hightech' ? 'rgba(0, 242, 254, 0.04)' : 'rgba(255,255,255,0.02)';
-    ctx.lineWidth = 1;
-    for (let x = 0; x < canvas.width; x += 60) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-    }
-    for (let y = 0; y < canvas.height; y += 60) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
-    }
+    const cardX = 80;
+    const cardY = 130;
+    const cardW = 920;
+    const cardH = 1660;
 
-    // Orbes Luminosas de Atmosfera Cibernética
-    const g1 = ctx.createRadialGradient(180, 180, 10, 180, 180, 550);
-    g1.addColorStop(0, styleMood === 'hightech' ? 'rgba(0, 242, 254, 0.15)' : `hsla(${randomHue}, 70%, 50%, 0.15)`);
-    g1.addColorStop(1, 'transparent');
-    ctx.fillStyle = g1;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const g2 = ctx.createRadialGradient(900, 1740, 20, 900, 1740, 650);
-    g2.addColorStop(0, styleMood === 'hightech' ? 'rgba(79, 70, 229, 0.15)' : `hsla(${(randomHue + 120) % 360}, 70%, 50%, 0.12)`);
-    g2.addColorStop(1, 'transparent');
-    ctx.fillStyle = g2;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Dimensões do Card Principal
-    const cardX = 64;
-    const cardY = 100;
-    const cardW = 952;
-    const cardH = 1720;
-
-    // Sombra de Profundidade com Glow Neon sutil para High-Tech
-    ctx.shadowColor = styleMood === 'hightech' ? 'rgba(0, 242, 254, 0.18)' : 'rgba(0, 0, 0, 0.5)';
-    ctx.shadowBlur = 45;
-    ctx.shadowOffsetY = 15;
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
+    ctx.shadowBlur = 40;
+    ctx.shadowOffsetY = 12;
 
     ctx.fillStyle = cardBgColor;
     ctx.beginPath();
@@ -634,35 +607,19 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fill();
     ctx.shadowColor = 'transparent';
 
-    ctx.strokeStyle = styleMood === 'hightech' ? 'rgba(0, 242, 254, 0.35)' : borderColor;
-    ctx.lineWidth = styleMood === 'hightech' ? 2 : 2.5;
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 2;
     ctx.stroke();
 
-    // --- MARCAS DE CALIBRAÇÃO / CANTOS HUD (Estilo Tech Avançado) ---
-    if (styleMood === 'hightech') {
-      ctx.strokeStyle = '#00f2fe';
-      ctx.lineWidth = 3;
-      const cornerLen = 24;
-      // Top-Left
-      ctx.beginPath(); ctx.moveTo(cardX, cardY + cornerLen); ctx.lineTo(cardX, cardY); ctx.lineTo(cardX + cornerLen, cardY); ctx.stroke();
-      // Top-Right
-      ctx.beginPath(); ctx.moveTo(cardX + cardW - cornerLen, cardY); ctx.lineTo(cardX + cardW, cardY); ctx.lineTo(cardX + cardW, cardY + cornerLen); ctx.stroke();
-      // Bottom-Left
-      ctx.beginPath(); ctx.moveTo(cardX, cardY + cardH - cornerLen); ctx.lineTo(cardX, cardY + cardH); ctx.lineTo(cardX + cornerLen, cardY + cardH); ctx.stroke();
-      // Bottom-Right
-      ctx.beginPath(); ctx.moveTo(cardX + cardW - cornerLen, cardY + cardH); ctx.lineTo(cardX + cardW, cardY + cardH); ctx.lineTo(cardX + cardW, cardY + cardH - cornerLen); ctx.stroke();
-    }
-
-    // --- ÍCONE VETORIAL HIGH-TECH DE TOPO ---
+    // --- ÍCONE VETORIAL SUPERIOR LIMPO ---
     ctx.save();
     ctx.strokeStyle = accentColor;
     ctx.fillStyle = accentColor;
     ctx.lineWidth = 4;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.globalAlpha = 0.95;
 
-    ctx.translate(cardX + cardW - 90, cardY + 85);
+    ctx.translate(cardX + cardW - 100, cardY + 95);
 
     if (toolKey === 'date') {
       ctx.beginPath(); ctx.roundRect(-24, -28, 48, 52, 10); ctx.stroke();
@@ -750,100 +707,100 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     ctx.restore();
 
-    // --- Badge do Sistema ---
+    // --- Badge ---
     const badgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "UTILITÁRIO").toUpperCase();
-    ctx.font = '800 18px system-ui, sans-serif';
+    ctx.font = '800 20px system-ui, sans-serif';
     const badgeMetrics = ctx.measureText(badgeText);
     const badgeW = badgeMetrics.width + 52;
-    const badgeH = 46;
-    const badgeX = cardX + 56;
-    const badgeY = cardY + 56;
+    const badgeH = 50;
+    const badgeX = cardX + 60;
+    const badgeY = cardY + 60;
 
     ctx.fillStyle = panelBgColor;
     ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 16);
+    if (ctx.roundRect) ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 24);
     else ctx.rect(badgeX, badgeY, badgeW, badgeH);
     ctx.fill();
-    ctx.strokeStyle = styleMood === 'hightech' ? 'rgba(0, 242, 254, 0.3)' : borderColor;
+    ctx.strokeStyle = borderColor;
     ctx.lineWidth = 1;
     ctx.stroke();
 
-    ctx.fillStyle = accentColor;
-    ctx.fillText(badgeText, badgeX + 26, badgeY + 29);
+    ctx.fillStyle = '#f7f8fb';
+    ctx.fillText(badgeText, badgeX + 26, badgeY + 32);
 
     // --- Título Principal ---
-    ctx.fillStyle = '#f0f4f8';
-    ctx.font = '800 44px system-ui, sans-serif';
-    ctx.fillText(titleText, cardX + 56, badgeY + 128);
+    ctx.fillStyle = '#f7f8fb';
+    ctx.font = '800 48px system-ui, sans-serif';
+    ctx.fillText(titleText, cardX + 60, badgeY + 135);
 
-    // --- Valor / Resultado Principal ---
-    let resFontSize = 88;
-    if (resultText.length > 18) resFontSize = 70;
-    if (resultText.length > 30) resFontSize = 52;
+    // --- Resultado Principal ---
+    let resFontSize = 92;
+    if (resultText.length > 18) resFontSize = 74;
+    if (resultText.length > 30) resFontSize = 54;
     ctx.font = `900 ${resFontSize}px system-ui, sans-serif`;
 
-    let resLines = wrapTextCanvas(ctx, resultText, cardW - 112);
-    let resStartY = badgeY + 235;
+    let resLines = wrapTextCanvas(ctx, resultText, cardW - 120);
+    let resStartY = badgeY + 245;
     resLines.forEach((l) => {
-      ctx.fillText(l.trim(), cardX + 56, resStartY);
+      ctx.fillText(l.trim(), cardX + 60, resStartY);
       resStartY += resFontSize + 10;
     });
 
-    // --- Bloco de Métricas (Painel HUD / Data Stream) ---
+    // --- Bloco de Métricas do Rodapé (Sem Redundância) ---
     if (extraDetails && Object.keys(extraDetails).length > 0) {
-      const boxX = cardX + 56;
-      const boxW = cardW - 112;
+      const boxX = cardX + 60;
+      const boxW = cardW - 120;
 
-      ctx.font = '800 20px system-ui, sans-serif'; 
+      ctx.font = '800 22px system-ui, sans-serif'; 
       let detailLayout = [];
       let totalDetailsHeight = 0;
 
       Object.entries(extraDetails).forEach(([key, val]) => {
-        let lines = wrapTextCanvas(ctx, val.toString(), boxW - 240);
-        let itemHeight = Math.max(54, lines.length * 28 + 20);
+        let lines = wrapTextCanvas(ctx, val.toString(), boxW - 250);
+        let itemHeight = Math.max(60, lines.length * 30 + 20);
         detailLayout.push({ key, lines, height: itemHeight });
         totalDetailsHeight += itemHeight;
       });
 
-      let boxH = totalDetailsHeight + 78; 
-      let boxY = cardY + cardH - 165 - boxH;
+      let boxH = totalDetailsHeight + 84; 
+      let boxY = cardY + cardH - 180 - boxH;
 
       ctx.fillStyle = panelBgColor;
       ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 20);
+      if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 24);
       else ctx.rect(boxX, boxY, boxW, boxH);
       ctx.fill();
-      ctx.strokeStyle = styleMood === 'hightech' ? 'rgba(0, 242, 254, 0.25)' : borderColor;
+      ctx.strokeStyle = borderColor;
       ctx.lineWidth = 1;
       ctx.stroke();
 
       ctx.fillStyle = accentColor;
-      ctx.font = '800 16px system-ui, sans-serif';
-      ctx.fillText("TELEMETRIA DE ANÁLISE", boxX + 28, boxY + 34);
+      ctx.font = '800 18px system-ui, sans-serif';
+      ctx.fillText("MÉTRICAS DA ANÁLISE", boxX + 32, boxY + 40);
 
-      let currentY = boxY + 84;
+      let currentY = boxY + 95;
       detailLayout.forEach((item, i) => {
         if (i > 0) {
-          ctx.strokeStyle = styleMood === 'hightech' ? 'rgba(30, 41, 59, 0.8)' : borderColor;
+          ctx.strokeStyle = borderColor;
           ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.moveTo(boxX + 28, currentY - 24);
-          ctx.lineTo(boxX + boxW - 28, currentY - 24);
+          ctx.moveTo(boxX + 32, currentY - 26);
+          ctx.lineTo(boxX + boxW - 32, currentY - 26);
           ctx.stroke();
         }
 
-        ctx.fillStyle = '#8998b2';
-        ctx.font = '750 18px system-ui, sans-serif';
+        ctx.fillStyle = '#9199a8';
+        ctx.font = '750 20px system-ui, sans-serif';
         ctx.textAlign = 'left';
-        ctx.fillText(item.key.toUpperCase(), boxX + 28, currentY);
+        ctx.fillText(item.key.toUpperCase(), boxX + 32, currentY);
 
-        ctx.fillStyle = '#f0f4f8';
-        ctx.font = '800 20px system-ui, sans-serif';
+        ctx.fillStyle = '#f7f8fb';
+        ctx.font = '800 22px system-ui, sans-serif';
         ctx.textAlign = 'right';
         let lineY = currentY;
         item.lines.forEach(line => {
-          ctx.fillText(line, boxX + boxW - 28, lineY);
-          lineY += 28;
+          ctx.fillText(line, boxX + boxW - 32, lineY);
+          lineY += 30;
         });
         ctx.textAlign = 'left';
 
@@ -851,21 +808,21 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // --- Footer do Card High-Tech ---
-    ctx.strokeStyle = styleMood === 'hightech' ? 'rgba(0, 242, 254, 0.2)' : borderColor;
+    // --- Footer do Card ---
+    ctx.strokeStyle = borderColor;
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(cardX + 56, cardY + cardH - 96);
-    ctx.lineTo(cardX + cardW - 56, cardY + cardH - 96);
+    ctx.moveTo(cardX + 60, cardY + cardH - 105);
+    ctx.lineTo(cardX + cardW - 60, cardY + cardH - 105);
     ctx.stroke();
 
-    ctx.fillStyle = '#8998b2';
-    ctx.font = '750 17px system-ui, sans-serif';
-    ctx.fillText("SYSTEM CORE // tempo.utilitários", cardX + 56, cardY + cardH - 58);
+    ctx.fillStyle = '#9199a8';
+    ctx.font = '750 19px system-ui, sans-serif';
+    ctx.fillText("CRIADO VIA tempo.utilitários", cardX + 60, cardY + cardH - 65);
 
     ctx.fillStyle = accentColor;
-    ctx.font = '900 20px system-ui, sans-serif';
-    ctx.fillText("→ tempo.utilitarios", cardX + 56, cardY + cardH - 30);
+    ctx.font = '900 22px system-ui, sans-serif';
+    ctx.fillText("→ tempo.utilitarios", cardX + 60, cardY + cardH - 35);
 
     const link = document.createElement('a');
     link.download = `tempo-${toolKey}-story.png`;
@@ -1280,7 +1237,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div style="text-align: center; padding: 10px 0;">
         <div id="pomoDisplay" style="font-size: clamp(54px, 12vw, 84px); font-weight: 900; letter-spacing: -2px; margin: 15px 0; font-variant-numeric: tabular-nums;">25:00</div>
         <div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px;">
-          <button id="pomoToggleBtn" style="padding: 14px 32px; border-radius: 14px; border: 0; background: var(--accent); color: #06080d; font-weight: 800; font-size: 16px; cursor: pointer; transition: transform 0.15s;">${st.running ? 'Pausar' : 'Iniciar'}</button>
+          <button id="pomoToggleBtn" style="padding: 14px 32px; border-radius: 14px; border: 0; background: var(--accent); color: #fff; font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.15s;">${st.running ? 'Pausar' : 'Iniciar'}</button>
           <button id="pomoResetBtn" style="padding: 14px 24px; border-radius: 14px; border: 1px solid var(--line); background: var(--card2); color: var(--text); font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.15s;">Reiniciar</button>
         </div>
       </div>
