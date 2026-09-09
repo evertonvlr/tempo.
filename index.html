@@ -207,9 +207,9 @@ footer a:hover{color:var(--accent)}
       <button class="palette-item selected" data-style="sofisticado">
         <span style="display:flex; align-items:center; gap:8px;">
           <svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"></path></svg>
-          Dark Sofisticado
+          Dark Sofisticado (Orbs dinâmicos)
         </span>
-        <span style="font-size:11px; color:var(--muted);">Orbs & Glow</span>
+        <span style="font-size:11px; color:var(--muted);">Glow & Cores Variadas</span>
       </button>
       <button class="palette-item" data-style="glass">
         <span style="display:flex; align-items:center; gap:8px;">
@@ -558,21 +558,23 @@ document.addEventListener("DOMContentLoaded", () => {
     return lines;
   }
 
-  // --- MOTOR DE GERAÇÃO DE CARDS ORIGINAL, SÓBRIO E LIMPO ---
+  // --- MOTOR DE GERAÇÃO DE CARDS RESTAURADO (COM CORES DINÂMICAS ALEATÓRIAS) ---
   function executeGenerateShareCard(toolKey, titleText, resultText, extraDetails = {}, styleMood = 'sofisticado') {
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
     canvas.height = 1920;
     const ctx = canvas.getContext('2d');
 
+    // Geração de tom aleatório elegante a cada clique no card
+    const randomHue = Math.floor(Math.random() * 360);
     let baseBgColor, cardBgColor, panelBgColor, borderColor, accentColor;
 
     if (styleMood === 'glass') {
-      baseBgColor = `#0b0d12`;
-      cardBgColor = `rgba(19, 23, 32, 0.85)`;
-      panelBgColor = `rgba(26, 32, 43, 0.75)`;
-      borderColor = `rgba(41, 49, 62, 0.5)`;
-      accentColor = `#7c5cff`;
+      baseBgColor = `hsl(${randomHue}, 24%, 6%)`;
+      cardBgColor = `hsla(${randomHue}, 22%, 13%, 0.90)`;
+      panelBgColor = `hsla(${randomHue}, 18%, 18%, 0.75)`;
+      borderColor = `hsla(${randomHue}, 30%, 45%, 0.35)`;
+      accentColor = `hsl(${(randomHue + 40) % 360}, 85%, 70%)`;
     } else if (styleMood === 'mono') {
       baseBgColor = `#09090b`;
       cardBgColor = `#18181b`;
@@ -580,25 +582,41 @@ document.addEventListener("DOMContentLoaded", () => {
       borderColor = `#3f3f46`;
       accentColor = `#f4f4f5`;
     } else {
-      // Dark Sofisticado (Original)
+      // Dark Sofisticado com Orbs de atmosfera colorida dinâmica
       baseBgColor = `#0b0d12`;
       cardBgColor = `#131720`;
       panelBgColor = `#1a202b`;
       borderColor = `#29313e`;
-      accentColor = `#7c5cff`;
+      accentColor = `hsl(${randomHue}, 85%, 68%)`;
     }
 
+    // Fundo base
     ctx.fillStyle = baseBgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Orbes Luminosas de Atmosfera Dinâmica
+    if (styleMood === 'sofisticado') {
+      const g1 = ctx.createRadialGradient(200, 200, 20, 200, 200, 600);
+      g1.addColorStop(0, `hsla(${randomHue}, 80%, 55%, 0.14)`);
+      g1.addColorStop(1, 'transparent');
+      ctx.fillStyle = g1;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const g2 = ctx.createRadialGradient(880, 1720, 30, 880, 1720, 700);
+      g2.addColorStop(0, `hsla(${(randomHue + 140) % 360}, 80%, 55%, 0.12)`);
+      g2.addColorStop(1, 'transparent');
+      ctx.fillStyle = g2;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
     const cardX = 80;
     const cardY = 130;
     const cardW = 920;
     const cardH = 1660;
 
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
-    ctx.shadowBlur = 40;
-    ctx.shadowOffsetY = 12;
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+    ctx.shadowBlur = 45;
+    ctx.shadowOffsetY = 14;
 
     ctx.fillStyle = cardBgColor;
     ctx.beginPath();
@@ -611,7 +629,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // --- ÍCONE VETORIAL SUPERIOR LIMPO ---
+    // --- ÍCONE VETORIAL SUPERIOR ---
     ctx.save();
     ctx.strokeStyle = accentColor;
     ctx.fillStyle = accentColor;
@@ -725,7 +743,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineWidth = 1;
     ctx.stroke();
 
-    ctx.fillStyle = '#f7f8fb';
+    ctx.fillStyle = accentColor;
     ctx.fillText(badgeText, badgeX + 26, badgeY + 32);
 
     // --- Título Principal ---
@@ -746,7 +764,7 @@ document.addEventListener("DOMContentLoaded", () => {
       resStartY += resFontSize + 10;
     });
 
-    // --- Bloco de Métricas do Rodapé (Sem Redundância) ---
+    // --- Bloco de Métricas do Rodapé ---
     if (extraDetails && Object.keys(extraDetails).length > 0) {
       const boxX = cardX + 60;
       const boxW = cardW - 120;
