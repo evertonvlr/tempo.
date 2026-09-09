@@ -558,7 +558,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return lines;
   }
 
-  // --- MOTOR DE GERAÇÃO DE CARDS POSTÁVEIS (COM MAIS INFORMAÇÃO HARMONIOSA) ---
+  // --- MOTOR DE GERAÇÃO DE CARDS POSTÁVEIS (OTIMIZADO PARA TRÁFEGO ORGÂNICO) ---
   function executeGenerateShareCard(toolKey, titleText, resultText, extraDetails = {}, styleMood = 'sofisticado') {
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
@@ -570,10 +570,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (styleMood === 'glass') {
       baseBgColor = `hsl(${randomHue}, 24%, 6%)`;
-      cardBgColor = `hsla(${randomHue}, 22%, 13%, 0.94)`;
-      panelBgColor = `hsla(${randomHue}, 18%, 18%, 0.82)`;
-      borderColor = `hsla(${randomHue}, 30%, 45%, 0.35)`;
-      accentColor = `hsl(${(randomHue + 45) % 360}, 85%, 72%)`;
+      cardBgColor = `hsla(${randomHue}, 22%, 13%, 0.95)`;
+      panelBgColor = `hsla(${randomHue}, 18%, 18%, 0.85)`;
+      borderColor = `hsla(${randomHue}, 35%, 50%, 0.4)`;
+      accentColor = `hsl(${(randomHue + 45) % 360}, 90%, 74%)`;
     } else if (styleMood === 'mono') {
       baseBgColor = `#09090b`;
       cardBgColor = `#18181b`;
@@ -591,41 +591,62 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = baseBgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Orbes de Atmosfera e Brilho Dinâmicos (Atraem o olhar no feed do Instagram)
     if (styleMood === 'sofisticado') {
-      const g1 = ctx.createRadialGradient(220, 250, 30, 220, 250, 650);
-      g1.addColorStop(0, `hsla(${randomHue}, 85%, 55%, 0.16)`);
+      const g1 = ctx.createRadialGradient(240, 280, 20, 240, 280, 700);
+      g1.addColorStop(0, `hsla(${randomHue}, 90%, 60%, 0.20)`);
       g1.addColorStop(1, 'transparent');
       ctx.fillStyle = g1;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      const g2 = ctx.createRadialGradient(860, 1680, 40, 860, 1680, 750);
-      g2.addColorStop(0, `hsla(${(randomHue + 130) % 360}, 85%, 55%, 0.14)`);
+      const g2 = ctx.createRadialGradient(840, 1640, 30, 840, 1640, 800);
+      g2.addColorStop(0, `hsla(${(randomHue + 140) % 360}, 90%, 60%, 0.18)`);
       g2.addColorStop(1, 'transparent');
       ctx.fillStyle = g2;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    const cardX = 65;
-    const cardY = 95;
-    const cardW = 950;
-    const cardH = 1730;
+    const cardX = 60;
+    const cardY = 90;
+    const cardW = 960;
+    const cardH = 1740;
 
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
-    ctx.shadowBlur = 50;
-    ctx.shadowOffsetY = 16;
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+    ctx.shadowBlur = 60;
+    ctx.shadowOffsetY = 18;
 
     ctx.fillStyle = cardBgColor;
     ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(cardX, cardY, cardW, cardH, 36);
+    if (ctx.roundRect) ctx.roundRect(cardX, cardY, cardW, cardH, 38);
     else ctx.rect(cardX, cardY, cardW, cardH);
     ctx.fill();
     ctx.shadowColor = 'transparent';
 
     ctx.strokeStyle = borderColor;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2.5;
     ctx.stroke();
 
-    // --- ÍCONE VETORIAL SUPERIOR ---
+    // --- SELO DE STATUS EXCLUSIVO (Gatilho Visual Orgânico) ---
+    const tagX = cardX + 55;
+    const tagY = cardY + 55;
+    const tagText = "★ CÁLCULO VERIFICADO & COMPARTILHÁVEL";
+    ctx.font = '800 15px system-ui, sans-serif';
+    const tagW = ctx.measureText(tagText).width + 36;
+    const tagH = 38;
+
+    ctx.fillStyle = panelBgColor;
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(tagX, tagY, tagW, tagH, 19);
+    else ctx.rect(tagX, tagY, tagW, tagH);
+    ctx.fill();
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    ctx.fillStyle = accentColor;
+    ctx.fillText(tagText, tagX + 18, tagY + 24);
+
+    // --- ÍCONE VETORIAL DO UTILITÁRIO ---
     ctx.save();
     ctx.strokeStyle = accentColor;
     ctx.fillStyle = accentColor;
@@ -633,7 +654,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 
-    ctx.translate(cardX + cardW - 100, cardY + 95);
+    ctx.translate(cardX + cardW - 90, tagY + 19);
 
     if (toolKey === 'date') {
       ctx.beginPath(); ctx.roundRect(-24, -28, 48, 52, 10); ctx.stroke();
@@ -721,46 +742,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     ctx.restore();
 
-    // --- Badge Temático Superior ---
-    const badgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "UTILITÁRIO").toUpperCase();
-    ctx.font = '800 18px system-ui, sans-serif';
-    const badgeMetrics = ctx.measureText(badgeText);
-    const badgeW = badgeMetrics.width + 52;
-    const badgeH = 48;
-    const badgeX = cardX + 55;
-    const badgeY = cardY + 55;
-
-    ctx.fillStyle = panelBgColor;
-    ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 22);
-    else ctx.rect(badgeX, badgeY, badgeW, badgeH);
-    ctx.fill();
-    ctx.strokeStyle = borderColor;
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    ctx.fillStyle = accentColor;
-    ctx.fillText(badgeText, badgeX + 26, badgeY + 30);
-
     // --- Título Principal ---
     ctx.fillStyle = '#f7f8fb';
-    ctx.font = '800 42px system-ui, sans-serif';
-    ctx.fillText(titleText, cardX + 55, badgeY + 124);
+    ctx.font = '800 44px system-ui, sans-serif';
+    ctx.fillText(titleText, cardX + 55, tagY + 115);
 
-    // --- Resultado Principal ---
-    let resFontSize = 78;
-    if (resultText.length > 18) resFontSize = 62;
-    if (resultText.length > 30) resFontSize = 44;
+    // --- Resultado Principal Destacado ---
+    let resFontSize = 76;
+    if (resultText.length > 18) resFontSize = 58;
+    if (resultText.length > 30) resFontSize = 42;
     ctx.font = `900 ${resFontSize}px system-ui, sans-serif`;
 
     let resLines = wrapTextCanvas(ctx, resultText, cardW - 110);
-    let resStartY = badgeY + 220;
+    let resStartY = tagY + 205;
     resLines.forEach((l) => {
       ctx.fillText(l.trim(), cardX + 55, resStartY);
-      resStartY += resFontSize + 10;
+      resStartY += resFontSize + 12;
     });
 
-    // --- BLOCO DE MÉTRICAS DETALHADAS (GRID HARMONIOSO EXPANDIDO) ---
+    // --- BLOCO DE MÉTRICAS DETALHADAS (GRID HARMONIOSO) ---
     if (extraDetails && Object.keys(extraDetails).length > 0) {
       const boxX = cardX + 55;
       const boxW = cardW - 110;
@@ -771,17 +771,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       Object.entries(extraDetails).forEach(([key, val]) => {
         let lines = wrapTextCanvas(ctx, val.toString(), boxW - 220);
-        let itemHeight = Math.max(54, lines.length * 26 + 18);
+        let itemHeight = Math.max(56, lines.length * 26 + 18);
         detailLayout.push({ key, lines, height: itemHeight });
         totalDetailsHeight += itemHeight;
       });
 
-      let boxH = totalDetailsHeight + 76; 
-      let boxY = cardY + cardH - 180 - boxH;
+      let boxH = totalDetailsHeight + 78; 
+      let boxY = cardY + cardH - 195 - boxH;
 
       ctx.fillStyle = panelBgColor;
       ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 24);
+      if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 26);
       else ctx.rect(boxX, boxY, boxW, boxH);
       ctx.fill();
       ctx.strokeStyle = borderColor;
@@ -790,9 +790,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       ctx.fillStyle = accentColor;
       ctx.font = '800 16px system-ui, sans-serif';
-      ctx.fillText("INDICADORES DA ANÁLISE", boxX + 28, boxY + 35);
+      ctx.fillText("INDICADORES DA ANÁLISE", boxX + 28, boxY + 36);
 
-      let currentY = boxY + 84;
+      let currentY = boxY + 86;
       detailLayout.forEach((item, i) => {
         if (i > 0) {
           ctx.strokeStyle = borderColor;
@@ -822,21 +822,21 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // --- Footer de Chamada para Ação Orgânica ---
+    // --- RODAPÉ DE CHAMADA PARA TRÁFEGO ORGÂNICO (CTA OTIMIZADA) ---
     ctx.strokeStyle = borderColor;
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(cardX + 55, cardY + cardH - 95);
-    ctx.lineTo(cardX + cardW - 55, cardY + cardH - 95);
+    ctx.moveTo(cardX + 55, cardY + cardH - 105);
+    ctx.lineTo(cardX + cardW - 55, cardY + cardH - 105);
     ctx.stroke();
 
     ctx.fillStyle = '#9199a8';
     ctx.font = '750 17px system-ui, sans-serif';
-    ctx.fillText("QUER CALCULAR O SEU TAMBÉM?", cardX + 55, cardY + cardH - 60);
+    ctx.fillText("QUER DESCOBRIR O SEU TAMBÉM?", cardX + 55, cardY + cardH - 65);
 
     ctx.fillStyle = accentColor;
-    ctx.font = '900 21px system-ui, sans-serif';
-    ctx.fillText("→ tempo.utilitarios", cardX + 55, cardY + cardH - 32);
+    ctx.font = '900 22px system-ui, sans-serif';
+    ctx.fillText("→ tempo.utilitarios", cardX + 55, cardY + cardH - 35);
 
     const link = document.createElement('a');
     link.download = `tempo-${toolKey}-story.png`;
@@ -1004,8 +1004,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const details = { 
           "Início": formatDate(a), 
           "Fim": formatDate(b), 
-          "Total em Dias": `${x.total.toLocaleString('pt-BR')} dias`,
-          "Meses Aproximados": `~${(x.total / 30.43).toFixed(1)} meses`
+          "Total de Dias": `${x.total.toLocaleString('pt-BR')} dias`,
+          "Meses Equivalentes": `~${(x.total / 30.43).toFixed(1)} meses`
         };
         showResult(html, plainText, false, "", details);
       };
@@ -1031,7 +1031,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const details = { 
           "Data Base": formatDate(base), 
           "Operação": st.mode === "add" ? "Adição de Período" : "Subtração de Período", 
-          "Variação Aplicada": `${n} dias`,
+          "Variação": `${n} dias`,
           "Dia da Semana": d.toLocaleDateString('pt-BR', { weekday: 'long' })
         };
         showResult(html, plainText, false, "", details);
@@ -1065,7 +1065,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "Início": a, 
         "Fim": b, 
         "Total em Minutos": `${total.toLocaleString('pt-BR')} min`,
-        "Equivalente em Horas": `${(total / 60).toFixed(2)}h`
+        "Carga Horária": `${(total / 60).toFixed(2)}h`
       };
       showResult(html, `${h}h ${m.toString().padStart(2, "0")}min`, false, "", details);
     };
@@ -1107,7 +1107,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const details = { 
           "Início": formatDate(a), 
           "Fim": formatDate(b), 
-          "Dias Úteis": `${total} dias`,
+          "Dias Úteis (Seg-Sex)": `${total} dias`,
           "Dias Corridos": `${Math.abs(totalCalendar)} dias`
         };
         showResult(html, `${total} dias úteis`, false, "", details);
@@ -1132,7 +1132,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const details = { 
           "Data Base": formatDate(base), 
           "Operação": st.mode === "add" ? "Prazo Final Útil" : "Retroativo Útil", 
-          "Qtd. Dias Úteis": `${n} dias`,
+          "Qtd. Úteis": `${n} dias`,
           "Vencimento": d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })
         };
         showResult(html, `${formatDate(d)}`, false, "", details);
@@ -1187,8 +1187,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
     showResult(`<div class="big">Relógio Global Ativo</div><div class="small">Monitore o horário nas principais capitais do planeta.</div>`, `Brasília / Lisboa / NY / Londres / Tóquio`, false, "Relógio Mundial", { 
       "Fuso Local": Intl.DateTimeFormat().resolvedOptions().timeZone, 
-      "Capitais": "Brasília, Lisboa, NY, Londres, Tóquio",
-      "Sincronização": "Tempo Real (UTC)"
+      "Capitais Monitoradas": "5 Globais",
+      "Sincronização": "Tempo Real"
     });
   }
 
@@ -1267,8 +1267,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "Hora Base": `${h}:00`, 
         "Lisboa": cityTimesSummary[1]?.split(': ')[1] || '', 
         "Londres": cityTimesSummary[2]?.split(': ')[1] || '', 
-        "Nova York": cityTimesSummary[3]?.split(': ')[1] || '',
-        "Países em Horário Comercial": `${workingCount} de 5`
+        "Países em Comercial": `${workingCount} de 5`
       });
     }
 
@@ -1311,7 +1310,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const modeNames = { work: 'Sessão de Foco', short: 'Pausa Curta', long: 'Pausa Longa' };
       showResult(`<div class="big">${m}:${s.toString().padStart(2, '0')}</div><div class="small">Modo: ${modeNames[st.mode]}</div>`, `${modeNames[st.mode]} - ${m}m`, false, "Temporizador Pomodoro", { 
         "Método": "Pomodoro 25/5", 
-        "Sessão Atual": modeNames[st.mode],
+        "Sessão": modeNames[st.mode],
         "Estado": st.running ? "Em Andamento" : "Pausado" 
       });
     }
@@ -1434,8 +1433,8 @@ document.addEventListener("DOMContentLoaded", () => {
         showResult(html, `Durma às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { 
           "Melhor Horário": bestTime, 
           "Duração Ideal": "7h 30m (5 ciclos)", 
-          "Tempo para Adormecer": "15 minutos",
-          "Alerta": "Acorde fora do sono profundo"
+          "Adormecer": "15 minutos",
+          "Benefício": "Zero cansaço ao despertar"
         });
       
       } else {
@@ -1457,8 +1456,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const bestTime = times.find(t=>t.c===5).time;
         showResult(html, `Acorde às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { 
           "Alarme Recomendado": bestTime, 
-          "Base Científica": "Ciclos biológicos de 90m",
-          "Duração": "7h 30m de sono"
+          "Base": "Ciclos biológicos de 90m",
+          "Duração": "7h 30m"
         });
       }
     };
@@ -1591,10 +1590,10 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>`;
 
       const details = { 
-        "Signo Analisado": signObj.name,
+        "Signo": signObj.name,
         "Cor da Sorte": colors[colIdx], 
-        "Número da Sorte": numbers[numIdx], 
-        "Harmonia Astral": signs[compIdx].name
+        "Número": numbers[numIdx], 
+        "Harmonia": signs[compIdx].name
       };
       
       showResult(`<div class="big" style="display:flex; align-items:center; justify-content:center; gap:8px;">${pureGlyph} <span>${signObj.name}</span></div><div class="small">Previsão diária consultada.</div>`, `${signObj.name} - Horóscopo Diário`, false, "Horóscopo Diário", details);
@@ -1661,7 +1660,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const details = { 
         "DUM": formatDate(dum), 
         "Idade Gestacional": `${weeks} semanas e ${days} dias`, 
-        "Trimestre Atual": weeks <= 13 ? "1º Trimestre" : (weeks <= 27 ? "2º Trimestre" : "3º Trimestre"),
+        "Trimestre": weeks <= 13 ? "1º Trimestre" : (weeks <= 27 ? "2º Trimestre" : "3º Trimestre"),
         "Parto Previsto": formatDate(dueDate)
       };
       showResult(html, plainText, false, "", details);
@@ -1710,7 +1709,7 @@ document.addEventListener("DOMContentLoaded", () => {
           "Evento": rawName, 
           "Data Alvo": formatDate(evDate), 
           "Contagem": `${x.total.toLocaleString('pt-BR')} dias restantes`,
-          "Semanas Restantes": `~${Math.floor(x.total / 7)} semanas`
+          "Semanas": `~${Math.floor(x.total / 7)} semanas`
         };
         showResult(html, `${x.total} dias para ${rawName}`, false, "", details);
       } else {
@@ -1719,8 +1718,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const details = { 
           "Evento": rawName, 
           "Data Referência": formatDate(evDate), 
-          "Tempo Decorrido": `${x.total.toLocaleString('pt-BR')} dias`,
-          "Anos Decorridos": `${x.y} anos e ${x.m} meses`
+          "Decorrido": `${x.total.toLocaleString('pt-BR')} dias`,
+          "Tempo": `${x.y} anos e ${x.m} meses`
         };
         showResult(html, `${x.total} dias desde ${rawName}`, false, "", details);
       }
@@ -1766,9 +1765,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const details = { 
         "Salário Base": `R$ ${sal.toFixed(2)}`,
         "Valor da Hora": `R$ ${vHora.toFixed(2)}`, 
-        "Qtd. Horas Extras": `${qtd}h`, 
-        "Adicional Legal": `${rate}%`, 
-        "Valor da Hora Extra": `R$ ${vExtra.toFixed(2)}` 
+        "Qtd. Extras": `${qtd}h`, 
+        "Adicional": `${rate}%`, 
+        "Valor Hora Extra": `R$ ${vExtra.toFixed(2)}` 
       };
       showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
     };
@@ -1810,9 +1809,9 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         const details = { 
           "Salário Base": `R$ ${sal.toFixed(2)}`, 
-          "Período Contabilizado": `${meses}/12 avos`, 
-          "Tipo de Benefício": "13º Salário Proporcional",
-          "Regime CLT": "Estimativa Legal"
+          "Período": `${meses}/12 avos`, 
+          "Benefício": "13º Proporcional",
+          "Regime": "CLT"
         };
         showResult(html, `R$ ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
       };
@@ -1840,8 +1839,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const details = { 
           "Salário Base": `R$ ${sal.toFixed(2)}`,
           "Férias Proporcional": `R$ ${base.toFixed(2)}`, 
-          "Adicional Constitucional de ⅓": `R$ ${terço.toFixed(2)}`, 
-          "Meses Contados": `${meses} avos` 
+          "Adicional ⅓ Constitucional": `R$ ${terço.toFixed(2)}`, 
+          "Meses": `${meses} avos` 
         };
         showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
       };
@@ -1953,7 +1952,6 @@ document.addEventListener("DOMContentLoaded", () => {
         "Saldo Salário": `R$ ${saldoSalario.toFixed(2)}`, 
         "13º Salário": `R$ ${decimoTerceiro.toFixed(2)}`, 
         "Férias + ⅓": `R$ ${feriasTotal.toFixed(2)}`, 
-        "Aviso Prévio": `R$ ${avisoPrevio.toFixed(2)}`, 
         "Multa FGTS": `R$ ${multaFgts.toFixed(2)}`
       };
       showResult(html, `R$ ${totalRescisao.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
@@ -1990,7 +1988,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "Distância Alvo": `${dist} km`, 
         "Tempo Total": `${totalMin} minutos`,
         "Pace Médio": `${paceFormatted} min/km`, 
-        "Velocidade Média": `${speed} km/h` 
+        "Velocidade": `${speed} km/h` 
       };
       showResult(html, `${paceFormatted} min/km`, false, "", details);
     };
