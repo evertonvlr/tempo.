@@ -609,118 +609,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const cardW = 920;
     const cardH = 1660;
 
-    // --- ILUSTRAÇÃO ORGÂNICA DE TOPO (VETORIAL CUSTOMIZADA) ---
-    ctx.save();
-    ctx.strokeStyle = accentColor;
-    ctx.fillStyle = accentColor;
-    ctx.lineWidth = 5;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.globalAlpha = 0.45;
-
-    ctx.translate(cardX + cardW - 75, cardY + 75);
-
-    if (toolKey === 'date') {
-      // Ícone orgânico de Calendário Fluido
-      ctx.beginPath(); ctx.roundRect(-24, -28, 48, 52, 10); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-24, -8); ctx.lineTo(24, -8); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 10, 5, 0, Math.PI * 2); ctx.fill();
-    } 
-    else if (toolKey === 'time') {
-      // Relógio Minimalista Fluido
-      ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -14); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(10, 4); ctx.stroke();
-    }
-    else if (toolKey === 'business') {
-      // Maleta / Pasta Executiva Orgânica
-      ctx.beginPath(); ctx.roundRect(-28, -18, 56, 36, 8); ctx.stroke();
-      ctx.beginPath(); ctx.roundRect(-10, -26, 20, 10, 4); ctx.stroke();
-    }
-    else if (toolKey === 'worldclock') {
-      // Globo Terrestre Curvilíneo
-      ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.ellipse(0, 0, 12, 28, 0, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-28, 0); ctx.lineTo(28, 0); ctx.stroke();
-    }
-    else if (toolKey === 'meeting') {
-      // Balões de Diálogo Conectados
-      ctx.beginPath(); ctx.roundRect(-30, -20, 36, 24, 8); ctx.stroke();
-      ctx.beginPath(); ctx.roundRect(-6, -2, 36, 24, 8); ctx.fill();
-    }
-    else if (toolKey === 'pomodoro') {
-      // Alvo / Foco Circular Orgânico
-      ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 0, 16, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI * 2); ctx.fill();
-    }
-    else if (toolKey === 'sleep') {
-      // Lua Crescente Suave com Estrela
-      ctx.beginPath();
-      ctx.arc(0, 0, 26, -Math.PI/1.5, Math.PI/1.5, false);
-      ctx.arc(8, 0, 20, Math.PI/1.5, -Math.PI/1.5, true);
-      ctx.fill();
-    }
-    else if (toolKey === 'horoscope') {
-      // Estrela Mística Fluida
-      ctx.beginPath();
-      ctx.moveTo(0, -30); ctx.lineTo(9, -9); ctx.lineTo(30, 0); ctx.lineTo(9, 9);
-      ctx.lineTo(0, 30); ctx.lineTo(-9, 9); ctx.lineTo(-30, 0); ctx.lineTo(-9, -9);
-      ctx.closePath(); ctx.fill();
-    }
-    else if (toolKey === 'age') {
-      // Coração / Marcador de Vida
-      ctx.beginPath();
-      ctx.moveTo(0, 10);
-      ctx.bezierCurveTo(-25, -10, -25, -28, 0, -16);
-      ctx.bezierCurveTo(25, -28, 25, -10, 0, 10);
-      ctx.fill();
-    }
-    else if (toolKey === 'pregnancy') {
-      // Coração Duplo Gestacional
-      ctx.beginPath();
-      ctx.arc(-8, -4, 14, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath();
-      ctx.arc(8, 4, 14, 0, Math.PI * 2); ctx.fill();
-    }
-    else if (toolKey === 'countdown') {
-      // Ampulheta Estilizada Orgânica
-      ctx.beginPath();
-      ctx.moveTo(-20, -26); ctx.lineTo(20, -26);
-      ctx.lineTo(0, 0);
-      ctx.lineTo(20, 26); ctx.lineTo(-20, 26);
-      ctx.lineTo(0, 0);
-      ctx.closePath(); ctx.stroke();
-    }
-    else if (toolKey === 'overtime') {
-      // Gráfico de Linha Ascendente Fluido
-      ctx.beginPath();
-      ctx.moveTo(-26, 18); ctx.lineTo(-10, 2); ctx.lineTo(6, 10); ctx.lineTo(26, -18);
-      ctx.stroke();
-      ctx.beginPath(); ctx.arc(26, -18, 5, 0, Math.PI * 2); ctx.fill();
-    }
-    else if (toolKey === 'vacation13') {
-      // Cédula / Benefício Arredondado
-      ctx.rotate(-Math.PI / 12);
-      ctx.beginPath(); ctx.roundRect(-32, -20, 64, 40, 8); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI * 2); ctx.fill();
-    }
-    else if (toolKey === 'rescision') {
-      // Prancheta de Acordo com Check
-      ctx.beginPath(); ctx.roundRect(-24, -28, 48, 56, 8); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-12, -8); ctx.lineTo(12, -8); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-12, 6); ctx.lineTo(6, 6); ctx.stroke();
-    }
-    else if (toolKey === 'running') {
-      // Onda de Ritmo / Tênis Orgânico
-      ctx.rotate(-Math.PI / 8);
-      ctx.beginPath(); ctx.roundRect(-30, -10, 60, 22, 11); ctx.fill();
-    }
-    else {
-      ctx.beginPath(); ctx.arc(0, 0, 24, 0, Math.PI * 2); ctx.stroke();
-    }
-    ctx.restore();
-
     // Sombra e Corpo do Card
     ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
     ctx.shadowBlur = 50;
@@ -736,6 +624,103 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.strokeStyle = borderColor;
     ctx.lineWidth = 2;
     ctx.stroke();
+
+    // --- ILUSTRAÇÃO ORGÂNICA DE TOPO (VETORIAL CUSTOMIZADA) ---
+    ctx.save();
+    ctx.strokeStyle = accentColor;
+    ctx.fillStyle = accentColor;
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalAlpha = 0.85;
+
+    ctx.translate(cardX + cardW - 100, cardY + 95);
+
+    if (toolKey === 'date') {
+      ctx.beginPath(); ctx.roundRect(-24, -28, 48, 52, 10); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-24, -8); ctx.lineTo(24, -8); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 10, 5, 0, Math.PI * 2); ctx.fill();
+    } 
+    else if (toolKey === 'time') {
+      ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -14); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(10, 4); ctx.stroke();
+    }
+    else if (toolKey === 'business') {
+      ctx.beginPath(); ctx.roundRect(-28, -18, 56, 36, 8); ctx.stroke();
+      ctx.beginPath(); ctx.roundRect(-10, -26, 20, 10, 4); ctx.stroke();
+    }
+    else if (toolKey === 'worldclock') {
+      ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(0, 0, 12, 28, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-28, 0); ctx.lineTo(28, 0); ctx.stroke();
+    }
+    else if (toolKey === 'meeting') {
+      ctx.beginPath(); ctx.roundRect(-30, -20, 36, 24, 8); ctx.stroke();
+      ctx.beginPath(); ctx.roundRect(-6, -2, 36, 24, 8); ctx.fill();
+    }
+    else if (toolKey === 'pomodoro') {
+      ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, 16, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI * 2); ctx.fill();
+    }
+    else if (toolKey === 'sleep') {
+      ctx.beginPath();
+      ctx.arc(0, 0, 26, -Math.PI/1.5, Math.PI/1.5, false);
+      ctx.arc(8, 0, 20, Math.PI/1.5, -Math.PI/1.5, true);
+      ctx.fill();
+    }
+    else if (toolKey === 'horoscope') {
+      ctx.beginPath();
+      ctx.moveTo(0, -30); ctx.lineTo(9, -9); ctx.lineTo(30, 0); ctx.lineTo(9, 9);
+      ctx.lineTo(0, 30); ctx.lineTo(-9, 9); ctx.lineTo(-30, 0); ctx.lineTo(-9, -9);
+      ctx.closePath(); ctx.fill();
+    }
+    else if (toolKey === 'age') {
+      ctx.beginPath();
+      ctx.moveTo(0, 10);
+      ctx.bezierCurveTo(-25, -10, -25, -28, 0, -16);
+      ctx.bezierCurveTo(25, -28, 25, -10, 0, 10);
+      ctx.fill();
+    }
+    else if (toolKey === 'pregnancy') {
+      ctx.beginPath();
+      ctx.arc(-8, -4, 14, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath();
+      ctx.arc(8, 4, 14, 0, Math.PI * 2); ctx.fill();
+    }
+    else if (toolKey === 'countdown') {
+      ctx.beginPath();
+      ctx.moveTo(-20, -26); ctx.lineTo(20, -26);
+      ctx.lineTo(0, 0);
+      ctx.lineTo(20, 26); ctx.lineTo(-20, 26);
+      ctx.lineTo(0, 0);
+      ctx.closePath(); ctx.stroke();
+    }
+    else if (toolKey === 'overtime') {
+      ctx.beginPath();
+      ctx.moveTo(-26, 18); ctx.lineTo(-10, 2); ctx.lineTo(6, 10); ctx.lineTo(26, -18);
+      ctx.stroke();
+      ctx.beginPath(); ctx.arc(26, -18, 5, 0, Math.PI * 2); ctx.fill();
+    }
+    else if (toolKey === 'vacation13') {
+      ctx.rotate(-Math.PI / 12);
+      ctx.beginPath(); ctx.roundRect(-32, -20, 64, 40, 8); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI * 2); ctx.fill();
+    }
+    else if (toolKey === 'rescision') {
+      ctx.beginPath(); ctx.roundRect(-24, -28, 48, 56, 8); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-12, -8); ctx.lineTo(12, -8); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-12, 6); ctx.lineTo(6, 6); ctx.stroke();
+    }
+    else if (toolKey === 'running') {
+      ctx.rotate(-Math.PI / 8);
+      ctx.beginPath(); ctx.roundRect(-30, -10, 60, 22, 11); ctx.fill();
+    }
+    else {
+      ctx.beginPath(); ctx.arc(0, 0, 24, 0, Math.PI * 2); ctx.stroke();
+    }
+    ctx.restore();
 
     // --- Badge ---
     const badgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "UTILITÁRIO").toUpperCase();
@@ -1014,7 +999,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const x = calendarDifference(a, b);
         const html = `<div class="big">${x.y} ${x.y===1?'ano':'anos'}, ${x.m} ${x.m===1?'mês':'meses'} & ${x.d} ${x.d===1?'dia':'dias'}</div><div class="small">Total: ${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div>`;
         const plainText = `${x.y} anos, ${x.m} meses e ${x.d} dias`;
-        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Total Dias": `${x.total.toLocaleString('pt-BR')} dias` };
+        const details = { "Início": formatDate(a), "Fim": formatDate(b) };
         showResult(html, plainText, false, "", details);
       };
       $("#date1").oninput = calculate; $("#date2").oninput = calculate; calculate();
@@ -1036,7 +1021,7 @@ document.addEventListener("DOMContentLoaded", () => {
         d.setDate(d.getDate() + (st.mode === "add" ? n : -n));
         const html = `<div class="big">${formatDate(d)}</div><div class="small">${st.mode==="add"?'Adicionados':'Subtraídos'} ${n.toLocaleString('pt-BR')} ${n===1?'dia':'dias'}.</div>`;
         const plainText = `${formatDate(d)}`;
-        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição" : "Subtração", "Variação": `${n} dias` };
+        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição" : "Subtração" };
         showResult(html, plainText, false, "", details);
       };
       $("#baseDate").oninput = calculate; $("#days").oninput = calculate; calculate();
@@ -1064,7 +1049,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if(end < start) end += 1440;
       const total = end - start, h = Math.floor(total / 60), m = total % 60;
       const html = `<div class="big">${h}h ${m.toString().padStart(2, "0")}min</div><div class="small">Total: ${total.toLocaleString('pt-BR')} minutos</div>`;
-      const details = { "Início": a, "Fim": b, "Total em Minutos": `${total.toLocaleString('pt-BR')} min` };
+      const details = { "Início": a, "Fim": b };
       showResult(html, `${h}h ${m.toString().padStart(2, "0")}min`, false, "", details);
     };
     
@@ -1101,7 +1086,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(!a || !b) return showResult("Selecione as duas datas.", "", true);
         const total = businessDaysDifference(a, b);
         const html = `<div class="big">${total.toLocaleString('pt-BR')} ${total===1?'dia útil':'dias úteis'}</div><div class="small">Intervalo sem finais de semana.</div>`;
-        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Regra": "Exclui fins de semana" };
+        const details = { "Início": formatDate(a), "Fim": formatDate(b) };
         showResult(html, `${total} dias úteis`, false, "", details);
       };
       $("#bDate1").oninput = calculate; $("#bDate2").oninput = calculate; calculate();
@@ -1121,7 +1106,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe data e quantidade.", "", true);
         const d = addBusinessDays(base, n, st.mode === "add");
         const html = `<div class="big">${formatDate(d)}</div><div class="small">Resultado (${n} dias úteis).</div>`;
-        const details = { "Data Base": formatDate(base), "Dias Úteis": `${n} dias`, "Operação": st.mode === "add" ? "Adição" : "Subtração" };
+        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição" : "Subtração" };
         showResult(html, `${formatDate(d)}`, false, "", details);
       };
       $("#bBaseDate").oninput = calculate; $("#bDays").oninput = calculate; calculate();
@@ -1172,7 +1157,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateClocks();
     window._wcInterval = setInterval(updateClocks, 1000);
     
-    showResult(`<div class="big">Relógio Global Ativo</div><div class="small">Compartilhe o horário das capitais mundiais.</div>`, `Brasília / Lisboa / NY / Londres / Tóquio`, false, "Relógio Mundial", { "Capitais": "5 Principais", "Fuso Local": Intl.DateTimeFormat().resolvedOptions().timeZone });
+    showResult(`<div class="big">Relógio Global Ativo</div><div class="small">Compartilhe o horário das capitais mundiais.</div>`, `Brasília / Lisboa / NY / Londres / Tóquio`, false, "Relógio Mundial", { "Fuso Local": Intl.DateTimeFormat().resolvedOptions().timeZone });
   }
 
   function renderMeeting() {
@@ -1246,7 +1231,7 @@ document.addEventListener("DOMContentLoaded", () => {
         statusEl.innerHTML = statusMsg;
       }
 
-      showResult(`<div class="big">${h.toString().padStart(2, '0')}:00 Base</div><div class="small" style="margin-top:12px;">${statusMsg}</div>`, `Reunião Global às ${h}:00`, false, "Planejador de Reuniões", { "Brasília": cityTimesSummary[0]?.split(': ')[1] || '', "Lisboa": cityTimesSummary[1]?.split(': ')[1] || '', "Londres": cityTimesSummary[2]?.split(': ')[1] || '', "Nova York": cityTimesSummary[3]?.split(': ')[1] || '', "Tóquio": cityTimesSummary[4]?.split(': ')[1] || '' });
+      showResult(`<div class="big">${h.toString().padStart(2, '0')}:00 Base</div><div class="small" style="margin-top:12px;">${statusMsg}</div>`, `Reunião Global às ${h}:00`, false, "Planejador de Reuniões", { "Lisboa": cityTimesSummary[1]?.split(': ')[1] || '', "Londres": cityTimesSummary[2]?.split(': ')[1] || '', "Nova York": cityTimesSummary[3]?.split(': ')[1] || '', "Tóquio": cityTimesSummary[4]?.split(': ')[1] || '' });
     }
 
     rangeInput.oninput = updateMeetingPlanner;
@@ -1286,7 +1271,7 @@ document.addEventListener("DOMContentLoaded", () => {
       displayEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
       
       const modeNames = { work: 'Sessão de Foco', short: 'Pausa Curta', long: 'Pausa Longa' };
-      showResult(`<div class="big">${m}:${s.toString().padStart(2, '0')}</div><div class="small">Modo: ${modeNames[st.mode]}</div>`, `${modeNames[st.mode]} - ${m}m`, false, "Temporizador Pomodoro", { "Ciclo Atual": modeNames[st.mode], "Método": "Pomodoro 25/5" });
+      showResult(`<div class="big">${m}:${s.toString().padStart(2, '0')}</div><div class="small">Modo: ${modeNames[st.mode]}</div>`, `${modeNames[st.mode]} - ${m}m`, false, "Temporizador Pomodoro", { "Método": "Pomodoro 25/5" });
     }
     updateDisplay();
 
@@ -1404,7 +1389,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
         const bestTime = times.find(t=>t.c===5).time;
-        showResult(html, `Durma às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Alvo": st.time, "Melhor Horário": bestTime, "Tempo Adormecer": "15 minutos" });
+        showResult(html, `Durma às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Melhor Horário": bestTime, "Tempo Adormecer": "15 minutos" });
       
       } else {
         const times = [];
@@ -1423,7 +1408,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
         const bestTime = times.find(t=>t.c===5).time;
-        showResult(html, `Acorde às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Melhor Despertar": bestTime, "Base Científica": "Ciclos de 90m" });
+        showResult(html, `Acorde às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Base Científica": "Ciclos de 90m" });
       }
     };
 
@@ -1586,7 +1571,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const x = calendarDifference(birth, ref);
       const html = `<div class="big">${x.y} anos, ${x.m} meses & ${x.d} dias</div><div class="small">Total: ~${x.total.toLocaleString('pt-BR')} dias.</div>`;
       const plainText = `${x.y} anos, ${x.m} meses e ${x.d} dias`;
-      const details = { "Nascimento": formatDate(birth), "Referência": formatDate(ref), "Dias Vividos": `${x.total.toLocaleString('pt-BR')} dias` };
+      const details = { "Nascimento": formatDate(birth), "Referência": formatDate(ref) };
       showResult(html, plainText, false, "", details);
     };
     $("#birthDate").oninput = calculate; $("#refDate").oninput = calculate; calculate();
@@ -1616,7 +1601,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const html = `<div class="big">${weeks} semanas & ${days} dias</div><div class="small">Previsão do parto: <strong>${formatDate(dueDate)}</strong></div>`;
       const plainText = `${weeks} semanas e ${days} dias`;
-      const details = { "DUM": formatDate(dum), "Dias Totais": `${diffDays} dias`, "Parto Previsto": formatDate(dueDate) };
+      const details = { "DUM": formatDate(dum), "Parto Previsto": formatDate(dueDate) };
       showResult(html, plainText, false, "", details);
     };
     $("#dumDate").oninput = calculate; calculate();
@@ -1659,12 +1644,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (st.mode === "down") {
         if (today > evDate) return showResult("Data já passou!", "", true);
         const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Faltam para ${name}.</div>`;
-        const details = { "Data Alvo": formatDate(evDate), "Modo": "Contagem Regressiva", "Hoje": formatDate(today) };
+        const details = { "Data Alvo": formatDate(evDate), "Modo": "Contagem Regressiva" };
         showResult(html, `${x.total} dias para ${rawName}`, false, "", details);
       } else {
         if (today < evDate) return showResult("Data futura!", "", true);
         const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Passados desde ${name}.</div>`;
-        const details = { "Data Passada": formatDate(evDate), "Modo": "Tempo Passado", "Hoje": formatDate(today) };
+        const details = { "Data Passada": formatDate(evDate), "Modo": "Tempo Passado" };
         showResult(html, `${x.total} dias desde ${rawName}`, false, "", details);
       }
     };
@@ -1706,7 +1691,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="small">Normal: R$ ${vHora.toFixed(2)} | Extra (${rate}%): R$ ${vExtra.toFixed(2)}</div>
         <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
       `;
-      const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Jornada": `${jor}h mensais`, "Valor da Hora": `R$ ${vHora.toFixed(2)}`, "Qtd. Horas": `${qtd}h`, "Adicional": `${rate}%` };
+      const details = { "Valor da Hora": `R$ ${vHora.toFixed(2)}`, "Qtd. Horas": `${qtd}h`, "Adicional": `${rate}%` };
       showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
     };
     $("#sal").oninput = calculate; $("#jor").oninput = calculate; $("#qtd").oninput = calculate; $("#rate").onchange = calculate; calculate();
@@ -1745,7 +1730,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="small">Proporcional a ${meses} ${meses===1?'mês':'meses'}.</div>
           <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
         `;
-        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Período": `${meses}/12 avos`, "Tipo de Cálculo": "13º Salário" };
+        const details = { "Período": `${meses}/12 avos`, "Tipo": "13º Salário" };
         showResult(html, `R$ ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
@@ -1769,7 +1754,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="small">Férias: R$ ${base.toFixed(2)} | 1/3: R$ ${terço.toFixed(2)}</div>
           <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
         `;
-        const details = { "Salário Base": `R$ ${sal.toFixed(2)}`, "Férias Proporcional": `R$ ${base.toFixed(2)}`, "Adicional de ⅓": `R$ ${terço.toFixed(2)}`, "Meses Contados": `${meses} avos` };
+        const details = { "Férias Proporcional": `R$ ${base.toFixed(2)}`, "Adicional de ⅓": `R$ ${terço.toFixed(2)}`, "Meses Contados": `${meses} avos` };
         showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
@@ -1876,7 +1861,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
       `;
       const details = { 
-        "Tempo Empresa": `${timeDiffReal.y} anos e ${timeDiffReal.m} meses`,
+        "Tempo Empresa": `${timeDiffReal.y}a ${timeDiffReal.m}m`,
         "Saldo Salário": `R$ ${saldoSalario.toFixed(2)}`, 
         "13º Salário": `R$ ${decimoTerceiro.toFixed(2)}`, 
         "Férias + ⅓": `R$ ${feriasTotal.toFixed(2)}`, 
@@ -1913,7 +1898,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="big">${paceFormatted} <span style="font-size:16px; font-weight:normal; color:var(--muted);">min/km</span></div>
         <div class="small" style="margin-top:8px;">Velocidade Média: <strong>${speed} km/h</strong></div>
       `;
-      const details = { "Distância": `${dist} km`, "Tempo Total": `${totalMin} min`, "Velocidade": `${speed} km/h` };
+      const details = { "Distância": `${dist} km`, "Velocidade": `${speed} km/h` };
       showResult(html, `${paceFormatted} min/km`, false, "", details);
     };
     $("#runDist").oninput = calculate; $("#runTime").oninput = calculate; calculate();
