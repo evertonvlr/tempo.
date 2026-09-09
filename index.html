@@ -587,7 +587,6 @@ document.addEventListener("DOMContentLoaded", () => {
       accentColor = `hsl(${(randomHue + 45) % 360}, 85%, 68%)`;
     }
 
-    // Fundo Principal do Story
     ctx.fillStyle = baseBgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -603,13 +602,11 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = g2;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // --- Dimensões do Card Central ---
     const cardX = 80;
     const cardY = 130;
     const cardW = 920;
     const cardH = 1660;
 
-    // Sombra e Corpo do Card
     ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
     ctx.shadowBlur = 50;
     ctx.shadowOffsetY = 15;
@@ -625,7 +622,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // --- ILUSTRAÇÃO ORGÂNICA DE TOPO (VETORIAL CUSTOMIZADA) ---
     ctx.save();
     ctx.strokeStyle = accentColor;
     ctx.fillStyle = accentColor;
@@ -722,7 +718,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     ctx.restore();
 
-    // --- Badge ---
     const badgeText = (i18n['pt-BR'].tools[toolKey] ? i18n['pt-BR'].tools[toolKey].badge : "UTILITÁRIO").toUpperCase();
     ctx.font = '800 22px system-ui, sans-serif';
     const badgeMetrics = ctx.measureText(badgeText);
@@ -743,12 +738,10 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = '#f7f8fb';
     ctx.fillText(badgeText, badgeX + 30, badgeY + 34);
 
-    // --- Título Principal ---
     ctx.fillStyle = '#f7f8fb';
     ctx.font = '800 52px system-ui, sans-serif';
     ctx.fillText(titleText, cardX + 60, badgeY + 140);
 
-    // --- Resultado com Ajuste Dinâmico de Fonte ---
     let resFontSize = 100;
     if (resultText.length > 18) resFontSize = 78;
     if (resultText.length > 30) resFontSize = 58;
@@ -761,7 +754,6 @@ document.addEventListener("DOMContentLoaded", () => {
       resStartY += resFontSize + 10;
     });
 
-    // --- Caixa de Detalhes Estética (Eliminando redundâncias) ---
     if (extraDetails && Object.keys(extraDetails).length > 0) {
       const boxX = cardX + 60;
       const boxW = cardW - 120;
@@ -820,7 +812,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // --- Footer do Card ---
     ctx.strokeStyle = borderColor;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -1545,7 +1536,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "Harmonia": signs[compIdx].name
       };
       
-      showResult(`<div class="big" style="display:flex; align-items:center; justify-content:center; gap:8px;">${pureGlyph} <span>${signObj.name}</span></div><div class="small">${climatePool[cIdx]}</div>`, `${signObj.name} - Horóscopo Diário`, false, "Horóscopo Diário", details);
+      showResult(`<div class="big" style="display:flex; align-items:center; justify-content:center; gap:8px;">${pureGlyph} <span>${signObj.name}</span></div><div class="small">Previsão diária consultada.</div>`, `${signObj.name} - Horóscopo Diário`, false, "Horóscopo Diário", details);
     }
 
     selectEl.onchange = () => { haptic(); updateHoroscope(); };
