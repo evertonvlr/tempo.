@@ -23,10 +23,14 @@
 :root{
   --bg:#0b0d12;--card:#131720;--card2:#1a202b;--text:#f7f8fb;--muted:#9199a8;--line:#29313e;--accent:#7c5cff;--danger:#ff6574;
   --highlight: rgba(255,255,255,0.04);
+  --glow: rgba(124, 92, 255, 0.15);
+  --ambient: radial-gradient(circle at 50% 0%, rgba(124, 92, 255, 0.08), transparent 50%);
 }
 :root.light{
   --bg:#f4f5f7;--card:#ffffff;--card2:#eef2f6;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#6366f1;--danger:#ef4444;
   --highlight: rgba(255,255,255,0.6);
+  --glow: rgba(99, 102, 241, 0.15);
+  --ambient: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.05), transparent 50%);
 }
 body{
   font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -34,11 +38,20 @@ body{
   min-height:100vh;
   transition:background 0.3s, color 0.3s;
   background: var(--bg);
+  position: relative;
+  overflow-x: hidden;
 }
+/* Efeito Premium: Aura no fundo da página */
+body::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100vh;
+  background: var(--ambient);
+  z-index: -1; pointer-events: none;
+}
+
 button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer}
 .app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
-header{height:76px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(11,13,18,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:50;border-bottom:1px solid var(--line);margin-bottom:10px}
-:root.light header{background:rgba(244,245,247,0.85);}
+header{height:76px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(11,13,18,0.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:50;border-bottom:1px solid var(--line);margin-bottom:10px}
+:root.light header{background:rgba(244,245,247,0.75);}
 
 .logo-container{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:opacity .2s, transform .15s ease}
 .logo-container:hover{opacity:0.85}
@@ -48,114 +61,149 @@ header{height:76px;display:flex;align-items:center;justify-content:space-between
 .logo-sub{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-top:2px}
 
 .header-actions{display:flex;gap:10px;align-items:center}
-.icon-btn{width:42px;height:42px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);display:grid;place-items:center;transition:transform .15s ease, background .2s, border-color .2s;outline:none}
-.icon-btn svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none}
-.icon-btn:hover{transform:scale(1.04);background:var(--card2);border-color:var(--accent)}
+/* Efeito Premium: Ícones do cabeçalho */
+.icon-btn{width:42px;height:42px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);display:grid;place-items:center;transition:all .2s ease;outline:none; box-shadow: 0 2px 5px rgba(0,0,0,0.05), inset 0 1px 1px var(--highlight);}
+.icon-btn svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;transition:transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);}
+.icon-btn:hover{transform:translateY(-2px);background:var(--card2);border-color:var(--accent); box-shadow: 0 6px 12px var(--glow), inset 0 1px 1px var(--highlight);}
+.icon-btn:hover svg{transform:scale(1.1);}
 .icon-btn:active{transform:scale(0.95)}
 
 .chips-wrapper{width:100%;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:10px 0 16px;display:flex;gap:8px;justify-content:center}
 @media(max-width:700px){.chips-wrapper{justify-content:flex-start}}
 .chips-wrapper::-webkit-scrollbar{display:none}
-.chip{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:8px 16px;color:var(--text);font-size:12px;font-weight:750;white-space:nowrap;cursor:pointer;transition:all .2s; display:flex; align-items:center; gap:8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05)}
+/* Efeito Premium: Chips de atalho */
+.chip{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:8px 16px;color:var(--text);font-size:12px;font-weight:750;white-space:nowrap;cursor:pointer;transition:all .25s cubic-bezier(0.175, 0.885, 0.32, 1.275); display:flex; align-items:center; gap:8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05), inset 0 1px 1px var(--highlight);}
 .chip svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none}
-.chip:hover{background:var(--card2);border-color:var(--accent);box-shadow: 0 4px 12px rgba(124,92,255,0.1)}
+.chip:hover{background:var(--card2);border-color:var(--accent);box-shadow: 0 4px 15px var(--glow), inset 0 1px 1px var(--highlight); transform: translateY(-1px);}
 .chip:active{transform:scale(0.95)}
 
 .hero{text-align:center;padding:18px 0 22px}
-.badge{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:7px 14px;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.8px;margin-bottom:14px;background:var(--card);box-shadow: inset 0 1px 1px var(--highlight)}
-h1{font-size:clamp(34px,7vw,60px);line-height:1;letter-spacing:-2.5px;margin-bottom:12px}
+/* Efeito Premium: Badge e Título Gradient */
+.badge{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:7px 14px;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.8px;margin-bottom:14px;background: linear-gradient(180deg, var(--card2), var(--card)); box-shadow: inset 0 1px 1px var(--highlight), 0 2px 10px rgba(0,0,0,0.1); position:relative; overflow:hidden;}
+.badge::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); animation: shine 3s infinite;}
+@keyframes shine { to { left: 200%; } }
+
+h1{font-size:clamp(34px,7vw,60px);line-height:1.1;letter-spacing:-2.5px;margin-bottom:12px; 
+   background: linear-gradient(135deg, var(--text) 30%, var(--muted) 100%); 
+   -webkit-background-clip: text; -webkit-text-fill-color: transparent; padding-bottom:4px;}
 .hero p{color:var(--muted);font-size:15px;line-height:1.6}
 
-/* Panel Principal */
-.panel{width:min(100%,760px);margin:auto;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 25px 80px rgba(0,0,0,.15), inset 0 1px 1px var(--highlight);transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform;transition:all 0.3s ease}
-.zen-mode .panel{width:min(100%,920px);border-color:var(--accent);box-shadow:0 30px 100px rgba(124,92,255,0.15), inset 0 1px 2px rgba(124,92,255,0.1)}
+/* Efeito Premium: Panel Principal */
+.panel{
+  width:min(100%,760px);margin:auto;background:var(--card);
+  border:1px solid var(--line);border-radius:24px;padding:24px;
+  /* Sombra multicamada suave estilo Apple/Vercel */
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,0.06), 0 12px 32px -4px rgba(0,0,0,0.15), inset 0 1px 1px var(--highlight);
+  position:relative; overflow:hidden;
+  transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform;transition:all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* Linha de luz (Top Shine) no painel */
+.panel::before {
+  content: ''; position: absolute; top: 0; left: 10%; width: 80%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.4; transition: opacity 0.3s;
+}
+.panel:hover { box-shadow: 0 4px 8px -2px rgba(0,0,0,0.08), 0 16px 48px -6px rgba(0,0,0,0.2), inset 0 1px 1px var(--highlight); }
+.panel:hover::before { opacity: 0.8; }
 
-/* NOVO: Estilo universal para Cards Internos (Fuso, Sono, Horóscopo, Reuniões) */
+.zen-mode .panel{width:min(100%,920px);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent), 0 30px 100px var(--glow), inset 0 1px 2px rgba(124,92,255,0.1);}
+
+/* Estilo universal para Cards Internos (Fuso, Sono, Horóscopo, Reuniões) */
 .inner-card {
   background: linear-gradient(135deg, var(--card2) 0%, var(--bg) 100%);
   border: 1px solid var(--line);
   border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.03), inset 0 1px 1px var(--highlight);
-  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03), inset 0 1px 1px var(--highlight);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: hidden;
 }
 .inner-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(124, 92, 255, 0.3);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08), inset 0 1px 1px var(--highlight);
+  border-color: rgba(124, 92, 255, 0.4);
+  box-shadow: 0 8px 25px var(--glow), inset 0 1px 1px var(--highlight);
 }
-.inner-card::before {
+.inner-card::after {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(124,92,255,0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(124,92,255,0.5), transparent);
   opacity: 0; transition: opacity 0.3s ease;
 }
-.inner-card:hover::before { opacity: 1; }
+.inner-card:hover::after { opacity: 1; }
 
-.ad-container{width:min(100%,760px);margin:20px auto 0;background:var(--card);border:1px dashed var(--line);border-radius:18px;padding:14px;text-align:center;color:var(--muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px; transition: border-color 0.3s}
-.ad-container:hover{border-color: var(--accent); border-style: solid; background: var(--card2)}
+.ad-container{width:min(100%,760px);margin:20px auto 0;background:var(--card);border:1px dashed var(--line);border-radius:18px;padding:14px;text-align:center;color:var(--muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px; transition: all 0.3s}
+.ad-container:hover{border-color: var(--accent); border-style: solid; background: var(--card2); box-shadow: 0 10px 30px var(--glow);}
 .ad-tag{background:var(--bg);border:1px solid var(--line);color:var(--accent);padding:2px 6px;border-radius:6px;font-size:9px;letter-spacing:.5px}
 
-.tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:14px;margin-bottom:23px;border:1px solid var(--line);box-shadow: inset 0 1px 3px rgba(0,0,0,0.1)}
-.tab{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 8px;border-radius:10px;font-weight:750;font-size:13px;transition:.2s}
-.tab.active{background:var(--card2);color:var(--text);box-shadow:0 3px 12px rgba(0,0,0,.1), inset 0 1px 1px var(--highlight)}
+/* Efeito Premium: Tabs */
+.tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:14px;margin-bottom:23px;border:1px solid var(--line);box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 1px 0 var(--highlight);}
+.tab{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 8px;border-radius:10px;font-weight:750;font-size:13px;transition:all .3s cubic-bezier(0.16, 1, 0.3, 1);}
+.tab.active{background:var(--card2);color:var(--text);box-shadow:0 4px 12px rgba(0,0,0,.1), inset 0 1px 1px var(--highlight); transform: translateY(-1px);}
 
 .grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:14px}
 .field{min-width:0}
 .field label{display:block;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.5px;margin:0 0 8px 3px}
 
-input,select{width:100%;max-width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:12px 14px;outline:none;transition:.2s;font-size:16px;-webkit-appearance:none;box-shadow: inset 0 2px 4px rgba(0,0,0,0.03)}
-input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.15), inset 0 1px 2px rgba(0,0,0,0.02)}
-select{cursor:pointer}
+/* Efeito Premium: Inputs */
+input,select{width:100%;max-width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:12px 14px;outline:none;transition:all .3s;font-size:16px;-webkit-appearance:none;box-shadow: inset 0 2px 4px rgba(0,0,0,0.05), 0 1px 0 var(--highlight);}
+input:hover,select:hover{border-color: rgba(124,92,255,0.4);}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--glow), inset 0 1px 2px rgba(0,0,0,0.02); transform: translateY(-1px);}
+select{cursor:pointer; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%239199a8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>'); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; padding-right: 40px;}
 
-/* Box de Resultado Central */
-.result{margin-top:20px;padding:22px;border:1px solid var(--line);background: radial-gradient(circle at top, var(--card2) 0%, var(--bg) 100%); border-radius:16px;text-align:center;display:none;transition:all 0.25s ease; box-shadow: inset 0 1px 1px var(--highlight)}
-.result.show{display:block;animation:up .3s cubic-bezier(0.175, 0.885, 0.32, 1.275)}
-.result.copied-flash{border-color:#4ade80!important;background:rgba(74,222,128,0.05)!important; transform: scale(1.01)}
-.result .big{font-size:clamp(22px,4.5vw,30px);font-weight:900;letter-spacing:-1px;word-break:break-word}
+/* Efeito Premium: Box de Resultado Central */
+.result{margin-top:20px;padding:22px;border:1px solid var(--line);background: radial-gradient(circle at top, var(--card2) 0%, var(--bg) 100%); border-radius:16px;text-align:center;display:none;transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: inset 0 1px 1px var(--highlight), 0 10px 30px rgba(0,0,0,0.1); position:relative; overflow:hidden;}
+.result::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity:0; transition:opacity 0.4s; }
+.result.show{display:block;animation:up .4s cubic-bezier(0.175, 0.885, 0.32, 1.275)}
+.result.show::before { opacity: 0.5; animation: pulseLine 2s infinite; }
+@keyframes pulseLine { 0% { opacity: 0.2; } 50% { opacity: 0.8; } 100% { opacity: 0.2; } }
+
+.result.copied-flash{border-color:#4ade80!important;background:rgba(74,222,128,0.05)!important; transform: scale(1.02); box-shadow: 0 0 20px rgba(74,222,128,0.2), inset 0 1px 1px var(--highlight);}
+.result .big{font-size:clamp(22px,4.5vw,30px);font-weight:900;letter-spacing:-1px;word-break:break-word; background: linear-gradient(135deg, var(--text), var(--muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
 .result .small{color:var(--muted);margin-top:7px;font-size:13px;line-height:1.5}
 .error{color:var(--danger)!important; background: rgba(255,101,116,0.05)!important; border-color: rgba(255,101,116,0.3)!important}
+.error .big { background: none; -webkit-text-fill-color: var(--danger); }
 
-.result.has-copy{cursor:pointer;position:relative;}
-.result.has-copy:hover{border-color:var(--accent)}
+.result.has-copy{cursor:pointer;}
+.result.has-copy:hover{border-color:var(--accent); box-shadow: 0 10px 40px var(--glow), inset 0 1px 1px var(--highlight); transform: translateY(-2px);}
 
-.action-buttons{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
-.action-btn{display:flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--line);color:var(--text);padding:8px 14px;border-radius:10px;font-size:12px;font-weight:750;cursor:pointer;transition:all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.05)}
+.action-buttons{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.action-btn{display:flex;align-items:center;gap:6px;background: linear-gradient(180deg, var(--card2), var(--bg));border:1px solid var(--line);color:var(--text);padding:10px 16px;border-radius:12px;font-size:12px;font-weight:750;cursor:pointer;transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 2px 6px rgba(0,0,0,0.05), inset 0 1px 1px var(--highlight);}
 .action-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
-.action-btn:hover{border-color:var(--accent);background:var(--bg);transform:translateY(-1px);box-shadow: 0 4px 12px rgba(124,92,255,0.1)}
+.action-btn:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow: 0 6px 15px var(--glow), inset 0 1px 1px var(--highlight);}
 
 /* Toast Notification */
-.toast-container { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 12px 24px; border-radius: 99px; font-size: 14px; font-weight: 750; box-shadow: 0 10px 30px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999; display: flex; align-items: center; gap: 8px; }
+.toast-container { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 12px 24px; border-radius: 99px; font-size: 14px; font-weight: 750; box-shadow: 0 10px 40px rgba(0,0,0,0.4); opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999; display: flex; align-items: center; gap: 8px; }
 .toast-container.show { bottom: 30px; opacity: 1; }
 .toast-container svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
 
 /* Modals Overlay */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:.2s;z-index:100;display:grid;place-items:center;padding:20px}
+.modal-overlay{position:fixed;inset:0;background:rgba(11,13,18,0.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .3s;z-index:100;display:grid;place-items:center;padding:20px}
 .modal-overlay.open{opacity:1;pointer-events:auto}
-.modal-box{width:min(100%, 460px);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 25px 60px rgba(0,0,0,.3), inset 0 1px 1px var(--highlight);transform:translateY(-10px);transition:.2s}
-.modal-overlay.open .modal-box{transform:translateY(0)}
+.modal-box{width:min(100%, 460px);background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 30px 80px rgba(0,0,0,.4), inset 0 1px 1px var(--highlight);transform:translateY(20px) scale(0.95);transition:all .4s cubic-bezier(0.16, 1, 0.3, 1); opacity:0;}
+.modal-overlay.open .modal-box{transform:translateY(0) scale(1); opacity:1;}
 
-.palette-input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);padding:14px;border-radius:12px;font-size:16px;outline:none;margin-bottom:12px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.03)}
-.palette-list{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
-.palette-item{padding:12px 14px;border-radius:10px;background:transparent;border:0;color:var(--text);text-align:left;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:.15s}
-.palette-item:hover, .palette-item.selected{background:var(--card2);color:var(--accent)}
+.palette-input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);padding:16px;border-radius:14px;font-size:16px;outline:none;margin-bottom:12px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05); transition:border-color 0.3s;}
+.palette-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--glow), inset 0 2px 4px rgba(0,0,0,0.05); }
+.palette-list{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:4px; scrollbar-width:thin;}
+.palette-item{padding:14px 16px;border-radius:12px;background:transparent;border:0;color:var(--text);text-align:left;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .2s;}
+.palette-item:hover, .palette-item.selected{background:var(--card2);color:var(--accent); padding-left: 20px;}
 .palette-item svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 
 /* Drawer Menu */
-.drawer{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:.25s;z-index:90}
+.drawer{position:fixed;inset:0;background:rgba(11,13,18,.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .3s;z-index:90}
 .drawer.open{opacity:1;pointer-events:auto}
-.drawer-card{position:absolute;right:0;top:0;height:100%;width:min(350px,89vw);background:var(--card);border-left:1px solid var(--line);padding:22px;transform:translateX(100%);transition:.3s cubic-bezier(.2,.8,.2,1);overflow-y:auto}
+.drawer-card{position:absolute;right:0;top:0;height:100%;width:min(350px,89vw);background:var(--card);border-left:1px solid rgba(255,255,255,0.05);padding:24px;transform:translateX(100%);transition:.4s cubic-bezier(0.16, 1, 0.3, 1);overflow-y:auto; box-shadow: -20px 0 60px rgba(0,0,0,0.3);}
 .drawer.open .drawer-card{transform:translateX(0)}
 
-.drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-size:18px}
-.close{border:0;background:var(--card2);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:21px;box-shadow:inset 0 1px 1px var(--highlight)}
-.lang-selector{margin-bottom:20px}
-.lang-selector select{padding:10px;font-size:15px;font-weight:750;}
-.menu-group{font-size:11px;font-weight:750;color:var(--muted);letter-spacing:.8px;margin:18px 0 8px 4px}
-.menu-item{width:100%;text-align:left;padding:12px 16px;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:14px;margin-bottom:8px;font-weight:750;font-size:14px;transition:all .2s;display:flex;align-items:center;gap:12px}
-.menu-item svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;flex-shrink:0}
-.menu-item:hover,.menu-item.active{border-color:var(--accent);background:var(--card2);box-shadow: 0 4px 12px rgba(0,0,0,0.05)}
-.menu-item span{opacity:.9}
+.drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;font-size:18px}
+.close{border:0;background:var(--card2);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:21px;box-shadow:inset 0 1px 1px var(--highlight); transition:all 0.2s;}
+.close:hover { background: var(--line); transform:scale(1.05); }
+.lang-selector{margin-bottom:24px}
+.lang-selector select{padding:12px;font-size:14px;font-weight:750;}
+.menu-group{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.08em;margin:24px 0 10px 4px; text-transform:uppercase;}
+.menu-item{width:100%;text-align:left;padding:14px 16px;border:1px solid transparent;background:transparent;color:var(--muted);border-radius:14px;margin-bottom:4px;font-weight:750;font-size:14px;transition:all .2s;display:flex;align-items:center;gap:12px}
+.menu-item svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;flex-shrink:0}
+.menu-item:hover{background:var(--bg); color:var(--text); transform:translateX(4px);}
+.menu-item.active{border-color:var(--accent);background:var(--card2);color:var(--accent);box-shadow: 0 4px 15px var(--glow), inset 0 1px 1px var(--highlight);}
 
 /* Zen Mode Rules & Escape Button */
 .zen-mode header, .zen-mode .hero, .zen-mode .ad-container, .zen-mode footer, .zen-mode .chips-wrapper { display: none !important; }
@@ -163,15 +211,15 @@ select{cursor:pointer}
 
 .exit-zen-btn {
   position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-20px); z-index: 9999;
-  background: rgba(26, 32, 43, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--accent); color: var(--text); padding: 10px 20px; border-radius: 99px;
+  background: rgba(26, 32, 43, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--accent); color: var(--text); padding: 12px 24px; border-radius: 99px;
   font-size: 13px; font-weight: 750; display: none; align-items: center; gap: 8px; cursor: pointer;
   box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 1px 1px var(--highlight);
-  transition: all 0.2s; opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0;
 }
 .exit-zen-btn svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.exit-zen-btn:hover { background: var(--card); transform: translateX(-50%) scale(1.05); box-shadow: 0 20px 40px rgba(124,92,255,0.25); }
-.zen-mode .exit-zen-btn { display: flex; animation: slideDownFade 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.exit-zen-btn:hover { background: var(--card); transform: translateX(-50%) scale(1.05); box-shadow: 0 20px 40px var(--glow); }
+.zen-mode .exit-zen-btn { display: flex; animation: slideDownFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
 @keyframes slideDownFade {
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -185,12 +233,12 @@ select{cursor:pointer}
   .result { background: #f9f9f9 !important; border: 1px solid #ccc !important; color: #000 !important; }
 }
 
-footer{text-align:center;color:var(--muted);font-size:11px;margin-top:42px}
-footer a{color:var(--muted);text-decoration:none;transition:.2s}
-footer a:hover{color:var(--accent)}
-@keyframes up{from{opacity:0;transform:translateY(8px) scale(0.98)}to{opacity:1;transform:none}}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:42px; font-weight: 600;}
+footer a{color:var(--muted);text-decoration:none;transition:.2s; border-bottom: 1px solid transparent;}
+footer a:hover{color:var(--accent); border-bottom-color: var(--accent);}
+@keyframes up{from{opacity:0;transform:translateY(12px) scale(0.98)}to{opacity:1;transform:none}}
 @media(max-width:700px){.grid{grid-template-columns:1fr}}
-@media(max-width:600px){.app{padding:0 14px 35px}.hero{padding:20px 0 18px}.panel{padding:17px;border-radius:20px}h1{letter-spacing:-2px}.tabs{margin-bottom:19px}.tab{font-size:12px}}
+@media(max-width:600px){.app{padding:0 14px 35px}.hero{padding:20px 0 18px}.panel{padding:20px;border-radius:20px}h1{letter-spacing:-2px; font-size:32px;}.tabs{margin-bottom:19px}.tab{font-size:12px}}
 </style>
 </head>
 <body>
@@ -218,7 +266,7 @@ footer a:hover{color:var(--accent)}
 
 <main>
 <section class="hero">
-  <div id="greeting" style="font-size:14px; font-weight:750; color:var(--accent); margin-bottom:10px; letter-spacing:0.5px; display:flex; align-items:center; justify-content:center; gap:6px;"></div>
+  <div id="greeting" style="font-size:14px; font-weight:800; color:var(--accent); margin-bottom:12px; letter-spacing:0.5px; display:flex; align-items:center; justify-content:center; gap:8px;"></div>
   <div class="badge" id="toolBadge">UTILITÁRIO DE TEMPO</div>
   <h1 id="title">Calculadora de Data</h1>
   <p id="subtitle">Descubra exatamente quanto tempo existe entre duas datas.</p>
@@ -247,7 +295,7 @@ footer a:hover{color:var(--accent)}
 <!-- Command Palette Modal -->
 <div class="modal-overlay" id="paletteModal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-box">
-    <div style="font-size:11px; font-weight:750; color:var(--muted); margin-bottom:6px;">PALETA DE COMANDOS (DIGITE OU USE 1-5)</div>
+    <div style="font-size:11px; font-weight:800; color:var(--accent); margin-bottom:10px; letter-spacing: 1px;">PALETA DE COMANDOS</div>
     <input type="text" class="palette-input" id="paletteInput" placeholder="Busque por nome ou pressione 1-5...">
     <div class="palette-list" id="paletteList"></div>
   </div>
@@ -256,37 +304,37 @@ footer a:hover{color:var(--accent)}
 <!-- Style Picker Modal (Card Generator Moods) -->
 <div class="modal-overlay" id="styleModal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-box">
-    <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 6px; display:flex; align-items:center; gap:8px;">
-      <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"></path><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-      Escolha o Estilo do Card
+    <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; display:flex; align-items:center; gap:10px;">
+      <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--accent)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"></path><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+      Estilo do Card
     </h3>
-    <p style="font-size: 13px; color: var(--muted); margin-bottom: 18px;">Selecione o mood visual para o seu Story:</p>
-    <div style="display:flex; flex-direction:column; gap:8px;" id="styleOptionsList">
-      <button class="palette-item selected" data-style="sofisticado">
-        <span style="display:flex; align-items:center; gap:8px;">
+    <p style="font-size: 14px; color: var(--muted); margin-bottom: 22px; line-height: 1.5;">Selecione o mood visual para a exportação do seu Story:</p>
+    <div style="display:flex; flex-direction:column; gap:10px;" id="styleOptionsList">
+      <button class="palette-item selected inner-card" data-style="sofisticado" style="border: 1px solid var(--accent); box-shadow: 0 4px 15px var(--glow);">
+        <span style="display:flex; align-items:center; gap:10px;">
           <svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"></path></svg>
-          Dark Sofisticado (Orbs dinâmicos)
+          Dark Sofisticado (Orbs)
         </span>
-        <span style="font-size:11px; color:var(--muted);">Glow & Cores Variadas</span>
+        <span style="font-size:11px; color:var(--accent);">Glow & Cores Variadas</span>
       </button>
-      <button class="palette-item" data-style="glass">
-        <span style="display:flex; align-items:center; gap:8px;">
+      <button class="palette-item inner-card" data-style="glass">
+        <span style="display:flex; align-items:center; gap:10px;">
           <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
           Glassmorphism
         </span>
         <span style="font-size:11px; color:var(--muted);">Moderno & Clean</span>
       </button>
-      <button class="palette-item" data-style="mono">
-        <span style="display:flex; align-items:center; gap:8px;">
+      <button class="palette-item inner-card" data-style="mono">
+        <span style="display:flex; align-items:center; gap:10px;">
           <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
           Minimal Mono
         </span>
         <span style="font-size:11px; color:var(--muted);">Sóbrio & Elegante</span>
       </button>
     </div>
-    <div style="display: flex; gap: 8px; margin-top: 18px;">
-      <button id="cancelStyleBtn" style="flex:1; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-weight: 700; cursor:pointer;">Cancelar</button>
-      <button id="confirmStyleBtn" style="flex:1; padding: 12px; border-radius: 12px; border: 0; background: var(--accent); color: #fff; font-weight: 700; cursor:pointer;">Gerar Card</button>
+    <div style="display: flex; gap: 12px; margin-top: 24px;">
+      <button id="cancelStyleBtn" style="flex:1; padding: 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-weight: 750; cursor:pointer; transition: all 0.2s;">Cancelar</button>
+      <button id="confirmStyleBtn" style="flex:1; padding: 14px; border-radius: 14px; border: 0; background: var(--accent); color: #fff; font-weight: 750; cursor:pointer; box-shadow: 0 4px 15px var(--glow); transition: all 0.2s;">Gerar Card</button>
     </div>
   </div>
 </div>
@@ -296,7 +344,7 @@ footer a:hover{color:var(--accent)}
     <div class="drawer-top"><strong id="menuTitle">tempo utilitários</strong><button class="close" id="closeMenu" aria-label="Fechar menu">×</button></div>
     
     <div class="lang-selector">
-      <label for="langSelect" style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:6px;" id="langLabel">IDIOMA / REGIÃO</label>
+      <label for="langSelect" style="display:block; color:var(--muted); font-size:11px; font-weight:800; margin-bottom:8px; letter-spacing: 1px;" id="langLabel">IDIOMA / REGIÃO</label>
       <select id="langSelect">
         <option value="pt-BR">Português (Brasil) - PT-BR</option>
         <option value="pt-PT">Português (Portugal) - PT-PT</option>
@@ -954,7 +1002,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         extraActions = `
           <div class="action-buttons">
-            <button class="action-btn" id="shareCardBtn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Gerar Card Postável 9:16 (Stories)</button>
+            <button class="action-btn" id="shareCardBtn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Gerar Card Postável 9:16</button>
             ${shareHtml}
             ${['Horas Extras (CLT)', 'Rescisão Contratual (Acerto)'].includes(titleEl.textContent) ? '<button class="action-btn" id="printPdfBtn"><svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> Exportar PDF</button>' : ''}
           </div>
@@ -1259,7 +1307,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     grid.innerHTML = zones.map((z, idx) => `
       <div class="inner-card" style="text-align:center; padding:16px;">
-        <div style="font-size:11px; font-weight:750; color:var(--muted); margin-bottom:6px;">${z.city}</div>
+        <div style="font-size:11px; font-weight:750; color:var(--muted); margin-bottom:6px; letter-spacing:0.5px;">${z.city}</div>
         <div id="wc-time-${idx}" style="font-size:24px; font-weight:900; letter-spacing:-.5px; color:var(--text);">--:--:--</div>
         <div id="wc-date-${idx}" style="font-size:11px; color:var(--muted); margin-top:4px;">--</div>
       </div>
@@ -1293,8 +1341,8 @@ document.addEventListener("DOMContentLoaded", () => {
     tool.innerHTML = `
       <div class="field" style="margin-bottom: 20px;">
         <label for="meetHour">SELECIONE A HORA BASE (0 - 23)</label>
-        <input type="range" id="meetHour" min="0" max="23" value="${st.hour}" style="cursor: pointer;">
-        <div style="text-align: center; font-size: 28px; font-weight: 900; margin-top: 8px;" id="meetHourDisplay">${st.hour.toString().padStart(2, '0')}:00</div>
+        <input type="range" id="meetHour" min="0" max="23" value="${st.hour}" style="cursor: pointer; height:6px; border-radius:4px; margin-top:10px;">
+        <div style="text-align: center; font-size: 28px; font-weight: 900; margin-top: 12px; color:var(--accent);" id="meetHourDisplay">${st.hour.toString().padStart(2, '0')}:00</div>
       </div>
       <div style="display:flex; flex-direction:column; gap:10px;" id="meetZonesList"></div>
       <div class="result show" style="display:block; margin-top:20px; text-align:left;">
@@ -1380,10 +1428,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <button class="tab ${st.mode === 'long' ? 'active' : ''}" data-pmode="long">Pausa Longa (15m)</button>
       </div>
       <div style="text-align: center; padding: 10px 0;">
-        <div id="pomoDisplay" style="font-size: clamp(54px, 12vw, 84px); font-weight: 900; letter-spacing: -2px; margin: 15px 0; font-variant-numeric: tabular-nums;">25:00</div>
+        <div id="pomoDisplay" style="font-size: clamp(64px, 14vw, 94px); font-weight: 900; letter-spacing: -3px; margin: 15px 0; font-variant-numeric: tabular-nums; background: linear-gradient(135deg, var(--text), var(--muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">25:00</div>
         <div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px;">
-          <button id="pomoToggleBtn" style="padding: 14px 32px; border-radius: 14px; border: 0; background: var(--accent); color: #fff; font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.15s;">${st.running ? 'Pausar' : 'Iniciar'}</button>
-          <button id="pomoResetBtn" style="padding: 14px 24px; border-radius: 14px; border: 1px solid var(--line); background: var(--card2); color: var(--text); font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.15s;">Reiniciar</button>
+          <button id="pomoToggleBtn" style="padding: 14px 32px; border-radius: 14px; border: 0; background: var(--accent); color: #fff; font-weight: 750; font-size: 16px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 15px var(--glow);">${st.running ? 'Pausar' : 'Iniciar'}</button>
+          <button id="pomoResetBtn" style="padding: 14px 24px; border-radius: 14px; border: 1px solid var(--line); background: var(--card2); color: var(--text); font-weight: 750; font-size: 16px; cursor: pointer; transition: all 0.2s;">Reiniciar</button>
         </div>
       </div>
       <div class="result show" style="display:block; margin-top: 24px; text-align: center;">
@@ -1519,7 +1567,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const html = `
           <div class="small" style="margin-bottom:8px;">Durma em um destes horários para acordar disposto (inclui 15m para adormecer):</div>
           <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap:10px; margin-bottom:12px;">
-            ${times.map(t => `<div class="inner-card" style="text-align:center; padding:14px 10px; border-color:${t.c>=5?'var(--accent)':'var(--line)'}; ${t.c>=5?'box-shadow: 0 4px 15px rgba(124,92,255,0.15);':''}">
+            ${times.map(t => `<div class="inner-card" style="text-align:center; padding:14px 10px; border-color:${t.c>=5?'var(--accent)':'var(--line)'}; ${t.c>=5?'box-shadow: 0 8px 25px var(--glow);':''}">
               <div style="font-size:24px; font-weight:900; ${t.c>=5?'color:var(--accent)':''}">${t.time}</div>
               <div style="font-size:11px; color:var(--muted); font-weight:750; margin-top:4px;">${t.c} Ciclos (${t.c*1.5}h)</div>
             </div>`).join('')}
@@ -1543,7 +1591,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const html = `
           <div class="small" style="margin-bottom:8px;">Se você for dormir agora, coloque o alarme para:</div>
           <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap:10px; margin-bottom:12px;">
-            ${times.map(t => `<div class="inner-card" style="text-align:center; padding:14px 10px; border-color:${t.c>=5?'var(--accent)':'var(--line)'}; ${t.c>=5?'box-shadow: 0 4px 15px rgba(124,92,255,0.15);':''}">
+            ${times.map(t => `<div class="inner-card" style="text-align:center; padding:14px 10px; border-color:${t.c>=5?'var(--accent)':'var(--line)'}; ${t.c>=5?'box-shadow: 0 8px 25px var(--glow);':''}">
               <div style="font-size:24px; font-weight:900; ${t.c>=5?'color:var(--accent)':''}">${t.time}</div>
               <div style="font-size:11px; color:var(--muted); font-weight:750; margin-top:4px;">${t.c} Ciclos (${t.c*1.5}h)</div>
             </div>`).join('')}
@@ -1654,7 +1702,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       contentEl.innerHTML = `
         <div class="inner-card" style="padding:24px; text-align: left;">
-          <div style="font-size: 11px; font-weight: 750; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">${todayStr}</div>
+          <div style="font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">${todayStr}</div>
           <div style="font-size: 26px; font-weight: 900; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
             ${pureGlyph} <span>${signObj.name}</span>
           </div>
@@ -2191,13 +2239,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let text = '', svgIcon = '';
     if (hour < 12) { 
       text = 'Bom dia'; 
-      svgIcon = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line></svg>`; 
+      svgIcon = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line></svg>`; 
     } else if (hour < 18) { 
       text = 'Boa tarde'; 
-      svgIcon = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>`; 
+      svgIcon = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>`; 
     } else { 
       text = 'Boa noite'; 
-      svgIcon = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`; 
+      svgIcon = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`; 
     }
     if(greetingEl) greetingEl.innerHTML = `${svgIcon} <span>${text}</span>`;
   }
