@@ -117,7 +117,7 @@ h1{font-size:clamp(34px,7vw,60px);line-height:1.1;letter-spacing:-2.5px;margin-b
 
 .zen-mode .panel{width:min(100%,920px);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent), 0 30px 100px var(--glow), inset 0 1px 2px rgba(124,92,255,0.1);}
 
-/* Inner Cards Otimizados */
+/* Inner Cards Otimizados + Spotlight dinâmico */
 .inner-card {
   background: linear-gradient(135deg, var(--card2) 0%, var(--bg) 100%);
   border: 1px solid var(--line);
@@ -127,17 +127,28 @@ h1{font-size:clamp(34px,7vw,60px);line-height:1.1;letter-spacing:-2.5px;margin-b
   overflow: hidden;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s, border-color 0.25s;
 }
+.inner-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(124, 92, 255, 0.08), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 0;
+  pointer-events: none;
+}
+.inner-card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(124,92,255,0.5), transparent);
+  opacity: 0; transition: opacity 0.25s ease; z-index: 1; pointer-events: none;
+}
+.inner-card:hover::before, .inner-card:hover::after { opacity: 1; }
 .inner-card:hover {
   transform: translateY(-2px);
   border-color: rgba(124, 92, 255, 0.4);
   box-shadow: 0 8px 25px var(--glow), inset 0 1px 1px var(--highlight);
 }
-.inner-card::after {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(124,92,255,0.5), transparent);
-  opacity: 0; transition: opacity 0.25s ease;
-}
-.inner-card:hover::after { opacity: 1; }
+.inner-card > * { position: relative; z-index: 2; }
 
 .ad-container{width:min(100%,760px);margin:20px auto 0;background:var(--card);border:1px dashed var(--line);border-radius:18px;padding:14px;text-align:center;color:var(--muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px; transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s}
 .ad-container:hover{border-color: var(--accent); border-style: solid; background: var(--card2); box-shadow: 0 10px 30px var(--glow);}
@@ -435,6 +446,48 @@ document.addEventListener("DOMContentLoaded", () => {
   
   const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), zenBtn = $("#zenBtn"), exitZenBtn = $("#exitZenBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), styleModal = $("#styleModal"), cancelStyleBtn = $("#cancelStyleBtn"), confirmStyleBtn = $("#confirmStyleBtn"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport"), quickChips = $("#quickChips"), greetingEl = $("#greeting"), globalToast = $("#globalToast"), toastMsg = $("#toastMsg");
 
+  // Spotlight dinâmico 60fps usando RequestAnimationFrame
+  let isMoving = false;
+  document.addEventListener('mousemove', e => {
+    if(!isMoving) {
+      window.requestAnimationFrame(() => {
+        document.querySelectorAll('.inner-card').forEach(card => {
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+          card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+        });
+        isMoving = false;
+      });
+      isMoving = true;
+    }
+  });
+
+  // Animação de contagem para números finais
+  function animateValue(obj, start, end, duration, isCurrency = false) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const currentVal = (easeOut * (end - start) + start);
+      
+      if (isCurrency) {
+        obj.innerHTML = currentVal.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+      } else {
+        obj.innerHTML = Math.floor(currentVal).toLocaleString('pt-BR');
+      }
+      
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        obj.innerHTML = isCurrency 
+          ? end.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})
+          : end.toLocaleString('pt-BR');
+      }
+    };
+    window.requestAnimationFrame(step);
+  }
+
   function haptic() {
     try { if (navigator.vibrate) navigator.vibrate(20); } catch(e){}
   }
@@ -442,30 +495,22 @@ document.addEventListener("DOMContentLoaded", () => {
   function showToast(msg) {
     toastMsg.textContent = msg;
     globalToast.classList.add('show');
-    setTimeout(() => {
-      globalToast.classList.remove('show');
-    }, 2500);
+    setTimeout(() => { globalToast.classList.remove('show'); }, 2500);
   }
 
   const storage = {
     get(key, fallback) {
       try { const v = localStorage.getItem(key); return v !== null ? v : fallback; } catch(e) { return fallback; }
     },
-    set(key, val) {
-      try { localStorage.setItem(key, val); } catch(e) {}
-    }
+    set(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
   };
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
-    });
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
   }
 
   function escapeHTML(str) {
-    return str.replace(/[&<>'"]/g, tag => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-    }[tag] || tag));
+    return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
   }
 
   const getLocalISODate = (d = new Date()) => {
@@ -493,17 +538,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   function getStoredState(toolKey) {
-    try {
-      const saved = storage.get('tempo_state_' + toolKey, null);
-      if (saved) return JSON.parse(saved);
-    } catch(e){}
+    try { const saved = storage.get('tempo_state_' + toolKey, null); if (saved) return JSON.parse(saved); } catch(e){}
     return defaultStates[toolKey];
   }
 
   function saveStoredState(toolKey, stateObj) {
-    try {
-      storage.set('tempo_state_' + toolKey, JSON.stringify(stateObj));
-    } catch(e){}
+    try { storage.set('tempo_state_' + toolKey, JSON.stringify(stateObj)); } catch(e){}
   }
 
   function pushRecentTool(toolKey) {
@@ -521,7 +561,6 @@ document.addEventListener("DOMContentLoaded", () => {
       footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>',
       menu: "tempo utilitários", langLabel: "IDIOMA / REGIÃO",
       g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "TRABALHISTAS & FINANÇAS", g4: "ESPORTE & PERFORMANCE",
-      copyHint: "Clique no cartão para copiar", copied: "✓ Copiado!",
       disclaimer: "* Valores estimados para fins orientativos. Consulte o RH ou um profissional contábil.",
       tools: {
         date: { title: "Calculadora de Data", subtitle: "Descubra exatamente quanto tempo existe entre duas datas.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Data" },
@@ -566,32 +605,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   applyTheme(currentTheme);
 
-  themeBtn.addEventListener('click', () => {
-    haptic();
-    applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-  });
-
-  zenBtn.addEventListener('click', () => {
-    haptic();
-    isZenMode = true;
-    document.body.classList.add('zen-mode');
-    showToast('Modo Foco Ativado (Sem distrações)');
-  });
-
-  exitZenBtn.addEventListener('click', () => {
-    haptic();
-    isZenMode = false;
-    document.body.classList.remove('zen-mode');
-    showToast('Modo Padrão Restaurado');
-  });
+  themeBtn.addEventListener('click', () => { haptic(); applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); });
+  zenBtn.addEventListener('click', () => { haptic(); isZenMode = true; document.body.classList.add('zen-mode'); showToast('Modo Foco Ativado (Sem distrações)'); });
+  exitZenBtn.addEventListener('click', () => { haptic(); isZenMode = false; document.body.classList.remove('zen-mode'); showToast('Modo Padrão Restaurado'); });
 
   const validTools = ['date', 'time', 'business', 'worldclock', 'meeting', 'pomodoro', 'sleep', 'horoscope', 'age', 'pregnancy', 'countdown', 'overtime', 'vacation13', 'rescision', 'running'];
-  
-  function getToolFromHash() {
-    const hash = window.location.hash.replace('#', '');
-    return validTools.includes(hash) ? hash : null;
-  }
-
+  function getToolFromHash() { const hash = window.location.hash.replace('#', ''); return validTools.includes(hash) ? hash : null; }
   let activeTool = getToolFromHash() || storage.get('tempo_tool', 'date');
   if (!validTools.includes(activeTool)) activeTool = 'date';
 
@@ -599,129 +618,77 @@ document.addEventListener("DOMContentLoaded", () => {
   let pendingCardData = null;
   let selectedMoodStyle = 'sofisticado';
 
-  function dateFromInput(id) {
-    const v = $(id).value;
-    if (!v) return null;
-    const d = new Date(v + "T12:00:00");
-    return isNaN(d.getTime()) ? null : d;
-  }
-
-  function formatDate(d) {
-    return d.toLocaleDateString('pt-BR', { day: "2-digit", month: "2-digit", year: "numeric" });
-  }
+  function dateFromInput(id) { const v = $(id).value; if (!v) return null; const d = new Date(v + "T12:00:00"); return isNaN(d.getTime()) ? null : d; }
+  function formatDate(d) { return d.toLocaleDateString('pt-BR', { day: "2-digit", month: "2-digit", year: "numeric" }); }
 
   function calendarDifference(start, end) {
     if (start > end) { let temp = start; start = end; end = temp; }
-    let y = end.getFullYear() - start.getFullYear();
-    let m = end.getMonth() - start.getMonth();
-    let d = end.getDate() - start.getDate();
-    
-    if (m < 0 || (m === 0 && d < 0)) {
-      y--;
-      m += 12;
-    }
-    
-    if (d < 0) {
-      m--;
-      if (m < 0) { m += 12; y--; }
-      let daysInPrevMonth = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
-      d += daysInPrevMonth;
-      if (d < 0) { d = end.getDate(); }
-    }
-    
-    const utcStart = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
-    const utcEnd = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
-    const total = Math.round((utcEnd - utcStart) / 86400000);
+    let y = end.getFullYear() - start.getFullYear(), m = end.getMonth() - start.getMonth(), d = end.getDate() - start.getDate();
+    if (m < 0 || (m === 0 && d < 0)) { y--; m += 12; }
+    if (d < 0) { m--; if (m < 0) { m += 12; y--; } d += new Date(end.getFullYear(), end.getMonth(), 0).getDate(); if (d < 0) d = end.getDate(); }
+    const total = Math.round((Date.UTC(end.getFullYear(), end.getMonth(), end.getDate()) - Date.UTC(start.getFullYear(), start.getMonth(), start.getDate())) / 86400000);
     return { y, m, d, total };
   }
 
   function businessDaysDifference(start, end) {
     if (start > end) { let temp = start; start = end; end = temp; }
-    let s = new Date(start); s.setDate(s.getDate() + 1);
-    let e = new Date(end);
-    s.setHours(12,0,0,0); e.setHours(12,0,0,0);
+    let s = new Date(start); s.setDate(s.getDate() + 1); let e = new Date(end); s.setHours(12,0,0,0); e.setHours(12,0,0,0);
     if (s > e) return 0;
-    
-    let totalDays = Math.round((e - s) / 86400000) + 1;
-    let fullWeeks = Math.floor(totalDays / 7);
-    let remDays = totalDays % 7;
-    
-    let count = fullWeeks * 5;
-    let curDayOfWeek = s.getDay();
-    for (let i = 0; i < remDays; i++) {
-      let d = (curDayOfWeek + i) % 7;
-      if (d !== 0 && d !== 6) count++;
-    }
+    let totalDays = Math.round((e - s) / 86400000) + 1, fullWeeks = Math.floor(totalDays / 7), remDays = totalDays % 7, count = fullWeeks * 5, curDayOfWeek = s.getDay();
+    for (let i = 0; i < remDays; i++) { let d = (curDayOfWeek + i) % 7; if (d !== 0 && d !== 6) count++; }
     return count;
   }
 
   function addBusinessDays(base, n, isAdd = true) {
-    let cur = new Date(base); 
-    cur.setHours(12, 0, 0, 0);
-    if (n === 0) return cur;
-    let dir = isAdd ? 1 : -1;
-    
-    let fullWeeks = Math.floor(n / 5);
-    let rem = n % 5;
-    
-    cur.setDate(cur.getDate() + (fullWeeks * 7 * dir));
+    let cur = new Date(base); cur.setHours(12, 0, 0, 0); if (n === 0) return cur;
+    let dir = isAdd ? 1 : -1, fullWeeks = Math.floor(n / 5); cur.setDate(cur.getDate() + (fullWeeks * 7 * dir));
     let added = fullWeeks * 5;
-    
-    while (added < n) {
-      cur.setDate(cur.getDate() + dir);
-      const day = cur.getDay();
-      if (day !== 0 && day !== 6) added++;
-    }
+    while (added < n) { cur.setDate(cur.getDate() + dir); const day = cur.getDay(); if (day !== 0 && day !== 6) added++; }
     return cur;
   }
 
   function wrapTextCanvas(ctx, text, maxWidth) {
     if (!text) return [];
-    let words = text.toString().split(' ');
-    let lines = [];
-    let currentLine = words[0] || '';
-    
+    let words = text.toString().split(' '), lines = [], currentLine = words[0] || '';
     for (let i = 1; i < words.length; i++) {
-      let word = words[i];
-      let metrics = ctx.measureText(currentLine + " " + word);
-      if (metrics.width < maxWidth) {
-        currentLine += " " + word;
-      } else {
-        lines.push(currentLine);
-        currentLine = word;
-      }
+      let word = words[i], metrics = ctx.measureText(currentLine + " " + word);
+      if (metrics.width < maxWidth) currentLine += " " + word; else { lines.push(currentLine); currentLine = word; }
     }
     if(currentLine) lines.push(currentLine);
     return lines;
   }
 
+  // Função para desenhar a textura de ruído rapidamente usando pattern
+  function drawNoise(ctx, width, height, opacity) {
+    const noiseCanvas = document.createElement('canvas');
+    noiseCanvas.width = 128; noiseCanvas.height = 128;
+    const nCtx = noiseCanvas.getContext('2d');
+    const imgData = nCtx.createImageData(128, 128);
+    const data = imgData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const val = Math.random() * 255;
+      data[i] = val; data[i+1] = val; data[i+2] = val; data[i+3] = opacity * 255;
+    }
+    nCtx.putImageData(imgData, 0, 0);
+    ctx.fillStyle = ctx.createPattern(noiseCanvas, 'repeat');
+    ctx.fillRect(0, 0, width, height);
+  }
+
   function executeGenerateShareCard(toolKey, titleText, resultText, extraDetails = {}, styleMood = 'sofisticado') {
     const canvas = document.createElement('canvas');
-    canvas.width = 1080;
-    canvas.height = 1920;
+    canvas.width = 1080; canvas.height = 1920;
     const ctx = canvas.getContext('2d');
 
     const randomHue = Math.floor(Math.random() * 360);
     let baseBgColor, cardBgColor, panelBgColor, borderColor, accentColor;
 
     if (styleMood === 'glass') {
-      baseBgColor = `hsl(${randomHue}, 24%, 6%)`;
-      cardBgColor = `hsla(${randomHue}, 22%, 13%, 0.95)`;
-      panelBgColor = `hsla(${randomHue}, 18%, 18%, 0.85)`;
-      borderColor = `hsla(${randomHue}, 35%, 50%, 0.4)`;
-      accentColor = `hsl(${(randomHue + 45) % 360}, 90%, 74%)`;
+      baseBgColor = `hsl(${randomHue}, 24%, 6%)`; cardBgColor = `hsla(${randomHue}, 22%, 13%, 0.95)`;
+      panelBgColor = `hsla(${randomHue}, 18%, 18%, 0.85)`; borderColor = `hsla(${randomHue}, 35%, 50%, 0.4)`; accentColor = `hsl(${(randomHue + 45) % 360}, 90%, 74%)`;
     } else if (styleMood === 'mono') {
-      baseBgColor = `#09090b`;
-      cardBgColor = `#18181b`;
-      panelBgColor = `#27272a`;
-      borderColor = `#3f3f46`;
-      accentColor = `#f4f4f5`;
+      baseBgColor = `#09090b`; cardBgColor = `#18181b`; panelBgColor = `#27272a`; borderColor = `#3f3f46`; accentColor = `#f4f4f5`;
     } else {
-      baseBgColor = `#0b0d12`;
-      cardBgColor = `#131720`;
-      panelBgColor = `#1a202b`;
-      borderColor = `#29313e`;
-      accentColor = `hsl(${randomHue}, 85%, 68%)`;
+      baseBgColor = `#0b0d12`; cardBgColor = `#131720`; panelBgColor = `#1a202b`; borderColor = `#29313e`; accentColor = `hsl(${randomHue}, 85%, 68%)`;
     }
 
     ctx.fillStyle = baseBgColor;
@@ -734,279 +701,151 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (styleMood === 'sofisticado') {
       const g1 = ctx.createRadialGradient(240, 280, 20, 240, 280, 700);
-      g1.addColorStop(0, `hsla(${randomHue}, 90%, 60%, 0.20)`);
-      g1.addColorStop(1, 'transparent');
-      ctx.fillStyle = g1;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+      g1.addColorStop(0, `hsla(${randomHue}, 90%, 60%, 0.20)`); g1.addColorStop(1, 'transparent');
+      ctx.fillStyle = g1; ctx.fillRect(0, 0, canvas.width, canvas.height);
       const g2 = ctx.createRadialGradient(840, 1640, 30, 840, 1640, 800);
-      g2.addColorStop(0, `hsla(${(randomHue + 140) % 360}, 90%, 60%, 0.18)`);
-      g2.addColorStop(1, 'transparent');
-      ctx.fillStyle = g2;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      g2.addColorStop(0, `hsla(${(randomHue + 140) % 360}, 90%, 60%, 0.18)`); g2.addColorStop(1, 'transparent');
+      ctx.fillStyle = g2; ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    const cardX = 60;
-    const cardY = 90;
-    const cardW = 960;
-    const cardH = 1740;
+    // Textura premium sutil no background
+    drawNoise(ctx, canvas.width, canvas.height, 0.04);
 
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-    ctx.shadowBlur = 60;
-    ctx.shadowOffsetY = 18;
+    const cardX = 60, cardY = 90, cardW = 960, cardH = 1740;
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'; ctx.shadowBlur = 60; ctx.shadowOffsetY = 18;
 
     ctx.fillStyle = cardBgColor;
     ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(cardX, cardY, cardW, cardH, 38);
-    else ctx.rect(cardX, cardY, cardW, cardH);
-    ctx.fill();
-    ctx.shadowColor = 'transparent';
+    if (ctx.roundRect) ctx.roundRect(cardX, cardY, cardW, cardH, 38); else ctx.rect(cardX, cardY, cardW, cardH);
+    ctx.fill(); ctx.shadowColor = 'transparent';
 
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(cardX+2, cardY+2, cardW-4, cardH-4, 36);
-    ctx.stroke();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)'; ctx.lineWidth = 2; ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(cardX+2, cardY+2, cardW-4, cardH-4, 36); ctx.stroke();
+    ctx.strokeStyle = borderColor; ctx.lineWidth = 2.5; ctx.stroke();
 
-    ctx.strokeStyle = borderColor;
-    ctx.lineWidth = 2.5;
-    ctx.stroke();
+    // Logotipo tempo. utilitários no topo
+    ctx.font = '900 36px system-ui, sans-serif'; ctx.textAlign = 'left';
+    ctx.fillStyle = '#f7f8fb'; ctx.fillText('tempo', cardX + 55, cardY + 75);
+    const tW = ctx.measureText('tempo').width;
+    ctx.fillStyle = accentColor; ctx.fillText('.', cardX + 55 + tW, cardY + 75);
+    ctx.font = '700 16px system-ui, sans-serif'; ctx.fillStyle = '#9199a8';
+    ctx.fillText('utilitários', cardX + 55, cardY + 98);
 
-    const tagX = cardX + 55;
-    const tagY = cardY + 55;
+    const tagX = cardX + 55, tagY = cardY + 140; // Deslocado para baixo por conta do logo
     const tagText = "★ CÁLCULO VERIFICADO & COMPARTILHÁVEL";
     ctx.font = '800 15px system-ui, sans-serif';
-    const tagW = ctx.measureText(tagText).width + 36;
-    const tagH = 38;
+    const tagW = ctx.measureText(tagText).width + 36, tagH = 38;
 
-    ctx.fillStyle = panelBgColor;
-    ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(tagX, tagY, tagW, tagH, 19);
-    else ctx.rect(tagX, tagY, tagW, tagH);
-    ctx.fill();
-    ctx.strokeStyle = borderColor;
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    ctx.fillStyle = accentColor;
-    ctx.fillText(tagText, tagX + 18, tagY + 24);
+    ctx.fillStyle = panelBgColor; ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(tagX, tagY, tagW, tagH, 19); else ctx.rect(tagX, tagY, tagW, tagH);
+    ctx.fill(); ctx.strokeStyle = borderColor; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = accentColor; ctx.fillText(tagText, tagX + 18, tagY + 24);
 
     ctx.save();
-    ctx.shadowColor = accentColor;
-    ctx.shadowBlur = 25; 
-    ctx.strokeStyle = accentColor;
-    ctx.fillStyle = accentColor;
-    ctx.lineWidth = 4;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-
+    ctx.shadowColor = accentColor; ctx.shadowBlur = 25; 
+    ctx.strokeStyle = accentColor; ctx.fillStyle = accentColor; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     ctx.translate(cardX + cardW - 90, tagY + 19);
 
-    if (toolKey === 'date') {
-      ctx.beginPath(); ctx.roundRect(-24, -28, 48, 52, 10); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-24, -8); ctx.lineTo(24, -8); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 10, 5, 0, Math.PI * 2); ctx.fill();
-    } 
-    else if (toolKey === 'time') {
-      ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -14); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(10, 4); ctx.stroke();
-    }
-    else if (toolKey === 'business') {
-      ctx.beginPath(); ctx.roundRect(-28, -18, 56, 36, 8); ctx.stroke();
-      ctx.beginPath(); ctx.roundRect(-10, -26, 20, 10, 4); ctx.stroke();
-    }
-    else if (toolKey === 'worldclock') {
-      ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.ellipse(0, 0, 12, 28, 0, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-28, 0); ctx.lineTo(28, 0); ctx.stroke();
-    }
-    else if (toolKey === 'meeting') {
-      ctx.beginPath(); ctx.roundRect(-30, -20, 36, 24, 8); ctx.stroke();
-      ctx.beginPath(); ctx.roundRect(-6, -2, 36, 24, 8); ctx.fill();
-    }
-    else if (toolKey === 'pomodoro') {
-      ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 0, 16, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI * 2); ctx.fill();
-    }
-    else if (toolKey === 'sleep') {
-      ctx.beginPath();
-      ctx.arc(0, 0, 26, -Math.PI/1.5, Math.PI/1.5, false);
-      ctx.arc(8, 0, 20, Math.PI/1.5, -Math.PI/1.5, true);
-      ctx.fill();
-    }
-    else if (toolKey === 'horoscope') {
-      ctx.beginPath();
-      ctx.moveTo(0, -30); ctx.lineTo(9, -9); ctx.lineTo(30, 0); ctx.lineTo(9, 9);
-      ctx.lineTo(0, 30); ctx.lineTo(-9, 9); ctx.lineTo(-30, 0); ctx.lineTo(-9, -9);
-      ctx.closePath(); ctx.fill();
-    }
-    else if (toolKey === 'age') {
-      ctx.beginPath();
-      ctx.moveTo(0, 10);
-      ctx.bezierCurveTo(-25, -10, -25, -28, 0, -16);
-      ctx.bezierCurveTo(25, -28, 25, -10, 0, 10);
-      ctx.fill();
-    }
-    else if (toolKey === 'pregnancy') {
-      ctx.beginPath();
-      ctx.arc(-8, -4, 14, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath();
-      ctx.arc(8, 4, 14, 0, Math.PI * 2); ctx.fill();
-    }
-    else if (toolKey === 'countdown') {
-      ctx.beginPath();
-      ctx.moveTo(-20, -26); ctx.lineTo(20, -26);
-      ctx.lineTo(0, 0);
-      ctx.lineTo(20, 26); ctx.lineTo(-20, 26);
-      ctx.lineTo(0, 0);
-      ctx.closePath(); ctx.stroke();
-    }
-    else if (toolKey === 'overtime') {
-      ctx.beginPath();
-      ctx.moveTo(-26, 18); ctx.lineTo(-10, 2); ctx.lineTo(6, 10); ctx.lineTo(26, -18);
-      ctx.stroke();
-      ctx.beginPath(); ctx.arc(26, -18, 5, 0, Math.PI * 2); ctx.fill();
-    }
-    else if (toolKey === 'vacation13') {
-      ctx.rotate(-Math.PI / 12);
-      ctx.beginPath(); ctx.roundRect(-32, -20, 64, 40, 8); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI * 2); ctx.fill();
-    }
-    else if (toolKey === 'rescision') {
-      ctx.beginPath(); ctx.roundRect(-24, -28, 48, 56, 8); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-12, -8); ctx.lineTo(12, -8); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-12, 6); ctx.lineTo(6, 6); ctx.stroke();
-    }
-    else if (toolKey === 'running') {
-      ctx.rotate(-Math.PI / 8);
-      ctx.beginPath(); ctx.roundRect(-30, -10, 60, 22, 11); ctx.fill();
-    }
-    else {
-      ctx.beginPath(); ctx.arc(0, 0, 24, 0, Math.PI * 2); ctx.stroke();
-    }
+    if (toolKey === 'date') { ctx.beginPath(); ctx.roundRect(-24, -28, 48, 52, 10); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-24, -8); ctx.lineTo(24, -8); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 10, 5, 0, Math.PI * 2); ctx.fill(); } 
+    else if (toolKey === 'time') { ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -14); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(10, 4); ctx.stroke(); }
+    else if (toolKey === 'business') { ctx.beginPath(); ctx.roundRect(-28, -18, 56, 36, 8); ctx.stroke(); ctx.beginPath(); ctx.roundRect(-10, -26, 20, 10, 4); ctx.stroke(); }
+    else if (toolKey === 'worldclock') { ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke(); ctx.beginPath(); ctx.ellipse(0, 0, 12, 28, 0, 0, Math.PI * 2); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-28, 0); ctx.lineTo(28, 0); ctx.stroke(); }
+    else if (toolKey === 'meeting') { ctx.beginPath(); ctx.roundRect(-30, -20, 36, 24, 8); ctx.stroke(); ctx.beginPath(); ctx.roundRect(-6, -2, 36, 24, 8); ctx.fill(); }
+    else if (toolKey === 'pomodoro') { ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 0, 16, 0, Math.PI * 2); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI * 2); ctx.fill(); }
+    else if (toolKey === 'sleep') { ctx.beginPath(); ctx.arc(0, 0, 26, -Math.PI/1.5, Math.PI/1.5, false); ctx.arc(8, 0, 20, Math.PI/1.5, -Math.PI/1.5, true); ctx.fill(); }
+    else if (toolKey === 'horoscope') { ctx.beginPath(); ctx.moveTo(0, -30); ctx.lineTo(9, -9); ctx.lineTo(30, 0); ctx.lineTo(9, 9); ctx.lineTo(0, 30); ctx.lineTo(-9, 9); ctx.lineTo(-30, 0); ctx.lineTo(-9, -9); ctx.closePath(); ctx.fill(); }
+    else if (toolKey === 'age') { ctx.beginPath(); ctx.moveTo(0, 10); ctx.bezierCurveTo(-25, -10, -25, -28, 0, -16); ctx.bezierCurveTo(25, -28, 25, -10, 0, 10); ctx.fill(); }
+    else if (toolKey === 'pregnancy') { ctx.beginPath(); ctx.arc(-8, -4, 14, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(8, 4, 14, 0, Math.PI * 2); ctx.fill(); }
+    else if (toolKey === 'countdown') { ctx.beginPath(); ctx.moveTo(-20, -26); ctx.lineTo(20, -26); ctx.lineTo(0, 0); ctx.lineTo(20, 26); ctx.lineTo(-20, 26); ctx.lineTo(0, 0); ctx.closePath(); ctx.stroke(); }
+    else if (toolKey === 'overtime') { ctx.beginPath(); ctx.moveTo(-26, 18); ctx.lineTo(-10, 2); ctx.lineTo(6, 10); ctx.lineTo(26, -18); ctx.stroke(); ctx.beginPath(); ctx.arc(26, -18, 5, 0, Math.PI * 2); ctx.fill(); }
+    else if (toolKey === 'vacation13') { ctx.rotate(-Math.PI / 12); ctx.beginPath(); ctx.roundRect(-32, -20, 64, 40, 8); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI * 2); ctx.fill(); }
+    else if (toolKey === 'rescision') { ctx.beginPath(); ctx.roundRect(-24, -28, 48, 56, 8); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-12, -8); ctx.lineTo(12, -8); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-12, 6); ctx.lineTo(6, 6); ctx.stroke(); }
+    else if (toolKey === 'running') { ctx.rotate(-Math.PI / 8); ctx.beginPath(); ctx.roundRect(-30, -10, 60, 22, 11); ctx.fill(); }
+    else { ctx.beginPath(); ctx.arc(0, 0, 24, 0, Math.PI * 2); ctx.stroke(); }
     ctx.restore();
 
-    ctx.fillStyle = '#f7f8fb';
-    ctx.font = '800 44px system-ui, sans-serif';
-    ctx.fillText(titleText, cardX + 55, tagY + 115);
+    ctx.fillStyle = '#f7f8fb'; ctx.font = '800 44px system-ui, sans-serif'; ctx.fillText(titleText, cardX + 55, tagY + 115);
 
     let resFontSize = 76;
     if (resultText.length > 18) resFontSize = 58;
     if (resultText.length > 30) resFontSize = 42;
     ctx.font = `900 ${resFontSize}px system-ui, sans-serif`;
 
-    let resLines = wrapTextCanvas(ctx, resultText, cardW - 110);
-    let resStartY = tagY + 205;
-    resLines.forEach((l) => {
-      ctx.fillText(l.trim(), cardX + 55, resStartY);
-      resStartY += resFontSize + 12;
-    });
+    let resLines = wrapTextCanvas(ctx, resultText, cardW - 110), resStartY = tagY + 205;
+    resLines.forEach((l) => { ctx.fillText(l.trim(), cardX + 55, resStartY); resStartY += resFontSize + 12; });
 
     if (extraDetails && Object.keys(extraDetails).length > 0) {
-      const boxX = cardX + 55;
-      const boxW = cardW - 110;
-
+      const boxX = cardX + 55, boxW = cardW - 110;
       ctx.font = '800 18px system-ui, sans-serif'; 
-      let detailLayout = [];
-      let totalDetailsHeight = 0;
+      let detailLayout = [], totalDetailsHeight = 0;
 
       Object.entries(extraDetails).forEach(([key, val]) => {
-        let lines = wrapTextCanvas(ctx, val.toString(), boxW - 220);
-        let itemHeight = Math.max(56, lines.length * 26 + 18);
-        detailLayout.push({ key, lines, height: itemHeight });
-        totalDetailsHeight += itemHeight;
+        let lines = wrapTextCanvas(ctx, val.toString(), boxW - 220), itemHeight = Math.max(56, lines.length * 26 + 18);
+        detailLayout.push({ key, lines, height: itemHeight }); totalDetailsHeight += itemHeight;
       });
 
-      let boxH = totalDetailsHeight + 78; 
-      let boxY = cardY + cardH - 195 - boxH;
-
-      ctx.fillStyle = panelBgColor;
-      ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 26);
-      else ctx.rect(boxX, boxY, boxW, boxH);
+      let boxH = totalDetailsHeight + 78, boxY = cardY + cardH - 195 - boxH;
+      ctx.fillStyle = panelBgColor; ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(boxX, boxY, boxW, boxH, 26); else ctx.rect(boxX, boxY, boxW, boxH);
       ctx.fill();
       
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(boxX+1, boxY+1, boxW-2, boxH-2, 25);
-      ctx.stroke();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)'; ctx.lineWidth = 1; ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(boxX+1, boxY+1, boxW-2, boxH-2, 25); ctx.stroke();
+      ctx.strokeStyle = borderColor; ctx.lineWidth = 1.5; ctx.stroke();
 
-      ctx.strokeStyle = borderColor;
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      ctx.fillStyle = accentColor;
-      ctx.font = '800 16px system-ui, sans-serif';
-      ctx.fillText("INDICADORES DA ANÁLISE", boxX + 28, boxY + 36);
+      ctx.fillStyle = accentColor; ctx.font = '800 16px system-ui, sans-serif'; ctx.fillText("INDICADORES DA ANÁLISE", boxX + 28, boxY + 36);
 
       let currentY = boxY + 86;
       detailLayout.forEach((item, i) => {
-        if (i > 0) {
-          ctx.strokeStyle = borderColor;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(boxX + 28, currentY - 22);
-          ctx.lineTo(boxX + boxW - 28, currentY - 22);
-          ctx.stroke();
-        }
-
-        ctx.fillStyle = '#9199a8';
-        ctx.font = '750 18px system-ui, sans-serif';
-        ctx.textAlign = 'left';
-        ctx.fillText(item.key.toUpperCase(), boxX + 28, currentY);
-
-        ctx.fillStyle = '#f7f8fb';
-        ctx.font = '800 19px system-ui, sans-serif';
-        ctx.textAlign = 'right';
+        if (i > 0) { ctx.strokeStyle = borderColor; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(boxX + 28, currentY - 22); ctx.lineTo(boxX + boxW - 28, currentY - 22); ctx.stroke(); }
+        ctx.fillStyle = '#9199a8'; ctx.font = '750 18px system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.fillText(item.key.toUpperCase(), boxX + 28, currentY);
+        ctx.fillStyle = '#f7f8fb'; ctx.font = '800 19px system-ui, sans-serif'; ctx.textAlign = 'right';
         let lineY = currentY;
-        item.lines.forEach(line => {
-          ctx.fillText(line, boxX + boxW - 28, lineY);
-          lineY += 26;
-        });
-        ctx.textAlign = 'left';
-
-        currentY += item.height;
+        item.lines.forEach(line => { ctx.fillText(line, boxX + boxW - 28, lineY); lineY += 26; });
+        ctx.textAlign = 'left'; currentY += item.height;
       });
     }
 
-    ctx.strokeStyle = borderColor;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(cardX + 55, cardY + cardH - 105);
-    ctx.lineTo(cardX + cardW - 55, cardY + cardH - 105);
-    ctx.stroke();
+    ctx.strokeStyle = borderColor; ctx.lineWidth = 1; ctx.beginPath();
+    ctx.moveTo(cardX + 55, cardY + cardH - 105); ctx.lineTo(cardX + cardW - 55, cardY + cardH - 105); ctx.stroke();
+    ctx.fillStyle = '#9199a8'; ctx.font = '750 17px system-ui, sans-serif'; ctx.fillText("QUER DESCOBRIR O SEU TAMBÉM?", cardX + 55, cardY + cardH - 65);
+    ctx.fillStyle = accentColor; ctx.font = '900 22px system-ui, sans-serif'; ctx.fillText("→ tempo.utilitarios", cardX + 55, cardY + cardH - 35);
 
-    ctx.fillStyle = '#9199a8';
-    ctx.font = '750 17px system-ui, sans-serif';
-    ctx.fillText("QUER DESCOBRIR O SEU TAMBÉM?", cardX + 55, cardY + cardH - 65);
+    // Renderizar QR Code da URL antes de exportar
+    const qrSize = 130;
+    const qrImage = new Image();
+    qrImage.crossOrigin = "Anonymous";
+    // QR Code em preto/branco super contrastante, fica clean e sempre funciona
+    qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=${qrSize}x${qrSize}&data=https://tempo.utilitarios&color=000000&bgcolor=ffffff&margin=1`;
+    
+    qrImage.onload = () => {
+      ctx.save();
+      const qrX = cardX + cardW - qrSize - 55;
+      const qrY = cardY + cardH - qrSize - 55;
+      ctx.beginPath();
+      if(ctx.roundRect) ctx.roundRect(qrX, qrY, qrSize, qrSize, 12); else ctx.rect(qrX, qrY, qrSize, qrSize);
+      ctx.clip(); // Borda arredondada no QR Code
+      ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
+      ctx.restore();
 
-    ctx.fillStyle = accentColor;
-    ctx.font = '900 22px system-ui, sans-serif';
-    ctx.fillText("→ tempo.utilitarios", cardX + 55, cardY + cardH - 35);
-
-    const link = document.createElement('a');
-    link.download = `tempo-${toolKey}-story.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+      const link = document.createElement('a'); link.download = `tempo-${toolKey}-story.png`;
+      link.href = canvas.toDataURL('image/png'); link.click();
+    };
+    qrImage.onerror = () => {
+      // Fallback caso a API de QR Code falhe, garante o download do card mesmo assim
+      const link = document.createElement('a'); link.download = `tempo-${toolKey}-story.png`;
+      link.href = canvas.toDataURL('image/png'); link.click();
+    };
   }
 
   function showResult(html, plainText = "", error = false, toolName = "", extraDetails = {}) {
     const r = $("#result");
     if(r) {
-      r.setAttribute('aria-live', 'polite');
-      r.setAttribute('aria-atomic', 'true');
-      textToCopy = plainText;
-      
+      r.setAttribute('aria-live', 'polite'); r.setAttribute('aria-atomic', 'true'); textToCopy = plainText;
       let extraActions = '';
       if (!error && plainText) {
         let shareHtml = '';
-        if (navigator.share) {
-          shareHtml = `<button class="action-btn" id="nativeShareBtn"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg> Compartilhar</button>`;
-        }
-        
+        if (navigator.share) { shareHtml = `<button class="action-btn" id="nativeShareBtn"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg> Compartilhar</button>`; }
         extraActions = `
           <div class="action-buttons">
             <button class="action-btn" id="shareCardBtn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Gerar Card Postável 9:16</button>
@@ -1019,105 +858,47 @@ document.addEventListener("DOMContentLoaded", () => {
       const fullHtml = html + extraActions;
       if (r.innerHTML !== fullHtml) {
         r.innerHTML = fullHtml;
-        r.classList.remove("show");
-        void r.offsetWidth; 
-        r.classList.add("show");
+        r.classList.remove("show"); void r.offsetWidth; r.classList.add("show");
+        
+        // Gatilho do Count-Up nas tags da interface
+        setTimeout(() => {
+          r.querySelectorAll('.num-anim').forEach(el => {
+            const val = Number(el.dataset.val);
+            const isCurrency = el.dataset.currency === 'true';
+            animateValue(el, 0, val, 1000, isCurrency);
+          });
+        }, 50);
         
         const shareBtn = $("#shareCardBtn");
-        if (shareBtn) {
-          shareBtn.onclick = (ev) => {
-            ev.stopPropagation();
-            haptic();
-            pendingCardData = { toolKey: activeTool, titleText: titleEl.textContent, resultText: plainText, extraDetails };
-            openStyleModal();
-          };
-        }
-
+        if (shareBtn) { shareBtn.onclick = (ev) => { ev.stopPropagation(); haptic(); pendingCardData = { toolKey: activeTool, titleText: titleEl.textContent, resultText: plainText, extraDetails }; openStyleModal(); }; }
         const nativeShare = $("#nativeShareBtn");
-        if (nativeShare && navigator.share) {
-          nativeShare.onclick = (ev) => {
-            ev.stopPropagation();
-            haptic();
-            navigator.share({
-              title: titleEl.textContent,
-              text: `Confira este cálculo no tempo.utilitários:\n\n${titleEl.textContent}\nResultado: ${plainText}\n`,
-              url: window.location.href
-            }).catch(console.error);
-          };
-        }
-
+        if (nativeShare && navigator.share) { nativeShare.onclick = (ev) => { ev.stopPropagation(); haptic(); navigator.share({ title: titleEl.textContent, text: `Confira este cálculo no tempo.utilitários:\n\n${titleEl.textContent}\nResultado: ${plainText}\n`, url: window.location.href }).catch(console.error); }; }
         const printBtn = $("#printPdfBtn");
-        if (printBtn) {
-          printBtn.onclick = (ev) => {
-            ev.stopPropagation();
-            haptic();
-            window.print();
-          };
-        }
+        if (printBtn) { printBtn.onclick = (ev) => { ev.stopPropagation(); haptic(); window.print(); }; }
       }
       
-      if (error) {
-        r.classList.add("error");
-        r.classList.remove("has-copy");
-      } else {
-        r.classList.remove("error");
-        if(textToCopy) r.classList.add("has-copy");
-      }
+      if (error) { r.classList.add("error"); r.classList.remove("has-copy"); } 
+      else { r.classList.remove("error"); if(textToCopy) r.classList.add("has-copy"); }
     }
   }
 
-  function openStyleModal() {
-    styleModal.classList.add('open');
-    styleModal.setAttribute('aria-hidden', 'false');
-  }
-
-  function closeStyleModal() {
-    styleModal.classList.remove('open');
-    styleModal.setAttribute('aria-hidden', 'true');
-  }
+  function openStyleModal() { styleModal.classList.add('open'); styleModal.setAttribute('aria-hidden', 'false'); }
+  function closeStyleModal() { styleModal.classList.remove('open'); styleModal.setAttribute('aria-hidden', 'true'); }
 
   $$('#styleOptionsList button').forEach(btn => {
-    btn.onclick = () => {
-      haptic();
-      $$('#styleOptionsList button').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      selectedMoodStyle = btn.dataset.style;
-    };
+    btn.onclick = () => { haptic(); $$('#styleOptionsList button').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); selectedMoodStyle = btn.dataset.style; };
   });
 
   cancelStyleBtn.onclick = () => { haptic(); closeStyleModal(); };
-  confirmStyleBtn.onclick = () => {
-    haptic();
-    closeStyleModal();
-    if (pendingCardData) {
-      executeGenerateShareCard(pendingCardData.toolKey, pendingCardData.titleText, pendingCardData.resultText, pendingCardData.extraDetails, selectedMoodStyle);
-    }
-  };
+  confirmStyleBtn.onclick = () => { haptic(); closeStyleModal(); if (pendingCardData) { executeGenerateShareCard(pendingCardData.toolKey, pendingCardData.titleText, pendingCardData.resultText, pendingCardData.extraDetails, selectedMoodStyle); } };
   styleModal.onclick = (e) => { if(e.target === styleModal) closeStyleModal(); };
 
   document.addEventListener('click', e => {
     const r = e.target.closest('.result.has-copy');
     if (r && !r.classList.contains('error') && textToCopy && !e.target.closest('.action-buttons')) {
-      haptic();
-      r.classList.add('copied-flash');
-      setTimeout(() => r.classList.remove('copied-flash'), 600);
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          showToast('Copiado para a área de clipboard');
-        }).catch(()=>{}); 
-      } else {
-        try {
-          const textArea = document.createElement("textarea");
-          textArea.value = textToCopy;
-          textArea.style.position = "fixed"; 
-          document.body.appendChild(textArea);
-          textArea.focus();
-          textArea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textArea);
-          showToast('Copiado para a área de clipboard');
-        } catch(err) {}
-      }
+      haptic(); r.classList.add('copied-flash'); setTimeout(() => r.classList.remove('copied-flash'), 600);
+      if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(textToCopy).then(() => { showToast('Copiado para a área de clipboard'); }).catch(()=>{}); } 
+      else { try { const textArea = document.createElement("textarea"); textArea.value = textToCopy; textArea.style.position = "fixed"; document.body.appendChild(textArea); textArea.focus(); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea); showToast('Copiado para a área de clipboard'); } catch(err) {} }
     }
   });
 
@@ -1144,20 +925,14 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="result" id="result"></div>`;
       
       const calculate = () => {
-        st.d1 = $("#date1").value;
-        st.d2 = $("#date2").value;
-        saveStoredState('date', st);
+        st.d1 = $("#date1").value; st.d2 = $("#date2").value; saveStoredState('date', st);
         const a = dateFromInput("#date1"), b = dateFromInput("#date2");
         if(!a || !b) return showResult("Selecione as duas datas.", "", true);
         const x = calendarDifference(a, b);
-        const html = `<div class="big">${x.y} ${x.y===1?'ano':'anos'}, ${x.m} ${x.m===1?'mês':'meses'} & ${x.d} ${x.d===1?'dia':'dias'}</div><div class="small">Total: ${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div>`;
+        // Atualizado com .num-anim para o Count-up
+        const html = `<div class="big">${x.y} ${x.y===1?'ano':'anos'}, ${x.m} ${x.m===1?'mês':'meses'} & ${x.d} ${x.d===1?'dia':'dias'}</div><div class="small">Total: <span class="num-anim" data-val="${x.total}">0</span> ${x.total===1?'dia':'dias'}</div>`;
         const plainText = `${x.y} anos, ${x.m} meses e ${x.d} dias`;
-        const details = { 
-          "Início": formatDate(a), 
-          "Fim": formatDate(b), 
-          "Total de Dias": `${x.total.toLocaleString('pt-BR')} dias`,
-          "Meses Equivalentes": `~${(x.total / 30.43).toFixed(1)} meses`
-        };
+        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Total de Dias": `${x.total.toLocaleString('pt-BR')} dias`, "Meses Equivalentes": `~${(x.total / 30.43).toFixed(1)} meses` };
         showResult(html, plainText, false, "", details);
       };
       $("#date1").oninput = calculate; $("#date2").oninput = calculate; calculate();
@@ -1170,21 +945,13 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="result" id="result"></div>`;
       
       const calculate = () => {
-        st.base = $("#baseDate").value;
-        st.days = $("#days").value;
-        saveStoredState('date', st);
+        st.base = $("#baseDate").value; st.days = $("#days").value; saveStoredState('date', st);
         const base = dateFromInput("#baseDate"), n = Number($("#days").value);
         if(!base || $("#days").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe uma data e quantidade válida.", "", true);
-        const d = new Date(base);
-        d.setDate(d.getDate() + (st.mode === "add" ? n : -n));
-        const html = `<div class="big">${formatDate(d)}</div><div class="small">${st.mode==="add"?'Adicionados':'Subtraídos'} ${n.toLocaleString('pt-BR')} ${n===1?'dia':'dias'}.</div>`;
+        const d = new Date(base); d.setDate(d.getDate() + (st.mode === "add" ? n : -n));
+        const html = `<div class="big">${formatDate(d)}</div><div class="small">${st.mode==="add"?'Adicionados':'Subtraídos'} <span class="num-anim" data-val="${n}">0</span> ${n===1?'dia':'dias'}.</div>`;
         const plainText = `${formatDate(d)}`;
-        const details = { 
-          "Data Base": formatDate(base), 
-          "Operação": st.mode === "add" ? "Adição de Período" : "Subtração de Período", 
-          "Variação": `${n} dias`,
-          "Dia da Semana": d.toLocaleDateString('pt-BR', { weekday: 'long' })
-        };
+        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição de Período" : "Subtração de Período", "Variação": `${n} dias`, "Dia da Semana": d.toLocaleDateString('pt-BR', { weekday: 'long' }) };
         showResult(html, plainText, false, "", details);
       };
       $("#baseDate").oninput = calculate; $("#days").oninput = calculate; calculate();
@@ -1202,25 +969,15 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="result" id="result"></div>`;
     
     const calculate = () => {
-      st.t1 = $("#time1").value;
-      st.t2 = $("#time2").value;
-      saveStoredState('time', st);
-      const a = st.t1, b = st.t2;
-      if(!a || !b) return showResult("Informe os dois horários.", "", true);
+      st.t1 = $("#time1").value; st.t2 = $("#time2").value; saveStoredState('time', st);
+      const a = st.t1, b = st.t2; if(!a || !b) return showResult("Informe os dois horários.", "", true);
       let [ah, am] = a.split(":").map(Number), [bh, bm] = b.split(":").map(Number);
-      let start = ah * 60 + am, end = bh * 60 + bm;
-      if(end < start) end += 1440;
+      let start = ah * 60 + am, end = bh * 60 + bm; if(end < start) end += 1440;
       const total = end - start, h = Math.floor(total / 60), m = total % 60;
-      const html = `<div class="big">${h}h ${m.toString().padStart(2, "0")}min</div><div class="small">Total: ${total.toLocaleString('pt-BR')} minutos</div>`;
-      const details = { 
-        "Início": a, 
-        "Fim": b, 
-        "Total em Minutos": `${total.toLocaleString('pt-BR')} min`,
-        "Carga Horária": `${(total / 60).toFixed(2)}h`
-      };
+      const html = `<div class="big">${h}h ${m.toString().padStart(2, "0")}min</div><div class="small">Total: <span class="num-anim" data-val="${total}">0</span> minutos</div>`;
+      const details = { "Início": a, "Fim": b, "Total em Minutos": `${total.toLocaleString('pt-BR')} min`, "Carga Horária": `${(total / 60).toFixed(2)}h` };
       showResult(html, `${h}h ${m.toString().padStart(2, "0")}min`, false, "", details);
     };
-    
     $("#time1").oninput = calculate; $("#time2").oninput = calculate; calculate();
   }
 
@@ -1247,20 +1004,12 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="result" id="result"></div>`;
       
       const calculate = () => {
-        st.b1 = $("#bDate1").value;
-        st.b2 = $("#bDate2").value;
-        saveStoredState('business', st);
+        st.b1 = $("#bDate1").value; st.b2 = $("#bDate2").value; saveStoredState('business', st);
         const a = dateFromInput("#bDate1"), b = dateFromInput("#bDate2");
         if(!a || !b) return showResult("Selecione as duas datas.", "", true);
-        const total = businessDaysDifference(a, b);
-        const totalCalendar = Math.round((b - a) / 86400000);
-        const html = `<div class="big">${total.toLocaleString('pt-BR')} ${total===1?'dia útil':'dias úteis'}</div><div class="small">Intervalo sem finais de semana.</div>`;
-        const details = { 
-          "Início": formatDate(a), 
-          "Fim": formatDate(b), 
-          "Dias Úteis (Seg-Sex)": `${total} dias`,
-          "Dias Corridos": `${Math.abs(totalCalendar)} dias`
-        };
+        const total = businessDaysDifference(a, b), totalCalendar = Math.round((b - a) / 86400000);
+        const html = `<div class="big"><span class="num-anim" data-val="${total}">0</span> ${total===1?'dia útil':'dias úteis'}</div><div class="small">Intervalo sem finais de semana.</div>`;
+        const details = { "Início": formatDate(a), "Fim": formatDate(b), "Dias Úteis (Seg-Sex)": `${total} dias`, "Dias Corridos": `${Math.abs(totalCalendar)} dias` };
         showResult(html, `${total} dias úteis`, false, "", details);
       };
       $("#bDate1").oninput = calculate; $("#bDate2").oninput = calculate; calculate();
@@ -1273,19 +1022,12 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="result" id="result"></div>`;
       
       const calculate = () => {
-        st.base = $("#bBaseDate").value;
-        st.days = $("#bDays").value;
-        saveStoredState('business', st);
+        st.base = $("#bBaseDate").value; st.days = $("#bDays").value; saveStoredState('business', st);
         const base = dateFromInput("#bBaseDate"), n = Number($("#bDays").value);
         if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe data e quantidade.", "", true);
         const d = addBusinessDays(base, n, st.mode === "add");
-        const html = `<div class="big">${formatDate(d)}</div><div class="small">Resultado (${n} dias úteis).</div>`;
-        const details = { 
-          "Data Base": formatDate(base), 
-          "Operação": st.mode === "add" ? "Prazo Final Útil" : "Retroativo Útil", 
-          "Qtd. Úteis": `${n} dias`,
-          "Vencimento": d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })
-        };
+        const html = `<div class="big">${formatDate(d)}</div><div class="small">Resultado (<span class="num-anim" data-val="${n}">0</span> dias úteis).</div>`;
+        const details = { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Prazo Final Útil" : "Retroativo Útil", "Qtd. Úteis": `${n} dias`, "Vencimento": d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) };
         showResult(html, `${formatDate(d)}`, false, "", details);
       };
       $("#bBaseDate").oninput = calculate; $("#bDays").oninput = calculate; calculate();
@@ -1302,15 +1044,10 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>`;
     
     const zones = [
-      { city: 'Brasília', tz: 'America/Sao_Paulo' },
-      { city: 'Lisboa', tz: 'Europe/Lisbon' },
-      { city: 'New York', tz: 'America/New_York' },
-      { city: 'London', tz: 'Europe/London' },
-      { city: 'Tokyo', tz: 'Asia/Tokyo' }
+      { city: 'Brasília', tz: 'America/Sao_Paulo' }, { city: 'Lisboa', tz: 'Europe/Lisbon' }, { city: 'New York', tz: 'America/New_York' }, { city: 'London', tz: 'Europe/London' }, { city: 'Tokyo', tz: 'Asia/Tokyo' }
     ];
 
-    const grid = $("#worldClockGrid");
-    $("#localTzBox").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const grid = $("#worldClockGrid"); $("#localTzBox").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     grid.innerHTML = zones.map((z, idx) => `
       <div class="inner-card" style="text-align:center; padding:16px;">
@@ -1324,23 +1061,16 @@ document.addEventListener("DOMContentLoaded", () => {
       if(!$("#worldClockGrid")) return;
       const now = new Date();
       zones.forEach((z, idx) => {
-        const timeEl = $(`#wc-time-${idx}`);
-        const dateEl = $(`#wc-date-${idx}`);
+        const timeEl = $(`#wc-time-${idx}`), dateEl = $(`#wc-date-${idx}`);
         if(timeEl && dateEl) {
-          const timeStr = new Intl.DateTimeFormat('pt-BR', { timeZone: z.tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(now);
-          timeEl.textContent = timeStr;
+          timeEl.textContent = new Intl.DateTimeFormat('pt-BR', { timeZone: z.tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(now);
           dateEl.textContent = new Intl.DateTimeFormat('pt-BR', { timeZone: z.tz, weekday: 'short', day: 'numeric', month: 'short' }).format(now);
         }
       });
     }
-    updateClocks();
-    window._wcInterval = setInterval(updateClocks, 1000);
+    updateClocks(); window._wcInterval = setInterval(updateClocks, 1000);
     
-    showResult(`<div class="big">Relógio Global Ativo</div><div class="small">Monitore o horário nas principais capitais do planeta.</div>`, `Brasília / Lisboa / NY / Londres / Tóquio`, false, "Relógio Mundial", { 
-      "Fuso Local": Intl.DateTimeFormat().resolvedOptions().timeZone, 
-      "Capitais Monitoradas": "5 Globais",
-      "Sincronização": "Tempo Real"
-    });
+    showResult(`<div class="big">Relógio Global Ativo</div><div class="small">Monitore o horário nas principais capitais do planeta.</div>`, `Brasília / Lisboa / NY / Londres / Tóquio`, false, "Relógio Mundial", { "Fuso Local": Intl.DateTimeFormat().resolvedOptions().timeZone, "Capitais Monitoradas": "5 Globais", "Sincronização": "Tempo Real" });
   }
 
   function renderMeeting() {
@@ -1354,43 +1084,25 @@ document.addEventListener("DOMContentLoaded", () => {
       <div style="display:flex; flex-direction:column; gap:10px;" id="meetZonesList"></div>
       <div class="result show" style="display:block; margin-top:20px; text-align:left;">
         <div style="font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.8 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg>
-          Estado da Janela:
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.8 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg> Estado da Janela:
         </div>
         <div id="meetStatusText" style="color:var(--muted); font-size:14px; margin-top:6px;">--</div>
       </div>`;
 
-    const cities = [
-      { name: 'Brasília', tz: 'America/Sao_Paulo' },
-      { name: 'Lisboa', tz: 'Europe/Lisbon' },
-      { name: 'London', tz: 'Europe/London' },
-      { name: 'New York', tz: 'America/New_York' },
-      { name: 'Tokyo', tz: 'Asia/Tokyo' }
-    ];
-
-    const rangeInput = $("#meetHour");
-    const displayEl = $("#meetHourDisplay");
-    const listEl = $("#meetZonesList");
-    const statusEl = $("#meetStatusText");
+    const cities = [{ name: 'Brasília', tz: 'America/Sao_Paulo' }, { name: 'Lisboa', tz: 'Europe/Lisbon' }, { name: 'London', tz: 'Europe/London' }, { name: 'New York', tz: 'America/New_York' }, { name: 'Tokyo', tz: 'Asia/Tokyo' }];
+    const rangeInput = $("#meetHour"), displayEl = $("#meetHourDisplay"), listEl = $("#meetZonesList"), statusEl = $("#meetStatusText");
 
     function updateMeetingPlanner() {
-      const h = Number(rangeInput.value);
-      st.hour = h;
-      saveStoredState('meeting', st);
+      const h = Number(rangeInput.value); st.hour = h; saveStoredState('meeting', st);
       displayEl.textContent = `${h.toString().padStart(2, '0')}:00`;
+      const refDate = new Date(); refDate.setHours(h, 0, 0, 0);
 
-      const refDate = new Date();
-      refDate.setHours(h, 0, 0, 0);
-
-      let workingCount = 0;
-      let cityTimesSummary = [];
+      let workingCount = 0, cityTimesSummary = [];
       listEl.innerHTML = cities.map(c => {
         const timeStr = new Intl.DateTimeFormat('pt-BR', { timeZone: c.tz, hour: '2-digit', minute: '2-digit', hour12: false }).format(refDate);
         const hourNum = parseInt(timeStr.split(':')[0]);
-        const isWorking = hourNum >= 9 && hourNum < 18;
-        if (isWorking) workingCount++;
+        const isWorking = hourNum >= 9 && hourNum < 18; if (isWorking) workingCount++;
         cityTimesSummary.push(`${c.name}: ${timeStr}`);
-
         return `
           <div class="inner-card" style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px;">
             <div style="font-size:14px;"><strong>${c.name}</strong></div>
@@ -1403,27 +1115,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }).join('');
 
       let statusMsg = '';
-      if (workingCount >= 4) {
-        statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:#4ade80;"><strong>Excelente horário!</strong> Maioria em expediente.</div>`;
-        statusEl.innerHTML = statusMsg;
-      } else if (workingCount >= 2) {
-        statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:#fbbf24;"><strong>Atenção!</strong> Horário razoável de sobreposição.</div>`;
-        statusEl.innerHTML = statusMsg;
-      } else {
-        statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:var(--danger);"><strong>Difícil.</strong> Fora de hora para reuniões.</div>`;
-        statusEl.innerHTML = statusMsg;
-      }
+      if (workingCount >= 4) { statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:#4ade80;"><strong>Excelente horário!</strong> Maioria em expediente.</div>`; } 
+      else if (workingCount >= 2) { statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:#fbbf24;"><strong>Atenção!</strong> Horário razoável de sobreposição.</div>`; } 
+      else { statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:var(--danger);"><strong>Difícil.</strong> Fora de hora para reuniões.</div>`; }
+      statusEl.innerHTML = statusMsg;
 
-      showResult(`<div class="big">${h.toString().padStart(2, '0')}:00 Base</div><div class="small" style="margin-top:12px;">${statusMsg}</div>`, `Reunião Global às ${h}:00`, false, "Planejador de Reuniões", { 
-        "Hora Base": `${h}:00`, 
-        "Lisboa": cityTimesSummary[1]?.split(': ')[1] || '', 
-        "Londres": cityTimesSummary[2]?.split(': ')[1] || '', 
-        "Países em Comercial": `${workingCount} de 5`
-      });
+      showResult(`<div class="big">${h.toString().padStart(2, '0')}:00 Base</div><div class="small" style="margin-top:12px;">${statusMsg}</div>`, `Reunião Global às ${h}:00`, false, "Planejador de Reuniões", { "Hora Base": `${h}:00`, "Lisboa": cityTimesSummary[1]?.split(': ')[1] || '', "Londres": cityTimesSummary[2]?.split(': ')[1] || '', "Países em Comercial": `${workingCount} de 5` });
     }
-
-    rangeInput.oninput = updateMeetingPlanner;
-    updateMeetingPlanner();
+    rangeInput.oninput = updateMeetingPlanner; updateMeetingPlanner();
   }
 
   function renderPomodoro() {
@@ -1445,97 +1144,37 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="small" id="pomoStatus" style="font-weight: 700;">${st.running ? 'Sessão em andamento...' : 'Pronto para iniciar a sessão de foco.'}</div>
       </div>`;
 
-    function getSecondsForMode(m) {
-      if (m === 'work') return 25 * 60;
-      if (m === 'short') return 5 * 60;
-      return 15 * 60;
-    }
+    function getSecondsForMode(m) { if (m === 'work') return 25 * 60; if (m === 'short') return 5 * 60; return 15 * 60; }
 
     function updateDisplay() {
-      const displayEl = $("#pomoDisplay");
-      if (!displayEl) return;
-      const m = Math.floor(st.timeLeft / 60);
-      const s = st.timeLeft % 60;
+      const displayEl = $("#pomoDisplay"); if (!displayEl) return;
+      const m = Math.floor(st.timeLeft / 60), s = st.timeLeft % 60;
       displayEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-      
       const modeNames = { work: 'Sessão de Foco', short: 'Pausa Curta', long: 'Pausa Longa' };
-      showResult(`<div class="big">${m}:${s.toString().padStart(2, '0')}</div><div class="small">Modo: ${modeNames[st.mode]}</div>`, `${modeNames[st.mode]} - ${m}m`, false, "Temporizador Pomodoro", { 
-        "Método": "Pomodoro 25/5", 
-        "Sessão": modeNames[st.mode],
-        "Estado": st.running ? "Em Andamento" : "Pausado" 
-      });
+      showResult(`<div class="big">${m}:${s.toString().padStart(2, '0')}</div><div class="small">Modo: ${modeNames[st.mode]}</div>`, `${modeNames[st.mode]} - ${m}m`, false, "Temporizador Pomodoro", { "Método": "Pomodoro 25/5", "Sessão": modeNames[st.mode], "Estado": st.running ? "Em Andamento" : "Pausado" });
     }
     updateDisplay();
 
     function stopTimer() {
-      if (window._pomodoroInterval) {
-        clearInterval(window._pomodoroInterval);
-        window._pomodoroInterval = null;
-      }
-      st.running = false;
-      saveStoredState('pomodoro', st);
+      if (window._pomodoroInterval) { clearInterval(window._pomodoroInterval); window._pomodoroInterval = null; }
+      st.running = false; saveStoredState('pomodoro', st);
     }
 
     function startTimer(isResume = false) {
-      st.running = true;
-      saveStoredState('pomodoro', st);
-
-      const tb = $("#pomoToggleBtn");
-      const stEl = $("#pomoStatus");
-      if(tb) tb.textContent = 'Pausar';
-      if(stEl) stEl.textContent = 'Sessão em andamento...';
-
+      st.running = true; saveStoredState('pomodoro', st);
+      const tb = $("#pomoToggleBtn"), stEl = $("#pomoStatus");
+      if(tb) tb.textContent = 'Pausar'; if(stEl) stEl.textContent = 'Sessão em andamento...';
       if (window._pomodoroInterval) clearInterval(window._pomodoroInterval);
-
       window._pomodoroInterval = setInterval(() => {
-        if (st.timeLeft > 0) {
-          st.timeLeft--;
-          saveStoredState('pomodoro', st);
-          updateDisplay();
-        } else {
-          stopTimer();
-          const tbDone = $("#pomoToggleBtn");
-          const stDone = $("#pomoStatus");
-          if(tbDone) tbDone.textContent = 'Iniciar';
-          if(stDone) stDone.textContent = 'Tempo esgotado! Excelente trabalho.';
-          haptic();
-        }
+        if (st.timeLeft > 0) { st.timeLeft--; saveStoredState('pomodoro', st); updateDisplay(); } 
+        else { stopTimer(); const tbDone = $("#pomoToggleBtn"), stDone = $("#pomoStatus"); if(tbDone) tbDone.textContent = 'Iniciar'; if(stDone) stDone.textContent = 'Tempo esgotado! Excelente trabalho.'; haptic(); }
       }, 1000);
     }
-
     if (st.running) startTimer(true);
 
-    $("#pomoToggleBtn").onclick = () => {
-      haptic();
-      if (st.running) {
-        stopTimer();
-        $("#pomoToggleBtn").textContent = 'Iniciar';
-        $("#pomoStatus").textContent = 'Pausado.';
-      } else {
-        startTimer(false);
-      }
-    };
-
-    $("#pomoResetBtn").onclick = () => {
-      haptic();
-      stopTimer();
-      st.timeLeft = getSecondsForMode(st.mode);
-      saveStoredState('pomodoro', st);
-      updateDisplay();
-      $("#pomoToggleBtn").textContent = 'Iniciar';
-      $("#pomoStatus").textContent = 'Cronômetro reiniciado.';
-    };
-
-    $$("[data-pmode]").forEach(tab => {
-      tab.onclick = () => {
-        haptic();
-        stopTimer();
-        st.mode = tab.dataset.pmode;
-        st.timeLeft = getSecondsForMode(st.mode);
-        saveStoredState('pomodoro', st);
-        renderPomodoro();
-      };
-    });
+    $("#pomoToggleBtn").onclick = () => { haptic(); if (st.running) { stopTimer(); $("#pomoToggleBtn").textContent = 'Iniciar'; $("#pomoStatus").textContent = 'Pausado.'; } else { startTimer(false); } };
+    $("#pomoResetBtn").onclick = () => { haptic(); stopTimer(); st.timeLeft = getSecondsForMode(st.mode); saveStoredState('pomodoro', st); updateDisplay(); $("#pomoToggleBtn").textContent = 'Iniciar'; $("#pomoStatus").textContent = 'Cronômetro reiniciado.'; };
+    $$("[data-pmode]").forEach(tab => { tab.onclick = () => { haptic(); stopTimer(); st.mode = tab.dataset.pmode; st.timeLeft = getSecondsForMode(st.mode); saveStoredState('pomodoro', st); renderPomodoro(); }; });
   }
 
   function renderSleep() {
@@ -1554,23 +1193,17 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="result" id="result" style="margin-top:16px;"></div>`;
 
     const calculate = () => {
-      st.time = $("#sleepTime").value;
-      saveStoredState('sleep', st);
-
+      st.time = $("#sleepTime").value; saveStoredState('sleep', st);
       let baseDate = new Date();
       if (st.mode === 'wakeup') {
         const [h, m] = st.time.split(':').map(Number);
         if(isNaN(h)) return showResult("Informe um horário válido.", "", true);
-        baseDate.setHours(h, m, 0, 0);
-        if (baseDate < new Date()) baseDate.setDate(baseDate.getDate() + 1);
-        
+        baseDate.setHours(h, m, 0, 0); if (baseDate < new Date()) baseDate.setDate(baseDate.getDate() + 1);
         let times = [];
         for(let cycles = 6; cycles >= 3; cycles--) {
-          const d = new Date(baseDate.getTime());
-          d.setMinutes(d.getMinutes() - (cycles * 90) - 15);
+          const d = new Date(baseDate.getTime()); d.setMinutes(d.getMinutes() - (cycles * 90) - 15);
           times.push({ c: cycles, time: d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
         }
-        
         const html = `
           <div class="small" style="margin-bottom:8px;">Durma em um destes horários para acordar disposto (inclui 15m para adormecer):</div>
           <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap:10px; margin-bottom:12px;">
@@ -1578,21 +1211,13 @@ document.addEventListener("DOMContentLoaded", () => {
               <div style="font-size:24px; font-weight:900; ${t.c>=5?'color:var(--accent)':''}">${t.time}</div>
               <div style="font-size:11px; color:var(--muted); font-weight:750; margin-top:4px;">${t.c} Ciclos (${t.c*1.5}h)</div>
             </div>`).join('')}
-          </div>
-        `;
+          </div>`;
         const bestTime = times.find(t=>t.c===5).time;
-        showResult(html, `Durma às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { 
-          "Melhor Horário": bestTime, 
-          "Duração Ideal": "7h 30m (5 ciclos)", 
-          "Adormecer": "15 minutos",
-          "Benefício": "Zero cansaço ao despertar"
-        });
-      
+        showResult(html, `Durma às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Melhor Horário": bestTime, "Duração Ideal": "7h 30m (5 ciclos)", "Adormecer": "15 minutos", "Benefício": "Zero cansaço ao despertar" });
       } else {
         const times = [];
         for(let cycles = 3; cycles <= 6; cycles++) {
-          const d = new Date();
-          d.setMinutes(d.getMinutes() + (cycles * 90) + 15);
+          const d = new Date(); d.setMinutes(d.getMinutes() + (cycles * 90) + 15);
           times.push({ c: cycles, time: d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
         }
         const html = `
@@ -1602,156 +1227,62 @@ document.addEventListener("DOMContentLoaded", () => {
               <div style="font-size:24px; font-weight:900; ${t.c>=5?'color:var(--accent)':''}">${t.time}</div>
               <div style="font-size:11px; color:var(--muted); font-weight:750; margin-top:4px;">${t.c} Ciclos (${t.c*1.5}h)</div>
             </div>`).join('')}
-          </div>
-        `;
+          </div>`;
         const bestTime = times.find(t=>t.c===5).time;
-        showResult(html, `Acorde às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { 
-          "Alarme Recomendado": bestTime, 
-          "Base": "Ciclos biológicos de 90m",
-          "Duração": "7h 30m"
-        });
+        showResult(html, `Acorde às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Alarme Recomendado": bestTime, "Base": "Ciclos biológicos de 90m", "Duração": "7h 30m" });
       }
     };
-
-    $("#sleepTime").oninput = calculate;
-    calculate();
-
-    $$("[data-smode]").forEach(tab => {
-      tab.onclick = () => {
-        haptic();
-        st.mode = tab.dataset.smode;
-        saveStoredState('sleep', st);
-        renderSleep();
-      };
-    });
+    $("#sleepTime").oninput = calculate; calculate();
+    $$("[data-smode]").forEach(tab => { tab.onclick = () => { haptic(); st.mode = tab.dataset.smode; saveStoredState('sleep', st); renderSleep(); }; });
   }
 
   function renderHoroscope() {
     const st = getStoredState('horoscope');
     const signs = [
-      { id: 'aries', name: 'Áries', symbol: '♈' },
-      { id: 'taurus', name: 'Touro', symbol: '♉' },
-      { id: 'gemini', name: 'Gêmeos', symbol: '♊' },
-      { id: 'cancer', name: 'Câncer', symbol: '♋' },
-      { id: 'leo', name: 'Leão', symbol: '♌' },
-      { id: 'virgo', name: 'Virgem', symbol: '♍' },
-      { id: 'libra', name: 'Libra', symbol: '♎' },
-      { id: 'scorpio', name: 'Escorpião', symbol: '♏' },
-      { id: 'sagittarius', name: 'Sagitário', symbol: '♐' },
-      { id: 'capricorn', name: 'Capricórnio', symbol: '♑' },
-      { id: 'aquarius', name: 'Aquário', symbol: '♒' },
-      { id: 'pisces', name: 'Peixes', symbol: '♓' }
+      { id: 'aries', name: 'Áries', symbol: '♈' }, { id: 'taurus', name: 'Touro', symbol: '♉' }, { id: 'gemini', name: 'Gêmeos', symbol: '♊' }, { id: 'cancer', name: 'Câncer', symbol: '♋' }, { id: 'leo', name: 'Leão', symbol: '♌' }, { id: 'virgo', name: 'Virgem', symbol: '♍' },
+      { id: 'libra', name: 'Libra', symbol: '♎' }, { id: 'scorpio', name: 'Escorpião', symbol: '♏' }, { id: 'sagittarius', name: 'Sagitário', symbol: '♐' }, { id: 'capricorn', name: 'Capricórnio', symbol: '♑' }, { id: 'aquarius', name: 'Aquário', symbol: '♒' }, { id: 'pisces', name: 'Peixes', symbol: '♓' }
     ];
-
     tool.innerHTML = `
       <div style="margin-bottom: 16px;">
         <label style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:8px;" id="signLabel">SELECIONE O SEU SIGNO</label>
-        <select id="signSelect" style="font-weight:700;">
-          ${signs.map(s => `<option value="${s.id}" ${st.sign === s.id ? 'selected' : ''}>${s.name}</option>`).join('')}
-        </select>
+        <select id="signSelect" style="font-weight:700;">${signs.map(s => `<option value="${s.id}" ${st.sign === s.id ? 'selected' : ''}>${s.name}</option>`).join('')}</select>
       </div>
       <div id="horoscopeContent" style="margin-top: 16px;"></div>
       <div class="result" id="result"></div>`;
 
-    const climatePool = [
-      "O céu astral favorece a clareza mental e a tomada de decisões importantes que estavam em banho-maria.",
-      "Uma forte onda de energia renovadora convida você a sair da zona de conforto e explorar novas perspectivas.",
-      "O momento pede cautela com impulsos repentinos; respire fundo antes de reagir a provocações.",
-      "Alinhamentos planetários auspiciosos trazem leveza e otimismo genuíno para o seu dia a dia.",
-      "Sensibilidade acirrada. Aproveite para olhar para dentro e alinhar suas verdadeiras prioridades de vida."
-    ];
-    const lovePool = [
-      "No amor, a cumplicidade ganha espaço. Se estiver comprometido(a), uma conversa sincera fortalece os laços. Solteiros podem atrair alguém com interesses intelectuais parecidos.",
-      "O magnetismo pessoal está em alta. O romance ganha contornos apaixonados, mas evite cobranças excessivas por atenção que possam gerar atritos desnecessários.",
-      "Sua empatia natural será o grande diferencial nas relações hoje. Ouça mais o coração de quem você ama e evite discussões por detalhes irrelevantes.",
-      "Fase excelente para resolver pendências afetivas do passado. Perdoar e virar a página abrirá portas para surpresas muito felizes no campo amoroso."
-    ];
-    const workPool = [
-      "No campo profissional, sua capacidade de foco e produtividade impressionará superiores. É um ótimo dia para apresentar propostas ou liderar projetos complexos.",
-      "Desafios inesperados na rotina exigirão flexibilidade rápida. Sua habilidade de improviso garantirá que tudo termine dentro do prazo estabelecido.",
-      "Evite se sobrecarregar assumindo tarefas que pertencem a outros colegas. Foque nas suas metas principais para garantir entregas de excelência.",
-      "Momento altamente favorável para networking e parcerias estratégicas. Uma conversa informal pode se desdobrar em uma excelente oportunidade de carreira."
-    ];
-    const moneyPool = [
-      "O setor financeiro pede cautela com gastos por impulso motivados pelo estresse. Organize suas contas antes de fechar qualquer nova compra.",
-      "Boas notícias relativas a investimentos ou entradas extras de dinheiro podem surgir. Mantenha o planejamento a longo prazo firme.",
-      "Fase estável para as finanças, ideal para renegociar dívidas ou traçar metas claras de economia para o próximo semestre."
-    ];
-    const healthPool = [
-      "Sua energia vital pede pausas estratégicas. Reserve alguns minutos do dia para respirar fundo, se alongar e cuidar da saúde mental.",
-      "Ótimo dia para iniciar uma nova rotina de exercícios físicos ou ajustar a hidratação e a qualidade do sono.",
-      "Evite o excesso de cafeína e telas antes de dormir; seu corpo agradecerá com um descanso muito mais revigorante."
-    ];
-    const colors = ["Vermelho Rubi", "Azul Safira", "Amarelo Ouro", "Verde Esmeralda", "Violeta", "Branco Pérola", "Rosa Quartzo"];
-    const numbers = ["07", "14", "22", "33", "41", "55", "09", "18"];
+    const climatePool = ["O céu astral favorece a clareza mental e a tomada de decisões importantes que estavam em banho-maria.", "Uma forte onda de energia renovadora convida você a sair da zona de conforto e explorar novas perspectivas.", "O momento pede cautela com impulsos repentinos; respire fundo antes de reagir a provocações.", "Alinhamentos planetários auspiciosos trazem leveza e otimismo genuíno para o seu dia a dia.", "Sensibilidade acirrada. Aproveite para olhar para dentro e alinhar suas verdadeiras prioridades de vida."];
+    const lovePool = ["No amor, a cumplicidade ganha espaço. Se estiver comprometido(a), uma conversa sincera fortalece os laços. Solteiros podem atrair alguém com interesses intelectuais parecidos.", "O magnetismo pessoal está em alta. O romance ganha contornos apaixonados, mas evite cobranças excessivas por atenção que possam gerar atritos desnecessários.", "Sua empatia natural será o grande diferencial nas relações hoje. Ouça mais o coração de quem você ama e evite discussões por detalhes irrelevantes.", "Fase excelente para resolver pendências afetivas do passado. Perdoar e virar a página abrirá portas para surpresas muito felizes no campo amoroso."];
+    const workPool = ["No campo profissional, sua capacidade de foco e produtividade impressionará superiores. É um ótimo dia para apresentar propostas ou liderar projetos complexos.", "Desafios inesperados na rotina exigirão flexibilidade rápida. Sua habilidade de improviso garantirá que tudo termine dentro do prazo estabelecido.", "Evite se sobrecarregar assumindo tarefas que pertencem a outros colegas. Foque nas suas metas principais para garantir entregas de excelência.", "Momento altamente favorável para networking e parcerias estratégicas. Uma conversa informal pode se desdobrar em uma excelente oportunidade de carreira."];
+    const moneyPool = ["O setor financeiro pede cautela com gastos por impulso motivados pelo estresse. Organize suas contas antes de fechar qualquer nova compra.", "Boas notícias relativas a investimentos ou entradas extras de dinheiro podem surgir. Mantenha o planejamento a longo prazo firme.", "Fase estável para as finanças, ideal para renegociar dívidas ou traçar metas claras de economia para o próximo semestre."];
+    const healthPool = ["Sua energia vital pede pausas estratégicas. Reserve alguns minutos do dia para respirar fundo, se alongar e cuidar da saúde mental.", "Ótimo dia para iniciar uma nova rotina de exercícios físicos ou ajustar a hidratação e a qualidade do sono.", "Evite o excesso de cafeína e telas antes de dormir; seu corpo agradecerá com um descanso muito mais revigorante."];
+    const colors = ["Vermelho Rubi", "Azul Safira", "Amarelo Ouro", "Verde Esmeralda", "Violeta", "Branco Pérola", "Rosa Quartzo"], numbers = ["07", "14", "22", "33", "41", "55", "09", "18"];
 
-    const selectEl = $("#signSelect");
-    const contentEl = $("#horoscopeContent");
-
+    const selectEl = $("#signSelect"), contentEl = $("#horoscopeContent");
     function updateHoroscope() {
-      st.sign = selectEl.value;
-      saveStoredState('horoscope', st);
-      const signObj = signs.find(s => s.id === st.sign);
-      const todayEpochDays = Math.floor(Date.now() / 86400000);
-      const signIndex = signs.findIndex(s => s.id === st.sign);
-      
-      const cIdx = (todayEpochDays + signIndex * 3) % climatePool.length;
-      const lIdx = (todayEpochDays + signIndex * 7) % lovePool.length;
-      const wIdx = (todayEpochDays + signIndex * 11) % workPool.length;
-      const mIdx = (todayEpochDays + signIndex * 13) % moneyPool.length;
-      const hIdx = (todayEpochDays + signIndex * 17) % healthPool.length;
-      const colIdx = (todayEpochDays + signIndex * 5) % colors.length;
-      const numIdx = (todayEpochDays + signIndex * 9) % numbers.length;
-      const compIdx = (signIndex + (todayEpochDays % 4)) % signs.length;
-
+      st.sign = selectEl.value; saveStoredState('horoscope', st);
+      const signObj = signs.find(s => s.id === st.sign), todayEpochDays = Math.floor(Date.now() / 86400000), signIndex = signs.findIndex(s => s.id === st.sign);
+      const cIdx = (todayEpochDays + signIndex * 3) % climatePool.length, lIdx = (todayEpochDays + signIndex * 7) % lovePool.length, wIdx = (todayEpochDays + signIndex * 11) % workPool.length, mIdx = (todayEpochDays + signIndex * 13) % moneyPool.length, hIdx = (todayEpochDays + signIndex * 17) % healthPool.length, colIdx = (todayEpochDays + signIndex * 5) % colors.length, numIdx = (todayEpochDays + signIndex * 9) % numbers.length, compIdx = (signIndex + (todayEpochDays % 4)) % signs.length;
       const todayStr = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
       const pureGlyph = `<span style="font-size:24px; line-height:1; color:var(--text); display:inline-flex; align-items:center; background:transparent;">${signObj.symbol}</span>`;
 
       contentEl.innerHTML = `
         <div class="inner-card" style="padding:24px; text-align: left;">
           <div style="font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">${todayStr}</div>
-          <div style="font-size: 26px; font-weight: 900; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
-            ${pureGlyph} <span>${signObj.name}</span>
-          </div>
-          <div style="margin-bottom: 16px;">
-            <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Clima Astral</strong>
-            <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${climatePool[cIdx]}</span>
-          </div>
-          <div style="margin-bottom: 16px;">
-            <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Amor & Relações</strong>
-            <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${lovePool[lIdx]}</span>
-          </div>
-          <div style="margin-bottom: 16px;">
-            <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Trabalho & Carreira</strong>
-            <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${workPool[wIdx]}</span>
-          </div>
-          <div style="margin-bottom: 16px;">
-            <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Dinheiro & Finanças</strong>
-            <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${moneyPool[mIdx]}</span>
-          </div>
-          <div style="margin-bottom: 18px;">
-            <strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Saúde & Bem-estar</strong>
-            <span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${healthPool[hIdx]}</span>
-          </div>
+          <div style="font-size: 26px; font-weight: 900; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">${pureGlyph} <span>${signObj.name}</span></div>
+          <div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Clima Astral</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${climatePool[cIdx]}</span></div>
+          <div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Amor & Relações</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${lovePool[lIdx]}</span></div>
+          <div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Trabalho & Carreira</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${workPool[wIdx]}</span></div>
+          <div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Dinheiro & Finanças</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${moneyPool[mIdx]}</span></div>
+          <div style="margin-bottom: 18px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Saúde & Bem-estar</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${healthPool[hIdx]}</span></div>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted);">
             <div><strong>Cor:</strong> <span style="color:var(--text);">${colors[colIdx]}</span></div>
             <div><strong>Número:</strong> <span style="color:var(--text);">${numbers[numIdx]}</span></div>
             <div><strong>Combina com:</strong> <span style="color:var(--text);">${signs[compIdx].name}</span></div>
           </div>
         </div>`;
-
-      const details = { 
-        "Signo": signObj.name,
-        "Cor da Sorte": colors[colIdx], 
-        "Número": numbers[numIdx], 
-        "Harmonia": signs[compIdx].name
-      };
-      
-      showResult(`<div class="big" style="display:flex; align-items:center; justify-content:center; gap:8px;">${pureGlyph} <span>${signObj.name}</span></div><div class="small">Previsão diária consultada.</div>`, `${signObj.name} - Horóscopo Diário`, false, "Horóscopo Diário", details);
+      showResult(`<div class="big" style="display:flex; align-items:center; justify-content:center; gap:8px;">${pureGlyph} <span>${signObj.name}</span></div><div class="small">Previsão diária consultada.</div>`, `${signObj.name} - Horóscopo Diário`, false, "Horóscopo Diário", { "Signo": signObj.name, "Cor da Sorte": colors[colIdx], "Número": numbers[numIdx], "Harmonia": signs[compIdx].name });
     }
-
-    selectEl.onchange = () => { haptic(); updateHoroscope(); };
-    updateHoroscope();
+    selectEl.onchange = () => { haptic(); updateHoroscope(); }; updateHoroscope();
   }
 
   function renderAge() {
@@ -1764,22 +1295,13 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="result" id="result"></div>`;
       
     const calculate = () => {
-      st.birth = $("#birthDate").value;
-      st.ref = $("#refDate").value;
-      saveStoredState('age', st);
+      st.birth = $("#birthDate").value; st.ref = $("#refDate").value; saveStoredState('age', st);
       const birth = dateFromInput("#birthDate"), ref = dateFromInput("#refDate");
       if(!birth || !ref) return showResult("Selecione as datas.", "", true);
       if(birth > ref) return showResult("Data futura inválida.", "", true);
       const x = calendarDifference(birth, ref);
-      const html = `<div class="big">${x.y} anos, ${x.m} meses & ${x.d} dias</div><div class="small">Total: ~${x.total.toLocaleString('pt-BR')} dias vividos.</div>`;
-      const plainText = `${x.y} anos, ${x.m} meses e ${x.d} dias`;
-      const details = { 
-        "Nascimento": formatDate(birth), 
-        "Referência": formatDate(ref), 
-        "Idade Exata": `${x.y} anos e ${x.m} meses`,
-        "Total em Dias": `${x.total.toLocaleString('pt-BR')} dias`
-      };
-      showResult(html, plainText, false, "", details);
+      const html = `<div class="big">${x.y} anos, ${x.m} meses & ${x.d} dias</div><div class="small">Total: <span class="num-anim" data-val="${x.total}">0</span> dias vividos.</div>`;
+      showResult(html, `${x.y} anos, ${x.m} meses e ${x.d} dias`, false, "", { "Nascimento": formatDate(birth), "Referência": formatDate(ref), "Idade Exata": `${x.y} anos e ${x.m} meses`, "Total em Dias": `${x.total.toLocaleString('pt-BR')} dias` });
     };
     $("#birthDate").oninput = calculate; $("#refDate").oninput = calculate; calculate();
   }
@@ -1793,28 +1315,12 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="result" id="result"></div>`;
       
     const calculate = () => {
-      st.dum = $("#dumDate").value;
-      saveStoredState('pregnancy', st);
-      const dum = dateFromInput("#dumDate");
-      if(!dum) return showResult("Informe a DUM.", "", true);
-      
-      const today = new Date(); today.setHours(12, 0, 0, 0);
-      if(dum > today) return showResult("DUM futura inválida.", "", true);
-      
-      const diffDays = Math.round((today - dum) / 86400000);
-      const weeks = Math.floor(diffDays / 7);
-      const days = diffDays % 7;
-      const dueDate = new Date(dum); dueDate.setDate(dueDate.getDate() + 280); 
-      
+      st.dum = $("#dumDate").value; saveStoredState('pregnancy', st);
+      const dum = dateFromInput("#dumDate"); if(!dum) return showResult("Informe a DUM.", "", true);
+      const today = new Date(); today.setHours(12, 0, 0, 0); if(dum > today) return showResult("DUM futura inválida.", "", true);
+      const diffDays = Math.round((today - dum) / 86400000), weeks = Math.floor(diffDays / 7), days = diffDays % 7, dueDate = new Date(dum); dueDate.setDate(dueDate.getDate() + 280); 
       const html = `<div class="big">${weeks} semanas & ${days} dias</div><div class="small">Previsão do parto: <strong>${formatDate(dueDate)}</strong></div>`;
-      const plainText = `${weeks} semanas e ${days} dias`;
-      const details = { 
-        "DUM": formatDate(dum), 
-        "Idade Gestacional": `${weeks} semanas e ${days} dias`, 
-        "Trimestre": weeks <= 13 ? "1º Trimestre" : (weeks <= 27 ? "2º Trimestre" : "3º Trimestre"),
-        "Parto Previsto": formatDate(dueDate)
-      };
-      showResult(html, plainText, false, "", details);
+      showResult(html, `${weeks} semanas e ${days} dias`, false, "", { "DUM": formatDate(dum), "Idade Gestacional": `${weeks} semanas e ${days} dias`, "Trimestre": weeks <= 13 ? "1º Trimestre" : (weeks <= 27 ? "2º Trimestre" : "3º Trimestre"), "Parto Previsto": formatDate(dueDate) });
     };
     $("#dumDate").oninput = calculate; calculate();
   }
@@ -1840,39 +1346,19 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="result" id="result"></div>`;
     
     const calculate = () => {
-      st.name = $("#evName").value;
-      st.date = $("#evDate").value;
-      saveStoredState('countdown', st);
-
-      const rawName = st.name || "Evento";
-      const name = escapeHTML(rawName);
-      
-      const evDate = dateFromInput("#evDate");
+      st.name = $("#evName").value; st.date = $("#evDate").value; saveStoredState('countdown', st);
+      const rawName = st.name || "Evento", name = escapeHTML(rawName), evDate = dateFromInput("#evDate");
       if(!evDate) return showResult("Selecione data válida.", "", true);
-      
-      const today = new Date(); today.setHours(12,0,0,0);
-      const x = calendarDifference(today, evDate);
+      const today = new Date(); today.setHours(12,0,0,0); const x = calendarDifference(today, evDate);
       
       if (st.mode === "down") {
         if (today > evDate) return showResult("Data já passou!", "", true);
-        const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Faltam para ${name}.</div>`;
-        const details = { 
-          "Evento": rawName, 
-          "Data Alvo": formatDate(evDate), 
-          "Contagem": `${x.total.toLocaleString('pt-BR')} dias restantes`,
-          "Semanas": `~${Math.floor(x.total / 7)} semanas`
-        };
-        showResult(html, `${x.total} dias para ${rawName}`, false, "", details);
+        const html = `<div class="big"><span class="num-anim" data-val="${x.total}">0</span> ${x.total===1?'dia':'dias'}</div><div class="small">Faltam para ${name}.</div>`;
+        showResult(html, `${x.total} dias para ${rawName}`, false, "", { "Evento": rawName, "Data Alvo": formatDate(evDate), "Contagem": `${x.total.toLocaleString('pt-BR')} dias restantes`, "Semanas": `~${Math.floor(x.total / 7)} semanas` });
       } else {
         if (today < evDate) return showResult("Data futura!", "", true);
-        const html = `<div class="big">${x.total.toLocaleString('pt-BR')} ${x.total===1?'dia':'dias'}</div><div class="small">Passados desde ${name}.</div>`;
-        const details = { 
-          "Evento": rawName, 
-          "Data Referência": formatDate(evDate), 
-          "Decorrido": `${x.total.toLocaleString('pt-BR')} dias`,
-          "Tempo": `${x.y} anos e ${x.m} meses`
-        };
-        showResult(html, `${x.total} dias desde ${rawName}`, false, "", details);
+        const html = `<div class="big"><span class="num-anim" data-val="${x.total}">0</span> ${x.total===1?'dia':'dias'}</div><div class="small">Passados desde ${name}.</div>`;
+        showResult(html, `${x.total} dias desde ${rawName}`, false, "", { "Evento": rawName, "Data Referência": formatDate(evDate), "Decorrido": `${x.total.toLocaleString('pt-BR')} dias`, "Tempo": `${x.y} anos e ${x.m} meses` });
       }
     };
     $("#evName").oninput = calculate; $("#evDate").oninput = calculate; calculate();
@@ -1898,29 +1384,15 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="result" id="result"></div>`;
       
     const calculate = () => {
-      st.sal = Number($("#sal").value);
-      st.jor = Number($("#jor").value);
-      st.qtd = Number($("#qtd").value);
-      st.rate = Number($("#rate").value);
-      saveStoredState('overtime', st);
-      
+      st.sal = Number($("#sal").value); st.jor = Number($("#jor").value); st.qtd = Number($("#qtd").value); st.rate = Number($("#rate").value); saveStoredState('overtime', st);
       const sal = st.sal, jor = st.jor, qtd = st.qtd, rate = st.rate;
       if(!sal || sal<=0 || !jor || jor<=0 || isNaN(qtd) || qtd<0) return showResult("Valores inválidos.", "", true);
-      
       const vHora = sal / jor, vExtra = vHora * (1 + rate / 100), total = vExtra * qtd;
       const html = `
-        <div class="big">R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+        <div class="big">R$ <span class="num-anim" data-val="${total}" data-currency="true">0,00</span></div>
         <div class="small">Normal: R$ ${vHora.toFixed(2)} | Extra (${rate}%): R$ ${vExtra.toFixed(2)}</div>
-        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
-      `;
-      const details = { 
-        "Salário Base": `R$ ${sal.toFixed(2)}`,
-        "Valor da Hora": `R$ ${vHora.toFixed(2)}`, 
-        "Qtd. Extras": `${qtd}h`, 
-        "Adicional": `${rate}%`, 
-        "Valor Hora Extra": `R$ ${vExtra.toFixed(2)}` 
-      };
-      showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
+        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>`;
+      showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", { "Salário Base": `R$ ${sal.toFixed(2)}`, "Valor da Hora": `R$ ${vHora.toFixed(2)}`, "Qtd. Extras": `${qtd}h`, "Adicional": `${rate}%`, "Valor Hora Extra": `R$ ${vExtra.toFixed(2)}` });
     };
     $("#sal").oninput = calculate; $("#jor").oninput = calculate; $("#qtd").oninput = calculate; $("#rate").onchange = calculate; calculate();
   }
@@ -1936,8 +1408,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderVArea() {
-    const st = getStoredState('vacation13');
-    const area = $("#vArea");
+    const st = getStoredState('vacation13'), area = $("#vArea");
     if(st.mode === "13"){
       area.innerHTML = `
         <div class="grid">
@@ -1947,24 +1418,15 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="result" id="result"></div>`;
       
       const calculate = () => {
-        st.sal = Number($("#vSal").value);
-        st.meses = Number($("#vMeses").value);
-        saveStoredState('vacation13', st);
+        st.sal = Number($("#vSal").value); st.meses = Number($("#vMeses").value); saveStoredState('vacation13', st);
         const sal = st.sal, meses = st.meses;
         if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult("Valores inválidos.", "", true);
         const val = (sal / 12) * meses;
         const html = `
-          <div class="big">R$ ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+          <div class="big">R$ <span class="num-anim" data-val="${val}" data-currency="true">0,00</span></div>
           <div class="small">Proporcional a ${meses} ${meses===1?'mês':'meses'}.</div>
-          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
-        `;
-        const details = { 
-          "Salário Base": `R$ ${sal.toFixed(2)}`, 
-          "Período": `${meses}/12 avos`, 
-          "Benefício": "13º Proporcional",
-          "Regime": "CLT"
-        };
-        showResult(html, `R$ ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
+          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>`;
+        showResult(html, `R$ ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", { "Salário Base": `R$ ${sal.toFixed(2)}`, "Período": `${meses}/12 avos`, "Benefício": "13º Proporcional", "Regime": "CLT" });
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
     } else {
@@ -1976,24 +1438,15 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="result" id="result"></div>`;
       
       const calculate = () => {
-        st.sal = Number($("#vSal").value);
-        st.meses = Number($("#vMeses").value);
-        saveStoredState('vacation13', st);
+        st.sal = Number($("#vSal").value); st.meses = Number($("#vMeses").value); saveStoredState('vacation13', st);
         const sal = st.sal, meses = st.meses;
         if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult("Valores inválidos.", "", true);
         const base = (sal / 12) * meses, terço = base / 3, total = base + terço;
         const html = `
-          <div class="big">R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+          <div class="big">R$ <span class="num-anim" data-val="${total}" data-currency="true">0,00</span></div>
           <div class="small">Férias: R$ ${base.toFixed(2)} | 1/3: R$ ${terço.toFixed(2)}</div>
-          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
-        `;
-        const details = { 
-          "Salário Base": `R$ ${sal.toFixed(2)}`,
-          "Férias Proporcional": `R$ ${base.toFixed(2)}`, 
-          "Adicional ⅓ Constitucional": `R$ ${terço.toFixed(2)}`, 
-          "Meses": `${meses} avos` 
-        };
-        showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
+          <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>`;
+        showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", { "Salário Base": `R$ ${sal.toFixed(2)}`, "Férias Proporcional": `R$ ${base.toFixed(2)}`, "Adicional ⅓ Constitucional": `R$ ${terço.toFixed(2)}`, "Meses": `${meses} avos` });
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
     }
@@ -2020,92 +1473,58 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="result" id="result"></div>`;
     
     const calculate = () => {
-      st.sal = Number($("#rSal").value);
-      st.reason = $("#rReason").value;
-      st.adm = $("#rAdm").value;
-      st.term = $("#rTerm").value;
-      saveStoredState('rescision', st);
-
+      st.sal = Number($("#rSal").value); st.reason = $("#rReason").value; st.adm = $("#rAdm").value; st.term = $("#rTerm").value; saveStoredState('rescision', st);
       const sal = st.sal, reason = st.reason, dAdm = dateFromInput("#rAdm"), dTerm = dateFromInput("#rTerm");
       if(!sal || sal<=0 || !dAdm || !dTerm) return showResult("Preencha todos os campos.", "", true);
       if(dAdm > dTerm) return showResult("Admissão posterior à demissão.", "", true);
       
       const timeDiffReal = calendarDifference(dAdm, dTerm);
-      
-      let diasAviso = 0;
-      if (reason === "sem_justa" || reason === "acordo") {
-        diasAviso = 30 + Math.min(timeDiffReal.y * 3, 60);
-      }
-
-      const dProj = new Date(dTerm);
-      if (reason !== "pedido") {
-        dProj.setDate(dProj.getDate() + diasAviso);
-      }
-
+      let diasAviso = 0; if (reason === "sem_justa" || reason === "acordo") { diasAviso = 30 + Math.min(timeDiffReal.y * 3, 60); }
+      const dProj = new Date(dTerm); if (reason !== "pedido") { dProj.setDate(dProj.getDate() + diasAviso); }
       const daysInMonth = new Date(dTerm.getFullYear(), dTerm.getMonth() + 1, 0).getDate();
       const diasTrab = Math.min(dTerm.getDate(), daysInMonth);
       const saldoSalario = diasTrab >= daysInMonth ? sal : Math.min(sal, (sal / 30) * diasTrab);
       
       let avisoPrevio = 0;
-      if (reason === "sem_justa") {
-        avisoPrevio = (sal / 30) * diasAviso;
-      } else if (reason === "acordo") {
-        avisoPrevio = ((sal / 30) * diasAviso) / 2;
-      }
+      if (reason === "sem_justa") { avisoPrevio = (sal / 30) * diasAviso; } 
+      else if (reason === "acordo") { avisoPrevio = ((sal / 30) * diasAviso) / 2; }
 
       const start13 = new Date(Math.max(dAdm.getTime(), new Date(dProj.getFullYear(), 0, 1).getTime()));
       const diff13 = calendarDifference(start13, dProj);
-      let avos13 = diff13.y * 12 + diff13.m;
-      if (diff13.d >= 15) avos13++;
+      let avos13 = diff13.y * 12 + diff13.m; if (diff13.d >= 15) avos13++;
       const decimoTerceiro = (sal / 12) * Math.min(avos13, 12);
 
       const totalMesesTrabalhados = timeDiffReal.y * 12 + timeDiffReal.m;
       let feriasTotal = 0;
-      
       if (totalMesesTrabalhados >= 12) {
-        const periodosVencidos = Math.floor(totalMesesTrabalhados / 12);
-        const mesAtualCiclo = totalMesesTrabalhados % 12;
-        let avosFeriasProp = mesAtualCiclo;
-        if (timeDiffReal.d >= 15) avosFeriasProp++;
-        
+        const periodosVencidos = Math.floor(totalMesesTrabalhados / 12), mesAtualCiclo = totalMesesTrabalhados % 12;
+        let avosFeriasProp = mesAtualCiclo; if (timeDiffReal.d >= 15) avosFeriasProp++;
         const valorVencidas = (sal + sal / 3) * periodosVencidos;
         const valorProporcional = ((sal / 12) * Math.min(avosFeriasProp, 12)) * (4/3);
         feriasTotal = valorVencidas + valorProporcional;
       } else {
         const projDiff = calendarDifference(dAdm, dProj);
-        let avosFerias = projDiff.m;
-        if (projDiff.d >= 15) avosFerias++;
-        const feriasBase = (sal / 12) * Math.min(avosFerias, 12);
-        feriasTotal = feriasBase + (feriasBase / 3);
+        let avosFerias = projDiff.m; if (projDiff.d >= 15) avosFerias++;
+        const feriasBase = (sal / 12) * Math.min(avosFerias, 12); feriasTotal = feriasBase + (feriasBase / 3);
       }
 
       const totalMonthsReal = timeDiffReal.y * 12 + timeDiffReal.m + (timeDiffReal.d >= 15 ? 1 : 0);
       const saldoFgtsEst = (sal * 0.08) * totalMonthsReal;
-      
       let multaFgts = 0;
-      if (reason === "sem_justa") multaFgts = saldoFgtsEst * 0.40;
-      else if (reason === "acordo") multaFgts = saldoFgtsEst * 0.20;
+      if (reason === "sem_justa") multaFgts = saldoFgtsEst * 0.40; else if (reason === "acordo") multaFgts = saldoFgtsEst * 0.20;
 
       const totalRescisao = saldoSalario + decimoTerceiro + feriasTotal + avisoPrevio + multaFgts;
       
       const html = `
-        <div class="big">R$ ${totalRescisao.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+        <div class="big">R$ <span class="num-anim" data-val="${totalRescisao}" data-currency="true">0,00</span></div>
         <div class="small" style="margin-top:8px; line-height:1.6;">
           Saldo: R$ ${saldoSalario.toFixed(2)} | 13º Prop.: R$ ${decimoTerceiro.toFixed(2)}<br>
           ${reason !== 'pedido' ? `Aviso Prévio (${diasAviso}d): R$ ${avisoPrevio.toFixed(2)}<br>` : ''}
           Férias (Venc./Prop. + ⅓): R$ ${feriasTotal.toFixed(2)}<br>
           ${reason !== 'pedido' ? `Multa FGTS: R$ ${multaFgts.toFixed(2)}` : ''}
         </div>
-        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>
-      `;
-      const details = { 
-        "Tempo Empresa": `${timeDiffReal.y}a ${timeDiffReal.m}m`,
-        "Saldo Salário": `R$ ${saldoSalario.toFixed(2)}`, 
-        "13º Salário": `R$ ${decimoTerceiro.toFixed(2)}`, 
-        "Férias + ⅓": `R$ ${feriasTotal.toFixed(2)}`, 
-        "Multa FGTS": `R$ ${multaFgts.toFixed(2)}`
-      };
-      showResult(html, `R$ ${totalRescisao.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", details);
+        <div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>`;
+      showResult(html, `R$ ${totalRescisao.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", { "Tempo Empresa": `${timeDiffReal.y}a ${timeDiffReal.m}m`, "Saldo Salário": `R$ ${saldoSalario.toFixed(2)}`, "13º Salário": `R$ ${decimoTerceiro.toFixed(2)}`, "Férias + ⅓": `R$ ${feriasTotal.toFixed(2)}`, "Multa FGTS": `R$ ${multaFgts.toFixed(2)}` });
     };
     $("#rSal").oninput = calculate; $("#rReason").onchange = calculate; $("#rAdm").oninput = calculate; $("#rTerm").oninput = calculate; calculate();
   }
@@ -2120,254 +1539,104 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="result" id="result"></div>`;
       
     const calculate = () => {
-      st.dist = Number($("#runDist").value);
-      st.time = Number($("#runTime").value);
-      saveStoredState('running', st);
-      const dist = st.dist, totalMin = st.time;
-      if(!dist || dist <= 0 || !totalMin || totalMin <= 0) return showResult("Valores inválidos.", "", true);
-      
+      st.dist = Number($("#runDist").value); st.time = Number($("#runTime").value); saveStoredState('running', st);
+      const dist = st.dist, totalMin = st.time; if(!dist || dist <= 0 || !totalMin || totalMin <= 0) return showResult("Valores inválidos.", "", true);
       let paceDec = totalMin / dist, paceMin = Math.floor(paceDec), paceSec = Math.round((paceDec - paceMin) * 60);
       if (paceSec === 60) { paceMin += 1; paceSec = 0; }
-      
       const paceFormatted = `${paceMin}:${paceSec < 10 ? '0' : ''}${paceSec}`, speed = (dist / (totalMin / 60)).toFixed(1);
-      
-      const html = `
-        <div class="big">${paceFormatted} <span style="font-size:16px; font-weight:normal; color:var(--muted);">min/km</span></div>
-        <div class="small" style="margin-top:8px;">Velocidade Média: <strong>${speed} km/h</strong></div>
-      `;
-      const details = { 
-        "Distância Alvo": `${dist} km`, 
-        "Tempo Total": `${totalMin} minutos`,
-        "Pace Médio": `${paceFormatted} min/km`, 
-        "Velocidade": `${speed} km/h` 
-      };
-      showResult(html, `${paceFormatted} min/km`, false, "", details);
+      const html = `<div class="big">${paceFormatted} <span style="font-size:16px; font-weight:normal; color:var(--muted);">min/km</span></div><div class="small" style="margin-top:8px;">Velocidade Média: <strong>${speed} km/h</strong></div>`;
+      showResult(html, `${paceFormatted} min/km`, false, "", { "Distância Alvo": `${dist} km`, "Tempo Total": `${totalMin} minutos`, "Pace Médio": `${paceFormatted} min/km`, "Velocidade": `${speed} km/h` });
     };
     $("#runDist").oninput = calculate; $("#runTime").oninput = calculate; calculate();
   }
 
-  function openPalette() {
-    haptic();
-    paletteModal.classList.add("open");
-    paletteModal.setAttribute("aria-hidden", "false");
-    paletteInput.value = "";
-    renderPaletteList("");
-    requestAnimationFrame(() => paletteInput.focus());
-  }
-  function closePalette() { 
-    paletteModal.classList.remove("open"); 
-    paletteModal.setAttribute("aria-hidden", "true");
-    searchBtn.focus();
-  }
-
-  function openDrawer() {
-    haptic();
-    drawer.classList.add("open");
-    drawer.setAttribute("aria-hidden", "false");
-    const firstMenuBtn = drawer.querySelector('.close');
-    if(firstMenuBtn) firstMenuBtn.focus();
-  }
-  function closeDrawer() {
-    drawer.classList.remove("open");
-    drawer.setAttribute("aria-hidden", "true");
-    openMenuBtn.focus();
-  }
+  function openPalette() { haptic(); paletteModal.classList.add("open"); paletteModal.setAttribute("aria-hidden", "false"); paletteInput.value = ""; renderPaletteList(""); requestAnimationFrame(() => paletteInput.focus()); }
+  function closePalette() { paletteModal.classList.remove("open"); paletteModal.setAttribute("aria-hidden", "true"); searchBtn.focus(); }
+  function openDrawer() { haptic(); drawer.classList.add("open"); drawer.setAttribute("aria-hidden", "false"); const firstMenuBtn = drawer.querySelector('.close'); if(firstMenuBtn) firstMenuBtn.focus(); }
+  function closeDrawer() { drawer.classList.remove("open"); drawer.setAttribute("aria-hidden", "true"); openMenuBtn.focus(); }
 
   function renderPaletteList(query) {
-    const list = Object.keys(i18n['pt-BR'].tools).map(key => ({
-      key, name: i18n['pt-BR'].tools[key].menuName, badge: i18n['pt-BR'].tools[key].badge
-    })).filter(x => x.name.toLowerCase().includes(query.toLowerCase()));
-
+    const list = Object.keys(i18n['pt-BR'].tools).map(key => ({ key, name: i18n['pt-BR'].tools[key].menuName, badge: i18n['pt-BR'].tools[key].badge })).filter(x => x.name.toLowerCase().includes(query.toLowerCase()));
     paletteList.innerHTML = list.map((item, idx) => `
       <button class="palette-item ${idx===0?'selected':''}" data-tool="${item.key}">
         <span>${idx < 9 ? `<strong style="color:var(--accent); margin-right:6px;">[${idx+1}]</strong>` : ''}${item.name}</span>
         <span style="font-size:11px; color:var(--muted); font-weight:600; border:1px solid var(--line); padding:2px 6px; border-radius:6px;">${item.badge}</span>
-      </button>
-    `).join('');
-
-    $$('#paletteList .palette-item').forEach(btn => {
-      btn.onclick = () => {
-        haptic();
-        loadTool(btn.dataset.tool);
-        closePalette();
-      };
-    });
+      </button>`).join('');
+    $$('#paletteList .palette-item').forEach(btn => { btn.onclick = () => { haptic(); loadTool(btn.dataset.tool); closePalette(); }; });
   }
 
   paletteInput.oninput = (e) => renderPaletteList(e.target.value);
-  
   paletteInput.onkeydown = (e) => {
     if (['1','2','3','4','5','6','7','8','9'].includes(e.key)) {
-      const idx = parseInt(e.key) - 1;
-      const items = paletteList.querySelectorAll('.palette-item');
-      if (items[idx]) {
-        e.preventDefault();
-        items[idx].click();
-      }
+      const idx = parseInt(e.key) - 1, items = paletteList.querySelectorAll('.palette-item');
+      if (items[idx]) { e.preventDefault(); items[idx].click(); }
     }
   };
 
-  searchBtn.onclick = openPalette;
-  paletteModal.onclick = (e) => { if(e.target === paletteModal) closePalette(); };
+  searchBtn.onclick = openPalette; paletteModal.onclick = (e) => { if(e.target === paletteModal) closePalette(); };
 
   function trapFocus(e, container) {
     const focusable = container.querySelectorAll('input, button, select, textarea, a[href], [tabindex]:not([tabindex="-1"])');
     if (focusable.length === 0) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
+    const first = focusable[0], last = focusable[focusable.length - 1];
     if (e.key === 'Tab') {
-      if (e.shiftKey) {
-        if (document.activeElement === first) { last.focus(); e.preventDefault(); }
-      } else {
-        if (document.activeElement === last) { first.focus(); e.preventDefault(); }
-      }
+      if (e.shiftKey) { if (document.activeElement === first) { last.focus(); e.preventDefault(); } } 
+      else { if (document.activeElement === last) { first.focus(); e.preventDefault(); } }
     }
   }
 
   document.addEventListener('keydown', e => {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-      e.preventDefault();
-      if (paletteModal.classList.contains('open')) closePalette();
-      else openPalette();
-    }
-    if (e.key === 'Escape') {
-      closePalette();
-      closeDrawer();
-      closeStyleModal();
-    }
-    if (paletteModal.classList.contains('open')) trapFocus(e, paletteModal);
-    else if (drawer.classList.contains('open')) trapFocus(e, drawer);
-    else if (styleModal.classList.contains('open')) trapFocus(e, styleModal);
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); if (paletteModal.classList.contains('open')) closePalette(); else openPalette(); }
+    if (e.key === 'Escape') { closePalette(); closeDrawer(); closeStyleModal(); }
+    if (paletteModal.classList.contains('open')) trapFocus(e, paletteModal); else if (drawer.classList.contains('open')) trapFocus(e, drawer); else if (styleModal.classList.contains('open')) trapFocus(e, styleModal);
   });
 
   function updateGreeting() {
-    const hour = new Date().getHours();
-    let text = '', svgIcon = '';
-    if (hour < 12) { 
-      text = 'Bom dia'; 
-      svgIcon = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line></svg>`; 
-    } else if (hour < 18) { 
-      text = 'Boa tarde'; 
-      svgIcon = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>`; 
-    } else { 
-      text = 'Boa noite'; 
-      svgIcon = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`; 
-    }
+    const hour = new Date().getHours(); let text = '', svgIcon = '';
+    if (hour < 12) { text = 'Bom dia'; svgIcon = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line></svg>`; } 
+    else if (hour < 18) { text = 'Boa tarde'; svgIcon = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>`; } 
+    else { text = 'Boa noite'; svgIcon = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`; }
     if(greetingEl) greetingEl.innerHTML = `${svgIcon} <span>${text}</span>`;
   }
 
   function renderChips() {
     try {
-      const recentKeys = JSON.parse(storage.get('tempo_recent_tools', '["sleep", "pomodoro", "rescision", "worldclock"]'));
-      const toolMetaMap = i18n['pt-BR'].tools;
-      
+      const recentKeys = JSON.parse(storage.get('tempo_recent_tools', '["sleep", "pomodoro", "rescision", "worldclock"]')), toolMetaMap = i18n['pt-BR'].tools;
       if(quickChips) {
-        quickChips.innerHTML = recentKeys.map(k => {
-          const m = toolMetaMap[k];
-          return `<button class="chip" data-tool="${k}"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg> ${m ? m.menuName : k}</button>`;
-        }).join('');
-
-        $$('#quickChips .chip').forEach(btn => {
-          btn.onclick = () => { haptic(); loadTool(btn.dataset.tool); };
-        });
+        quickChips.innerHTML = recentKeys.map(k => { const m = toolMetaMap[k]; return `<button class="chip" data-tool="${k}"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg> ${m ? m.menuName : k}</button>`; }).join('');
+        $$('#quickChips .chip').forEach(btn => { btn.onclick = () => { haptic(); loadTool(btn.dataset.tool); }; });
       }
     } catch(e){}
   }
 
   function updateStaticTexts() {
-    updateGreeting();
-    renderChips();
-    footerText.innerHTML = i18n['pt-BR'].footer;
-    menuTitle.textContent = i18n['pt-BR'].menu;
-    langLabel.textContent = i18n['pt-BR'].langLabel;
-    groupEssential.textContent = i18n['pt-BR'].g1;
-    groupPersonal.textContent = i18n['pt-BR'].g2;
-    groupLabor.textContent = i18n['pt-BR'].g3;
-    groupSport.textContent = i18n['pt-BR'].g4;
-
-    $$("[data-i18n]").forEach(el => {
-      const k = el.getAttribute("data-i18n");
-      const toolKey = k.replace("tool_", "");
-      if (i18n['pt-BR'].tools[toolKey]) {
-        el.textContent = i18n['pt-BR'].tools[toolKey].menuName;
-      }
-    });
+    updateGreeting(); renderChips(); footerText.innerHTML = i18n['pt-BR'].footer; menuTitle.textContent = i18n['pt-BR'].menu; langLabel.textContent = i18n['pt-BR'].langLabel;
+    groupEssential.textContent = i18n['pt-BR'].g1; groupPersonal.textContent = i18n['pt-BR'].g2; groupLabor.textContent = i18n['pt-BR'].g3; groupSport.textContent = i18n['pt-BR'].g4;
+    $$("[data-i18n]").forEach(el => { const k = el.getAttribute("data-i18n").replace("tool_", ""); if (i18n['pt-BR'].tools[k]) el.textContent = i18n['pt-BR'].tools[k].menuName; });
   }
 
   function loadTool(t, updateHash = true) {
-    if (window._wcInterval) {
-      clearInterval(window._wcInterval);
-      window._wcInterval = null;
-    }
-
-    activeTool = t;
-    storage.set('tempo_tool', t);
-    pushRecentTool(t);
+    if (window._wcInterval) { clearInterval(window._wcInterval); window._wcInterval = null; }
+    activeTool = t; storage.set('tempo_tool', t); pushRecentTool(t);
+    if (updateHash && window.location.hash !== '#' + t) window.location.hash = t;
     
-    if (updateHash && window.location.hash !== '#' + t) {
-      window.location.hash = t;
-    }
-
     const meta = i18n['pt-BR'].tools[t] || i18n['pt-BR'].tools['date'];
-    pageTitle.textContent = "tempo utilitários — " + meta.title;
-    titleEl.textContent = meta.title;
-    subtitleEl.textContent = meta.subtitle;
-    toolBadge.textContent = meta.badge;
+    pageTitle.textContent = "tempo utilitários — " + meta.title; titleEl.textContent = meta.title; subtitleEl.textContent = meta.subtitle; toolBadge.textContent = meta.badge;
     
     $$(".menu-item").forEach(x => x.classList.remove("active"));
-    const activeItem = document.querySelector(`.menu-item[data-tool="${t}"]`);
-    if (activeItem) activeItem.classList.add("active");
+    const activeItem = document.querySelector(`.menu-item[data-tool="${t}"]`); if (activeItem) activeItem.classList.add("active");
 
-    if (t === "date") renderDate();
-    else if (t === "time") renderTime();
-    else if (t === "business") renderBusiness();
-    else if (t === "worldclock") renderWorldClock();
-    else if (t === "meeting") renderMeeting();
-    else if (t === "pomodoro") renderPomodoro();
-    else if (t === "sleep") renderSleep();
-    else if (t === "horoscope") renderHoroscope();
-    else if (t === "age") renderAge();
-    else if (t === "pregnancy") renderPregnancy();
-    else if (t === "countdown") renderCountdown();
-    else if (t === "overtime") renderOvertime();
-    else if (t === "vacation13") renderVacation13();
-    else if (t === "rescision") renderRescision();
-    else if (t === "running") renderRunning();
+    if (t === "date") renderDate(); else if (t === "time") renderTime(); else if (t === "business") renderBusiness(); else if (t === "worldclock") renderWorldClock(); else if (t === "meeting") renderMeeting(); else if (t === "pomodoro") renderPomodoro(); else if (t === "sleep") renderSleep(); else if (t === "horoscope") renderHoroscope(); else if (t === "age") renderAge(); else if (t === "pregnancy") renderPregnancy(); else if (t === "countdown") renderCountdown(); else if (t === "overtime") renderOvertime(); else if (t === "vacation13") renderVacation13(); else if (t === "rescision") renderRescision(); else if (t === "running") renderRunning();
   }
 
-  window.addEventListener('hashchange', () => {
-    const toolFromHash = getToolFromHash();
-    if (toolFromHash && toolFromHash !== activeTool) {
-      loadTool(toolFromHash, false);
-    }
-  });
-
-  langSelect.onchange = (e) => {
-    currentLang = e.target.value;
-    storage.set('tempo_lang', currentLang);
-    updateStaticTexts();
-    loadTool(activeTool);
-  };
-
-  logoBtn.addEventListener('click', () => { haptic(); closeDrawer(); loadTool('date'); });
-  openMenuBtn.addEventListener('click', openDrawer);
-  closeMenuBtn.addEventListener('click', closeDrawer);
+  window.addEventListener('hashchange', () => { const toolFromHash = getToolFromHash(); if (toolFromHash && toolFromHash !== activeTool) loadTool(toolFromHash, false); });
+  langSelect.onchange = (e) => { currentLang = e.target.value; storage.set('tempo_lang', currentLang); updateStaticTexts(); loadTool(activeTool); };
+  logoBtn.addEventListener('click', () => { haptic(); closeDrawer(); loadTool('date'); }); openMenuBtn.addEventListener('click', openDrawer); closeMenuBtn.addEventListener('click', closeDrawer);
   drawer.addEventListener('click', (e) => { if (e.target === drawer) closeDrawer(); });
-
-  $$(".menu-item").forEach(item => {
-    item.addEventListener('click', () => {
-      haptic();
-      closeDrawer();
-      loadTool(item.dataset.tool);
-    });
-  });
+  $$(".menu-item").forEach(item => { item.addEventListener('click', () => { haptic(); closeDrawer(); loadTool(item.dataset.tool); }); });
 
   updateStaticTexts();
-  
-  setTimeout(() => {
-    loadTool(activeTool);
-  }, 50);
+  setTimeout(() => { loadTool(activeTool); }, 50);
 });
 </script>
 </body>
