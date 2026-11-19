@@ -5,16 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <meta name="theme-color" id="metaThemeColor" content="#0b0d12">
 <meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, reuniões globais, esporte, foco e horóscopo diário completo. Sem anúncios e direto ao ponto.">
+
+<!-- SEO & Open Graph (WhatsApp / Telegram / Redes Sociais) -->
 <meta property="og:title" content="tempo.utilitários — Calculadoras Rápidas">
 <meta property="og:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças e reuniões globais.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://tempo.utilitarios/og-cover.png"> <!-- Trocar no futuro -->
+<meta property="og:url" content="https://tempo-bay-eta.vercel.app/">
+<meta property="og:image" content="https://tempo-bay-eta.vercel.app/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="tempo.utilitários — Calculadoras Rápidas">
+<meta name="twitter:description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças e reuniões globais.">
+<meta name="twitter:image" content="https://tempo-bay-eta.vercel.app/og-cover.png">
 
-<!-- PWA & Mobile Meta Tags (Arquivos desativados para evitar erro 404. Descomente quando criar manifest e sw.js) -->
+<!-- PWA & Mobile Meta Tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="tempo.utility">
-<!-- <link rel="manifest" href="manifest.json"> -->
+<link rel="manifest" href="manifest.json">
 
 <title id="pageTitle">tempo utilitários — Utilitários</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230b0d12%22/><text x=%2250%22 y=%2270%22 font-size=%2260%22 font-weight=%22900%22 font-family=%22system-ui, sans-serif%22 fill=%22%23f7f8fb%22 text-anchor=%22middle%22>t<tspan fill=%22%237c5cff%22>.</tspan></text></svg>">
@@ -72,12 +79,14 @@ header{
 .logo-main span{color:var(--accent)}
 .logo-sub{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-top:2px}
 
-.header-actions{display:flex;gap:10px;align-items:center}
-.icon-btn{width:42px;height:42px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);display:grid;place-items:center;outline:none; box-shadow: 0 2px 5px rgba(0,0,0,0.05), inset 0 1px 1px var(--highlight); transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s, border-color 0.2s, box-shadow 0.2s;}
+.header-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{width:40px;height:40px;border:1px solid var(--line);border-radius:13px;background:var(--card);color:var(--text);display:grid;place-items:center;outline:none;position:relative;box-shadow: 0 2px 5px rgba(0,0,0,0.05), inset 0 1px 1px var(--highlight); transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s, border-color 0.2s, box-shadow 0.2s;}
 .icon-btn svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;transition:transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);}
 .icon-btn:hover{transform:translateY(-2px);background:var(--card2);border-color:var(--accent); box-shadow: 0 6px 12px var(--glow), inset 0 1px 1px var(--highlight);}
 .icon-btn:hover svg{transform:scale(1.1);}
 .icon-btn:active{transform:scale(0.95)}
+.history-dot{position:absolute;top:8px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--accent);display:none;}
+.history-dot.active{display:block;}
 
 /* Chips */
 .chips-wrapper{width:100%;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:10px 0 16px;display:flex;gap:8px;justify-content:center}
@@ -120,7 +129,6 @@ h1{font-size:clamp(34px,7vw,60px);line-height:1.1;letter-spacing:-2.5px;margin-b
   position: relative; overflow: hidden;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s, border-color 0.25s;
 }
-/* Apenas aplica o spotlight se o dispositivo usar mouse/ponteiro preciso */
 @media (hover: hover) and (pointer: fine) {
   .inner-card::before {
     content: ""; position: absolute; inset: 0;
@@ -139,6 +147,11 @@ h1{font-size:clamp(34px,7vw,60px);line-height:1.1;letter-spacing:-2.5px;margin-b
   box-shadow: 0 8px 25px var(--glow), inset 0 1px 1px var(--highlight);
 }
 .inner-card > * { position: relative; z-index: 2; }
+
+#styleOptionsList .palette-item.selected {
+  border-color: var(--accent);
+  box-shadow: 0 4px 15px var(--glow), inset 0 1px 1px var(--highlight);
+}
 
 .ad-container{width:min(100%,760px);margin:20px auto 0;background:var(--card);border:1px dashed var(--line);border-radius:18px;padding:14px;text-align:center;color:var(--muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px; transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s}
 .ad-container:hover{border-color: var(--accent); border-style: solid; background: var(--card2); box-shadow: 0 10px 30px var(--glow);}
@@ -178,6 +191,12 @@ select{cursor:pointer; background-image: url('data:image/svg+xml;utf8,<svg xmlns
 .action-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
 .action-btn:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow: 0 6px 15px var(--glow), inset 0 1px 1px var(--highlight);}
 
+/* History Item Card */
+.history-item{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;text-align:left;}
+.history-item-meta{font-size:10px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.history-item-val{font-size:15px;font-weight:850;color:var(--text);word-break:break-word;}
+.history-item-time{font-size:11px;color:var(--muted);white-space:nowrap;}
+
 /* Toast Notification */
 .toast-container { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 12px 24px; border-radius: 99px; font-size: 14px; font-weight: 750; box-shadow: 0 10px 40px rgba(0,0,0,0.4); opacity: 0; pointer-events: none; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s; z-index: 9999; display: flex; align-items: center; gap: 8px; }
 .toast-container.show { transform: translateX(-50%) translateY(-90px); opacity: 1; }
@@ -191,7 +210,7 @@ select{cursor:pointer; background-image: url('data:image/svg+xml;utf8,<svg xmlns
 
 .palette-input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);padding:16px;border-radius:14px;font-size:16px;outline:none;margin-bottom:12px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05); transition:border-color 0.2s, box-shadow 0.2s;}
 .palette-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--glow), inset 0 2px 4px rgba(0,0,0,0.05); }
-.palette-list{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:4px; scrollbar-width:thin;}
+.palette-list{max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:6px; scrollbar-width:thin;}
 .palette-item{padding:14px 16px;border-radius:12px;background:transparent;border:0;color:var(--text);text-align:left;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background-color 0.2s, color 0.2s, padding-left 0.2s;}
 .palette-item:hover, .palette-item.selected{background:var(--card2);color:var(--accent); padding-left: 20px;}
 .palette-item svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
@@ -252,6 +271,10 @@ footer a:hover{color:var(--accent); border-bottom-color: var(--accent);}
     <div class="logo-sub">utilitários</div>
   </div>
   <div class="header-actions">
+    <button class="icon-btn" id="historyBtn" aria-label="Histórico de Cálculos" title="Histórico de Cálculos">
+      <span class="history-dot" id="historyDot"></span>
+      <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg>
+    </button>
     <button class="icon-btn" id="zenBtn" aria-label="Modo Foco (Zen)" title="Modo Foco (Zen)">
       <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
     </button>
@@ -293,14 +316,32 @@ footer a:hover{color:var(--accent); border-bottom-color: var(--accent);}
   <span id="toastMsg">Copiado!</span>
 </div>
 
+<!-- Modal Paleta de Comandos -->
 <div class="modal-overlay" id="paletteModal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-box">
     <div style="font-size:11px; font-weight:800; color:var(--accent); margin-bottom:10px; letter-spacing: 1px;">PALETA DE COMANDOS</div>
-    <input type="text" class="palette-input" id="paletteInput" placeholder="Busque por nome ou pressione 1-5...">
+    <input type="text" class="palette-input" id="paletteInput" placeholder="Busque por nome ou pressione 1-9...">
     <div class="palette-list" id="paletteList"></div>
   </div>
 </div>
 
+<!-- Modal Histórico de Cálculos -->
+<div class="modal-overlay" id="historyModal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-box">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 14px;">
+      <h3 style="font-size: 18px; font-weight: 800; display:flex; align-items:center; gap:8px;">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--accent)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg>
+        Histórico Recente
+      </h3>
+      <button id="clearHistoryBtn" style="border:0; background:transparent; color:var(--danger); font-size:12px; font-weight:750; cursor:pointer;">Limpar tudo</button>
+    </div>
+    <p style="font-size: 13px; color: var(--muted); margin-bottom: 14px;">Toque em um resultado para copiar novamente:</p>
+    <div class="palette-list" id="historyList"></div>
+    <button id="closeHistoryBtn" style="width:100%; margin-top:16px; padding:12px; border-radius:14px; border:1px solid var(--line); background:var(--bg); color:var(--text); font-weight:750;">Fechar</button>
+  </div>
+</div>
+
+<!-- Modal Estilo do Card -->
 <div class="modal-overlay" id="styleModal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-box">
     <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; display:flex; align-items:center; gap:10px;">
@@ -309,7 +350,7 @@ footer a:hover{color:var(--accent); border-bottom-color: var(--accent);}
     </h3>
     <p style="font-size: 14px; color: var(--muted); margin-bottom: 22px; line-height: 1.5;">Selecione o mood visual para a exportação do seu Story:</p>
     <div style="display:flex; flex-direction:column; gap:8px;" id="styleOptionsList">
-      <button class="palette-item selected inner-card" data-style="sofisticado" style="border: 1px solid var(--accent); box-shadow: 0 4px 15px var(--glow);">
+      <button class="palette-item selected inner-card" data-style="sofisticado">
         <span style="display:flex; align-items:center; gap:10px;">
           <svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"></path></svg> Dark Sofisticado
         </span>
@@ -341,6 +382,7 @@ footer a:hover{color:var(--accent); border-bottom-color: var(--accent);}
   </div>
 </div>
 
+<!-- Drawer Menu -->
 <div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="drawer-card" id="drawerCard">
     <div class="drawer-top"><strong id="menuTitle">tempo utilitários</strong><button class="close" id="closeMenu" aria-label="Fechar menu">×</button></div>
@@ -382,9 +424,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const $ = s => document.querySelector(s);
   const $$ = s => document.querySelectorAll(s);
   
-  const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), zenBtn = $("#zenBtn"), exitZenBtn = $("#exitZenBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), styleModal = $("#styleModal"), cancelStyleBtn = $("#cancelStyleBtn"), confirmStyleBtn = $("#confirmStyleBtn"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport"), quickChips = $("#quickChips"), greetingEl = $("#greeting"), globalToast = $("#globalToast"), toastMsg = $("#toastMsg");
+  const tool = $("#tool"), drawer = $("#drawer"), openMenuBtn = $("#openMenu"), closeMenuBtn = $("#closeMenu"), logoBtn = $("#logoBtn"), toolBadge = $("#toolBadge"), pageTitle = $("#pageTitle"), titleEl = $("#title"), subtitleEl = $("#subtitle"), themeBtn = $("#themeBtn"), searchBtn = $("#searchBtn"), historyBtn = $("#historyBtn"), historyDot = $("#historyDot"), zenBtn = $("#zenBtn"), exitZenBtn = $("#exitZenBtn"), paletteModal = $("#paletteModal"), paletteInput = $("#paletteInput"), paletteList = $("#paletteList"), historyModal = $("#historyModal"), historyList = $("#historyList"), clearHistoryBtn = $("#clearHistoryBtn"), closeHistoryBtn = $("#closeHistoryBtn"), styleModal = $("#styleModal"), cancelStyleBtn = $("#cancelStyleBtn"), confirmStyleBtn = $("#confirmStyleBtn"), langSelect = $("#langSelect"), footerText = $("#footerText"), menuTitle = $("#menuTitle"), langLabel = $("#langLabel"), groupEssential = $("#groupEssential"), groupPersonal = $("#groupPersonal"), groupLabor = $("#groupLabor"), groupSport = $("#groupSport"), quickChips = $("#quickChips"), greetingEl = $("#greeting"), globalToast = $("#globalToast"), toastMsg = $("#toastMsg");
 
-  // Spotlight dinâmico 60fps usando RequestAnimationFrame (Apenas para Desktop - validado via CSS)
+  // Spotlight dinâmico 60fps usando RequestAnimationFrame (Apenas para Desktop)
   let isMoving = false;
   document.addEventListener('mousemove', e => {
     if(!isMoving) {
@@ -400,9 +442,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Animação de contagem para números finais (100% segura contra Glitches de digitação)
+  // Animação de contagem para números finais
   function animateValue(obj, start, end, duration, isCurrency = false) {
-    if (obj._animId) window.cancelAnimationFrame(obj._animId); // Cancela o requestAnimationFrame anterior
+    if (obj._animId) window.cancelAnimationFrame(obj._animId);
     let startTimestamp = null;
     const step = (timestamp) => {
       if (!startTimestamp) startTimestamp = timestamp;
@@ -442,15 +484,50 @@ document.addEventListener("DOMContentLoaded", () => {
     set(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
   };
 
-  // Desativado temporariamente para não dar erro 404 na Vercel enquanto os arquivos não existirem
-  /*
+  // Service Worker PWA
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
   }
-  */
 
   function escapeHTML(str) {
     return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+  }
+
+  // Sistema de Histórico de Cálculos
+  let historyDebounce = null;
+  function getHistory() {
+    try { return JSON.parse(storage.get('tempo_calc_history', '[]')); } catch(e) { return []; }
+  }
+  function saveToHistory(toolKey, toolTitle, resultText) {
+    if (!resultText || ['worldclock', 'pomodoro'].includes(toolKey)) return;
+    let list = getHistory();
+    if (list.length > 0 && list[0].toolKey === toolKey && list[0].result === resultText) return;
+    const nowStr = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    list = [{ id: Date.now(), toolKey, toolTitle, result: resultText, time: nowStr }, ...list].slice(0, 12);
+    storage.set('tempo_calc_history', JSON.stringify(list));
+    updateHistoryBadge();
+  }
+  function updateHistoryBadge() {
+    if (historyDot) {
+      if (getHistory().length > 0) historyDot.classList.add('active');
+      else historyDot.classList.remove('active');
+    }
+  }
+  updateHistoryBadge();
+
+  function copyTextToClipboard(text) {
+    if (!text) return;
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(() => { showToast('Copiado para a área de transferência'); }).catch(()=>{});
+    } else {
+      try {
+        const textArea = document.createElement("textarea");
+        textArea.value = text; textArea.style.position = "fixed";
+        document.body.appendChild(textArea); textArea.focus(); textArea.select();
+        document.execCommand('copy'); document.body.removeChild(textArea);
+        showToast('Copiado para a área de transferência');
+      } catch(err) {}
+    }
   }
 
   const getLocalISODate = (d = new Date()) => {
@@ -480,10 +557,20 @@ document.addEventListener("DOMContentLoaded", () => {
       tools: {
         date: { title: "Calculadora de Data", subtitle: "Descubra exatamente quanto tempo existe entre duas datas.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Data" }, time: { title: "Calculadora de Horas", subtitle: "Calcule a diferença entre dois horários.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Horas" }, business: { title: "Calculadora de Dias Úteis", subtitle: "Calcule prazos desconsiderando os finais de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" }, worldclock: { title: "Fusos Horários (Relógio Mundial)", subtitle: "Consulte o horário em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" }, meeting: { title: "Planejador de Reuniões Globais", subtitle: "Encontre o horário ideal de trabalho em comum entre diferentes países.", badge: "UTILITÁRIO GLOBAL", menuName: "Planejador de Reuniões" }, pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gerencie seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" }, sleep: { title: "Ciclos de Sono", subtitle: "Calcule os melhores horários para dormir e acordar revigorado(a).", badge: "BEM-ESTAR & SAÚDE", menuName: "Ciclos de Sono (Sleep Calc)" }, horoscope: { title: "Horóscopo Diário Completo", subtitle: "Previsões detalhadas de amor, trabalho, finanças e saúde para o seu signo.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" }, age: { title: "Calculadora de Idade Exata", subtitle: "Descubra sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" }, pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime a idade gestacional e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" }, countdown: { title: "Contagem Regressiva", subtitle: "Meça o tempo que falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Regressiva" }, overtime: { title: "Horas Extras (CLT)", subtitle: "Estime o valor da sua hora e o acréscimo por horas extras trabalhadas.", badge: "HORAS EXTRAS CLT", menuName: "Horas Extras" }, vacation13: { title: "Férias & 13º Salário", subtitle: "Estime os valores proporcionais seguindo as normas trabalhistas.", badge: "FÉRIAS & 13º SALÁRIO", menuName: "Férias & 13º Salário" }, rescision: { title: "Rescisão Contratual (Acerto)", subtitle: "Estime rapidamente os valores devidos em caso de encerramento de contrato.", badge: "RESCISÃO CONTRATUAL", menuName: "Rescisão (Acerto)" }, running: { title: "Parciais de Corrida (Splits)", subtitle: "Descubra o ritmo por quilômetro necessário para atingir sua meta de tempo.", badge: "RITMO DE CORRIDA", menuName: "Parciais de Corrida" }
       }
+    },
+    'pt-PT': {
+      page: "tempo utilitários — Utilitários", footer: 'Simples. Rápido. Preciso. &nbsp;·&nbsp; <a href="privacidade.html">Política de Privacidade</a>', menu: "tempo utilitários", langLabel: "IDIOMA / REGIÃO", g1: "ESSENCIAIS", g2: "PESSOAL & VIDA", g3: "LABORAL & FINANÇAS", g4: "DESPORTO & PERFORMANCE", disclaimer: "* Valores estimados apenas para orientação. Consulte um contabilista certificado.",
+      tools: {
+        date: { title: "Calculadora de Datas", subtitle: "Descubra exatamente quanto tempo existe entre duas datas.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Datas" }, time: { title: "Calculadora de Horas", subtitle: "Calcule a diferença entre dois horários.", badge: "UTILITÁRIO DE TEMPO", menuName: "Calculadora de Horas" }, business: { title: "Calculadora de Dias Úteis", subtitle: "Calcule prazos desconsiderando os fins de semana.", badge: "UTILITÁRIO DE TEMPO", menuName: "Dias Úteis" }, worldclock: { title: "Fusos Horários (Relógio Mundial)", subtitle: "Consulte a hora em tempo real nas principais capitais mundiais.", badge: "UTILITÁRIO GLOBAL", menuName: "Fusos Horários" }, meeting: { title: "Planeador de Reuniões Globais", subtitle: "Encontre o horário de trabalho ideal em comum entre diferentes países.", badge: "UTILITÁRIO GLOBAL", menuName: "Planeador de Reuniões" }, pomodoro: { title: "Temporizador Pomodoro", subtitle: "Gira o seu tempo de foco e pausas com ciclos produtivos.", badge: "UTILITÁRIO DE FOCO", menuName: "Temporizador Pomodoro" }, sleep: { title: "Ciclos de Sono", subtitle: "Calcule os melhores horários para dormir e acordar revigorado(a).", badge: "BEM-ESTAR & SAÚDE", menuName: "Ciclos de Sono (Sleep Calc)" }, horoscope: { title: "Horóscopo Diário Completo", subtitle: "Previsões detalhadas de amor, trabalho, finanças e saúde para o seu signo.", badge: "UTILITÁRIO ASTROLÓGICO", menuName: "Horóscopo Diário" }, age: { title: "Calculadora de Idade Exata", subtitle: "Descubra a sua idade em anos, meses e dias.", badge: "PESSOAL & VIDA", menuName: "Idade Exata" }, pregnancy: { title: "Calculadora de Gestação", subtitle: "Estime a idade gestacional e a data provável do parto.", badge: "PESSOAL & VIDA", menuName: "Gestação & Parto" }, countdown: { title: "Contagem Decrescente", subtitle: "Meça o tempo que falta para um grande evento ou quanto tempo já passou.", badge: "PESSOAL & VIDA", menuName: "Contagem Decrescente" }, overtime: { title: "Horas Extraordinárias", subtitle: "Estime o valor da sua hora e o acréscimo por trabalho suplementar.", badge: "TRABALHO SUPLEMENTAR", menuName: "Horas Extraordinárias" }, vacation13: { title: "Férias & Subsídio de Natal", subtitle: "Estime os valores proporcionais de subsídios laborais.", badge: "FÉRIAS & NATAL", menuName: "Férias & Subsídio de Natal" }, rescision: { title: "Cessação de Contrato (Acertos)", subtitle: "Estime rapidamente os valores em caso de cessação de contrato.", badge: "CESSAÇÃO CONTRATUAL", menuName: "Cessação de Contrato" }, running: { title: "Parciais de Corrida (Splits)", subtitle: "Descubra o ritmo por quilómetro necessário para atingir a sua meta.", badge: "RITMO DE CORRIDA", menuName: "Parciais de Corrida" }
+      }
     }
   };
 
-  let currentLang = 'pt-BR'; let currentTheme = storage.get('tempo_theme', 'dark'); let isZenMode = false;
+  let currentLang = storage.get('tempo_lang', 'pt-BR');
+  if (!i18n[currentLang]) currentLang = 'pt-BR';
+  langSelect.value = currentLang;
+
+  let currentTheme = storage.get('tempo_theme', 'dark'); let isZenMode = false;
   const sunSvg = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
   const moonSvg = `<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
 
@@ -506,7 +593,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let textToCopy = "", pendingCardData = null, selectedMoodStyle = 'sofisticado';
 
   function dateFromInput(id) { const v = $(id).value; if (!v) return null; const d = new Date(v + "T12:00:00"); return isNaN(d.getTime()) ? null : d; }
-  function formatDate(d) { return d.toLocaleDateString('pt-BR', { day: "2-digit", month: "2-digit", year: "numeric" }); }
+  function formatDate(d) { return d.toLocaleDateString(currentLang, { day: "2-digit", month: "2-digit", year: "numeric" }); }
 
   function calendarDifference(start, end) {
     if (start > end) { let temp = start; start = end; end = temp; }
@@ -608,7 +695,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.strokeStyle = accentColor; ctx.fillStyle = accentColor; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     ctx.translate(cardX + cardW - 90, tagY + 19);
     
-    // Ícones dos Tools
     if (toolKey === 'date') { ctx.beginPath(); ctx.roundRect(-24, -28, 48, 52, 10); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-24, -8); ctx.lineTo(24, -8); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 10, 5, 0, Math.PI * 2); ctx.fill(); } 
     else if (toolKey === 'time') { ctx.beginPath(); ctx.arc(0, 0, 28, 0, Math.PI * 2); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -14); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(10, 4); ctx.stroke(); }
     else if (toolKey === 'business') { ctx.beginPath(); ctx.roundRect(-28, -18, 56, 36, 8); ctx.stroke(); ctx.beginPath(); ctx.roundRect(-10, -26, 20, 10, 4); ctx.stroke(); }
@@ -667,11 +753,11 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    const hostLabel = window.location.host || 'tempo-bay-eta.vercel.app';
     ctx.strokeStyle = borderColor; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cardX + 55, cardY + cardH - 105); ctx.lineTo(cardX + cardW - 55, cardY + cardH - 105); ctx.stroke();
     ctx.fillStyle = textSecondary; ctx.font = '750 17px system-ui, sans-serif'; ctx.fillText("QUER DESCOBRIR O SEU TAMBÉM?", cardX + 55, cardY + cardH - 65);
-    ctx.fillStyle = accentColor; ctx.font = '900 22px system-ui, sans-serif'; ctx.fillText("→ tempo.utilitarios", cardX + 55, cardY + cardH - 35);
+    ctx.fillStyle = accentColor; ctx.font = '900 21px system-ui, sans-serif'; ctx.fillText(`→ ${hostLabel}`, cardX + 55, cardY + cardH - 35);
 
-    // QR Code Dinâmico (Usa a URL real do site que estiver acessando)
     const qrSize = 130; const qrImage = new Image(); qrImage.crossOrigin = "Anonymous";
     const siteUrl = encodeURIComponent(window.location.origin + window.location.pathname);
     qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=${qrSize}x${qrSize}&data=${siteUrl}&color=000000&bgcolor=ffffff&margin=1`;
@@ -694,12 +780,15 @@ document.addEventListener("DOMContentLoaded", () => {
       r.setAttribute('aria-live', 'polite'); r.setAttribute('aria-atomic', 'true'); textToCopy = plainText;
       let extraActions = '';
       if (!error && plainText) {
+        if (historyDebounce) clearTimeout(historyDebounce);
+        historyDebounce = setTimeout(() => { saveToHistory(activeTool, titleEl.textContent, plainText); }, 2500);
+
         let shareHtml = ''; if (navigator.share) { shareHtml = `<button class="action-btn" id="nativeShareBtn"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg> Compartilhar</button>`; }
         extraActions = `
           <div class="action-buttons">
             <button class="action-btn" id="shareCardBtn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Gerar Card Postável 9:16</button>
             ${shareHtml}
-            ${['Horas Extras (CLT)', 'Rescisão Contratual (Acerto)'].includes(titleEl.textContent) ? '<button class="action-btn" id="printPdfBtn"><svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> Exportar PDF</button>' : ''}
+            ${['overtime', 'rescision'].includes(activeTool) ? '<button class="action-btn" id="printPdfBtn"><svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> Exportar PDF</button>' : ''}
           </div>`;
       }
       const fullHtml = html + extraActions;
@@ -707,27 +796,80 @@ document.addEventListener("DOMContentLoaded", () => {
         r.innerHTML = fullHtml; r.classList.remove("show"); void r.offsetWidth; r.classList.add("show");
         setTimeout(() => { r.querySelectorAll('.num-anim').forEach(el => { const val = Number(el.dataset.val); const isCurrency = el.dataset.currency === 'true'; animateValue(el, 0, val, 1000, isCurrency); }); }, 50);
         
-        const shareBtn = $("#shareCardBtn"); if (shareBtn) { shareBtn.onclick = (ev) => { ev.stopPropagation(); haptic(); pendingCardData = { toolKey: activeTool, titleText: titleEl.textContent, resultText: plainText, extraDetails }; openStyleModal(); }; }
-        const nativeShare = $("#nativeShareBtn"); if (nativeShare && navigator.share) { nativeShare.onclick = (ev) => { ev.stopPropagation(); haptic(); navigator.share({ title: titleEl.textContent, text: `Confira este cálculo no tempo.utilitários:\n\n${titleEl.textContent}\nResultado: ${plainText}\n`, url: window.location.href }).catch(console.error); }; }
+        const shareBtn = $("#shareCardBtn"); if (shareBtn) { shareBtn.onclick = (ev) => { ev.stopPropagation(); haptic(); saveToHistory(activeTool, titleEl.textContent, plainText); pendingCardData = { toolKey: activeTool, titleText: titleEl.textContent, resultText: plainText, extraDetails }; openStyleModal(); }; }
+        const nativeShare = $("#nativeShareBtn"); if (nativeShare && navigator.share) { nativeShare.onclick = (ev) => { ev.stopPropagation(); haptic(); saveToHistory(activeTool, titleEl.textContent, plainText); navigator.share({ title: titleEl.textContent, text: `Confira este cálculo no tempo.utilitários:\n\n${titleEl.textContent}\nResultado: ${plainText}\n`, url: window.location.href }).catch(console.error); }; }
         const printBtn = $("#printPdfBtn"); if (printBtn) { printBtn.onclick = (ev) => { ev.stopPropagation(); haptic(); window.print(); }; }
       }
       if (error) { r.classList.add("error"); r.classList.remove("has-copy"); } else { r.classList.remove("error"); if(textToCopy) r.classList.add("has-copy"); }
     }
   }
 
-  function openStyleModal() { styleModal.classList.add('open'); styleModal.setAttribute('aria-hidden', 'false'); }
+  function selectStyleOption(styleKey) {
+    selectedMoodStyle = styleKey;
+    $$('#styleOptionsList button').forEach(b => {
+      if (b.dataset.style === styleKey) b.classList.add('selected');
+      else b.classList.remove('selected');
+    });
+  }
+
+  function openStyleModal() {
+    if (currentTheme === 'light') selectStyleOption('light');
+    else if (selectedMoodStyle === 'light') selectStyleOption('sofisticado');
+    styleModal.classList.add('open');
+    styleModal.setAttribute('aria-hidden', 'false');
+  }
   function closeStyleModal() { styleModal.classList.remove('open'); styleModal.setAttribute('aria-hidden', 'true'); }
-  $$('#styleOptionsList button').forEach(btn => { btn.onclick = () => { haptic(); $$('#styleOptionsList button').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); selectedMoodStyle = btn.dataset.style; }; });
+  $$('#styleOptionsList button').forEach(btn => { btn.onclick = () => { haptic(); selectStyleOption(btn.dataset.style); }; });
   cancelStyleBtn.onclick = () => { haptic(); closeStyleModal(); };
   confirmStyleBtn.onclick = () => { haptic(); closeStyleModal(); if (pendingCardData) { executeGenerateShareCard(pendingCardData.toolKey, pendingCardData.titleText, pendingCardData.resultText, pendingCardData.extraDetails, selectedMoodStyle); } };
   styleModal.onclick = (e) => { if(e.target === styleModal) closeStyleModal(); };
 
+  // Modal de Histórico
+  function openHistoryModal() {
+    haptic();
+    const list = getHistory();
+    if (list.length === 0) {
+      historyList.innerHTML = `<div style="text-align:center; padding:28px 12px; color:var(--muted); font-size:13px;">Nenhum cálculo salvo ainda.<br>Seus resultados aparecerão aqui automaticamente.</div>`;
+    } else {
+      historyList.innerHTML = list.map(item => `
+        <button class="inner-card history-item" data-copy="${escapeHTML(item.result)}">
+          <div>
+            <div class="history-item-meta">${escapeHTML(item.toolTitle)}</div>
+            <div class="history-item-val">${escapeHTML(item.result)}</div>
+          </div>
+          <div class="history-item-time">${escapeHTML(item.time)}</div>
+        </button>
+      `).join('');
+      $$('#historyList .history-item').forEach(btn => {
+        btn.onclick = () => {
+          haptic();
+          copyTextToClipboard(btn.dataset.copy);
+          closeHistoryModal();
+        };
+      });
+    }
+    historyModal.classList.add('open');
+    historyModal.setAttribute('aria-hidden', 'false');
+  }
+  function closeHistoryModal() { historyModal.classList.remove('open'); historyModal.setAttribute('aria-hidden', 'true'); }
+  historyBtn.onclick = openHistoryModal;
+  closeHistoryBtn.onclick = () => { haptic(); closeHistoryModal(); };
+  historyModal.onclick = (e) => { if (e.target === historyModal) closeHistoryModal(); };
+  clearHistoryBtn.onclick = () => {
+    haptic();
+    storage.set('tempo_calc_history', '[]');
+    updateHistoryBadge();
+    openHistoryModal();
+    showToast('Histórico limpo');
+  };
+
   document.addEventListener('click', e => {
     const r = e.target.closest('.result.has-copy');
     if (r && !r.classList.contains('error') && textToCopy && !e.target.closest('.action-buttons')) {
-      haptic(); r.classList.add('copied-flash'); setTimeout(() => r.classList.remove('copied-flash'), 600);
-      if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(textToCopy).then(() => { showToast('Copiado para a área de clipboard'); }).catch(()=>{}); } 
-      else { try { const textArea = document.createElement("textarea"); textArea.value = textToCopy; textArea.style.position = "fixed"; document.body.appendChild(textArea); textArea.focus(); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea); showToast('Copiado para a área de clipboard'); } catch(err) {} }
+      haptic();
+      saveToHistory(activeTool, titleEl.textContent, textToCopy);
+      r.classList.add('copied-flash'); setTimeout(() => r.classList.remove('copied-flash'), 600);
+      copyTextToClipboard(textToCopy);
     }
   });
 
@@ -758,7 +900,7 @@ document.addEventListener("DOMContentLoaded", () => {
         st.base = $("#baseDate").value; st.days = $("#days").value; saveStoredState('date', st); const base = dateFromInput("#baseDate"), n = Number($("#days").value); if(!base || $("#days").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe uma data e quantidade válida.", "", true);
         const d = new Date(base); d.setDate(d.getDate() + (st.mode === "add" ? n : -n));
         const html = `<div class="big">${formatDate(d)}</div><div class="small">${st.mode==="add"?'Adicionados':'Subtraídos'} <span class="num-anim" data-val="${n}">0</span> ${n===1?'dia':'dias'}.</div>`;
-        showResult(html, `${formatDate(d)}`, false, "", { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição de Período" : "Subtração de Período", "Variação": `${n} dias`, "Dia da Semana": d.toLocaleDateString('pt-BR', { weekday: 'long' }) });
+        showResult(html, `${formatDate(d)}`, false, "", { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Adição de Período" : "Subtração de Período", "Variação": `${n} dias`, "Dia da Semana": d.toLocaleDateString(currentLang, { weekday: 'long' }) });
       };
       $("#baseDate").oninput = calculate; $("#days").oninput = calculate; calculate();
     }
@@ -790,7 +932,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const calculate = () => {
         st.b1 = $("#bDate1").value; st.b2 = $("#bDate2").value; saveStoredState('business', st); const a = dateFromInput("#bDate1"), b = dateFromInput("#bDate2"); if(!a || !b) return showResult("Selecione as duas datas.", "", true);
         const total = businessDaysDifference(a, b), totalCalendar = Math.round((b - a) / 86400000);
-        const html = `<div class="big"><span class="num-anim" data-val="${total}">0</span> ${total===1?'dia útil':'dias úteis'}</div><div class="small">Intervalo sem finais de semana.</div>`;
+        const html = `<div class="big"><span class="num-anim" data-val="${total}">0</span> ${total===1?'dia útil':'dias úteis'}</div><div class="small">Intervalo sem fins de semana.</div>`;
         showResult(html, `${total} dias úteis`, false, "", { "Início": formatDate(a), "Fim": formatDate(b), "Dias Úteis (Seg-Sex)": `${total} dias`, "Dias Corridos": `${Math.abs(totalCalendar)} dias` });
       };
       $("#bDate1").oninput = calculate; $("#bDate2").oninput = calculate; calculate();
@@ -800,7 +942,7 @@ document.addEventListener("DOMContentLoaded", () => {
         st.base = $("#bBaseDate").value; st.days = $("#bDays").value; saveStoredState('business', st); const base = dateFromInput("#bBaseDate"), n = Number($("#bDays").value); if(!base || $("#bDays").value === "" || !Number.isInteger(n) || n < 0) return showResult("Informe data e quantidade.", "", true);
         const d = addBusinessDays(base, n, st.mode === "add");
         const html = `<div class="big">${formatDate(d)}</div><div class="small">Resultado (<span class="num-anim" data-val="${n}">0</span> dias úteis).</div>`;
-        showResult(html, `${formatDate(d)}`, false, "", { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Prazo Final Útil" : "Retroativo Útil", "Qtd. Úteis": `${n} dias`, "Vencimento": d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) });
+        showResult(html, `${formatDate(d)}`, false, "", { "Data Base": formatDate(base), "Operação": st.mode === "add" ? "Prazo Final Útil" : "Retroativo Útil", "Qtd. Úteis": `${n} dias`, "Vencimento": d.toLocaleDateString(currentLang, { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) });
       };
       $("#bBaseDate").oninput = calculate; $("#bDays").oninput = calculate; calculate();
     }
@@ -814,7 +956,7 @@ document.addEventListener("DOMContentLoaded", () => {
     grid.innerHTML = zones.map((z, idx) => `<div class="inner-card" style="text-align:center; padding:16px;"><div style="font-size:11px; font-weight:750; color:var(--muted); margin-bottom:6px; letter-spacing:0.5px;">${z.city}</div><div id="wc-time-${idx}" style="font-size:24px; font-weight:900; letter-spacing:-.5px; color:var(--text);">--:--:--</div><div id="wc-date-${idx}" style="font-size:11px; color:var(--muted); margin-top:4px;">--</div></div>`).join('');
     function updateClocks() {
       if(!$("#worldClockGrid")) return; const now = new Date();
-      zones.forEach((z, idx) => { const timeEl = $(`#wc-time-${idx}`), dateEl = $(`#wc-date-${idx}`); if(timeEl && dateEl) { timeEl.textContent = new Intl.DateTimeFormat('pt-BR', { timeZone: z.tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(now); dateEl.textContent = new Intl.DateTimeFormat('pt-BR', { timeZone: z.tz, weekday: 'short', day: 'numeric', month: 'short' }).format(now); } });
+      zones.forEach((z, idx) => { const timeEl = $(`#wc-time-${idx}`), dateEl = $(`#wc-date-${idx}`); if(timeEl && dateEl) { timeEl.textContent = new Intl.DateTimeFormat('pt-BR', { timeZone: z.tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(now); dateEl.textContent = new Intl.DateTimeFormat(currentLang, { timeZone: z.tz, weekday: 'short', day: 'numeric', month: 'short' }).format(now); } });
     }
     updateClocks(); window._wcInterval = setInterval(updateClocks, 1000);
     showResult(`<div class="big">Relógio Global Ativo</div><div class="small">Monitore o horário nas principais capitais do planeta.</div>`, `Brasília / Lisboa / NY / Londres / Tóquio`, false, "Relógio Mundial", { "Fuso Local": Intl.DateTimeFormat().resolvedOptions().timeZone, "Capitais Monitoradas": "5 Globais", "Sincronização": "Tempo Real" });
@@ -852,14 +994,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     updateDisplay();
     function stopTimer() { if (window._pomodoroInterval) { clearInterval(window._pomodoroInterval); window._pomodoroInterval = null; } st.running = false; saveStoredState('pomodoro', st); }
-    function startTimer(isResume = false) {
+    function startTimer() {
       st.running = true; saveStoredState('pomodoro', st);
       const tb = $("#pomoToggleBtn"), stEl = $("#pomoStatus"); if(tb) tb.textContent = 'Pausar'; if(stEl) stEl.textContent = 'Sessão em andamento...';
       if (window._pomodoroInterval) clearInterval(window._pomodoroInterval);
       window._pomodoroInterval = setInterval(() => { if (st.timeLeft > 0) { st.timeLeft--; saveStoredState('pomodoro', st); updateDisplay(); } else { stopTimer(); const tbDone = $("#pomoToggleBtn"), stDone = $("#pomoStatus"); if(tbDone) tbDone.textContent = 'Iniciar'; if(stDone) stDone.textContent = 'Tempo esgotado! Excelente trabalho.'; haptic(); } }, 1000);
     }
-    if (st.running) startTimer(true);
-    $("#pomoToggleBtn").onclick = () => { haptic(); if (st.running) { stopTimer(); $("#pomoToggleBtn").textContent = 'Iniciar'; $("#pomoStatus").textContent = 'Pausado.'; } else { startTimer(false); } };
+    if (st.running) startTimer();
+    $("#pomoToggleBtn").onclick = () => { haptic(); if (st.running) { stopTimer(); $("#pomoToggleBtn").textContent = 'Iniciar'; $("#pomoStatus").textContent = 'Pausado.'; } else { startTimer(); } };
     $("#pomoResetBtn").onclick = () => { haptic(); stopTimer(); st.timeLeft = getSecondsForMode(st.mode); saveStoredState('pomodoro', st); updateDisplay(); $("#pomoToggleBtn").textContent = 'Iniciar'; $("#pomoStatus").textContent = 'Cronômetro reiniciado.'; };
     $$("[data-pmode]").forEach(tab => { tab.onclick = () => { haptic(); stopTimer(); st.mode = tab.dataset.pmode; st.timeLeft = getSecondsForMode(st.mode); saveStoredState('pomodoro', st); renderPomodoro(); }; });
   }
@@ -900,7 +1042,7 @@ document.addEventListener("DOMContentLoaded", () => {
       st.sign = selectEl.value; saveStoredState('horoscope', st);
       const signObj = signs.find(s => s.id === st.sign), todayEpochDays = Math.floor(Date.now() / 86400000), signIndex = signs.findIndex(s => s.id === st.sign);
       const cIdx = (todayEpochDays + signIndex * 3) % climatePool.length, lIdx = (todayEpochDays + signIndex * 7) % lovePool.length, wIdx = (todayEpochDays + signIndex * 11) % workPool.length, mIdx = (todayEpochDays + signIndex * 13) % moneyPool.length, hIdx = (todayEpochDays + signIndex * 17) % healthPool.length, colIdx = (todayEpochDays + signIndex * 5) % colors.length, numIdx = (todayEpochDays + signIndex * 9) % numbers.length, compIdx = (signIndex + (todayEpochDays % 4)) % signs.length;
-      const todayStr = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const todayStr = new Date().toLocaleDateString(currentLang, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
       const pureGlyph = `<span style="font-size:24px; line-height:1; color:var(--text); display:inline-flex; align-items:center; background:transparent;">${signObj.symbol}</span>`;
       contentEl.innerHTML = `<div class="inner-card" style="padding:24px; text-align: left;"><div style="font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">${todayStr}</div><div style="font-size: 26px; font-weight: 900; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">${pureGlyph} <span>${signObj.name}</span></div><div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Clima Astral</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${climatePool[cIdx]}</span></div><div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Amor & Relações</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${lovePool[lIdx]}</span></div><div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Trabalho & Carreira</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${workPool[wIdx]}</span></div><div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Dinheiro & Finanças</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${moneyPool[mIdx]}</span></div><div style="margin-bottom: 18px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Saúde & Bem-estar</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${healthPool[hIdx]}</span></div><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted);"><div><strong>Cor:</strong> <span style="color:var(--text);">${colors[colIdx]}</span></div><div><strong>Número:</strong> <span style="color:var(--text);">${numbers[numIdx]}</span></div><div><strong>Combina com:</strong> <span style="color:var(--text);">${signs[compIdx].name}</span></div></div></div>`;
       showResult(`<div class="big" style="display:flex; align-items:center; justify-content:center; gap:8px;">${pureGlyph} <span>${signObj.name}</span></div><div class="small">Previsão diária consultada.</div>`, `${signObj.name} - Horóscopo Diário`, false, "Horóscopo Diário", { "Signo": signObj.name, "Cor da Sorte": colors[colIdx], "Número": numbers[numIdx], "Harmonia": signs[compIdx].name });
@@ -937,7 +1079,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderCountdown() {
     const st = getStoredState('countdown');
-    tool.innerHTML = `<div class="tabs"><button class="tab ${st.mode === "down" ? "active" : ""}" data-mode="down">Contagem Regressiva</button><button class="tab ${st.mode === "passed" ? "active" : ""}" data-mode="passed">Tempo Passado</button></div><div id="countArea"></div>`;
+    tool.innerHTML = `<div class="tabs"><button class="tab ${st.mode === "down" ? "active" : ""}" data-mode="down">${currentLang === 'pt-PT' ? 'Contagem Decrescente' : 'Contagem Regressiva'}</button><button class="tab ${st.mode === "passed" ? "active" : ""}" data-mode="passed">Tempo Passado</button></div><div id="countArea"></div>`;
     renderCountArea(st);
   }
   function renderCountArea(st) {
@@ -963,39 +1105,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderOvertime() {
     const st = getStoredState('overtime');
-    tool.innerHTML = `<div class="grid"><div class="field"><label for="sal">SALÁRIO MENSAL (R$)</label><input type="number" id="sal" step="0.01" min="0" value="${st.sal}"></div><div class="field"><label for="jor">JORNADA MENSAL (HORAS)</label><input type="number" id="jor" value="${st.jor}" min="1"></div></div><div class="grid" style="margin-top:14px"><div class="field"><label for="qtd">QTD. HORAS EXTRAS</label><input type="number" id="qtd" step="0.5" min="0" value="${st.qtd}"></div><div class="field"><label for="rate">ACRÉSCIMO LEGAL</label><select id="rate"><option value="50" ${st.rate===50?'selected':''}>50% (Dias úteis / Normal)</option><option value="100" ${st.rate===100?'selected':''}>100% (Domingos / Feriados)</option></select></div></div><div class="result" id="result"></div>`;
+    const cur = currentLang === 'pt-PT' ? '€' : 'R$';
+    tool.innerHTML = `<div class="grid"><div class="field"><label for="sal">SALÁRIO MENSAL (${cur})</label><input type="number" id="sal" step="0.01" min="0" value="${st.sal}"></div><div class="field"><label for="jor">JORNADA MENSAL (HORAS)</label><input type="number" id="jor" value="${st.jor}" min="1"></div></div><div class="grid" style="margin-top:14px"><div class="field"><label for="qtd">QTD. HORAS EXTRAS</label><input type="number" id="qtd" step="0.5" min="0" value="${st.qtd}"></div><div class="field"><label for="rate">ACRÉSCIMO LEGAL</label><select id="rate"><option value="50" ${st.rate===50?'selected':''}>50% (Dias úteis / Normal)</option><option value="100" ${st.rate===100?'selected':''}>100% (Domingos / Feriados)</option></select></div></div><div class="result" id="result"></div>`;
     const calculate = () => {
       st.sal = Number($("#sal").value); st.jor = Number($("#jor").value); st.qtd = Number($("#qtd").value); st.rate = Number($("#rate").value); saveStoredState('overtime', st);
       const sal = st.sal, jor = st.jor, qtd = st.qtd, rate = st.rate; if(!sal || sal<=0 || !jor || jor<=0 || isNaN(qtd) || qtd<0) return showResult("Valores inválidos.", "", true);
       const vHora = sal / jor, vExtra = vHora * (1 + rate / 100), total = vExtra * qtd;
-      const html = `<div class="big">R$ <span class="num-anim" data-val="${total}" data-currency="true">0,00</span></div><div class="small">Normal: R$ ${vHora.toFixed(2)} | Extra (${rate}%): R$ ${vExtra.toFixed(2)}</div><div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>`;
-      showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", { "Salário Base": `R$ ${sal.toFixed(2)}`, "Valor da Hora": `R$ ${vHora.toFixed(2)}`, "Qtd. Extras": `${qtd}h`, "Adicional": `${rate}%`, "Valor Hora Extra": `R$ ${vExtra.toFixed(2)}` });
+      const html = `<div class="big">${cur} <span class="num-anim" data-val="${total}" data-currency="true">0,00</span></div><div class="small">Normal: ${cur} ${vHora.toFixed(2)} | Extra (${rate}%): ${cur} ${vExtra.toFixed(2)}</div><div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>`;
+      showResult(html, `${cur} ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", { "Salário Base": `${cur} ${sal.toFixed(2)}`, "Valor da Hora": `${cur} ${vHora.toFixed(2)}`, "Qtd. Extras": `${qtd}h`, "Adicional": `${rate}%`, "Valor Hora Extra": `${cur} ${vExtra.toFixed(2)}` });
     };
     $("#sal").oninput = calculate; $("#jor").oninput = calculate; $("#qtd").oninput = calculate; $("#rate").onchange = calculate; calculate();
   }
 
   function renderVacation13() {
-    tool.innerHTML = `<div class="tabs"><button class="tab ${getStoredState('vacation13').mode === "13" ? "active" : ""}" data-mode="13">13º Salário</button><button class="tab ${getStoredState('vacation13').mode === "vacation" ? "active" : ""}" data-mode="vacation">Férias + 1/3</button></div><div id="vArea"></div>`;
+    const label1 = currentLang === 'pt-PT' ? 'Subsídio de Natal' : '13º Salário';
+    const label2 = currentLang === 'pt-PT' ? 'Subsídio de Férias' : 'Férias + 1/3';
+    tool.innerHTML = `<div class="tabs"><button class="tab ${getStoredState('vacation13').mode === "13" ? "active" : ""}" data-mode="13">${label1}</button><button class="tab ${getStoredState('vacation13').mode === "vacation" ? "active" : ""}" data-mode="vacation">${label2}</button></div><div id="vArea"></div>`;
     renderVArea();
   }
   function renderVArea() {
     const st = getStoredState('vacation13'), area = $("#vArea");
+    const cur = currentLang === 'pt-PT' ? '€' : 'R$';
     if(st.mode === "13"){
-      area.innerHTML = `<div class="grid"><div class="field"><label for="vSal">SALÁRIO BRUTO (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="${st.sal}"></div><div class="field"><label for="vMeses">MESES TRABALHADOS (1 a 12)</label><input type="number" id="vMeses" min="1" max="12" value="${st.meses}"></div></div><div class="result" id="result"></div>`;
+      area.innerHTML = `<div class="grid"><div class="field"><label for="vSal">SALÁRIO BRUTO (${cur})</label><input type="number" id="vSal" step="0.01" min="0" value="${st.sal}"></div><div class="field"><label for="vMeses">MESES TRABALHADOS (1 a 12)</label><input type="number" id="vMeses" min="1" max="12" value="${st.meses}"></div></div><div class="result" id="result"></div>`;
       const calculate = () => {
         st.sal = Number($("#vSal").value); st.meses = Number($("#vMeses").value); saveStoredState('vacation13', st); const sal = st.sal, meses = st.meses; if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult("Valores inválidos.", "", true);
         const val = (sal / 12) * meses;
-        const html = `<div class="big">R$ <span class="num-anim" data-val="${val}" data-currency="true">0,00</span></div><div class="small">Proporcional a ${meses} ${meses===1?'mês':'meses'}.</div><div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>`;
-        showResult(html, `R$ ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", { "Salário Base": `R$ ${sal.toFixed(2)}`, "Período": `${meses}/12 avos`, "Benefício": "13º Proporcional", "Regime": "CLT" });
+        const html = `<div class="big">${cur} <span class="num-anim" data-val="${val}" data-currency="true">0,00</span></div><div class="small">Proporcional a ${meses} ${meses===1?'mês':'meses'}.</div><div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>`;
+        showResult(html, `${cur} ${val.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", { "Salário Base": `${cur} ${sal.toFixed(2)}`, "Período": `${meses}/12 avos`, "Benefício": currentLang === 'pt-PT' ? "Subsídio Natal" : "13º Proporcional" });
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
     } else {
-      area.innerHTML = `<div class="grid"><div class="field"><label for="vSal">SALÁRIO BRUTO (R$)</label><input type="number" id="vSal" step="0.01" min="0" value="${st.sal}"></div><div class="field"><label for="vMeses">MESES NO PERÍODO (1 a 12)</label><input type="number" id="vMeses" min="1" max="12" value="${st.meses}"></div></div><div class="result" id="result"></div>`;
+      area.innerHTML = `<div class="grid"><div class="field"><label for="vSal">SALÁRIO BRUTO (${cur})</label><input type="number" id="vSal" step="0.01" min="0" value="${st.sal}"></div><div class="field"><label for="vMeses">MESES NO PERÍODO (1 a 12)</label><input type="number" id="vMeses" min="1" max="12" value="${st.meses}"></div></div><div class="result" id="result"></div>`;
       const calculate = () => {
         st.sal = Number($("#vSal").value); st.meses = Number($("#vMeses").value); saveStoredState('vacation13', st); const sal = st.sal, meses = st.meses; if(!sal || sal<=0 || !meses || meses<1 || meses>12) return showResult("Valores inválidos.", "", true);
-        const base = (sal / 12) * meses, terço = base / 3, total = base + terço;
-        const html = `<div class="big">R$ <span class="num-anim" data-val="${total}" data-currency="true">0,00</span></div><div class="small">Férias: R$ ${base.toFixed(2)} | 1/3: R$ ${terço.toFixed(2)}</div><div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>`;
-        showResult(html, `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", { "Salário Base": `R$ ${sal.toFixed(2)}`, "Férias Proporcional": `R$ ${base.toFixed(2)}`, "Adicional ⅓ Constitucional": `R$ ${terço.toFixed(2)}`, "Meses": `${meses} avos` });
+        const base = (sal / 12) * meses, terço = currentLang === 'pt-PT' ? 0 : base / 3, total = base + terço;
+        const subText = currentLang === 'pt-PT' ? `Subsídio Proporcional: ${cur} ${base.toFixed(2)}` : `Férias: ${cur} ${base.toFixed(2)} | 1/3: ${cur} ${terço.toFixed(2)}`;
+        const html = `<div class="big">${cur} <span class="num-anim" data-val="${total}" data-currency="true">0,00</span></div><div class="small">${subText}</div><div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>`;
+        showResult(html, `${cur} ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", { "Salário Base": `${cur} ${sal.toFixed(2)}`, "Férias Proporcional": `${cur} ${base.toFixed(2)}`, "Meses": `${meses} avos` });
       };
       $("#vSal").oninput = calculate; $("#vMeses").oninput = calculate; calculate();
     }
@@ -1004,7 +1151,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderRescision() {
     const st = getStoredState('rescision');
-    tool.innerHTML = `<div class="grid"><div class="field"><label for="rSal">SALÁRIO BRUTO (R$)</label><input type="number" id="rSal" step="0.01" min="0" value="${st.sal}"></div><div class="field"><label for="rReason">MOTIVO DA SAÍDA</label><select id="rReason"><option value="sem_justa" ${st.reason==='sem_justa'?'selected':''}>Dispensa sem justa causa</option><option value="pedido" ${st.reason==='pedido'?'selected':''}>Pedido de demissão</option><option value="acordo" ${st.reason==='acordo'?'selected':''}>Acordo comum (Art. 484-A)</option></select></div></div><div class="grid" style="margin-top:14px"><div class="field"><label for="rAdm">DATA DE ADMISSÃO</label><input type="date" id="rAdm" value="${st.adm}"></div><div class="field"><label for="rTerm">DATA DE DEMISSÃO</label><input type="date" id="rTerm" value="${st.term}"></div></div><div class="result" id="result"></div>`;
+    const cur = currentLang === 'pt-PT' ? '€' : 'R$';
+    tool.innerHTML = `<div class="grid"><div class="field"><label for="rSal">SALÁRIO BRUTO (${cur})</label><input type="number" id="rSal" step="0.01" min="0" value="${st.sal}"></div><div class="field"><label for="rReason">MOTIVO DA SAÍDA</label><select id="rReason"><option value="sem_justa" ${st.reason==='sem_justa'?'selected':''}>Dispensa sem justa causa</option><option value="pedido" ${st.reason==='pedido'?'selected':''}>Pedido de demissão</option><option value="acordo" ${st.reason==='acordo'?'selected':''}>Acordo comum (Art. 484-A)</option></select></div></div><div class="grid" style="margin-top:14px"><div class="field"><label for="rAdm">DATA DE ADMISSÃO</label><input type="date" id="rAdm" value="${st.adm}"></div><div class="field"><label for="rTerm">DATA DE DEMISSÃO</label><input type="date" id="rTerm" value="${st.term}"></div></div><div class="result" id="result"></div>`;
     const calculate = () => {
       st.sal = Number($("#rSal").value); st.reason = $("#rReason").value; st.adm = $("#rAdm").value; st.term = $("#rTerm").value; saveStoredState('rescision', st);
       const sal = st.sal, reason = st.reason, dAdm = dateFromInput("#rAdm"), dTerm = dateFromInput("#rTerm"); if(!sal || sal<=0 || !dAdm || !dTerm) return showResult("Preencha todos os campos.", "", true); if(dAdm > dTerm) return showResult("Admissão posterior à demissão.", "", true);
@@ -1023,8 +1171,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const totalMonthsReal = timeDiffReal.y * 12 + timeDiffReal.m + (timeDiffReal.d >= 15 ? 1 : 0); const saldoFgtsEst = (sal * 0.08) * totalMonthsReal; let multaFgts = 0;
       if (reason === "sem_justa") multaFgts = saldoFgtsEst * 0.40; else if (reason === "acordo") multaFgts = saldoFgtsEst * 0.20;
       const totalRescisao = saldoSalario + decimoTerceiro + feriasTotal + avisoPrevio + multaFgts;
-      const html = `<div class="big">R$ <span class="num-anim" data-val="${totalRescisao}" data-currency="true">0,00</span></div><div class="small" style="margin-top:8px; line-height:1.6;">Saldo: R$ ${saldoSalario.toFixed(2)} | 13º Prop.: R$ ${decimoTerceiro.toFixed(2)}<br>${reason !== 'pedido' ? `Aviso Prévio (${diasAviso}d): R$ ${avisoPrevio.toFixed(2)}<br>` : ''}Férias (Venc./Prop. + ⅓): R$ ${feriasTotal.toFixed(2)}<br>${reason !== 'pedido' ? `Multa FGTS: R$ ${multaFgts.toFixed(2)}` : ''}</div><div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n['pt-BR'].disclaimer}</div>`;
-      showResult(html, `R$ ${totalRescisao.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", { "Tempo Empresa": `${timeDiffReal.y}a ${timeDiffReal.m}m`, "Saldo Salário": `R$ ${saldoSalario.toFixed(2)}`, "13º Salário": `R$ ${decimoTerceiro.toFixed(2)}`, "Férias + ⅓": `R$ ${feriasTotal.toFixed(2)}`, "Multa FGTS": `R$ ${multaFgts.toFixed(2)}` });
+      const html = `<div class="big">${cur} <span class="num-anim" data-val="${totalRescisao}" data-currency="true">0,00</span></div><div class="small" style="margin-top:8px; line-height:1.6;">Saldo: ${cur} ${saldoSalario.toFixed(2)} | 13º Prop.: ${cur} ${decimoTerceiro.toFixed(2)}<br>${reason !== 'pedido' ? `Aviso Prévio (${diasAviso}d): ${cur} ${avisoPrevio.toFixed(2)}<br>` : ''}Férias (Venc./Prop. + ⅓): ${cur} ${feriasTotal.toFixed(2)}<br>${reason !== 'pedido' ? `Multa FGTS: ${cur} ${multaFgts.toFixed(2)}` : ''}</div><div class="small" style="margin-top:10px; opacity:0.75; font-size:11px;">${i18n[currentLang].disclaimer}</div>`;
+      showResult(html, `${cur} ${totalRescisao.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`, false, "", { "Tempo Empresa": `${timeDiffReal.y}a ${timeDiffReal.m}m`, "Saldo Salário": `${cur} ${saldoSalario.toFixed(2)}`, "13º Salário": `${cur} ${decimoTerceiro.toFixed(2)}`, "Férias + ⅓": `${cur} ${feriasTotal.toFixed(2)}`, "Multa FGTS": `${cur} ${multaFgts.toFixed(2)}` });
     };
     $("#rSal").oninput = calculate; $("#rReason").onchange = calculate; $("#rAdm").oninput = calculate; $("#rTerm").oninput = calculate; calculate();
   }
@@ -1048,7 +1196,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function closeDrawer() { drawer.classList.remove("open"); drawer.setAttribute("aria-hidden", "true"); openMenuBtn.focus(); }
 
   function renderPaletteList(query) {
-    const list = Object.keys(i18n['pt-BR'].tools).map(key => ({ key, name: i18n['pt-BR'].tools[key].menuName, badge: i18n['pt-BR'].tools[key].badge })).filter(x => x.name.toLowerCase().includes(query.toLowerCase()));
+    const langTools = i18n[currentLang].tools;
+    const list = Object.keys(langTools).map(key => ({ key, name: langTools[key].menuName, badge: langTools[key].badge })).filter(x => x.name.toLowerCase().includes(query.toLowerCase()));
     paletteList.innerHTML = list.map((item, idx) => `<button class="palette-item ${idx===0?'selected':''}" data-tool="${item.key}"><span>${idx < 9 ? `<strong style="color:var(--accent); margin-right:6px;">[${idx+1}]</strong>` : ''}${item.name}</span><span style="font-size:11px; color:var(--muted); font-weight:600; border:1px solid var(--line); padding:2px 6px; border-radius:6px;">${item.badge}</span></button>`).join('');
     $$('#paletteList .palette-item').forEach(btn => { btn.onclick = () => { haptic(); loadTool(btn.dataset.tool); closePalette(); }; });
   }
@@ -1065,8 +1214,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); if (paletteModal.classList.contains('open')) closePalette(); else openPalette(); }
-    if (e.key === 'Escape') { closePalette(); closeDrawer(); closeStyleModal(); }
-    if (paletteModal.classList.contains('open')) trapFocus(e, paletteModal); else if (drawer.classList.contains('open')) trapFocus(e, drawer); else if (styleModal.classList.contains('open')) trapFocus(e, styleModal);
+    if (e.key === 'Escape') { closePalette(); closeDrawer(); closeStyleModal(); closeHistoryModal(); }
+    if (paletteModal.classList.contains('open')) trapFocus(e, paletteModal);
+    else if (drawer.classList.contains('open')) trapFocus(e, drawer);
+    else if (styleModal.classList.contains('open')) trapFocus(e, styleModal);
+    else if (historyModal.classList.contains('open')) trapFocus(e, historyModal);
   });
 
   function updateGreeting() {
@@ -1079,7 +1231,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderChips() {
     try {
-      const recentKeys = JSON.parse(storage.get('tempo_recent_tools', '["sleep", "pomodoro", "rescision", "worldclock"]')), toolMetaMap = i18n['pt-BR'].tools;
+      const recentKeys = JSON.parse(storage.get('tempo_recent_tools', '["sleep", "pomodoro", "rescision", "worldclock"]')), toolMetaMap = i18n[currentLang].tools;
       if(quickChips) {
         quickChips.innerHTML = recentKeys.map(k => { const m = toolMetaMap[k]; return `<button class="chip" data-tool="${k}"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg> ${m ? m.menuName : k}</button>`; }).join('');
         $$('#quickChips .chip').forEach(btn => { btn.onclick = () => { haptic(); loadTool(btn.dataset.tool); }; });
@@ -1088,16 +1240,24 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateStaticTexts() {
-    updateGreeting(); renderChips(); footerText.innerHTML = i18n['pt-BR'].footer; menuTitle.textContent = i18n['pt-BR'].menu; langLabel.textContent = i18n['pt-BR'].langLabel;
-    groupEssential.textContent = i18n['pt-BR'].g1; groupPersonal.textContent = i18n['pt-BR'].g2; groupLabor.textContent = i18n['pt-BR'].g3; groupSport.textContent = i18n['pt-BR'].g4;
-    $$("[data-i18n]").forEach(el => { const k = el.getAttribute("data-i18n").replace("tool_", ""); if (i18n['pt-BR'].tools[k]) el.textContent = i18n['pt-BR'].tools[k].menuName; });
+    const dict = i18n[currentLang];
+    updateGreeting(); renderChips();
+    footerText.innerHTML = dict.footer;
+    menuTitle.textContent = dict.menu;
+    langLabel.textContent = dict.langLabel;
+    groupEssential.textContent = dict.g1;
+    groupPersonal.textContent = dict.g2;
+    groupLabor.textContent = dict.g3;
+    groupSport.textContent = dict.g4;
+    $$("[data-i18n]").forEach(el => { const k = el.getAttribute("data-i18n").replace("tool_", ""); if (dict.tools[k]) el.textContent = dict.tools[k].menuName; });
   }
 
   function loadTool(t, updateHash = true) {
     if (window._wcInterval) { clearInterval(window._wcInterval); window._wcInterval = null; }
     activeTool = t; storage.set('tempo_tool', t); pushRecentTool(t);
     if (updateHash && window.location.hash !== '#' + t) window.location.hash = t;
-    const meta = i18n['pt-BR'].tools[t] || i18n['pt-BR'].tools['date'];
+    const dict = i18n[currentLang];
+    const meta = dict.tools[t] || dict.tools['date'];
     pageTitle.textContent = "tempo utilitários — " + meta.title; titleEl.textContent = meta.title; subtitleEl.textContent = meta.subtitle; toolBadge.textContent = meta.badge;
     $$(".menu-item").forEach(x => x.classList.remove("active")); const activeItem = document.querySelector(`.menu-item[data-tool="${t}"]`); if (activeItem) activeItem.classList.add("active");
     if (t === "date") renderDate(); else if (t === "time") renderTime(); else if (t === "business") renderBusiness(); else if (t === "worldclock") renderWorldClock(); else if (t === "meeting") renderMeeting(); else if (t === "pomodoro") renderPomodoro(); else if (t === "sleep") renderSleep(); else if (t === "horoscope") renderHoroscope(); else if (t === "age") renderAge(); else if (t === "pregnancy") renderPregnancy(); else if (t === "countdown") renderCountdown(); else if (t === "overtime") renderOvertime(); else if (t === "vacation13") renderVacation13(); else if (t === "rescision") renderRescision(); else if (t === "running") renderRunning();
