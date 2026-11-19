@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<meta name="theme-color" id="metaThemeColor" content="#0b0d12">
+<meta name="theme-color" id="metaThemeColor" content="#07090e">
 <meta name="description" content="Utilitários rápidos e minimalistas para cálculos de datas, horas, prazos, finanças CLT, reuniões globais, esporte, foco e horóscopo diário completo. Sem anúncios e direto ao ponto.">
 
 <!-- SEO & Open Graph (WhatsApp / Telegram / Redes Sociais) -->
@@ -24,243 +24,682 @@
 <link rel="manifest" href="manifest.json">
 
 <title id="pageTitle">tempo utilitários — Utilitários</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230b0d12%22/><text x=%2250%22 y=%2270%22 font-size=%2260%22 font-weight=%22900%22 font-family=%22system-ui, sans-serif%22 fill=%22%23f7f8fb%22 text-anchor=%22middle%22>t<tspan fill=%22%237c5cff%22>.</tspan></text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%2307090e%22/><text x=%2250%22 y=%2270%22 font-size=%2260%22 font-weight=%22900%22 font-family=%22system-ui, sans-serif%22 fill=%22%23f8fafc%22 text-anchor=%22middle%22>t<tspan fill=%22%237c5cff%22>.</tspan></text></svg>">
 <style>
 /* Reset & Variáveis */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0b0d12;--card:#131720;--card2:#1a202b;--text:#f7f8fb;--muted:#9199a8;--line:#29313e;--accent:#7c5cff;--danger:#ff6574;
-  --highlight: rgba(255,255,255,0.04);
-  --glow: rgba(124, 92, 255, 0.15);
-  --ambient: radial-gradient(circle at 50% 0%, rgba(124, 92, 255, 0.08), transparent 50%);
+  color-scheme: dark;
+  --bg:#07090e;
+  --card:#0e121b;
+  --card2:#151b28;
+  --text:#f8fafc;
+  --muted:#8b95a7;
+  --line:rgba(255,255,255,0.08);
+  --line-strong:rgba(255,255,255,0.14);
+  --accent:#7c5cff;
+  --accent-soft:rgba(124,92,255,0.14);
+  --danger:#ff6574;
+  --success:#34d399;
+  --highlight:rgba(255,255,255,0.06);
+  --glow:rgba(124, 92, 255, 0.22);
+  --grid-dot:rgba(255,255,255,0.045);
+  --ambient:radial-gradient(ellipse 75% 45% at 50% -5%, rgba(124, 92, 255, 0.16), transparent 70%);
 }
 :root.light{
-  --bg:#f4f5f7;--card:#ffffff;--card2:#eef2f6;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#6366f1;--danger:#ef4444;
-  --highlight: rgba(255,255,255,0.6);
-  --glow: rgba(99, 102, 241, 0.15);
-  --ambient: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.05), transparent 50%);
+  color-scheme: light;
+  --bg:#f6f7fb;
+  --card:#ffffff;
+  --card2:#f0f3f9;
+  --text:#0f172a;
+  --muted:#64748b;
+  --line:rgba(15,23,42,0.08);
+  --line-strong:rgba(15,23,42,0.14);
+  --accent:#6366f1;
+  --accent-soft:rgba(99,102,241,0.10);
+  --danger:#ef4444;
+  --success:#10b981;
+  --highlight:rgba(255,255,255,0.9);
+  --glow:rgba(99, 102, 241, 0.18);
+  --grid-dot:rgba(15,23,42,0.055);
+  --ambient:radial-gradient(ellipse 75% 45% at 50% -5%, rgba(99, 102, 241, 0.10), transparent 70%);
 }
+
 body{
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:"Plus Jakarta Sans",Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text);
   min-height:100vh;
-  background: var(--bg);
-  position: relative;
-  overflow-x: hidden;
-  transition: background-color 0.3s, color 0.3s;
-  -webkit-font-smoothing: antialiased;
+  background:var(--bg);
+  position:relative;
+  overflow-x:hidden;
+  transition:background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-/* Aura de Fundo Otimizada */
-body::before {
-  content: ''; position: fixed; inset: 0;
-  background: var(--ambient);
-  z-index: -1; pointer-events: none;
-  will-change: background;
+/* Aura de Fundo + Malha Técnica Sutil */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:var(--ambient);
+  z-index:-2;
+  pointer-events:none;
+}
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:radial-gradient(var(--grid-dot) 1px, transparent 1px);
+  background-size:24px 24px;
+  mask-image:radial-gradient(ellipse 80% 65% at 50% 15%, #000 30%, transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 65% at 50% 15%, #000 30%, transparent 100%);
+  z-index:-1;
+  pointer-events:none;
 }
 
-button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer}
-.app{width:min(100%,1180px);margin:auto;padding:0 20px 48px}
+button,input,select{font:inherit;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+.app{width:min(100%,1160px);margin:auto;padding:0 20px 56px}
 
-/* Header */
+/* Header Glassmorphism */
 header{
-  height:76px;display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;background:rgba(11,13,18,0.85);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  z-index:50;border-bottom:1px solid var(--line);margin-bottom:10px;
-  transform: translateZ(0);
+  height:74px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  background:rgba(7,9,14,0.75);
+  backdrop-filter:blur(16px) saturate(160%);
+  -webkit-backdrop-filter:blur(16px) saturate(160%);
+  z-index:50;
+  border-bottom:1px solid var(--line);
+  margin-bottom:14px;
+  transform:translateZ(0);
 }
-:root.light header{background:rgba(244,245,247,0.85);}
+:root.light header{background:rgba(246,247,251,0.78);}
 
-.logo-container{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:opacity .2s, transform .2s cubic-bezier(0.16, 1, 0.3, 1)}
-.logo-container:hover{opacity:0.85}
+.logo-container{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  cursor:pointer;
+  user-select:none;
+  padding:6px 10px 6px 4px;
+  border-radius:12px;
+  transition:opacity .2s, transform .2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.logo-container:hover{opacity:0.88}
 .logo-container:active{transform:scale(0.97)}
-.logo-main{font-size:22px;font-weight:850;letter-spacing:-.7px;color:var(--text)}
+.logo-main{font-size:23px;font-weight:800;letter-spacing:-.8px;color:var(--text)}
 .logo-main span{color:var(--accent)}
-.logo-sub{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-top:2px}
+.logo-sub{
+  font-size:11px;
+  font-weight:700;
+  color:var(--muted);
+  letter-spacing:.06em;
+  text-transform:lowercase;
+  background:var(--card2);
+  border:1px solid var(--line);
+  padding:2px 8px;
+  border-radius:99px;
+}
 
 .header-actions{display:flex;gap:8px;align-items:center}
-.icon-btn{width:40px;height:40px;border:1px solid var(--line);border-radius:13px;background:var(--card);color:var(--text);display:grid;place-items:center;outline:none;position:relative;box-shadow: 0 2px 5px rgba(0,0,0,0.05), inset 0 1px 1px var(--highlight); transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s, border-color 0.2s, box-shadow 0.2s;}
-.icon-btn svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;transition:transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);}
-.icon-btn:hover{transform:translateY(-2px);background:var(--card2);border-color:var(--accent); box-shadow: 0 6px 12px var(--glow), inset 0 1px 1px var(--highlight);}
-.icon-btn:hover svg{transform:scale(1.1);}
+.icon-btn{
+  height:40px;
+  min-width:40px;
+  padding:0 10px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--card);
+  color:var(--text);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  outline:none;
+  position:relative;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 var(--highlight);
+  transition:transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.icon-btn svg{width:17px;height:17px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;transition:transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);}
+.icon-btn:hover{transform:translateY(-1px);background:var(--card2);border-color:var(--accent);box-shadow:0 6px 16px var(--glow), inset 0 1px 0 var(--highlight);}
+.icon-btn:hover svg{transform:scale(1.08);}
 .icon-btn:active{transform:scale(0.95)}
-.history-dot{position:absolute;top:8px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--accent);display:none;}
+.kbd-hint{
+  font-family:"JetBrains Mono",monospace;
+  font-size:10px;
+  font-weight:700;
+  color:var(--muted);
+  background:var(--bg);
+  border:1px solid var(--line);
+  padding:2px 6px;
+  border-radius:6px;
+  letter-spacing:0.3px;
+}
+@media(max-width:640px){.kbd-hint{display:none}}
+.history-dot{position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);display:none;}
 .history-dot.active{display:block;}
 
-/* Chips */
-.chips-wrapper{width:100%;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:10px 0 16px;display:flex;gap:8px;justify-content:center}
-@media(max-width:700px){.chips-wrapper{justify-content:flex-start}}
+/* Chips de Acesso Rápido */
+.chips-wrapper{
+  width:100%;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  padding:8px 0 16px;
+  display:flex;
+  gap:8px;
+  justify-content:center;
+}
+@media(max-width:740px){.chips-wrapper{justify-content:flex-start}}
 .chips-wrapper::-webkit-scrollbar{display:none}
-.chip{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:8px 16px;color:var(--text);font-size:12px;font-weight:750;white-space:nowrap;cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05), inset 0 1px 1px var(--highlight); transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s, border-color 0.2s, box-shadow 0.2s;}
-.chip svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none}
-.chip:hover{background:var(--card2);border-color:var(--accent);box-shadow: 0 4px 15px var(--glow), inset 0 1px 1px var(--highlight); transform: translateY(-1px);}
+.chip{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:99px;
+  padding:8px 15px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+  white-space:nowrap;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.05), inset 0 1px 0 var(--highlight);
+  transition:transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.chip svg{width:13px;height:13px;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;fill:none;opacity:0.75}
+.chip:hover{background:var(--card2);color:var(--text);border-color:var(--line-strong);transform:translateY(-1px);}
+.chip.active{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+  color:var(--text);
+  box-shadow:0 4px 14px var(--glow), inset 0 1px 0 var(--highlight);
+}
+.chip.active svg{color:var(--accent);opacity:1}
 .chip:active{transform:scale(0.95)}
 
 /* Hero Section */
-.hero{text-align:center;padding:18px 0 22px}
-.badge{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:7px 14px;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.8px;margin-bottom:14px;background: linear-gradient(180deg, var(--card2), var(--card)); box-shadow: inset 0 1px 1px var(--highlight), 0 2px 10px rgba(0,0,0,0.1); position:relative; overflow:hidden;}
-.badge::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); opacity: 0.8;}
+.hero{text-align:center;padding:16px 0 26px}
+#greeting{
+  font-size:13px;
+  font-weight:700;
+  color:var(--accent);
+  margin-bottom:10px;
+  letter-spacing:0.3px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border:1px solid var(--line-strong);
+  border-radius:99px;
+  padding:6px 14px;
+  color:var(--muted);
+  font-family:"JetBrains Mono",monospace;
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:.9px;
+  margin-bottom:14px;
+  background:var(--card);
+  box-shadow:inset 0 1px 0 var(--highlight), 0 2px 10px rgba(0,0,0,0.08);
+  position:relative;
+  overflow:hidden;
+}
+.badge::before{
+  content:'';
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 8px var(--accent);
+}
 
-h1{font-size:clamp(34px,7vw,60px);line-height:1.1;letter-spacing:-2.5px;margin-bottom:12px; background: linear-gradient(135deg, var(--text) 30%, var(--muted) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; padding-bottom:4px;}
-.hero p{color:var(--muted);font-size:15px;line-height:1.6}
+h1{
+  font-size:clamp(32px,6.2vw,54px);
+  font-weight:800;
+  line-height:1.08;
+  letter-spacing:-2px;
+  margin-bottom:12px;
+  background:linear-gradient(180deg, var(--text) 35%, var(--muted) 125%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  padding-bottom:2px;
+}
+.hero p{color:var(--muted);font-size:15px;line-height:1.6;max-width:560px;margin:0 auto;}
 
-/* Panel Principal */
+/* Panel Principal (Bento Container) */
 .panel{
-  width:min(100%,760px);margin:auto;background:var(--card);
-  border:1px solid var(--line);border-radius:24px;padding:24px;
-  box-shadow: 0 2px 4px -1px rgba(0,0,0,0.06), 0 12px 32px -4px rgba(0,0,0,0.15), inset 0 1px 1px var(--highlight);
-  position:relative; overflow:hidden; transform:translateZ(0);-webkit-transform:translateZ(0);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s, border-color 0.3s;
+  width:min(100%,760px);
+  margin:auto;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:26px;
+  padding:28px;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.06),
+    0 20px 50px -12px rgba(0,0,0,0.28),
+    inset 0 1px 0 var(--highlight);
+  position:relative;
+  overflow:hidden;
+  transform:translateZ(0);
+  transition:transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s, border-color 0.3s;
 }
-.panel::before {
-  content: ''; position: absolute; top: 0; left: 10%; width: 80%; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.4; transition: opacity 0.3s;
+:root.light .panel{
+  box-shadow:
+    0 1px 3px rgba(15,23,42,0.05),
+    0 20px 45px -12px rgba(15,23,42,0.09),
+    inset 0 1px 0 var(--highlight);
 }
-.panel:hover { box-shadow: 0 4px 8px -2px rgba(0,0,0,0.08), 0 16px 48px -6px rgba(0,0,0,0.2), inset 0 1px 1px var(--highlight); }
-.panel:hover::before { opacity: 0.8; }
-.zen-mode .panel{width:min(100%,920px);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent), 0 30px 100px var(--glow), inset 0 1px 2px rgba(124,92,255,0.1);}
+.panel::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:12%;
+  width:76%;
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity:0.55;
+  transition:opacity 0.3s;
+}
+.panel:hover::before{opacity:0.95;}
+.zen-mode .panel{width:min(100%,900px);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent), 0 30px 100px var(--glow), inset 0 1px 1px var(--highlight);}
 
-/* Inner Cards Otimizados + Spotlight dinâmico p/ Desktop */
-.inner-card {
-  background: linear-gradient(135deg, var(--card2) 0%, var(--bg) 100%);
-  border: 1px solid var(--line); border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.03), inset 0 1px 1px var(--highlight);
-  position: relative; overflow: hidden;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s, border-color 0.25s;
+/* Inner Cards + Spotlight 60fps */
+.inner-card{
+  background:linear-gradient(180deg, var(--card2) 0%, var(--bg) 100%);
+  border:1px solid var(--line);
+  border-radius:16px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 var(--highlight);
+  position:relative;
+  overflow:hidden;
+  transition:transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s, border-color 0.25s;
 }
-@media (hover: hover) and (pointer: fine) {
-  .inner-card::before {
-    content: ""; position: absolute; inset: 0;
-    background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(124, 92, 255, 0.08), transparent 40%);
-    opacity: 0; transition: opacity 0.3s; z-index: 0; pointer-events: none;
+@media (hover: hover) and (pointer: fine){
+  .inner-card::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(124, 92, 255, 0.10), transparent 40%);
+    opacity:0;transition:opacity 0.3s;z-index:0;pointer-events:none;
   }
-  .inner-card::after {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(124,92,255,0.5), transparent);
-    opacity: 0; transition: opacity 0.25s ease; z-index: 1; pointer-events: none;
+  .inner-card::after{
+    content:'';position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg, transparent, rgba(124,92,255,0.55), transparent);
+    opacity:0;transition:opacity 0.25s ease;z-index:1;pointer-events:none;
   }
-  .inner-card:hover::before, .inner-card:hover::after { opacity: 1; }
+  .inner-card:hover::before, .inner-card:hover::after{opacity:1;}
 }
-.inner-card:hover {
-  transform: translateY(-2px); border-color: rgba(124, 92, 255, 0.4);
-  box-shadow: 0 8px 25px var(--glow), inset 0 1px 1px var(--highlight);
+.inner-card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(124, 92, 255, 0.4);
+  box-shadow:0 10px 26px var(--glow), inset 0 1px 0 var(--highlight);
 }
-.inner-card > * { position: relative; z-index: 2; }
+.inner-card > *{position:relative;z-index:2;}
 
-#styleOptionsList .palette-item.selected {
-  border-color: var(--accent);
-  box-shadow: 0 4px 15px var(--glow), inset 0 1px 1px var(--highlight);
+/* Amostras de cor no Modal de Estilo */
+.style-swatch{
+  width:22px;height:22px;border-radius:7px;flex-shrink:0;
+  border:1px solid var(--line-strong);
+  display:inline-block;
+}
+#styleOptionsList .palette-item.selected{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  box-shadow:0 4px 16px var(--glow), inset 0 1px 0 var(--highlight);
 }
 
-.ad-container{width:min(100%,760px);margin:20px auto 0;background:var(--card);border:1px dashed var(--line);border-radius:18px;padding:14px;text-align:center;color:var(--muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px; transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s}
-.ad-container:hover{border-color: var(--accent); border-style: solid; background: var(--card2); box-shadow: 0 10px 30px var(--glow);}
-.ad-tag{background:var(--bg);border:1px solid var(--line);color:var(--accent);padding:2px 6px;border-radius:6px;font-size:9px;letter-spacing:.5px}
+/* Banner Patrocinado Discreto */
+.ad-container{
+  width:min(100%,760px);
+  margin:22px auto 0;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:13px 18px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  transition:border-color 0.25s, background-color 0.25s, box-shadow 0.25s;
+}
+.ad-container:hover{border-color:var(--line-strong);background:var(--card2);}
+.ad-tag{
+  font-family:"JetBrains Mono",monospace;
+  background:var(--accent-soft);
+  border:1px solid rgba(124,92,255,0.25);
+  color:var(--accent);
+  padding:2px 8px;
+  border-radius:6px;
+  font-size:9.5px;
+  font-weight:700;
+  letter-spacing:.6px;
+}
 
-/* Tabs */
-.tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:14px;margin-bottom:23px;border:1px solid var(--line);box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 1px 0 var(--highlight);}
-.tab{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 8px;border-radius:10px;font-weight:750;font-size:13px;transition: transform 0.2s, background-color 0.2s, color 0.2s, box-shadow 0.2s;}
-.tab.active{background:var(--card2);color:var(--text);box-shadow:0 4px 12px rgba(0,0,0,.1), inset 0 1px 1px var(--highlight); transform: translateY(-1px);}
+/* Segmented Tabs (Estilo macOS / Linear) */
+.tabs{
+  display:flex;
+  gap:4px;
+  background:var(--bg);
+  padding:5px;
+  border-radius:14px;
+  margin-bottom:24px;
+  border:1px solid var(--line);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,0.12);
+}
+.tab{
+  flex:1;
+  border:1px solid transparent;
+  background:transparent;
+  color:var(--muted);
+  padding:10px 10px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:13px;
+  transition:transform 0.2s, background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.tab:hover:not(.active){color:var(--text);}
+.tab.active{
+  background:var(--card2);
+  color:var(--text);
+  border-color:var(--line-strong);
+  box-shadow:0 3px 10px rgba(0,0,0,0.14), inset 0 1px 0 var(--highlight);
+}
 
-.grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:14px}
+.grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:16px}
 .field{min-width:0}
-.field label{display:block;color:var(--muted);font-size:11px;font-weight:750;letter-spacing:.5px;margin:0 0 8px 3px}
+.field label{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.6px;
+  margin:0 0 8px 2px;
+  text-transform:uppercase;
+}
 
-/* Inputs Fluidos */
-input,select{width:100%;max-width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:12px 14px;outline:none;font-size:16px;-webkit-appearance:none;box-shadow: inset 0 2px 4px rgba(0,0,0,0.05), 0 1px 0 var(--highlight); transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;}
-input:hover,select:hover{border-color: rgba(124,92,255,0.4);}
-input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--glow), inset 0 1px 2px rgba(0,0,0,0.02); transform: translateY(-1px);}
-select{cursor:pointer; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%239199a8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>'); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; padding-right: 40px;}
+/* Inputs & Selects Modernos */
+input,select{
+  width:100%;
+  max-width:100%;
+  min-height:48px;
+  background:var(--bg);
+  border:1px solid var(--line);
+  color:var(--text);
+  border-radius:13px;
+  padding:12px 14px;
+  outline:none;
+  font-size:15px;
+  font-weight:600;
+  -webkit-appearance:none;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,0.08);
+  transition:border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+input:hover,select:hover{border-color:var(--line-strong);}
+input:focus,select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3.5px var(--glow), inset 0 1px 2px rgba(0,0,0,0.04);
+}
+input[type="range"]{
+  min-height:auto;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  accent-color:var(--accent);
+}
+select{
+  cursor:pointer;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%238b95a7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+  background-size:16px;
+  padding-right:40px;
+}
 
-/* Result Box Animado */
-.result{margin-top:20px;padding:22px;border:1px solid var(--line);background: radial-gradient(circle at top, var(--card2) 0%, var(--bg) 100%); border-radius:16px;text-align:center;display:none; box-shadow: inset 0 1px 1px var(--highlight), 0 10px 30px rgba(0,0,0,0.1); position:relative; overflow:hidden;}
-.result::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.6; }
-.result.show{display:block;animation:up .3s cubic-bezier(0.16, 1, 0.3, 1) forwards;}
+/* Caixa de Resultado Bento */
+.result{
+  margin-top:22px;
+  padding:24px 22px;
+  border:1px solid var(--line);
+  background:radial-gradient(ellipse 90% 80% at 50% 0%, var(--card2) 0%, var(--bg) 100%);
+  border-radius:18px;
+  text-align:center;
+  display:none;
+  box-shadow:inset 0 1px 0 var(--highlight), 0 10px 28px rgba(0,0,0,0.12);
+  position:relative;
+  overflow:hidden;
+}
+.result::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:15%;
+  right:15%;
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity:0.7;
+}
+.result.show{display:block;animation:up .32s cubic-bezier(0.16, 1, 0.3, 1) forwards;}
 
-.result.copied-flash{border-color:#4ade80!important;background:rgba(74,222,128,0.05)!important; transform: scale(1.02); box-shadow: 0 0 20px rgba(74,222,128,0.2), inset 0 1px 1px var(--highlight); transition: transform 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s;}
-.result .big{font-size:clamp(22px,4.5vw,30px);font-weight:900;letter-spacing:-1px;word-break:break-word; background: linear-gradient(135deg, var(--text), var(--muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
-.result .small{color:var(--muted);margin-top:7px;font-size:13px;line-height:1.5}
-.error{color:var(--danger)!important; background: rgba(255,101,116,0.05)!important; border-color: rgba(255,101,116,0.3)!important}
-.error .big { background: none; -webkit-text-fill-color: var(--danger); }
+.result.copied-flash{
+  border-color:var(--success)!important;
+  background:rgba(52,211,153,0.07)!important;
+  transform:scale(1.015);
+  box-shadow:0 0 24px rgba(52,211,153,0.22), inset 0 1px 0 var(--highlight);
+  transition:transform 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.result .big{
+  font-size:clamp(24px,4.8vw,34px);
+  font-weight:800;
+  letter-spacing:-1.2px;
+  word-break:break-word;
+  font-variant-numeric:tabular-nums;
+  background:linear-gradient(180deg, var(--text) 20%, var(--muted) 140%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.result .small{color:var(--muted);margin-top:8px;font-size:13.5px;line-height:1.55}
+.error{color:var(--danger)!important;background:rgba(255,101,116,0.06)!important;border-color:rgba(255,101,116,0.3)!important}
+.error .big{background:none;-webkit-text-fill-color:var(--danger);font-size:20px;letter-spacing:-0.5px;}
 
-.result.has-copy{cursor:pointer; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;}
-.result.has-copy:hover{border-color:var(--accent); box-shadow: 0 10px 40px var(--glow), inset 0 1px 1px var(--highlight); transform: translateY(-2px);}
+.result.has-copy{cursor:pointer;transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s;}
+.result.has-copy:hover{border-color:var(--accent);box-shadow:0 12px 36px var(--glow), inset 0 1px 0 var(--highlight);transform:translateY(-2px);}
+.result.has-copy::after{
+  content:'TOQUE PARA COPIAR';
+  display:inline-block;
+  margin-top:12px;
+  font-family:"JetBrains Mono",monospace;
+  font-size:9.5px;
+  font-weight:700;
+  letter-spacing:0.8px;
+  color:var(--muted);
+  opacity:0.75;
+}
 
 .action-buttons{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
-.action-btn{display:flex;align-items:center;gap:6px;background: linear-gradient(180deg, var(--card2), var(--bg));border:1px solid var(--line);color:var(--text);padding:10px 16px;border-radius:12px;font-size:12px;font-weight:750;cursor:pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.05), inset 0 1px 1px var(--highlight); transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;}
-.action-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
-.action-btn:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow: 0 6px 15px var(--glow), inset 0 1px 1px var(--highlight);}
+.action-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:var(--card2);
+  border:1px solid var(--line-strong);
+  color:var(--text);
+  padding:10px 16px;
+  border-radius:12px;
+  font-size:12.5px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 var(--highlight);
+  transition:transform 0.2s, border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+.action-btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.action-btn:hover{border-color:var(--accent);transform:translateY(-1.5px);box-shadow:0 6px 18px var(--glow), inset 0 1px 0 var(--highlight);}
+#shareCardBtn{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#ffffff;
+  box-shadow:0 4px 16px var(--glow), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+#shareCardBtn:hover{filter:brightness(1.08);}
 
 /* History Item Card */
 .history-item{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;text-align:left;}
-.history-item-meta{font-size:10px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
-.history-item-val{font-size:15px;font-weight:850;color:var(--text);word-break:break-word;}
-.history-item-time{font-size:11px;color:var(--muted);white-space:nowrap;}
+.history-item-meta{font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.history-item-val{font-size:15px;font-weight:800;color:var(--text);word-break:break-word;}
+.history-item-time{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);white-space:nowrap;}
 
 /* Toast Notification */
-.toast-container { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 12px 24px; border-radius: 99px; font-size: 14px; font-weight: 750; box-shadow: 0 10px 40px rgba(0,0,0,0.4); opacity: 0; pointer-events: none; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s; z-index: 9999; display: flex; align-items: center; gap: 8px; }
-.toast-container.show { transform: translateX(-50%) translateY(-90px); opacity: 1; }
-.toast-container svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+.toast-container{
+  position:fixed;bottom:-60px;left:50%;transform:translateX(-50%);
+  background:var(--text);color:var(--bg);
+  padding:11px 22px;border-radius:99px;font-size:13.5px;font-weight:700;
+  box-shadow:0 12px 36px rgba(0,0,0,0.45);
+  opacity:0;pointer-events:none;
+  transition:transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s;
+  z-index:9999;display:flex;align-items:center;gap:8px;
+}
+.toast-container.show{transform:translateX(-50%) translateY(-88px);opacity:1;}
+.toast-container svg{width:17px;height:17px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none;}
 
-/* Modals Overlay Fluido */
-.modal-overlay{position:fixed;inset:0;background:rgba(11,13,18,0.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity 0.25s;z-index:100;display:grid;place-items:center;padding:20px; transform: translateZ(0);}
+/* Modals Overlay */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(7,9,14,0.72);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  opacity:0;pointer-events:none;transition:opacity 0.25s;z-index:100;
+  display:grid;place-items:center;padding:20px;transform:translateZ(0);
+}
 .modal-overlay.open{opacity:1;pointer-events:auto}
-.modal-box{width:min(100%, 460px);background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 30px 80px rgba(0,0,0,.4), inset 0 1px 1px var(--highlight);transform:translateY(20px) scale(0.97);transition:transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; opacity:0; will-change: transform, opacity;}
-.modal-overlay.open .modal-box{transform:translateY(0) scale(1); opacity:1;}
+.modal-box{
+  width:min(100%, 470px);
+  background:var(--card);
+  border:1px solid var(--line-strong);
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 30px 90px rgba(0,0,0,.55), inset 0 1px 0 var(--highlight);
+  transform:translateY(16px) scale(0.97);
+  transition:transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+  opacity:0;
+}
+.modal-overlay.open .modal-box{transform:translateY(0) scale(1);opacity:1;}
 
-.palette-input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);padding:16px;border-radius:14px;font-size:16px;outline:none;margin-bottom:12px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05); transition:border-color 0.2s, box-shadow 0.2s;}
-.palette-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--glow), inset 0 2px 4px rgba(0,0,0,0.05); }
-.palette-list{max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:6px; scrollbar-width:thin;}
-.palette-item{padding:14px 16px;border-radius:12px;background:transparent;border:0;color:var(--text);text-align:left;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background-color 0.2s, color 0.2s, padding-left 0.2s;}
-.palette-item:hover, .palette-item.selected{background:var(--card2);color:var(--accent); padding-left: 20px;}
-.palette-item svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.palette-input{
+  width:100%;background:var(--bg);border:1px solid var(--line-strong);color:var(--text);
+  padding:14px 16px;border-radius:14px;font-size:15px;outline:none;margin-bottom:12px;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,0.08);
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.palette-input:focus{border-color:var(--accent);box-shadow:0 0 0 3.5px var(--glow);}
+.palette-list{max-height:310px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;scrollbar-width:thin;}
+.palette-item{
+  padding:13px 15px;border-radius:12px;background:transparent;border:1px solid transparent;
+  color:var(--text);text-align:left;font-weight:700;font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background-color 0.2s, color 0.2s, border-color 0.2s, padding-left 0.2s;
+}
+.palette-item:hover, .palette-item.selected{background:var(--card2);color:var(--accent);padding-left:18px;}
+.palette-item svg{width:15px;height:15px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
 
-/* Drawer Menu Fluido */
-.drawer{position:fixed;inset:0;background:rgba(11,13,18,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity 0.25s;z-index:90; transform: translateZ(0);}
+/* Drawer Menu Lateral */
+.drawer{
+  position:fixed;inset:0;
+  background:rgba(7,9,14,.72);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  opacity:0;pointer-events:none;transition:opacity 0.25s;z-index:90;transform:translateZ(0);
+}
 .drawer.open{opacity:1;pointer-events:auto}
-.drawer-card{position:absolute;right:0;top:0;height:100%;width:min(350px,89vw);background:var(--card);border-left:1px solid rgba(255,255,255,0.05);padding:24px;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);overflow-y:auto; box-shadow: -20px 0 60px rgba(0,0,0,0.3); will-change: transform;}
+.drawer-card{
+  position:absolute;right:0;top:0;height:100%;width:min(355px,90vw);
+  background:var(--card);border-left:1px solid var(--line);padding:24px;
+  transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y:auto;box-shadow:-24px 0 70px rgba(0,0,0,0.45);
+}
 .drawer.open .drawer-card{transform:translateX(0)}
-.drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;font-size:18px}
-.close{border:0;background:var(--card2);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:21px;box-shadow:inset 0 1px 1px var(--highlight); transition: transform 0.2s, background-color 0.2s;}
-.close:hover { background: var(--line); transform:scale(1.05); }
-.lang-selector{margin-bottom:24px}
-.lang-selector select{padding:12px;font-size:14px;font-weight:750;}
-.menu-group{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.08em;margin:24px 0 10px 4px; text-transform:uppercase;}
-.menu-item{width:100%;text-align:left;padding:14px 16px;border:1px solid transparent;background:transparent;color:var(--muted);border-radius:14px;margin-bottom:4px;font-weight:750;font-size:14px;transition: transform 0.2s, background-color 0.2s, color 0.2s, box-shadow 0.2s, border-color 0.2s; display:flex;align-items:center;gap:12px}
-.menu-item svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;flex-shrink:0}
-.menu-item:hover{background:var(--bg); color:var(--text); transform:translateX(4px);}
-.menu-item.active{border-color:var(--accent);background:var(--card2);color:var(--accent);box-shadow: 0 4px 15px var(--glow), inset 0 1px 1px var(--highlight);}
-
-/* Zen Mode Rules */
-.zen-mode header, .zen-mode .hero, .zen-mode .ad-container, .zen-mode footer, .zen-mode .chips-wrapper { display: none !important; }
-.zen-mode .app { max-width: 960px; padding-top: 60px; }
-.exit-zen-btn {
-  position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-20px); z-index: 9999;
-  background: rgba(26, 32, 43, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--accent); color: var(--text); padding: 12px 24px; border-radius: 99px;
-  font-size: 13px; font-weight: 750; display: none; align-items: center; gap: 8px; cursor: pointer;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 1px 1px var(--highlight);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s, opacity 0.3s; opacity: 0;
+.drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;font-size:18px;font-weight:800;}
+.close{
+  border:1px solid var(--line);background:var(--card2);color:var(--text);
+  width:38px;height:38px;border-radius:11px;font-size:20px;
+  display:grid;place-items:center;
+  box-shadow:inset 0 1px 0 var(--highlight);
+  transition:transform 0.2s, background-color 0.2s, border-color 0.2s;
 }
-.exit-zen-btn svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.exit-zen-btn:hover { background: var(--card); transform: translateX(-50%) scale(1.05); box-shadow: 0 20px 40px var(--glow); }
-.zen-mode .exit-zen-btn { display: flex; animation: slideDownFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-@keyframes slideDownFade { to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+.close:hover{background:var(--bg);border-color:var(--accent);transform:scale(1.05);}
+.lang-selector{margin-bottom:22px}
+.lang-selector select{padding:11px 14px;min-height:44px;font-size:13.5px;font-weight:700;}
+.menu-group{
+  font-family:"JetBrains Mono",monospace;
+  font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.08em;
+  margin:22px 0 8px 4px;text-transform:uppercase;
+}
+.menu-item{
+  width:100%;text-align:left;padding:12px 14px;border:1px solid transparent;
+  background:transparent;color:var(--muted);border-radius:13px;margin-bottom:4px;
+  font-weight:700;font-size:13.5px;
+  transition:transform 0.2s, background-color 0.2s, color 0.2s, box-shadow 0.2s, border-color 0.2s;
+  display:flex;align-items:center;gap:12px;
+}
+.menu-item svg{width:17px;height:17px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;flex-shrink:0}
+.menu-item:hover{background:var(--bg);color:var(--text);transform:translateX(3px);}
+.menu-item.active{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  color:var(--text);
+  box-shadow:0 4px 14px var(--glow), inset 0 1px 0 var(--highlight);
+}
+.menu-item.active svg{color:var(--accent);}
 
-@media print {
-  body { background: #fff !important; color: #000 !important; }
-  header, .chips-wrapper, .drawer, .modal-overlay, .ad-container, footer, .tabs, .action-buttons, .icon-btn, #zenBtn, .exit-zen-btn { display: none !important; }
-  .panel { border: none !important; box-shadow: none !important; padding: 0 !important; width: 100% !important; background: #fff !important; color: #000 !important; }
-  input, select { border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; }
-  .result { background: #f9f9f9 !important; border: 1px solid #ccc !important; color: #000 !important; }
+/* Zen Mode */
+.zen-mode header, .zen-mode .hero, .zen-mode .ad-container, .zen-mode footer, .zen-mode .chips-wrapper{display:none !important;}
+.zen-mode .app{max-width:940px;padding-top:76px;}
+.exit-zen-btn{
+  position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-20px);z-index:9999;
+  background:var(--card2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--accent);color:var(--text);padding:11px 22px;border-radius:99px;
+  font-size:13px;font-weight:700;display:none;align-items:center;gap:8px;cursor:pointer;
+  box-shadow:0 15px 35px rgba(0,0,0,0.45), inset 0 1px 0 var(--highlight);
+  transition:transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s, opacity 0.3s;opacity:0;
+}
+.exit-zen-btn svg{width:15px;height:15px;stroke:currentColor;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.exit-zen-btn:hover{background:var(--card);transform:translateX(-50%) scale(1.04);box-shadow:0 20px 40px var(--glow);}
+.zen-mode .exit-zen-btn{display:flex;animation:slideDownFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;}
+@keyframes slideDownFade{to{opacity:1;transform:translateX(-50%) translateY(0);}}
+
+@media print{
+  body{background:#fff !important;color:#000 !important;}
+  body::before,body::after{display:none !important;}
+  header, .chips-wrapper, .drawer, .modal-overlay, .ad-container, footer, .tabs, .action-buttons, .icon-btn, #zenBtn, .exit-zen-btn, .result.has-copy::after{display:none !important;}
+  .panel{border:none !important;box-shadow:none !important;padding:0 !important;width:100% !important;background:#fff !important;color:#000 !important;}
+  input, select{border:1px solid #ccc !important;background:#fff !important;color:#000 !important;}
+  .result{background:#f9f9f9 !important;border:1px solid #ccc !important;color:#000 !important;}
 }
 
-footer{text-align:center;color:var(--muted);font-size:12px;margin-top:42px; font-weight: 600;}
-footer a{color:var(--muted);text-decoration:none;transition: color 0.2s, border-bottom-color 0.2s; border-bottom: 1px solid transparent;}
-footer a:hover{color:var(--accent); border-bottom-color: var(--accent);}
-@keyframes up{from{opacity:0;transform:translateY(12px) scale(0.98)}to{opacity:1;transform:none}}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:44px;font-weight:600;}
+footer a{color:var(--muted);text-decoration:none;transition:color 0.2s, border-bottom-color 0.2s;border-bottom:1px solid transparent;}
+footer a:hover{color:var(--accent);border-bottom-color:var(--accent);}
+@keyframes up{from{opacity:0;transform:translateY(10px) scale(0.985)}to{opacity:1;transform:none}}
 @media(max-width:700px){.grid{grid-template-columns:1fr}}
-@media(max-width:600px){.app{padding:0 14px 35px}.hero{padding:20px 0 18px}.panel{padding:20px;border-radius:20px}h1{letter-spacing:-2px; font-size:32px;}.tabs{margin-bottom:19px}.tab{font-size:12px}}
+@media(max-width:600px){
+  .app{padding:0 14px 36px}
+  .hero{padding:16px 0 20px}
+  .panel{padding:20px;border-radius:22px}
+  h1{letter-spacing:-1.5px;font-size:30px;}
+  .tabs{margin-bottom:20px}
+  .tab{font-size:12px;padding:9px 6px}
+}
 </style>
 </head>
 <body>
@@ -280,6 +719,7 @@ footer a:hover{color:var(--accent); border-bottom-color: var(--accent);}
     </button>
     <button class="icon-btn" id="searchBtn" aria-label="Pesquisar (Ctrl+K)" title="Pesquisar (Ctrl+K)">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <span class="kbd-hint">Ctrl K</span>
     </button>
     <button class="icon-btn" id="themeBtn" aria-label="Alternar Tema" title="Alternar Tema"></button>
     <button class="icon-btn" id="openMenu" aria-label="Abrir menu">
@@ -292,8 +732,8 @@ footer a:hover{color:var(--accent); border-bottom-color: var(--accent);}
 
 <main>
 <section class="hero">
-  <div id="greeting" style="font-size:14px; font-weight:800; color:var(--accent); margin-bottom:12px; letter-spacing:0.5px; display:flex; align-items:center; justify-content:center; gap:8px;"></div>
-  <div class="badge" id="toolBadge">UTILITÁRIO DE TEMPO</div>
+  <div id="greeting"></div>
+  <div><span class="badge" id="toolBadge">UTILITÁRIO DE TEMPO</span></div>
   <h1 id="title">Calculadora de Data</h1>
   <p id="subtitle">Descubra exatamente quanto tempo existe entre duas datas.</p>
 </section>
@@ -319,7 +759,7 @@ footer a:hover{color:var(--accent); border-bottom-color: var(--accent);}
 <!-- Modal Paleta de Comandos -->
 <div class="modal-overlay" id="paletteModal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-box">
-    <div style="font-size:11px; font-weight:800; color:var(--accent); margin-bottom:10px; letter-spacing: 1px;">PALETA DE COMANDOS</div>
+    <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; color:var(--accent); margin-bottom:10px; letter-spacing: 1px;">PALETA DE COMANDOS</div>
     <input type="text" class="palette-input" id="paletteInput" placeholder="Busque por nome ou pressione 1-9...">
     <div class="palette-list" id="paletteList"></div>
   </div>
@@ -328,56 +768,60 @@ footer a:hover{color:var(--accent); border-bottom-color: var(--accent);}
 <!-- Modal Histórico de Cálculos -->
 <div class="modal-overlay" id="historyModal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-box">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 14px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 12px;">
       <h3 style="font-size: 18px; font-weight: 800; display:flex; align-items:center; gap:8px;">
-        <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--accent)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg>
+        <svg viewBox="0 0 24 24" width="19" height="19" stroke="var(--accent)" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg>
         Histórico Recente
       </h3>
-      <button id="clearHistoryBtn" style="border:0; background:transparent; color:var(--danger); font-size:12px; font-weight:750; cursor:pointer;">Limpar tudo</button>
+      <button id="clearHistoryBtn" style="border:0; background:transparent; color:var(--danger); font-size:12px; font-weight:700; cursor:pointer;">Limpar tudo</button>
     </div>
     <p style="font-size: 13px; color: var(--muted); margin-bottom: 14px;">Toque em um resultado para copiar novamente:</p>
     <div class="palette-list" id="historyList"></div>
-    <button id="closeHistoryBtn" style="width:100%; margin-top:16px; padding:12px; border-radius:14px; border:1px solid var(--line); background:var(--bg); color:var(--text); font-weight:750;">Fechar</button>
+    <button id="closeHistoryBtn" style="width:100%; margin-top:16px; padding:12px; border-radius:13px; border:1px solid var(--line-strong); background:var(--bg); color:var(--text); font-weight:700;">Fechar</button>
   </div>
 </div>
 
 <!-- Modal Estilo do Card -->
 <div class="modal-overlay" id="styleModal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-box">
-    <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; display:flex; align-items:center; gap:10px;">
-      <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--accent)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"></path><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-      Estilo do Card
+    <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px; display:flex; align-items:center; gap:10px;">
+      <svg viewBox="0 0 24 24" width="19" height="19" stroke="var(--accent)" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+      Estilo do Card 9:16
     </h3>
-    <p style="font-size: 14px; color: var(--muted); margin-bottom: 22px; line-height: 1.5;">Selecione o mood visual para a exportação do seu Story:</p>
+    <p style="font-size: 13.5px; color: var(--muted); margin-bottom: 18px; line-height: 1.5;">Escolha o acabamento visual para exportar seu Story:</p>
     <div style="display:flex; flex-direction:column; gap:8px;" id="styleOptionsList">
       <button class="palette-item selected inner-card" data-style="sofisticado">
-        <span style="display:flex; align-items:center; gap:10px;">
-          <svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"></path></svg> Dark Sofisticado
+        <span style="display:flex; align-items:center; gap:11px;">
+          <span class="style-swatch" style="background:radial-gradient(circle at 30% 30%, #7c5cff, #0b0d12);"></span>
+          Dark Sofisticado
         </span>
         <span style="font-size:11px; color:var(--accent);">Glow Variado</span>
       </button>
       <button class="palette-item inner-card" data-style="glass">
-        <span style="display:flex; align-items:center; gap:10px;">
-          <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg> Glassmorphism
+        <span style="display:flex; align-items:center; gap:11px;">
+          <span class="style-swatch" style="background:linear-gradient(135deg, #1e293b, #0f172a);"></span>
+          Glassmorphism
         </span>
         <span style="font-size:11px; color:var(--muted);">Dark Clean</span>
       </button>
       <button class="palette-item inner-card" data-style="mono">
-        <span style="display:flex; align-items:center; gap:10px;">
-          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> Minimal Mono
+        <span style="display:flex; align-items:center; gap:11px;">
+          <span class="style-swatch" style="background:linear-gradient(135deg, #27272a, #09090b);"></span>
+          Minimal Mono
         </span>
         <span style="font-size:11px; color:var(--muted);">Dark Sóbrio</span>
       </button>
       <button class="palette-item inner-card" data-style="light">
-        <span style="display:flex; align-items:center; gap:10px;">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line></svg> Clean Light
+        <span style="display:flex; align-items:center; gap:11px;">
+          <span class="style-swatch" style="background:linear-gradient(135deg, #ffffff, #e2e8f0);"></span>
+          Clean Light
         </span>
         <span style="font-size:11px; color:var(--muted);">Fundo Claro</span>
       </button>
     </div>
-    <div style="display: flex; gap: 12px; margin-top: 24px;">
-      <button id="cancelStyleBtn" style="flex:1; padding: 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-weight: 750; cursor:pointer; transition: transform 0.2s, background-color 0.2s;">Cancelar</button>
-      <button id="confirmStyleBtn" style="flex:1; padding: 14px; border-radius: 14px; border: 0; background: var(--accent); color: #fff; font-weight: 750; cursor:pointer; box-shadow: 0 4px 15px var(--glow); transition: transform 0.2s, box-shadow 0.2s;">Gerar Card</button>
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button id="cancelStyleBtn" style="flex:1; padding: 13px; border-radius: 13px; border: 1px solid var(--line-strong); background: var(--bg); color: var(--text); font-weight: 700; cursor:pointer; transition: transform 0.2s, background-color 0.2s;">Cancelar</button>
+      <button id="confirmStyleBtn" style="flex:1; padding: 13px; border-radius: 13px; border: 0; background: var(--accent); color: #fff; font-weight: 700; cursor:pointer; box-shadow: 0 4px 15px var(--glow); transition: transform 0.2s, box-shadow 0.2s;">Gerar Card</button>
     </div>
   </div>
 </div>
@@ -387,7 +831,7 @@ footer a:hover{color:var(--accent); border-bottom-color: var(--accent);}
   <div class="drawer-card" id="drawerCard">
     <div class="drawer-top"><strong id="menuTitle">tempo utilitários</strong><button class="close" id="closeMenu" aria-label="Fechar menu">×</button></div>
     <div class="lang-selector">
-      <label for="langSelect" style="display:block; color:var(--muted); font-size:11px; font-weight:800; margin-bottom:8px; letter-spacing: 1px;" id="langLabel">IDIOMA / REGIÃO</label>
+      <label for="langSelect" style="display:block; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; margin-bottom:8px; letter-spacing: 0.8px;" id="langLabel">IDIOMA / REGIÃO</label>
       <select id="langSelect">
         <option value="pt-BR">Português (Brasil) - PT-BR</option>
         <option value="pt-PT">Português (Portugal) - PT-PT</option>
@@ -576,8 +1020,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function applyTheme(theme) {
     currentTheme = theme; const metaTheme = $("#metaThemeColor");
-    if (theme === 'light') { document.documentElement.classList.add('light'); themeBtn.innerHTML = moonSvg; if (metaTheme) metaTheme.setAttribute("content", "#f4f5f7"); } 
-    else { document.documentElement.classList.remove('light'); themeBtn.innerHTML = sunSvg; if (metaTheme) metaTheme.setAttribute("content", "#0b0d12"); }
+    if (theme === 'light') { document.documentElement.classList.add('light'); themeBtn.innerHTML = moonSvg; if (metaTheme) metaTheme.setAttribute("content", "#f6f7fb"); } 
+    else { document.documentElement.classList.remove('light'); themeBtn.innerHTML = sunSvg; if (metaTheme) metaTheme.setAttribute("content", "#07090e"); }
     storage.set('tempo_theme', theme);
   }
   applyTheme(currentTheme);
@@ -641,17 +1085,17 @@ document.addEventListener("DOMContentLoaded", () => {
     
     let baseBgColor, cardBgColor, panelBgColor, borderColor, accentColor;
     const isLight = styleMood === 'light';
-    const textPrimary = isLight ? '#111827' : '#f7f8fb';
-    const textSecondary = isLight ? '#6b7280' : '#9199a8';
+    const textPrimary = isLight ? '#0f172a' : '#f8fafc';
+    const textSecondary = isLight ? '#64748b' : '#8b95a7';
 
     if (styleMood === 'light') {
-      baseBgColor = `#f4f5f7`; cardBgColor = `#ffffff`; panelBgColor = `#eef2f6`; borderColor = `#e5e7eb`; accentColor = `#6366f1`;
+      baseBgColor = `#f6f7fb`; cardBgColor = `#ffffff`; panelBgColor = `#f0f3f9`; borderColor = `#e2e8f0`; accentColor = `#6366f1`;
     } else if (styleMood === 'glass') {
       baseBgColor = `hsl(${randomHue}, 24%, 6%)`; cardBgColor = `hsla(${randomHue}, 22%, 13%, 0.95)`; panelBgColor = `hsla(${randomHue}, 18%, 18%, 0.85)`; borderColor = `hsla(${randomHue}, 35%, 50%, 0.4)`; accentColor = `hsl(${(randomHue + 45) % 360}, 90%, 74%)`;
     } else if (styleMood === 'mono') {
       baseBgColor = `#09090b`; cardBgColor = `#18181b`; panelBgColor = `#27272a`; borderColor = `#3f3f46`; accentColor = `#f4f4f5`;
     } else {
-      baseBgColor = `#0b0d12`; cardBgColor = `#131720`; panelBgColor = `#1a202b`; borderColor = `#29313e`; accentColor = `hsl(${randomHue}, 85%, 68%)`;
+      baseBgColor = `#07090e`; cardBgColor = `#0e121b`; panelBgColor = `#151b28`; borderColor = `#252e40`; accentColor = `hsl(${randomHue}, 85%, 68%)`;
     }
 
     ctx.fillStyle = baseBgColor; ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -669,7 +1113,7 @@ document.addEventListener("DOMContentLoaded", () => {
     drawNoise(ctx, canvas.width, canvas.height, isLight ? 0.02 : 0.04);
 
     const cardX = 60, cardY = 90, cardW = 960, cardH = 1740;
-    ctx.shadowColor = isLight ? 'rgba(0, 0, 0, 0.1)' : 'rgba(0, 0, 0, 0.5)'; ctx.shadowBlur = 60; ctx.shadowOffsetY = 18;
+    ctx.shadowColor = isLight ? 'rgba(0, 0, 0, 0.1)' : 'rgba(0, 0, 0, 0.55)'; ctx.shadowBlur = 60; ctx.shadowOffsetY = 18;
 
     ctx.fillStyle = cardBgColor; ctx.beginPath();
     if (ctx.roundRect) ctx.roundRect(cardX, cardY, cardW, cardH, 38); else ctx.rect(cardX, cardY, cardW, cardH);
@@ -953,7 +1397,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tool.innerHTML = `<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;" id="worldClockGrid"></div><div class="result show" style="display:block"><div class="small" style="font-weight:700; margin-bottom:4px;">Seu Fuso Horário Local:</div><div class="big" id="localTzBox" style="font-size:18px; padding-top:4px;">--</div></div>`;
     const zones = [{ city: 'Brasília', tz: 'America/Sao_Paulo' }, { city: 'Lisboa', tz: 'Europe/Lisbon' }, { city: 'New York', tz: 'America/New_York' }, { city: 'London', tz: 'Europe/London' }, { city: 'Tokyo', tz: 'Asia/Tokyo' }];
     const grid = $("#worldClockGrid"); $("#localTzBox").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    grid.innerHTML = zones.map((z, idx) => `<div class="inner-card" style="text-align:center; padding:16px;"><div style="font-size:11px; font-weight:750; color:var(--muted); margin-bottom:6px; letter-spacing:0.5px;">${z.city}</div><div id="wc-time-${idx}" style="font-size:24px; font-weight:900; letter-spacing:-.5px; color:var(--text);">--:--:--</div><div id="wc-date-${idx}" style="font-size:11px; color:var(--muted); margin-top:4px;">--</div></div>`).join('');
+    grid.innerHTML = zones.map((z, idx) => `<div class="inner-card" style="text-align:center; padding:16px;"><div style="font-size:11px; font-weight:700; color:var(--muted); margin-bottom:6px; letter-spacing:0.5px;">${z.city}</div><div id="wc-time-${idx}" style="font-size:24px; font-weight:800; letter-spacing:-.5px; color:var(--text); font-variant-numeric:tabular-nums;">--:--:--</div><div id="wc-date-${idx}" style="font-size:11px; color:var(--muted); margin-top:4px;">--</div></div>`).join('');
     function updateClocks() {
       if(!$("#worldClockGrid")) return; const now = new Date();
       zones.forEach((z, idx) => { const timeEl = $(`#wc-time-${idx}`), dateEl = $(`#wc-date-${idx}`); if(timeEl && dateEl) { timeEl.textContent = new Intl.DateTimeFormat('pt-BR', { timeZone: z.tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(now); dateEl.textContent = new Intl.DateTimeFormat(currentLang, { timeZone: z.tz, weekday: 'short', day: 'numeric', month: 'short' }).format(now); } });
@@ -964,7 +1408,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderMeeting() {
     const st = getStoredState('meeting');
-    tool.innerHTML = `<div class="field" style="margin-bottom: 20px;"><label for="meetHour">SELECIONE A HORA BASE (0 - 23)</label><input type="range" id="meetHour" min="0" max="23" value="${st.hour}" style="cursor: pointer; height:6px; border-radius:4px; margin-top:10px;"><div style="text-align: center; font-size: 28px; font-weight: 900; margin-top: 12px; color:var(--accent);" id="meetHourDisplay">${st.hour.toString().padStart(2, '0')}:00</div></div><div style="display:flex; flex-direction:column; gap:10px;" id="meetZonesList"></div><div class="result show" style="display:block; margin-top:20px; text-align:left;"><div style="font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.8 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg> Estado da Janela:</div><div id="meetStatusText" style="color:var(--muted); font-size:14px; margin-top:6px;">--</div></div>`;
+    tool.innerHTML = `<div class="field" style="margin-bottom: 20px;"><label for="meetHour">SELECIONE A HORA BASE (0 - 23)</label><input type="range" id="meetHour" min="0" max="23" value="${st.hour}" style="cursor: pointer; height:6px; border-radius:4px; margin-top:10px;"><div style="text-align: center; font-size: 30px; font-weight: 800; margin-top: 12px; color:var(--accent); font-variant-numeric:tabular-nums;" id="meetHourDisplay">${st.hour.toString().padStart(2, '0')}:00</div></div><div style="display:flex; flex-direction:column; gap:10px;" id="meetZonesList"></div><div class="result show" style="display:block; margin-top:20px; text-align:left;"><div style="font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.8 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg> Estado da Janela:</div><div id="meetStatusText" style="color:var(--muted); font-size:14px; margin-top:6px;">--</div></div>`;
     const cities = [{ name: 'Brasília', tz: 'America/Sao_Paulo' }, { name: 'Lisboa', tz: 'Europe/Lisbon' }, { name: 'London', tz: 'Europe/London' }, { name: 'New York', tz: 'America/New_York' }, { name: 'Tokyo', tz: 'Asia/Tokyo' }];
     const rangeInput = $("#meetHour"), displayEl = $("#meetHourDisplay"), listEl = $("#meetZonesList"), statusEl = $("#meetStatusText");
     function updateMeetingPlanner() {
@@ -972,10 +1416,10 @@ document.addEventListener("DOMContentLoaded", () => {
       let workingCount = 0, cityTimesSummary = [];
       listEl.innerHTML = cities.map(c => {
         const timeStr = new Intl.DateTimeFormat('pt-BR', { timeZone: c.tz, hour: '2-digit', minute: '2-digit', hour12: false }).format(refDate); const hourNum = parseInt(timeStr.split(':')[0]); const isWorking = hourNum >= 9 && hourNum < 18; if (isWorking) workingCount++; cityTimesSummary.push(`${c.name}: ${timeStr}`);
-        return `<div class="inner-card" style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px;"><div style="font-size:14px;"><strong>${c.name}</strong></div><div style="display:flex; align-items:center; gap:12px;"><span style="font-size:18px; font-weight:800;">${timeStr}</span><span style="font-size:11px; padding:4px 8px; border-radius:6px; font-weight:750; background:${isWorking ? 'rgba(74,222,128,0.15); color:#4ade80' : 'rgba(255,101,116,0.15); color:var(--danger)'}">${isWorking ? 'Comercial' : 'Fora'}</span></div></div>`;
+        return `<div class="inner-card" style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px;"><div style="font-size:14px;"><strong>${c.name}</strong></div><div style="display:flex; align-items:center; gap:12px;"><span style="font-size:18px; font-weight:800; font-variant-numeric:tabular-nums;">${timeStr}</span><span style="font-size:11px; padding:4px 9px; border-radius:7px; font-weight:700; background:${isWorking ? 'rgba(52,211,153,0.14); color:#34d399' : 'rgba(255,101,116,0.14); color:var(--danger)'}">${isWorking ? 'Comercial' : 'Fora'}</span></div></div>`;
       }).join('');
       let statusMsg = '';
-      if (workingCount >= 4) { statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:#4ade80;"><strong>Excelente horário!</strong> Maioria em expediente.</div>`; } else if (workingCount >= 2) { statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:#fbbf24;"><strong>Atenção!</strong> Horário razoável de sobreposição.</div>`; } else { statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:var(--danger);"><strong>Difícil.</strong> Fora de hora para reuniões.</div>`; }
+      if (workingCount >= 4) { statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:#34d399;"><strong>Excelente horário!</strong> Maioria em expediente.</div>`; } else if (workingCount >= 2) { statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:#fbbf24;"><strong>Atenção!</strong> Horário razoável de sobreposição.</div>`; } else { statusMsg = `<div style="display:flex; align-items:center; gap:6px; color:var(--danger);"><strong>Difícil.</strong> Fora de hora para reuniões.</div>`; }
       statusEl.innerHTML = statusMsg;
       showResult(`<div class="big">${h.toString().padStart(2, '0')}:00 Base</div><div class="small" style="margin-top:12px;">${statusMsg}</div>`, `Reunião Global às ${h}:00`, false, "Planejador de Reuniões", { "Hora Base": `${h}:00`, "Lisboa": cityTimesSummary[1]?.split(': ')[1] || '', "Londres": cityTimesSummary[2]?.split(': ')[1] || '', "Países em Comercial": `${workingCount} de 5` });
     }
@@ -984,7 +1428,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderPomodoro() {
     const st = getStoredState('pomodoro');
-    tool.innerHTML = `<div class="tabs"><button class="tab ${st.mode === 'work' ? 'active' : ''}" data-pmode="work">Foco (25m)</button><button class="tab ${st.mode === 'short' ? 'active' : ''}" data-pmode="short">Pausa Curta (5m)</button><button class="tab ${st.mode === 'long' ? 'active' : ''}" data-pmode="long">Pausa Longa (15m)</button></div><div style="text-align: center; padding: 10px 0;"><div id="pomoDisplay" style="font-size: clamp(64px, 14vw, 94px); font-weight: 900; letter-spacing: -3px; margin: 15px 0; font-variant-numeric: tabular-nums; background: linear-gradient(135deg, var(--text), var(--muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">25:00</div><div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px;"><button id="pomoToggleBtn" style="padding: 14px 32px; border-radius: 14px; border: 0; background: var(--accent); color: #fff; font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 15px var(--glow);">${st.running ? 'Pausar' : 'Iniciar'}</button><button id="pomoResetBtn" style="padding: 14px 24px; border-radius: 14px; border: 1px solid var(--line); background: var(--card2); color: var(--text); font-weight: 750; font-size: 16px; cursor: pointer; transition: transform 0.2s;">Reiniciar</button></div></div><div class="result show" style="display:block; margin-top: 24px; text-align: center;"><div class="small" id="pomoStatus" style="font-weight: 700;">${st.running ? 'Sessão em andamento...' : 'Pronto para iniciar a sessão de foco.'}</div></div>`;
+    tool.innerHTML = `<div class="tabs"><button class="tab ${st.mode === 'work' ? 'active' : ''}" data-pmode="work">Foco (25m)</button><button class="tab ${st.mode === 'short' ? 'active' : ''}" data-pmode="short">Pausa Curta (5m)</button><button class="tab ${st.mode === 'long' ? 'active' : ''}" data-pmode="long">Pausa Longa (15m)</button></div><div style="text-align: center; padding: 10px 0;"><div id="pomoDisplay" style="font-size: clamp(64px, 14vw, 94px); font-weight: 800; letter-spacing: -3px; margin: 15px 0; font-variant-numeric: tabular-nums; background: linear-gradient(180deg, var(--text), var(--muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">25:00</div><div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px;"><button id="pomoToggleBtn" style="padding: 14px 32px; border-radius: 14px; border: 0; background: var(--accent); color: #fff; font-weight: 700; font-size: 15px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 16px var(--glow);">${st.running ? 'Pausar' : 'Iniciar'}</button><button id="pomoResetBtn" style="padding: 14px 24px; border-radius: 14px; border: 1px solid var(--line-strong); background: var(--card2); color: var(--text); font-weight: 700; font-size: 15px; cursor: pointer; transition: transform 0.2s;">Reiniciar</button></div></div><div class="result show" style="display:block; margin-top: 24px; text-align: center;"><div class="small" id="pomoStatus" style="font-weight: 700;">${st.running ? 'Sessão em andamento...' : 'Pronto para iniciar a sessão de foco.'}</div></div>`;
     function getSecondsForMode(m) { if (m === 'work') return 25 * 60; if (m === 'short') return 5 * 60; return 15 * 60; }
     function updateDisplay() {
       const displayEl = $("#pomoDisplay"); if (!displayEl) return;
@@ -1015,11 +1459,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const [h, m] = st.time.split(':').map(Number); if(isNaN(h)) return showResult("Informe um horário válido.", "", true);
         baseDate.setHours(h, m, 0, 0); if (baseDate < new Date()) baseDate.setDate(baseDate.getDate() + 1);
         let times = []; for(let cycles = 6; cycles >= 3; cycles--) { const d = new Date(baseDate.getTime()); d.setMinutes(d.getMinutes() - (cycles * 90) - 15); times.push({ c: cycles, time: d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }); }
-        const html = `<div class="small" style="margin-bottom:8px;">Durma em um destes horários para acordar disposto (inclui 15m para adormecer):</div><div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap:10px; margin-bottom:12px;">${times.map(t => `<div class="inner-card" style="text-align:center; padding:14px 10px; border-color:${t.c>=5?'var(--accent)':'var(--line)'}; ${t.c>=5?'box-shadow: 0 8px 25px var(--glow);':''}"><div style="font-size:24px; font-weight:900; ${t.c>=5?'color:var(--accent)':''}">${t.time}</div><div style="font-size:11px; color:var(--muted); font-weight:750; margin-top:4px;">${t.c} Ciclos (${t.c*1.5}h)</div></div>`).join('')}</div>`;
+        const html = `<div class="small" style="margin-bottom:10px;">Durma em um destes horários para acordar disposto (inclui 15m para adormecer):</div><div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap:10px; margin-bottom:12px;">${times.map(t => `<div class="inner-card" style="text-align:center; padding:14px 10px; border-color:${t.c>=5?'var(--accent)':'var(--line)'}; ${t.c>=5?'box-shadow: 0 8px 25px var(--glow);':''}"><div style="font-size:24px; font-weight:800; font-variant-numeric:tabular-nums; ${t.c>=5?'color:var(--accent)':''}">${t.time}</div><div style="font-size:11px; color:var(--muted); font-weight:700; margin-top:4px;">${t.c} Ciclos (${t.c*1.5}h)</div></div>`).join('')}</div>`;
         const bestTime = times.find(t=>t.c===5).time; showResult(html, `Durma às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Melhor Horário": bestTime, "Duração Ideal": "7h 30m (5 ciclos)", "Adormecer": "15 minutos", "Benefício": "Zero cansaço ao despertar" });
       } else {
         const times = []; for(let cycles = 3; cycles <= 6; cycles++) { const d = new Date(); d.setMinutes(d.getMinutes() + (cycles * 90) + 15); times.push({ c: cycles, time: d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }); }
-        const html = `<div class="small" style="margin-bottom:8px;">Se você for dormir agora, coloque o alarme para:</div><div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap:10px; margin-bottom:12px;">${times.map(t => `<div class="inner-card" style="text-align:center; padding:14px 10px; border-color:${t.c>=5?'var(--accent)':'var(--line)'}; ${t.c>=5?'box-shadow: 0 8px 25px var(--glow);':''}"><div style="font-size:24px; font-weight:900; ${t.c>=5?'color:var(--accent)':''}">${t.time}</div><div style="font-size:11px; color:var(--muted); font-weight:750; margin-top:4px;">${t.c} Ciclos (${t.c*1.5}h)</div></div>`).join('')}</div>`;
+        const html = `<div class="small" style="margin-bottom:10px;">Se você for dormir agora, coloque o alarme para:</div><div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap:10px; margin-bottom:12px;">${times.map(t => `<div class="inner-card" style="text-align:center; padding:14px 10px; border-color:${t.c>=5?'var(--accent)':'var(--line)'}; ${t.c>=5?'box-shadow: 0 8px 25px var(--glow);':''}"><div style="font-size:24px; font-weight:800; font-variant-numeric:tabular-nums; ${t.c>=5?'color:var(--accent)':''}">${t.time}</div><div style="font-size:11px; color:var(--muted); font-weight:700; margin-top:4px;">${t.c} Ciclos (${t.c*1.5}h)</div></div>`).join('')}</div>`;
         const bestTime = times.find(t=>t.c===5).time; showResult(html, `Acorde às ${bestTime} (5 ciclos)`, false, "Ciclos de Sono", { "Alarme Recomendado": bestTime, "Base": "Ciclos biológicos de 90m", "Duração": "7h 30m" });
       }
     };
@@ -1030,7 +1474,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderHoroscope() {
     const st = getStoredState('horoscope');
     const signs = [{ id: 'aries', name: 'Áries', symbol: '♈' }, { id: 'taurus', name: 'Touro', symbol: '♉' }, { id: 'gemini', name: 'Gêmeos', symbol: '♊' }, { id: 'cancer', name: 'Câncer', symbol: '♋' }, { id: 'leo', name: 'Leão', symbol: '♌' }, { id: 'virgo', name: 'Virgem', symbol: '♍' }, { id: 'libra', name: 'Libra', symbol: '♎' }, { id: 'scorpio', name: 'Escorpião', symbol: '♏' }, { id: 'sagittarius', name: 'Sagitário', symbol: '♐' }, { id: 'capricorn', name: 'Capricórnio', symbol: '♑' }, { id: 'aquarius', name: 'Aquário', symbol: '♒' }, { id: 'pisces', name: 'Peixes', symbol: '♓' }];
-    tool.innerHTML = `<div style="margin-bottom: 16px;"><label style="display:block; color:var(--muted); font-size:11px; font-weight:750; margin-bottom:8px;" id="signLabel">SELECIONE O SEU SIGNO</label><select id="signSelect" style="font-weight:700;">${signs.map(s => `<option value="${s.id}" ${st.sign === s.id ? 'selected' : ''}>${s.name}</option>`).join('')}</select></div><div id="horoscopeContent" style="margin-top: 16px;"></div><div class="result" id="result"></div>`;
+    tool.innerHTML = `<div style="margin-bottom: 16px;"><label style="display:block; color:var(--muted); font-size:11px; font-weight:700; margin-bottom:8px; letter-spacing:0.6px;" id="signLabel">SELECIONE O SEU SIGNO</label><select id="signSelect" style="font-weight:700;">${signs.map(s => `<option value="${s.id}" ${st.sign === s.id ? 'selected' : ''}>${s.name}</option>`).join('')}</select></div><div id="horoscopeContent" style="margin-top: 16px;"></div><div class="result" id="result"></div>`;
     const climatePool = ["O céu astral favorece a clareza mental e a tomada de decisões importantes que estavam em banho-maria.", "Uma forte onda de energia renovadora convida você a sair da zona de conforto e explorar novas perspectivas.", "O momento pede cautela com impulsos repentinos; respire fundo antes de reagir a provocações.", "Alinhamentos planetários auspiciosos trazem leveza e otimismo genuíno para o seu dia a dia.", "Sensibilidade acirrada. Aproveite para olhar para dentro e alinhar suas verdadeiras prioridades de vida."];
     const lovePool = ["No amor, a cumplicidade ganha espaço. Se estiver comprometido(a), uma conversa sincera fortalece os laços. Solteiros podem atrair alguém com interesses intelectuais parecidos.", "O magnetismo pessoal está em alta. O romance ganha contornos apaixonados, mas evite cobranças excessivas por atenção que possam gerar atritos desnecessários.", "Sua empatia natural será o grande diferencial nas relações hoje. Ouça mais o coração de quem você ama e evite discussões por detalhes irrelevantes.", "Fase excelente para resolver pendências afetivas do passado. Perdoar e virar a página abrirá portas para surpresas muito felizes no campo amoroso."];
     const workPool = ["No campo profissional, sua capacidade de foco e produtividade impressionará superiores. É um ótimo dia para apresentar propostas ou liderar projetos complexos.", "Desafios inesperados na rotina exigirão flexibilidade rápida. Sua habilidade de improviso garantirá que tudo termine dentro do prazo estabelecido.", "Evite se sobrecarregar assumindo tarefas que pertencem a outros colegas. Foque nas suas metas principais para garantir entregas de excelência.", "Momento altamente favorável para networking e parcerias estratégicas. Uma conversa informal pode se desdobrar em uma excelente oportunidade de carreira."];
@@ -1044,7 +1488,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const cIdx = (todayEpochDays + signIndex * 3) % climatePool.length, lIdx = (todayEpochDays + signIndex * 7) % lovePool.length, wIdx = (todayEpochDays + signIndex * 11) % workPool.length, mIdx = (todayEpochDays + signIndex * 13) % moneyPool.length, hIdx = (todayEpochDays + signIndex * 17) % healthPool.length, colIdx = (todayEpochDays + signIndex * 5) % colors.length, numIdx = (todayEpochDays + signIndex * 9) % numbers.length, compIdx = (signIndex + (todayEpochDays % 4)) % signs.length;
       const todayStr = new Date().toLocaleDateString(currentLang, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
       const pureGlyph = `<span style="font-size:24px; line-height:1; color:var(--text); display:inline-flex; align-items:center; background:transparent;">${signObj.symbol}</span>`;
-      contentEl.innerHTML = `<div class="inner-card" style="padding:24px; text-align: left;"><div style="font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">${todayStr}</div><div style="font-size: 26px; font-weight: 900; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">${pureGlyph} <span>${signObj.name}</span></div><div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Clima Astral</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${climatePool[cIdx]}</span></div><div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Amor & Relações</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${lovePool[lIdx]}</span></div><div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Trabalho & Carreira</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${workPool[wIdx]}</span></div><div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Dinheiro & Finanças</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${moneyPool[mIdx]}</span></div><div style="margin-bottom: 18px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Saúde & Bem-estar</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${healthPool[hIdx]}</span></div><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted);"><div><strong>Cor:</strong> <span style="color:var(--text);">${colors[colIdx]}</span></div><div><strong>Número:</strong> <span style="color:var(--text);">${numbers[numIdx]}</span></div><div><strong>Combina com:</strong> <span style="color:var(--text);">${signs[compIdx].name}</span></div></div></div>`;
+      contentEl.innerHTML = `<div class="inner-card" style="padding:24px; text-align: left;"><div style="font-family:'JetBrains Mono',monospace; font-size: 10.5px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;">${todayStr}</div><div style="font-size: 26px; font-weight: 800; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">${pureGlyph} <span>${signObj.name}</span></div><div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Clima Astral</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${climatePool[cIdx]}</span></div><div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Amor & Relações</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${lovePool[lIdx]}</span></div><div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Trabalho & Carreira</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${workPool[wIdx]}</span></div><div style="margin-bottom: 16px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Dinheiro & Finanças</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${moneyPool[mIdx]}</span></div><div style="margin-bottom: 18px;"><strong style="color: var(--text); display: block; font-size: 13px; margin-bottom: 4px;">Saúde & Bem-estar</strong><span style="color: var(--muted); font-size: 14px; line-height: 1.6; display: block;">${healthPool[hIdx]}</span></div><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted);"><div><strong>Cor:</strong> <span style="color:var(--text);">${colors[colIdx]}</span></div><div><strong>Número:</strong> <span style="color:var(--text);">${numbers[numIdx]}</span></div><div><strong>Combina com:</strong> <span style="color:var(--text);">${signs[compIdx].name}</span></div></div></div>`;
       showResult(`<div class="big" style="display:flex; align-items:center; justify-content:center; gap:8px;">${pureGlyph} <span>${signObj.name}</span></div><div class="small">Previsão diária consultada.</div>`, `${signObj.name} - Horóscopo Diário`, false, "Horóscopo Diário", { "Signo": signObj.name, "Cor da Sorte": colors[colIdx], "Número": numbers[numIdx], "Harmonia": signs[compIdx].name });
     }
     selectEl.onchange = () => { haptic(); updateHoroscope(); }; updateHoroscope();
@@ -1106,7 +1550,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderOvertime() {
     const st = getStoredState('overtime');
     const cur = currentLang === 'pt-PT' ? '€' : 'R$';
-    tool.innerHTML = `<div class="grid"><div class="field"><label for="sal">SALÁRIO MENSAL (${cur})</label><input type="number" id="sal" step="0.01" min="0" value="${st.sal}"></div><div class="field"><label for="jor">JORNADA MENSAL (HORAS)</label><input type="number" id="jor" value="${st.jor}" min="1"></div></div><div class="grid" style="margin-top:14px"><div class="field"><label for="qtd">QTD. HORAS EXTRAS</label><input type="number" id="qtd" step="0.5" min="0" value="${st.qtd}"></div><div class="field"><label for="rate">ACRÉSCIMO LEGAL</label><select id="rate"><option value="50" ${st.rate===50?'selected':''}>50% (Dias úteis / Normal)</option><option value="100" ${st.rate===100?'selected':''}>100% (Domingos / Feriados)</option></select></div></div><div class="result" id="result"></div>`;
+    tool.innerHTML = `<div class="grid"><div class="field"><label for="sal">SALÁRIO MENSAL (${cur})</label><input type="number" id="sal" step="0.01" min="0" value="${st.sal}"></div><div class="field"><label for="jor">JORNADA MENSAL (HORAS)</label><input type="number" id="jor" value="${st.jor}" min="1"></div></div><div class="grid" style="margin-top:16px"><div class="field"><label for="qtd">QTD. HORAS EXTRAS</label><input type="number" id="qtd" step="0.5" min="0" value="${st.qtd}"></div><div class="field"><label for="rate">ACRÉSCIMO LEGAL</label><select id="rate"><option value="50" ${st.rate===50?'selected':''}>50% (Dias úteis / Normal)</option><option value="100" ${st.rate===100?'selected':''}>100% (Domingos / Feriados)</option></select></div></div><div class="result" id="result"></div>`;
     const calculate = () => {
       st.sal = Number($("#sal").value); st.jor = Number($("#jor").value); st.qtd = Number($("#qtd").value); st.rate = Number($("#rate").value); saveStoredState('overtime', st);
       const sal = st.sal, jor = st.jor, qtd = st.qtd, rate = st.rate; if(!sal || sal<=0 || !jor || jor<=0 || isNaN(qtd) || qtd<0) return showResult("Valores inválidos.", "", true);
@@ -1152,7 +1596,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderRescision() {
     const st = getStoredState('rescision');
     const cur = currentLang === 'pt-PT' ? '€' : 'R$';
-    tool.innerHTML = `<div class="grid"><div class="field"><label for="rSal">SALÁRIO BRUTO (${cur})</label><input type="number" id="rSal" step="0.01" min="0" value="${st.sal}"></div><div class="field"><label for="rReason">MOTIVO DA SAÍDA</label><select id="rReason"><option value="sem_justa" ${st.reason==='sem_justa'?'selected':''}>Dispensa sem justa causa</option><option value="pedido" ${st.reason==='pedido'?'selected':''}>Pedido de demissão</option><option value="acordo" ${st.reason==='acordo'?'selected':''}>Acordo comum (Art. 484-A)</option></select></div></div><div class="grid" style="margin-top:14px"><div class="field"><label for="rAdm">DATA DE ADMISSÃO</label><input type="date" id="rAdm" value="${st.adm}"></div><div class="field"><label for="rTerm">DATA DE DEMISSÃO</label><input type="date" id="rTerm" value="${st.term}"></div></div><div class="result" id="result"></div>`;
+    tool.innerHTML = `<div class="grid"><div class="field"><label for="rSal">SALÁRIO BRUTO (${cur})</label><input type="number" id="rSal" step="0.01" min="0" value="${st.sal}"></div><div class="field"><label for="rReason">MOTIVO DA SAÍDA</label><select id="rReason"><option value="sem_justa" ${st.reason==='sem_justa'?'selected':''}>Dispensa sem justa causa</option><option value="pedido" ${st.reason==='pedido'?'selected':''}>Pedido de demissão</option><option value="acordo" ${st.reason==='acordo'?'selected':''}>Acordo comum (Art. 484-A)</option></select></div></div><div class="grid" style="margin-top:16px"><div class="field"><label for="rAdm">DATA DE ADMISSÃO</label><input type="date" id="rAdm" value="${st.adm}"></div><div class="field"><label for="rTerm">DATA DE DEMISSÃO</label><input type="date" id="rTerm" value="${st.term}"></div></div><div class="result" id="result"></div>`;
     const calculate = () => {
       st.sal = Number($("#rSal").value); st.reason = $("#rReason").value; st.adm = $("#rAdm").value; st.term = $("#rTerm").value; saveStoredState('rescision', st);
       const sal = st.sal, reason = st.reason, dAdm = dateFromInput("#rAdm"), dTerm = dateFromInput("#rTerm"); if(!sal || sal<=0 || !dAdm || !dTerm) return showResult("Preencha todos os campos.", "", true); if(dAdm > dTerm) return showResult("Admissão posterior à demissão.", "", true);
@@ -1198,7 +1642,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderPaletteList(query) {
     const langTools = i18n[currentLang].tools;
     const list = Object.keys(langTools).map(key => ({ key, name: langTools[key].menuName, badge: langTools[key].badge })).filter(x => x.name.toLowerCase().includes(query.toLowerCase()));
-    paletteList.innerHTML = list.map((item, idx) => `<button class="palette-item ${idx===0?'selected':''}" data-tool="${item.key}"><span>${idx < 9 ? `<strong style="color:var(--accent); margin-right:6px;">[${idx+1}]</strong>` : ''}${item.name}</span><span style="font-size:11px; color:var(--muted); font-weight:600; border:1px solid var(--line); padding:2px 6px; border-radius:6px;">${item.badge}</span></button>`).join('');
+    paletteList.innerHTML = list.map((item, idx) => `<button class="palette-item ${idx===0?'selected':''}" data-tool="${item.key}"><span>${idx < 9 ? `<strong style="color:var(--accent); margin-right:6px;">[${idx+1}]</strong>` : ''}${item.name}</span><span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); font-weight:700; border:1px solid var(--line); padding:2px 7px; border-radius:6px;">${item.badge}</span></button>`).join('');
     $$('#paletteList .palette-item').forEach(btn => { btn.onclick = () => { haptic(); loadTool(btn.dataset.tool); closePalette(); }; });
   }
 
@@ -1223,9 +1667,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateGreeting() {
     const hour = new Date().getHours(); let text = '', svgIcon = '';
-    if (hour < 12) { text = 'Bom dia'; svgIcon = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line></svg>`; } 
-    else if (hour < 18) { text = 'Boa tarde'; svgIcon = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>`; } 
-    else { text = 'Boa noite'; svgIcon = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`; }
+    if (hour < 12) { text = 'Bom dia'; svgIcon = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line></svg>`; } 
+    else if (hour < 18) { text = 'Boa tarde'; svgIcon = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>`; } 
+    else { text = 'Boa noite'; svgIcon = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`; }
     if(greetingEl) greetingEl.innerHTML = `${svgIcon} <span>${text}</span>`;
   }
 
@@ -1233,7 +1677,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const recentKeys = JSON.parse(storage.get('tempo_recent_tools', '["sleep", "pomodoro", "rescision", "worldclock"]')), toolMetaMap = i18n[currentLang].tools;
       if(quickChips) {
-        quickChips.innerHTML = recentKeys.map(k => { const m = toolMetaMap[k]; return `<button class="chip" data-tool="${k}"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg> ${m ? m.menuName : k}</button>`; }).join('');
+        quickChips.innerHTML = recentKeys.map(k => { const m = toolMetaMap[k]; return `<button class="chip ${k === activeTool ? 'active' : ''}" data-tool="${k}"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg> ${m ? m.menuName : k}</button>`; }).join('');
         $$('#quickChips .chip').forEach(btn => { btn.onclick = () => { haptic(); loadTool(btn.dataset.tool); }; });
       }
     } catch(e){}
