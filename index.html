@@ -194,7 +194,7 @@ header{
   animation:pulseDot 2.2s infinite;
 }
 @keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.45;transform:scale(0.85)}}
-@media(max-width:760px){.live-chrono,.logo-sub{display:none}}
+@media(max-width:760px){.logo-sub{display:none}}
 
 .header-actions{display:flex;gap:7px;align-items:center}
 .icon-btn{
@@ -808,13 +808,25 @@ footer a:hover{color:var(--accent);border-bottom-color:var(--accent);}
 @keyframes up{from{opacity:0;transform:translateY(10px) scale(0.985)}to{opacity:1;transform:none}}
 @media(max-width:700px){.grid{grid-template-columns:1fr}}
 @media(max-width:600px){
-  .app{padding:10px 14px 36px}
-  header{top:10px;border-radius:16px;padding:0 12px 0 14px;margin-bottom:18px}
+  .app{padding:10px 12px 36px}
+  header{top:10px;height:58px;border-radius:16px;padding:0 10px 0 12px;margin-bottom:18px}
+  .header-left{gap:7px}
+  .logo-container{gap:6px;padding:4px 2px}
+  .logo-mark{width:24px;height:24px;border-radius:7px}
+  .logo-mark svg{width:13px;height:13px}
+  .logo-main{font-size:18px}
+  .live-chrono{padding:4px 8px;font-size:10.5px;gap:5px}
+  .header-actions{gap:4px}
+  .icon-btn{height:33px;min-width:33px;padding:0 7px;border-radius:9px}
+  .icon-btn svg{width:15px;height:15px}
   .hero{padding:6px 0 18px}
   .panel{padding:20px;border-radius:20px}
   h1{letter-spacing:-1.2px;font-size:28px;}
   .tabs{margin-bottom:20px}
   .tab{font-size:12px;padding:9px 6px}
+}
+@media(max-width:430px){
+  .clock-sec{display:none}
 }
 </style>
 </head>
@@ -1009,7 +1021,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function tickHeaderClock() {
     if (!headerClock) return;
     const now = new Date();
-    headerClock.textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const hm = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const sec = now.getSeconds().toString().padStart(2, '0');
+    headerClock.innerHTML = `${hm}<span class="clock-sec">:${sec}</span>`;
   }
   tickHeaderClock();
   setInterval(tickHeaderClock, 1000);
